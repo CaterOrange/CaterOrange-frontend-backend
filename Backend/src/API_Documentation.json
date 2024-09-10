@@ -1,0 +1,578 @@
+{
+	"info": {
+		"_postman_id": "c8e4be0e-75cd-43a1-ba73-fae281d76e19",
+		"name": "Cater Orange",
+		"description": "# 📄 CATER ORANGE\n\nThis template contains a boilerplate for documentation that you can quickly customize and reuse.\n\n## 🔖 How to use this template\n\n- Replace the content given brackets (()) with your API's details.\n    \n- Tips are formatted in `codespan` - feel free to read and remove them.\n    \n\n---\n\n## **Getting started guide**\n\n`List the steps or points required to start using your APIs. Make sure to cover everything required to reach success with your API as quickly as possible.`\n\nTo start using the ((add APIs here)), you need to -\n\n`The points given below are from The Postman API's documentation. You can reference it to write your own getting started guide.`\n\n- You must use a valid API Key to send requests to the API endpoints. You can get your API key from Postman's [integrations dashboard](https://go.postman.co/settings/me/api-keys).\n    \n- The API has [rate and usage limits](https://learning.postman.com/docs/developer/postman-api/postman-api-rate-limits/).\n    \n- The API only responds to HTTPS-secured communications. Any requests sent via HTTP return an HTTP 301 redirect to the corresponding HTTPS resources.\n    \n- The API returns request responses in JSON format. When an API request returns an error, it is sent in the JSON response as an error key.\n    \n\n### Authentication error response\n\nIf an API key is missing, malformed, or invalid, you will receive an HTTP 401 Unauthorized response code.\n\n## Rate and usage limits\n\n`Use this section to cover your APIs' terms of use. Include API limits, constraints, and relevant error codes, so consumers understand the permitted API usage and practices.`\n\n`The example given below is from The Postman API's documentation. Use it as a reference to write your APIs' terms of use.`\n\nAPI access rate limits apply at a per-API key basis in unit time. The limit is 300 requests per minute. Also, depending on your plan, you may have usage limits. If you exceed either limit, your request will return an HTTP 429 Too Many Requests status code.\n\nEach API response returns the following set of headers to help you identify your use status:\n\n| Header | Description |\n| --- | --- |\n| `X-RateLimit-Limit` | The maximum number of requests that the consumer is permitted to make per minute. |\n| `X-RateLimit-Remaining` | The number of requests remaining in the current rate limit window. |\n| `X-RateLimit-Reset` | The time at which the current rate limit window resets in UTC epoch seconds. |",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37067601"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Corporate",
+					"item": [
+						{
+							"name": "Add categories",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/addCategories",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"addCategories"
+									]
+								},
+								"description": "The **Add Categories API** allows you to create new categories such as **Breakfast**,**Lunch**, **Dinner**, and **Snacks** for food items. These categories help organize the menu for easier navigation and selection in the app."
+							},
+							"response": []
+						},
+						{
+							"name": "Retrieve a list of all groups",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Create a new group",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/createGroup",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"createGroup"
+									]
+								},
+								"description": "The **Create a New Group API** allows the creation of a new group based on the location of a specific customers. This API is useful for organizing customers into groups for targeted marketing, or delivery optimization based on their geographical locations."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a specific group by ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/deleteGroup",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"deleteGroup"
+									]
+								},
+								"description": "The **Delete a Specific Group by ID API** allows admin to remove an existing group from the system using its unique identifier. This operation is useful for managing and cleaning up groups that are no longer needed or have been incorrectly created."
+							},
+							"response": []
+						}
+					],
+					"description": "The **Corporate Orders** facilitates the management of corporate orders within the app. This API is designed for handling subscription-based corporate meal plans, where users can select a plan for a fixed duration or users can change ."
+				},
+				{
+					"name": "Events",
+					"item": [
+						{
+							"name": "Update a specific item by ID",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/updateItems/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"updateItems",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "The **Update Event Items API** allows you to modify existing food items in an event order.  \nThis API is useful for adjusting quantities, replacing items, or updating prices for a specific event order."
+							},
+							"response": []
+						},
+						{
+							"name": "Create a new item",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/addEventItems",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"addEventItems"
+									]
+								},
+								"description": "The **Add Event Items API** allows you to add specific food items for an event order"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a specific item by ID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/api/deleteItems/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"deleteItems",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								},
+								"description": "The **Delete Event Items API** allows users to remove specific food items from an event order. This API is useful for event organizers who need to modify their orders by removing unwanted or incorrectly added items before the event is finalized."
+							},
+							"response": []
+						}
+					],
+					"description": "The **Events Orders API** is designed to manage orders specifically for events such as parties, corporate gatherings, or other special occasions. This API allows users to place and manage orders tailored for events, ensuring that the meal and catering services are customized to fit the specific needs of the event."
+				},
+				{
+					"name": "Update a specific customer by ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/updateCustomer/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"updateCustomer",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"description": "The **Update a Specific Customer by ID API** allows for the modification of an existing customer’s details using their unique identifier.\n\nThis API is used to update customer information such as name, email, phone number, and address. It is useful for keeping customer records current and accurate."
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve a specific customer by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/customers/:id",
+							"host": [
+								"customers"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"description": "The **Retrieve a Specific Customer by ID API** allows admin to fetch detailed information about a specific customer using their unique identifier.\n\nThis API is essential for retrieving customer profiles, including personal and contact information, based on a provided customer ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Upload media for an order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/uploadMedia",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"uploadMedia"
+							]
+						},
+						"description": "The **Upload Media for an Order API** allows for the upload of media files, including images and videos, associated with a specific order.\n\nThis media can include content related to food items, food preparation, and the packing process."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a specific customer by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/deleteCustomer/:id ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"deleteCustomer",
+								":id "
+							],
+							"variable": [
+								{
+									"key": "id ",
+									"value": ""
+								}
+							]
+						},
+						"description": "The **Delete a Specific Customer by ID API** allows admin to remove a customer’s record from the system using their unique identifier.\n\nThis API is used to delete customer details permanently, which is useful for data management and cleaning up the customer database."
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve a list of all customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/getCustomerDetails",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"getCustomerDetails"
+							]
+						},
+						"description": "This API provides detailed information about each user, including their profile information and contact details."
+					},
+					"response": []
+				}
+			],
+			"description": "The `/me` endpoints let you manage information about the authenticated user."
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Retrieve a list of all event items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/getEventItems",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"getEventItems"
+							]
+						},
+						"description": "The **Get Event Items API** allows users to retrieve all the food items for a specific event. This API is useful for event organizers to review the list of items included in a particular event's order, helping in displaying the event's menu."
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve my orders list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/myorders/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"myorders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"description": "The **Get My Orders for a Particular User API** allows users to retrieve the order history for a specific user. This API provides details about the user’s past orders."
+					},
+					"response": []
+				},
+				{
+					"name": "place a new order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/placeOrder",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"placeOrder"
+							]
+						},
+						"description": "The **Place New Order API** allows users to place a new order for either a corporate or an event. This API facilitates the creation of orders by submitting order details such as quantities, and type of order."
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve a list of all categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/getCategories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"getCategories"
+							]
+						},
+						"description": "The **Fetch Categories API** retrieves a list of all available categories in the Cater Orange app. These categories include Breakfast, Lunch, Dinner, and Snacks. This API is useful for displaying categories in the user interface."
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve media related to a specific order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"description": "The **Retrieve Media for Food Preparation and Packing API** allows users to fetch media files such as images and videos that illustrate the food preparation and packing processes.\n\nThis API provides visual insights into how food is prepared, handled, and packed before delivery, offering transparency and assurance to users about the quality and hygiene standards."
+					},
+					"response": []
+				},
+				{
+					"name": "Update a specific order by ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/updateOrder/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"updateOrder",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"description": "The **Update a Specific Order by ID API** allows users to modify an existing order by increasing the quantity of the items. This functionality is useful when a user needs to adjust their order to include more items after the initial submission. The API ensures that the updated quantity is reflected in the order details after placed order successful."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a specific order by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/deleteOrder/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"deleteOrder",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add event items by user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/addEventItems",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"addEventItems"
+							]
+						},
+						"description": "The **Add Event Items API** enables users to add items to an event order menu. This feature is designed to facilitate for allowing users to specify the items they want to include.\n\nThis API ensures that users can customize their event orders according to their needs and preferences."
+					},
+					"response": []
+				},
+				{
+					"name": "Update event items",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/updateOrder/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"updateOrder",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"description": "The **Update Event Items API** allows users to modify the details of existing items in an event order. This includes updating item quantities.\n\nThis API ensures that users can make adjustments to their event orders as needed, providing flexibility and control over their event planning."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete the event items by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/deleteEventItem/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"deleteEventItem",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						},
+						"description": "The **Delete Event Items API** enables users to remove specific items from an event order.\n\nThis API is useful for managing event orders by allowing users to delete items that are no longer needed or were added in error."
+					},
+					"response": []
+				}
+			],
+			"description": "Users can place food orders with the option to select a specific delivery date using a date picker. This feature allows users to schedule their orders for a future date, ensuring that their order arrive at a convenient time.\n\nAdditionally, users can manage their orders by pausing delivery on specific dates when needed, offering greater flexibility and control over their order plans."
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "X-API-Key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://farming-simulator.pstmn.io"
+		}
+	]
+}

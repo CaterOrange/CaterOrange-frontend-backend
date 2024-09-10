@@ -1,0 +1,100 @@
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:10:29.391Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:11:03.834Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:11:15.092Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:12:47.614Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:14:57.094Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:15:04.860Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:19:48.927Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:20:09.814Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:21:05.237Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:22:28.604Z"}
+{"level":"error","message":"Error in creating Orders table","timestamp":"2024-09-10T14:24:12.383Z"}
+{"level":"error","message":"Error in creating OrderDetails table","timestamp":"2024-09-10T14:24:12.407Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:24:12.422Z"}
+{"level":"error","message":"Error in creating Payments table","timestamp":"2024-09-10T14:24:12.456Z"}
+{"level":"error","message":"Error in creating Orders table","timestamp":"2024-09-10T14:26:51.906Z"}
+{"level":"error","message":"Error in creating OrderDetails table","timestamp":"2024-09-10T14:26:51.956Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:26:51.994Z"}
+{"level":"error","message":"Error in creating category table","timestamp":"2024-09-10T14:45:30.919Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:45:30.926Z"}
+{"level":"error","message":"Error in creating Customer table","timestamp":"2024-09-10T14:45:30.928Z"}
+{"level":"error","message":"Error in creating Deliveries table","timestamp":"2024-09-10T14:45:30.930Z"}
+{"level":"error","message":"Error in creating ITEMS table","timestamp":"2024-09-10T14:45:30.932Z"}
+{"level":"error","message":"Error in creating Addresses table","timestamp":"2024-09-10T14:45:30.933Z"}
+{"level":"error","message":"Error in creating Logistics table","timestamp":"2024-09-10T14:45:30.934Z"}
+{"level":"error","message":"Error in creating Drivers table","timestamp":"2024-09-10T14:45:30.936Z"}
+{"level":"error","message":"Error in creating Vendors table","timestamp":"2024-09-10T14:45:30.937Z"}
+{"level":"error","message":"Error in creating Payments table","timestamp":"2024-09-10T14:45:30.938Z"}
+{"level":"error","message":"Error in creating Orders table","timestamp":"2024-09-10T14:45:30.940Z"}
+{"level":"error","message":"Error in creating OrderDetails table","timestamp":"2024-09-10T14:45:30.941Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:45:30.942Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:45:31.162Z"}
+{"level":"error","message":"Error in creating category table","timestamp":"2024-09-10T14:47:01.156Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:47:01.178Z"}
+{"level":"error","message":"Error in creating Customer table","timestamp":"2024-09-10T14:47:01.183Z"}
+{"level":"error","message":"Error in creating Deliveries table","timestamp":"2024-09-10T14:47:01.188Z"}
+{"level":"error","message":"Error in creating ITEMS table","timestamp":"2024-09-10T14:47:01.191Z"}
+{"level":"error","message":"Error in creating Addresses table","timestamp":"2024-09-10T14:47:01.193Z"}
+{"level":"error","message":"Error in creating Logistics table","timestamp":"2024-09-10T14:47:01.196Z"}
+{"level":"error","message":"Error in creating Drivers table","timestamp":"2024-09-10T14:47:01.199Z"}
+{"level":"error","message":"Error in creating Vendors table","timestamp":"2024-09-10T14:47:01.202Z"}
+{"level":"error","message":"Error in creating Payments table","timestamp":"2024-09-10T14:47:01.207Z"}
+{"level":"error","message":"Error in creating Orders table","timestamp":"2024-09-10T14:47:01.209Z"}
+{"level":"error","message":"Error in creating OrderDetails table","timestamp":"2024-09-10T14:47:01.213Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:47:01.216Z"}
+{"level":"error","message":"Error in creating category table","timestamp":"2024-09-10T14:47:46.104Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:47:46.124Z"}
+{"level":"error","message":"Error in creating Customer table","timestamp":"2024-09-10T14:47:46.128Z"}
+{"level":"error","message":"Error in creating Deliveries table","timestamp":"2024-09-10T14:47:46.134Z"}
+{"level":"error","message":"Error in creating ITEMS table","timestamp":"2024-09-10T14:47:46.137Z"}
+{"level":"error","message":"Error in creating Addresses table","timestamp":"2024-09-10T14:47:46.139Z"}
+{"level":"error","message":"Error in creating Logistics table","timestamp":"2024-09-10T14:47:46.142Z"}
+{"level":"error","message":"Error in creating Drivers table","timestamp":"2024-09-10T14:47:46.145Z"}
+{"level":"error","message":"Error in creating Vendors table","timestamp":"2024-09-10T14:47:46.148Z"}
+{"level":"error","message":"Error in creating Payments table","timestamp":"2024-09-10T14:47:46.152Z"}
+{"level":"error","message":"Error in creating Orders table","timestamp":"2024-09-10T14:47:46.155Z"}
+{"level":"error","message":"Error in creating OrderDetails table","timestamp":"2024-09-10T14:47:46.159Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:47:46.162Z"}
+{"level":"error","message":"Error in creating category table","timestamp":"2024-09-10T14:48:35.884Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:48:35.891Z"}
+{"level":"error","message":"Error in creating Customer table","timestamp":"2024-09-10T14:48:35.893Z"}
+{"level":"error","message":"Error in creating Deliveries table","timestamp":"2024-09-10T14:48:35.897Z"}
+{"level":"error","message":"Error in creating ITEMS table","timestamp":"2024-09-10T14:48:35.898Z"}
+{"level":"error","message":"Error in creating Addresses table","timestamp":"2024-09-10T14:48:35.899Z"}
+{"level":"error","message":"Error in creating Logistics table","timestamp":"2024-09-10T14:48:35.900Z"}
+{"level":"error","message":"Error in creating Drivers table","timestamp":"2024-09-10T14:48:35.902Z"}
+{"level":"error","message":"Error in creating Vendors table","timestamp":"2024-09-10T14:48:35.903Z"}
+{"level":"error","message":"Error in creating Payments table","timestamp":"2024-09-10T14:48:35.905Z"}
+{"level":"error","message":"Error in creating Orders table","timestamp":"2024-09-10T14:48:35.906Z"}
+{"level":"error","message":"Error in creating OrderDetails table","timestamp":"2024-09-10T14:48:35.907Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:48:35.908Z"}
+{"level":"error","message":"Error in creating category table","timestamp":"2024-09-10T14:49:01.001Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:49:01.018Z"}
+{"level":"error","message":"Error in creating Customer table","timestamp":"2024-09-10T14:49:01.021Z"}
+{"level":"error","message":"Error in creating Deliveries table","timestamp":"2024-09-10T14:49:01.024Z"}
+{"level":"error","message":"Error in creating ITEMS table","timestamp":"2024-09-10T14:49:01.025Z"}
+{"level":"error","message":"Error in creating Addresses table","timestamp":"2024-09-10T14:49:01.026Z"}
+{"level":"error","message":"Error in creating Logistics table","timestamp":"2024-09-10T14:49:01.028Z"}
+{"level":"error","message":"Error in creating Drivers table","timestamp":"2024-09-10T14:49:01.029Z"}
+{"level":"error","message":"Error in creating Vendors table","timestamp":"2024-09-10T14:49:01.030Z"}
+{"level":"error","message":"Error in creating Payments table","timestamp":"2024-09-10T14:49:01.033Z"}
+{"level":"error","message":"Error in creating Orders table","timestamp":"2024-09-10T14:49:01.035Z"}
+{"level":"error","message":"Error in creating OrderDetails table","timestamp":"2024-09-10T14:49:01.036Z"}
+{"level":"error","message":"Error in creating GROUPS table","timestamp":"2024-09-10T14:49:01.038Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:51:51.188Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:52:12.645Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:52:50.408Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:52:56.755Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:53:09.696Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:54:06.458Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:55:23.946Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:56:19.007Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:58:50.105Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:58:55.984Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:59:02.797Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T15:06:25.994Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T15:07:57.218Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T15:10:26.280Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T15:11:49.289Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T15:13:02.882Z"}
+{"level":"error","message":"Database connection error:","timestamp":"2024-09-10T15:14:06.177Z"}
