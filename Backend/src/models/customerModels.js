@@ -60,10 +60,13 @@ const updateCustomerPassword = async (customer_email, hashedPassword,token) => {
 };
 
 
+  
+
 module.exports = {
     createCustomer,
     findCustomerEmail,
     loginCustomer,
-    updateCustomerPassword
+    updateCustomerPassword,
+
     
 };

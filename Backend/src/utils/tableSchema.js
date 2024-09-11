@@ -200,6 +200,7 @@ function createCustomerTableQuery() {
         processing_date date,
         category_id INTEGER,
         items JSON,
+        order_id INTEGER,
         quantity INTEGER NOT NULL,
         FOREIGN KEY (order_id) REFERENCES orders(order_id),
         FOREIGN KEY (category_id) REFERENCES category(category_id)
