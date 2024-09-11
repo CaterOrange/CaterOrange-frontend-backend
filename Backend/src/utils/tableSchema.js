@@ -196,10 +196,9 @@ function createCustomerTableQuery() {
   function createOrderDetailsTableQuery() {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS order_details (
-        order_id INTEGER PRIMARY KEY,
+        processing_id SERIAL PRIMARY KEY,
+        processing_date date,
         category_id INTEGER,
-        from_date DATE NOT NULL,
-        no_of_days INTEGER NOT NULL,
         items JSON,
         quantity INTEGER NOT NULL,
         FOREIGN KEY (order_id) REFERENCES orders(order_id),
