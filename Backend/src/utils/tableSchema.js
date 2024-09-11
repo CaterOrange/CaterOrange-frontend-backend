@@ -12,7 +12,8 @@ function createCustomerTableQuery() {
         wallet_amount INTEGER,
         group_id INTEGER,
         access_token VARCHAR(255),
-        FOREIGN KEY (group_id) REFERENCES groups(group_id)
+        FOREIGN KEY (group_id) REFERENCES groups(group_id),
+        is_deactivated BOOLEAN DEFAULT FALSE
       );
     `;
     return createTableQuery;

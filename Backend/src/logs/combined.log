@@ -227,3 +227,7 @@
 {"level":"info","message":"Token verified successfully","timestamp":"2024-09-11 11:37:24","token":{"email":"sirisha@gmail.com","exp":1726121113,"iat":1726034713}}
 {"level":"info","message":"New token generated","timestamp":"2024-09-11 11:39:42","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNpcmlzaGFAZ21haWwuY29tIiwiaWF0IjoxNzI2MDM0OTgyLCJleHAiOjE3MjYxMjEzODJ9.HKScfBpdXTt5d8RWt2hiOlYOXck1reLoGBsLHGNQjRI"}
 {"customer_email":"sirisha@gmail.com","level":"info","message":"Customer password updated successfully","timestamp":"2024-09-11 11:39:42"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-11 15:46:35"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-11 15:46:35"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-11 15:46:35"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-11 15:46:35"}
