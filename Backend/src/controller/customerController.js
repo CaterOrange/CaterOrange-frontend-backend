@@ -11,7 +11,6 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const register = async (req, res) => {
     try {
         const { customer_name, customer_email , customer_password,  customer_phonenumber,confirm_password } = req.body;
-        
         const minNameLength = 3;
         const maxNameLength = 50;
         const minPasswordLength = 8;
@@ -26,7 +25,7 @@ const register = async (req, res) => {
         // Validate name format and length
         const nameRegex = /^[a-zA-Z\s]+$/;
         if (!nameRegex.test(customer_name) || customer_name.length < minNameLength || customer_name.length > maxNameLength) {
-            return res.status(400).json({ success: false, message: `Name must be between ${minNameLength}-${maxNameLength} characters and contain only alphabets` });
+            return res.status(400).json({ success: false, message: `Name must be between ${minNameLength}-${maxNameLength} characters and contain only alphabets `});
         }
 
         // Validate email format and length
@@ -42,10 +41,14 @@ const register = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Email already in use' });
         }
 
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,20}$/;
+
         // Validate password length and complexity
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (customer_password.length < minPasswordLength || customer_password.length > maxPasswordLength || !passwordRegex.test(customer_password)) {
-            return res.status(400).json({ success: false, message: 'Password must be between 8-20 characters, and include uppercase, lowercase, number, and special character' });
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be between 8-20 characters with one upper case,lower case and no special characters.'
+            });
         }
 
         // Check if passwords match
@@ -81,13 +84,10 @@ const register = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
 const login = [
-    body('customer_email')
-        .isEmail().withMessage('Please provide a valid email address.')
-        .normalizeEmail(),
-    body('customer_password')
-        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
-        .trim(),
+    // Validate and sanitize input fields
+    
 
     async (req, res) => {
         const errors = validationResult(req);
@@ -99,19 +99,32 @@ const login = [
             const { customer_email, customer_password } = req.body;
 
             // Fetch user data from the database
-            const customer = await customer_model.loginCustomer(customer_email);
+            const customer = await customer_model.findCustomerEmail(customer_email);
 
             if (!customer) {
                 logger.warn('Invalid login attempt', { customer_email });
-                return res.status(400).json({ message: 'Invalid email or password' });
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid email ,user not exists'
+                });
+              
             }
+            body('customer_email')
+            .isEmail().withMessage('Please provide a valid email address.')
+            .normalizeEmail(),
+            body('customer_password')
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
+            .trim()
 
             // Compare the password
             const isPasswordValid = await bcrypt.compare(customer_password, customer.customer_password);
 
             if (!isPasswordValid) {
                 logger.warn('Invalid login attempt', { customer_email });
-                return res.status(400).json({ message: 'Invalid email or password' });
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid password '
+                });
             }
 
             // Verify the existing token or generate a new one
@@ -122,9 +135,10 @@ const login = [
                 logger.info('Token verified successfully', { token });
             } catch (err) {
                 uat = jwt.sign({ email: customer_email }, SECRET_KEY, { expiresIn: '24h' });
+                await customer_model.updateAccessToken(customer_email, uat);
                 logger.info('New token generated', { token: uat });
             }
-
+            
             res.json({
                 success: true,
                 message: 'Login successful',
@@ -137,37 +151,38 @@ const login = [
     }
 ];
 
-
 const forgotPassword = [
-    body('customer_email')
-        .isEmail().withMessage('Please provide a valid email address.')
-        .normalizeEmail(),
-    body('customer_password')
-        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
-        .trim(),
-    body('confirm_password')
-        .custom((value, { req }) => {
-            if (value !== req.body.customer_password) {
-                throw new Error('Passwords do not match');
-            }
-            return true;
-        }),
+   
+   
 
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
+        
 
         try {
             const { customer_email, customer_password,confirm_password } = req.body;
-
             const existingUserByEmail = await customer_model.findCustomerEmail(customer_email);
+            if (customer_password !== confirm_password) {
+                return res.status(400).json({ success: false, message: 'Passwords do not match' });
+            }
+        
             if (!existingUserByEmail) {
                 logger.error('You are not registered yet, please register', { customer_email });
-                return res.status(400).json({ success: false, message: 'Invalid email , check email once or register' });
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid email ,user not exists'
+                });
             }
-
+            body('customer_email')
+            .isEmail().withMessage('Please provide a valid email address.')
+            .normalizeEmail(),
+            body('customer_password')
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
+            .trim()
+            
             // Hash the new password
             const hashedPassword = await bcrypt.hash(customer_password, 12);
             let token;
@@ -190,7 +205,8 @@ const forgotPassword = [
 
             res.json({
                 success: true,
-                message: 'Login successfully with new Password'
+                message: 'Login successfully with new Password',
+                token: uat
 
             });
         } catch (err) {
@@ -200,9 +216,68 @@ const forgotPassword = [
     }
 ];
 
+const google_auth=async (req, res)=>{
+    try{
+        const { customer_name,customer_email, access_token } = req.body;
+
+        const existingUserByEmail = await customer_model.findCustomerEmail(customer_email);
+
+        if(existingUserByEmail){
+            try{
+            const customer = await customer_model.updateAccessToken(customer_email, access_token);
+            if (!customer) {
+                logger.warn('Error updating token', { customer_email });
+                return res.status(400).json({ message: 'Error updating token' });
+            }
+
+            res.json({
+                success: true,
+                message: 'Login successfully with google',
+                token: access_token
+
+            });
+        }catch (err) {
+            logger.error('Error during google login', { error: err.message });
+            res.status(500).json({ error: err.message });
+        }
+        }
+        else{
+            try{
+               const customer_phonenumber=0;
+               const customer_password="";
+               console.log('access in google reg',access_token)
+
+                const newCustomer = await customer_model.createCustomer(
+                    customer_name,
+                    customer_email ,
+                    customer_password,
+                    customer_phonenumber,
+                    access_token
+                );
+                logger.info('Customer registered through google successfully', { customer_email  });
+
+            return res.json({
+            success: true,
+            message: 'Customer registered through google successfully',
+            customer: newCustomer
+        });
+            }
+            catch (err) {
+                logger.error('Error during customer registration with google', { error: err.message });
+                return res.status(500).json({ error: err.message });
+            }
+        }
+    }
+    catch (err) {
+        logger.error('Error during google oauth', { error: err.message });
+        res.status(500).json({ error: err.message });
+    }  
+        
+}
 
 module.exports = {
     register,
-    login,
-    forgotPassword
+    login,
+    forgotPassword,
+    google_auth
 };

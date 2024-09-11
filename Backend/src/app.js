@@ -1,5 +1,6 @@
 const express = require('express');
 const client = require('./config/dbConfig');
+const cors=require('cors')
 const logger = require('./config/logger');
 const { createTables } = require('./controller/tableController');
 const { createDatabase } = require('./config/config');
@@ -8,6 +9,7 @@ const allRoutes = require('./routes/customerRoutes.js');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 
 const initializeApp = async () => {
