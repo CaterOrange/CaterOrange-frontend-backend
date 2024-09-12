@@ -45,6 +45,8 @@ const loginCustomer = async (customer_email) => {
     }
 };
 
+
+
 const updateCustomerPassword = async (customer_email, hashedPassword,token) => {
     try {
         const result = await client.query(
@@ -59,6 +61,19 @@ const updateCustomerPassword = async (customer_email, hashedPassword,token) => {
     }
 };
 
+const getAllCustomers = async () => {
+    return client.query(DB_COMMANDS.GET_ALL_CUSTOMERS);
+  }
+  
+  const getCustomerById = async (userId) => {
+    return client.query(DB_COMMANDS.GET_CUSTOMER_BY_ID, [userId]);
+  }
+  const deleteCustomerById = async (userId) => {
+    return client.query(DB_COMMANDS.DELETE_CUSTOMER, [userId]);
+  }
+
+
+
 
   
 
@@ -67,6 +82,10 @@ module.exports = {
     findCustomerEmail,
     loginCustomer,
     updateCustomerPassword,
+    getAllCustomers,
+    getCustomerById,
+    deleteCustomerById
+
 
     
 };
