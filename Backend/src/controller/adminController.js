@@ -1,7 +1,7 @@
 const categoryModel = require('../models/categoryModels');
 const groupModel = require('../models/groupModels');
 const logger = require('../config/logger');
-const customerModel = require('../models/customerModels')
+const customerModel = require('../models/customerModels');
 
 const addCategory = async (req, res) => {
   try {
@@ -51,6 +51,65 @@ const getAllGroups = async (req, res) => {
     }
   };
 
+ const getCustomers = async(req, res)=>{
+    try {
+      const result = await getAllCustomers();
+      res.status(200).send(result.rows);
+    } catch (err) {
+      logger.error('Error:', err);
+      res.status(500).send('Retrieve error');
+    }
+  };
+
+  const getCustomerById = async(req, res)=> {
+    const id = req.params.id;
+    try {
+      const result = await getCustomerById(id);
+      res.status(200).send(result.rows);
+    } catch (err) {
+      logger.error('Error:', err);
+      res.status(500).send('Retrieve error');
+    }
+  };
+
+  const deleteCustomer = async (req, res)=> {
+    const id = req.params.id;
+    try {
+     const result = await deleteCustomerById(id);
+      res.status(200).send("Deleted");
+    } catch (err) {
+      logger.error('Error:', err);
+      res.status(500).send('Error deleting user by id');
+    }
+  };
+
+  const addItem = async (req, res) =>{
+      try {
+        const result=await additems(req.body);
+        res.status(200).send("Items added successfully");
+      } catch (err) {
+        res.status(500).send("Error in adding Items");
+      }
+    };
+    const deleteItem = async(req, res)=> {
+      try {
+        const id = parseInt(req.params.id);
+        const result=await deleteitems(id);
+        res.status(200).send("Items deleted successfully");
+      } catch (err) {
+        res.status(500).send("Error in deleting Item");
+      }
+    };
+    const updateItem = async(req, res)=> {
+      try {
+        const id =parseInt(req.params.id);
+        const result=await updateitems(id,req.body);
+        res.status(200).send("Item updated successfully");
+      } catch (err) {
+        res.status(500).send("Error in updating Item");
+      }
+    }
 
 
-module.exports = { addCategory, createGroup, deleteGroup,getAllGroups };
+
+module.exports = { addCategory, createGroup, deleteGroup,getAllGroups,getCustomers, deleteCustomer,addItem,deleteItem, updateItem };
