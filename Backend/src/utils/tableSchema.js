@@ -208,7 +208,10 @@ function createDeliveriesTableQuery() {
     CREATE TABLE IF NOT EXISTS deliveries (
       delivery_id SERIAL PRIMARY KEY,
       delivery_details JSON,
-      delivery_address JSON
+      delivery_address JSON,
+      driver_id INTEGER,
+      FOREIGN KEY (driver_id) REFERENCES drivers(driver_id)
+
     );
   `;
 }
