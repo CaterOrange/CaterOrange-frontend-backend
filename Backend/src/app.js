@@ -6,13 +6,13 @@ const { createTables } = require('./controller/tableController');
 const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const allRoutes = require('./routes/customerRoutes.js');
-// const adminRoutes = require('./routes/adminRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
-// app.use(express.json());
-// app.use(cors());
+app.use(express.json());
+app.use(cors());
 
-// app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 
 const initializeApp = async () => {
   try {
@@ -37,5 +37,5 @@ const initializeApp = async () => {
 };
 
 initializeApp();
-// app.use('/', allRoutes);
+app.use('/', allRoutes);
   

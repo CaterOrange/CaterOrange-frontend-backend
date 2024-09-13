@@ -287,8 +287,7 @@ function createEventMasterTableQuery() {
     CREATE TABLE IF NOT EXISTS event_master (
       category_id SERIAL PRIMARY KEY,
       category_name VARCHAR(255) NOT NULL,
-      category_media BYTEA,
-      table_id INTEGER
+      category_media BYTEA
     );
   `;
 }
@@ -300,7 +299,9 @@ function createQuantityTableQuery() {
       quantity_name VARCHAR(255),
       quantity_rate INTEGER,
       quantity_media BYTEA,
-      no_of_quantity INTEGER
+      no_of_quantity INTEGER,
+      category_id INTEGER,
+      FOREIGN KEY (category_id) REFERENCES event_master(category_id)
     );
   `;
 }
@@ -312,7 +313,10 @@ function createKgTableQuery() {
       kg_name VARCHAR(255),
       kg_rate INTEGER,
       kg_media BYTEA,
-      no_of_kgs INTEGER
+      no_of_kgs INTEGER,
+      category_id INTEGER,
+      FOREIGN KEY (category_id) REFERENCES event_master(category_id)
+
     );
   `;
 }
@@ -324,7 +328,10 @@ function createLitreTableQuery() {
       litre_name VARCHAR(255),
       litre_rate INTEGER,
       litre_media BYTEA,
-      no_of_litres INTEGER
+      no_of_litres INTEGER,
+      category_id INTEGER,
+      FOREIGN KEY (category_id) REFERENCES event_master(category_id)
+
     );
   `;
 }
@@ -339,7 +346,10 @@ function createKgQuantityTableQuery() {
       kg_quantity_unit2 INTEGER,
       kg_quantity_rate2 INTEGER,
       grams_unit FLOAT,
-      kgpiece_unit INTEGER
+      kgpiece_unit INTEGER,
+      category_id INTEGER,
+      FOREIGN KEY (category_id) REFERENCES event_master(category_id)
+
     );
   `;
 }
@@ -354,7 +364,10 @@ function createLitreQuantityTableQuery() {
       litre_quantity_unit2 INTEGER,
       litre_quantity_rate2 INTEGER,
       mls_unit FLOAT,
-      lqpiece_unit INTEGER
+      lqpiece_unit INTEGER,
+      category_id INTEGER,
+      FOREIGN KEY (category_id) REFERENCES event_master(category_id)
+
     );
   `;
 }
