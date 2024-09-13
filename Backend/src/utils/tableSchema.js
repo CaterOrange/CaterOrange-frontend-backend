@@ -70,7 +70,7 @@ function createDriversTableQuery() {
 
 function createCorporatePaymentTableQuery() {
   return `
-    CREATE TABLE IF NOT EXISTS payment (
+    CREATE TABLE IF NOT EXISTS corporate_payment (
       PaymentId SERIAL PRIMARY KEY,
       PaymentType VARCHAR(50),
       MerchantReferenceId VARCHAR(255),
@@ -95,7 +95,7 @@ function createCorporatePaymentTableQuery() {
 }
 function createEventPaymentTableQuery() {
   return `
-    CREATE TABLE IF NOT EXISTS payment (
+    CREATE TABLE IF NOT EXISTS event_payment (
       PaymentId SERIAL PRIMARY KEY,
       PaymentType VARCHAR(50),
       MerchantReferenceId VARCHAR(255),
@@ -131,7 +131,6 @@ function createCorporateOrdersTableQuery() {
       delivery_id INTEGER,
       corporatecart_id INTEGER,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-      FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId),
       FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id),
       FOREIGN KEY (delivery_id) REFERENCES deliveries(delivery_id),
       FOREIGN KEY (corporatecart_id) REFERENCES corporate_cart(corporatecart_id)
@@ -165,7 +164,6 @@ function createEventOrdersTableQuery() {
       delivery_id INTEGER,
       eventcart_id INTEGER,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-      FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId),
       FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id),
       FOREIGN KEY (delivery_id) REFERENCES deliveries(delivery_id),
       FOREIGN KEY (eventcart_id) REFERENCES event_cart(eventcart_id)
