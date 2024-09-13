@@ -129,7 +129,7 @@ function createCorporateOrdersTableQuery() {
       PaymentId INTEGER,
       vendor_id INTEGER,
       delivery_id INTEGER,
-      corporatecart_id INTEGER,
+      corporatecart_id JSON[],
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
       FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id),
       FOREIGN KEY (delivery_id) REFERENCES deliveries(delivery_id),
@@ -212,7 +212,7 @@ function createDeliveriesTableQuery() {
       driver_id INTEGER,
       FOREIGN KEY (driver_id) REFERENCES drivers(driver_id)
 
-    );
+    ); 
   `;
 }
 
