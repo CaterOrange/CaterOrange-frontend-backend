@@ -1,6 +1,6 @@
 const express = require('express');
 const client = require('./config/dbConfig');
-const cors=require('cors')
+const cors=require('cors')     
 const logger = require('./config/logger');
 const { createTables } = require('./controller/tableController');
 const { createDatabase } = require('./config/config');
