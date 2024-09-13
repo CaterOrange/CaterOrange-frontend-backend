@@ -615,3 +615,40 @@
 {"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 11:55:46"}
 {"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 11:55:46"}
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 11:55:46"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 11:56:17"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 11:56:17"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 11:56:19"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 11:56:19"}
+{"customer_email":"chandana@scaleorange.com","level":"info","message":"User data added successfully","timestamp":"2024-09-13 12:01:07"}
+{"customer_email":"chandana@scaleorange.com","level":"info","message":"Customer registered successfully","timestamp":"2024-09-13 12:01:07"}
+{"customer_email":"chandana@scaleorange.com","level":"error","message":"Email already in use","timestamp":"2024-09-13 12:01:10"}
+{"customer_email":"chandanasrisaikrishna@gmail.com","level":"info","message":"User data added successfully","timestamp":"2024-09-13 12:01:28"}
+{"customer_email":"chandanasrisaikrishna@gmail.com","level":"info","message":"Customer registered successfully","timestamp":"2024-09-13 12:01:28"}
+{"customer_email":"chandanasrisaikrishna@gmail.com","level":"error","message":"Email already in use","timestamp":"2024-09-13 12:01:32"}
+{"customer_email":"chandanasrisaikrishna@gmail.com","level":"error","message":"Email already in use","timestamp":"2024-09-13 12:01:44"}
+{"customer_email":"madabattulachandanasaisri@gmail.com","level":"info","message":"User data added successfully","timestamp":"2024-09-13 12:13:44"}
+{"customer_email":"madabattulachandanasaisri@gmail.com","level":"info","message":"Customer registered successfully","timestamp":"2024-09-13 12:13:44"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 12:36:58"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 12:36:58"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 12:36:58"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 12:36:58"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 12:38:31"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 12:38:31"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 12:38:31"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 12:38:31"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 12:39:00"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 12:39:00"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 12:39:00"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 12:39:00"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 12:40:04"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 12:40:04"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 12:40:04"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 12:40:04"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 12:40:07"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 12:40:07"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 12:40:07"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 12:40:07"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 12:40:33"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 12:40:33"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 12:40:34"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 12:40:34"}

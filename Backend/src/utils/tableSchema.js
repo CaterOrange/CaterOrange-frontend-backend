@@ -158,7 +158,7 @@ function createEventOrdersTableQuery() {
       customer_id INTEGER,
       order_date DATE NOT NULL,
       status VARCHAR(50),
-      total_amount INTEGER NOT NULL,
+      total_amount INTEGER NOT NULL,   
       PaymentId INTEGER,
       vendor_id INTEGER,
       delivery_id INTEGER,
@@ -177,8 +177,7 @@ function createEventOrderDetailsTableQuery() {
       details_id SERIAL PRIMARY KEY,
       processing_date DATE,
       status VARCHAR(50),
-      category_id INTEGER,
-      FOREIGN KEY (category_id) REFERENCES category(category_id)
+      itemInBag JSONB
     );
   `;
 }
@@ -188,6 +187,8 @@ function createCategoryTableQuery() {
     CREATE TABLE IF NOT EXISTS category (
       category_id SERIAL PRIMARY KEY,
       category_name VARCHAR(255) NOT NULL,
+      category_description text,
+      category_price integer NOT NULL,
       category_media BYTEA
     );
   `;
