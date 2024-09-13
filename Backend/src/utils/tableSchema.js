@@ -146,6 +146,7 @@ function createCorporateOrderDetailsTableQuery() {
       processing_date DATE UNIQUE,
       status VARCHAR(50),
       category_id INTEGER,
+      quantity INTEGER,
       FOREIGN KEY (category_id) REFERENCES category(category_id)
     );
   `;

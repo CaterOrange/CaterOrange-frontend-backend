@@ -523,3 +523,11 @@
 {"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 10:44:12"}
 {"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 10:44:12"}
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 10:44:12"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 10:49:59"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 10:49:59"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 10:49:59"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 10:49:59"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13 10:50:32"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13 10:50:32"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13 10:50:32"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13 10:50:32"}
