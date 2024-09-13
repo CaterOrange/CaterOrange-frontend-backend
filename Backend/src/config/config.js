@@ -24,12 +24,12 @@ const createDatabase = async () => {
     `;
    
     const result = await Client1.query(checkDatabaseExistsQuery, [databaseName]);
-   
+
     if (result.rowCount === 0) {
       console.log('Database does not exist. Creating database...');
 
       // Create the database
-      const createDatabaseQuery = `CREATE DATABASE ${databaseName};`;
+      const createDatabaseQuery =` CREATE DATABASE ${databaseName}`;
       await Client1.query(createDatabaseQuery);
 
       console.log('Database created successfully');
@@ -37,7 +37,8 @@ const createDatabase = async () => {
       console.log('Database already exists');
     }
   } catch (err) {
-    logger.error('Error creating database:', err.message);
+    console.error('Error creating database:', err.message);
+    logger.error('Error creating database:', err.stack);
   } finally {
     await Client1.end();
   }

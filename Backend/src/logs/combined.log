@@ -692,3 +692,22 @@ undefined
 {"level":"info","message":"Database created or already exists","timestamp":"2024-09-13T08:02:42.819Z"}
 {"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13T08:02:42.835Z"}
 {"level":"info","message":"Tables created successfully","timestamp":"2024-09-13T08:02:42.899Z"}
+{"level":"error","message":"Error creating database:","timestamp":"2024-09-13T08:09:30.788Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13T08:09:30.801Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-13T08:09:30.890Z"}
+{"level":"error","message":"Error creating database:","timestamp":"2024-09-13T08:13:22.411Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13T08:13:22.422Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-13T08:13:22.529Z"}
+{"level":"error","message":"Error creating database:","timestamp":"2024-09-13T08:14:51.679Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13T08:14:51.696Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-13T08:14:51.773Z"}
+{"level":"error","message":"Error creating database:","timestamp":"2024-09-13T08:16:14.027Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13T08:16:14.044Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-13T08:16:14.116Z"}
+{"level":"error","message":"Error creating database:","timestamp":"2024-09-13T08:17:17.755Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13T08:17:17.771Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-13T08:17:17.855Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-13T08:18:30.654Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13T08:18:30.759Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-13T08:18:30.795Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13T08:18:30.804Z"}
