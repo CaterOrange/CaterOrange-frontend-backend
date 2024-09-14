@@ -5,8 +5,8 @@ import { jwtDecode } from 'jwt-decode';
 import React, { useContext, useState } from 'react';
 import SignInForm from './SignInForm';
 import { SignUpContext } from '../../services/contexts/SignUpContext';
-import { SignUp_customer } from '../../services/context_state_management/actions/action';
-
+import { SignUp_customer ,Login_google_auth} from '../../services/context_state_management/actions/action';
+// import { Login_google_auth, SignUp_customer } from '../services/context_state_management/actions/action.js';
 
 const SignUpForm = ({ closeModal }) => {
   const { state, dispatch } = useContext(SignUpContext);
@@ -20,6 +20,7 @@ const SignUpForm = ({ closeModal }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+  // const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,29 +30,31 @@ const SignUpForm = ({ closeModal }) => {
     }
     console.log(name, phone, email, password, confirmPassword);
     await SignUp_customer(name, phone, email, password, confirmPassword, dispatch);
-   
+    // navigate('/dashboard'); // Navigate to dashboard after successful registration
   };
+
   const handleSignIn = (token) => {
     if (token) {
-        localStorage.setItem('accessToken', token);
-       
+      localStorage.setItem('accessToken', token);
     }
-};
-const handleGoogleLoginSuccess = async (credentialResponse) => {
-  const tokenId = credentialResponse.credential;
-  const decodedToken = jwtDecode(tokenId);
-  const { name, email } = decodedToken;
+  };
 
-  setEmail(email);
-  setUserProfile(decodedToken);
-  localStorage.setItem('accessToken', tokenId);
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    const tokenId = credentialResponse.credential;
+    const decodedToken = jwtDecode(tokenId);
+    const { name, email } = decodedToken;
 
-  await Login_google_auth(name, email, tokenId, dispatch);
-};
+    setEmail(email);
+    setUserProfile(decodedToken);
+    localStorage.setItem('accessToken', tokenId);
 
-const handleGoogleLoginError = () => {
-  console.log('Google Login Failed');
-};
+    await Login_google_auth(name, email, tokenId, dispatch);
+  
+  };
+
+  const handleGoogleLoginError = () => {
+    console.log('Google Login Failed');
+  };
 
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen bg-gray-100 relative">
@@ -59,7 +62,7 @@ const handleGoogleLoginError = () => {
         <SignInForm closeModal={() => setShowSignInModal(false)} onSignIn={handleSignIn}/>
       ) : (
       <div className="w-full max-w-xl bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold mb-6 text-orange-600 text-center">Create an account</h2>
+        <h2 className="text-2xl font-bold mb-6 text-black-600 text-center">Create an account</h2>
         
         <form onSubmit={handleSubmit}>
         <div className="flex space-x-4">
@@ -74,7 +77,7 @@ const handleGoogleLoginError = () => {
               required
             />
           
-     
+   
             <input
               type="text"
               id="phone"
@@ -106,15 +109,15 @@ const handleGoogleLoginError = () => {
               required
               placeholder="Password"
             />
-               <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3"
-                  >
-                    <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
-                  </button>
-      </div>
-      <div className='relative w-full'>
+             <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />
+                </button>
+  </div>
+  <div className='relative w-full'>
             <input
               type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
@@ -125,30 +128,17 @@ const handleGoogleLoginError = () => {
               placeholder="Confirm Password"
             />
             <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3"
-                  >
-                    <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
-                  </button>
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                >
+                  <FontAwesomeIcon icon={showConfirmPassword ? faEye : faEyeSlash} />
+                </button>
             </div>
           </div>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="remember-me"
-                className="h-4 w-4 text-orange-700 focus:ring-orange-600 border-gray-300 rounded mt-4"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 mt-4">
-                Remember me
-              </label>
-            </div>
-          </div>
+          
           <button 
-            className="bg-orange-600 text-white font-bold py-2 px-4 rounded w-full hover:bg-orange-700"
+            className="bg-blue-600 text-white font-bold py-2 px-4 rounded w-full hover:bg-blue-700"
             type="submit"
             disabled={state.isLoading}
           >
@@ -174,7 +164,7 @@ const handleGoogleLoginError = () => {
             Do you have an account?{' '}
             <button
               type="button"
-              className="text-orange-600 ml-1"
+              className="text-blue-600 ml-1"
               onClick={() => setShowSignInModal(true)}
             >
               Login

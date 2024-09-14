@@ -53,7 +53,7 @@ const getAllGroups = async (req, res) => {
 
  const getCustomers = async(req, res)=>{
     try {
-      const result = await getAllCustomers();
+      const result = await customerModel.getAllCustomers();
       res.status(200).send(result.rows);
     } catch (err) {
       logger.error('Error:', err);

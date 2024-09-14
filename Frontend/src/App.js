@@ -1,4 +1,4 @@
-import SignInForm from "./components/customer/SignInForm";
+import SignInForm from "./components/customer/SignInForm.js";
 import { SignInProvider } from './services/contexts/SignInContext.js';
 import { SignUpProvider } from './services/contexts/SignUpContext.js';
 import React, { useEffect, useState } from 'react';
@@ -13,7 +13,6 @@ function App() {
       setUser({ token });
     }
   };
-
   return (
     <SignInProvider>
       <SignUpProvider>
@@ -23,6 +22,7 @@ function App() {
               path="/"
               element={
                 user ? <Navigate to="/dashboard" /> : <SignInForm onSignIn={handleSignIn} />
+                
               }
             />
             {/* Add additional routes here as needed */}

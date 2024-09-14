@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/admin', adminRoutes);
+app.use('/', adminRoutes);
 
 const initializeApp = async () => {
   try {
