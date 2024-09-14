@@ -16,9 +16,13 @@ const getAllCustomers = async () => {
     return client.query(query, [...values, id]);
   }
 
+
+  
+
 module.exports = {
     getAllCustomers,
     getCustomerById,
     deleteCustomerById,
     updateUser
+    
 }

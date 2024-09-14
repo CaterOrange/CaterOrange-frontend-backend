@@ -1,5 +1,4 @@
 const logger = require('../config/logger');
-const customerModel = require('../models/customerModels');
 const adminModel = require('../models/adminModels')
  const getCustomers = async(req, res)=>{
     try {
@@ -64,5 +63,4 @@ const adminModel = require('../models/adminModels')
         res.status(500).send('Internal server error');
       }
     }
-
 module.exports = {updateUser,getCustomers, deleteCustomer,getCustomerById};

@@ -274,10 +274,57 @@ const google_auth=async (req, res)=>{
     }  
         
 }
+const createEventOrderController= async(req, res) => {
+    const { customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = req.body;
+  
+    try {
+        const order = await customer_model.createEventOrder(customer_id, { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id });
+        res.status(201).json({ message: 'Event order created successfully', order });
+    } catch (error) {
+        console.error('Error creating event order:', error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+const getEventOrderByIdController = async(req, res) => {
+    const {id } = req.params;
+  
+    try {
+        const order = await customer_model.getEventOrderById(id);
+  
+        if (!order) {
+            return res.status(404).json({ message: 'Event order not found' });
+        }
+  
+        res.status(200).json({ order });
+    } catch (error) {
+        console.error('Error retrieving event order:', error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+const getAllEventOrdersByCustomerIdController = async(req, res)=> {
+    const { customer_id } = req.body; 
+  
+    try {
+        const orders = await customer_model.getAllEventOrdersByCustomerId(customer_id);
+        res.status(200).json({ orders });
+    } catch (error) {
+        console.error('Error retrieving event orders:', error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 module.exports = {
     register,
     login,
     forgotPassword,
-    google_auth
+    google_auth,
+    createEventOrderController,
+    getAllEventOrdersByCustomerIdController,
+    getEventOrderByIdController
 };
+
+
+
+

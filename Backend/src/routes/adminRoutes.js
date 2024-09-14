@@ -8,4 +8,6 @@ router.get('/api/customers',adminController.getCustomers)
 router.delete('/api/deleteCustomer/:id',adminController.deleteCustomer)
 router.put('/api/updatecustomer/:id',adminController.updateUser)
 
+
+
 module.exports = router;

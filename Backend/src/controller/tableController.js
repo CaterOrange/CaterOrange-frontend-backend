@@ -2,7 +2,6 @@ const client = require('../config/dbConfig');
 const logger = require('../config/logger');
 const { createCustomerTableQuery,
     createVendorsTableQuery,
-    createLogisticCompaniesTableQuery,
     createDriversTableQuery,
     createCorporatePaymentTableQuery,
     createEventPaymentTableQuery,
@@ -12,18 +11,13 @@ const { createCustomerTableQuery,
     createEventOrderDetailsTableQuery,
     createCategoryTableQuery,
     createGroupsTableQuery,
-    createDeliveriesTableQuery,
     createCorporateOrderMediaTableQuery,
     createEventOrderMediaTableQuery,
     createAddressesTableQuery,
     createEventCartTableQuery,
     createCorporateCartTableQuery,
-    createEventMasterTableQuery,
-    createQuantityTableQuery,
-    createKgTableQuery,
-    createLitreTableQuery,
-    createKgQuantityTableQuery,
-    createLitreQuantityTableQuery} = require('../utils/tableSchema');
+    createAllProductsTableQuery,
+    createEventAddressTableQuery} = require('../utils/tableSchema');
     const createTables = async() => 
     {
       try {
@@ -45,14 +39,6 @@ const { createCustomerTableQuery,
       } catch (error) {
         console.error('Error creating Vendors table:', error);
       }
-  
-      try {
-        await client.query(createLogisticCompaniesTableQuery());
-        console.log('Logistic Companies table created successfully');
-      } catch (error) {
-        console.error('Error creating Logistic Companies table:', error);
-      }
-  
       try {
         await client.query(createDriversTableQuery());
         console.log('Drivers table created successfully');
@@ -67,6 +53,20 @@ const { createCustomerTableQuery,
       } catch (error) {
         console.error('Error creating Category table:', error);
       }
+      try{
+        await client.query(createAllProductsTableQuery());
+        console.log("All products table create successfully");
+      }
+      catch(error){
+        console.error('Error creating All products table',error);
+      }
+      try{
+        await client.query(createEventAddressTableQuery());
+        console.log("Event address table create successfully");
+      }
+      catch(error){
+        console.error('Error creating Event address table',error);
+      }
       try {
         await client.query(createEventCartTableQuery());
         console.log('Event Cart table created successfully');
@@ -79,12 +79,6 @@ const { createCustomerTableQuery,
         console.log('Corporate Cart table created successfully');
       } catch (error) {
         console.error('Error creating Corporate Cart table:', error);
-      }
-      try {
-        await client.query(createDeliveriesTableQuery());
-        console.log('Deliveries table created successfully');
-      } catch (error) {
-        console.error('Error creating Deliveries table:', error);
       }
       try {
         await client.query(createCorporateOrdersTableQuery());
@@ -145,52 +139,7 @@ const { createCustomerTableQuery,
             console.error('Error creating Addresses table:', error);
           }
       
-          
-      
-          try {
-            await client.query(createEventMasterTableQuery());
-            console.log('Event Master table created successfully');
-          } catch (error) {
-            console.error('Error creating Event Master table:', error);
-          }
-      
-          try {
-            await client.query(createQuantityTableQuery());
-            console.log('Quantity table created successfully');
-          } catch (error) {
-            console.error('Error creating Quantity table:', error);
-          }
-      
-          try {
-            await client.query(createKgTableQuery());
-            console.log('Kg table created successfully');
-          } catch (error) {
-            console.error('Error creating Kg table:', error);
-          }
-      
-          try {
-            await client.query(createLitreTableQuery());
-            console.log('Litre table created successfully');
-          } catch (error) {
-            console.error('Error creating Litre table:', error);
-          }
-      
-          try {
-            await client.query(createKgQuantityTableQuery());
-            console.log('Kg Quantity table created successfully');
-          } catch (error) {
-            console.error('Error creating Kg Quantity table:', error);
-          }
-      
-          try {
-            await client.query(createLitreQuantityTableQuery());
-            console.log('Litre Quantity table created successfully');
-          } catch (error) {
-            console.error('Error creating Litre Quantity table:', error);
-          }
-       
-    }
- 
+        }
     module.exports =
     {
         createTables

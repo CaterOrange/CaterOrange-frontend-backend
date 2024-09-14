@@ -60,6 +60,35 @@ const updateCustomerPassword = async (customer_email, hashedPassword,token) => {
         throw err;
     }
 };
+const createEventOrder = async (customer_id, orderData) => {
+    const { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = orderData;
+    const values = [customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id];
+  
+    try {
+        const result = await client.query(DB_COMMANDS.createEventOrder, values);
+        return result.rows[0];
+    } catch (error) {
+        throw new Error('Error creating event order: ' + error.message);
+    }
+}
+
+  const getEventOrderById = async (eventorder_id)=> {
+    try {
+        const result = await client.query(DB_COMMANDS.getEventOrderById, [eventorder_id]);
+        return result.rows[0];
+    } catch (error) {
+        throw new Error('Error retrieving event order: ' + error.message);
+    }
+}
+
+ const  getAllEventOrdersByCustomerId = async(customer_id)=> {
+    try {
+        const result = await client.query(DB_COMMANDS.getAllEventOrdersByCustomerId, [customer_id]);
+        return result.rows;
+    } catch (error) {
+        throw new Error('Error retrieving event orders: ' + error.message);
+    }
+}
 
  
 
@@ -68,6 +97,9 @@ module.exports = {
     findCustomerEmail,
     loginCustomer,
     updateCustomerPassword,
+    createEventOrder,
+    getEventOrderById,
+    getAllEventOrdersByCustomerId
    
 
 

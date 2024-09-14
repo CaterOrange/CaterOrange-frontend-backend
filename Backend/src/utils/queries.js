@@ -15,6 +15,13 @@ const DB_COMMANDS = {
     GET_CUSTOMER_BY_ID:`SELECT * FROM customer WHERE customer_id=$1`,
     DELETE_CUSTOMER:`DELETE FROM customer WHERE customer_id=$1`,
     UPDATE_USER: 'UPDATE customer SET',
+    createEventOrder : `
+        INSERT INTO event_orders (customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    getEventOrderById : `
+       SELECT * FROM event_orders WHERE eventorder_id = $1  `,
+    getAllEventOrdersByCustomerId : `
+        SELECT * FROM event_orders WHERE customer_id = $1`,
     
     
 };
