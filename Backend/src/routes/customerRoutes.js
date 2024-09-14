@@ -8,7 +8,6 @@ const customerController = require('../controller/customerController.js');
 router.post('/customer/login', customerController.login);
 router.post('/customer/register', customerController.register);
 router.post('/customer/forgotPassword', customerController.forgotPassword);
-
 //event order routes
 router.post('/event_order', customerController.createEventOrderController);
 router.get('/getevent_order/:id', customerController.getEventOrderByIdController);

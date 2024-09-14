@@ -90,8 +90,6 @@ const createEventOrder = async (customer_id, orderData) => {
     }
 }
 
- 
-
 module.exports = {
     createCustomer,
     findCustomerEmail,
@@ -100,6 +98,7 @@ module.exports = {
     createEventOrder,
     getEventOrderById,
     getAllEventOrdersByCustomerId
+
    
 
 

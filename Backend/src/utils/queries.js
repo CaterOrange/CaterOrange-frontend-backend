@@ -22,8 +22,7 @@ const DB_COMMANDS = {
        SELECT * FROM event_orders WHERE eventorder_id = $1  `,
     getAllEventOrdersByCustomerId : `
         SELECT * FROM event_orders WHERE customer_id = $1`,
-    
-    
-};
+        };
+        
 
 module.exports = { DB_COMMANDS };

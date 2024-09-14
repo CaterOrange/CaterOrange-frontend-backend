@@ -315,6 +315,7 @@ const getAllEventOrdersByCustomerIdController = async(req, res)=> {
     }
 }
 
+
 module.exports = {
     register,
     login,
