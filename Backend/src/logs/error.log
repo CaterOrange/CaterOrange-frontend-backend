@@ -133,3 +133,29 @@
 {"customer_email":"h@gmail.com","level":"error","message":"Email already in use","timestamp":"2024-09-16 13:42:30"}
 {"error":"customer_model.createCustomerToken is not a function","level":"error","message":"Error during customer registration","timestamp":"2024-09-16 18:00:38"}
 {"customer_email":"abc@gmail.com","level":"error","message":"Email already in use","timestamp":"2024-09-16 18:02:27"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 19:51:12"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 19:51:12"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 19:55:03"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 19:55:03"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 19:58:28"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 19:58:28"}
+{"level":"error","message":"Error adding default address data","timestamp":"2024-09-16 20:54:15"}
+{"error":"column \"cutsomer_email\" does not exist","level":"error","message":"Error retrieving default address","timestamp":"2024-09-16 20:54:15"}
+{"level":"error","message":"Error adding default address data","timestamp":"2024-09-16 20:56:10"}
+{"error":"column \"cutsomer_email\" does not exist","level":"error","message":"Error retrieving default address","timestamp":"2024-09-16 20:56:10"}
+{"level":"error","message":"Error adding default address data","timestamp":"2024-09-16 20:58:15"}
+{"error":"column \"cutsomer_email\" does not exist","level":"error","message":"Error retrieving default address","timestamp":"2024-09-16 20:58:15"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 20:59:55"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 20:59:55"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 21:00:36"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 21:00:36"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 21:11:52"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 21:11:52"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 21:15:21"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 21:15:21"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 22:44:42"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 22:44:42"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 22:47:20"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 22:47:20"}
+{"level":"error","message":"Error adding address data","timestamp":"2024-09-16 22:52:07"}
+{"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 22:52:07"}

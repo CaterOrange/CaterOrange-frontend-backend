@@ -16,6 +16,25 @@ const createaddress = async (customer_id,tag,pincode,line1,line2,location,ship_t
         throw err;
     }
 };
+
+const select_default_address = async (customer_email) => {
+    try {
+        console.log('in model default address');
+        const result = await client.query(
+            DB_COMMANDS.SELECT_NAME_PHONE,
+            [customer_email]
+        );
+        console.log("answer",result.rows[0]);
+        
+        logger.info('Default address retrieved successfully');
+        return result.rows[0];  
+    } catch (err) {
+        logger.error('Error retrieving default address data');
+        throw err;
+    }
+}
+
 module.exports={
-    createaddress
+    createaddress,
+    select_default_address
 }

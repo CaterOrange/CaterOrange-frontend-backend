@@ -25,6 +25,11 @@ const DB_COMMANDS = {
     CUSTOMER_SET_TOKEN: `UPDATE customer 
         SET access_token = $2
         WHERE customer_email = $1`,
+    SELECT_NAME_PHONE :`
+    SELECT customer_name, customer_phonenumber 
+    FROM customer 
+    WHERE customer_email = $1;
+    `
 
 };
 

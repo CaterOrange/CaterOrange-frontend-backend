@@ -18,7 +18,6 @@ function createCustomerTableQuery() {
     `
     return createTableQuery;
   }
-  
   function createVendorsTableQuery() {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS vendors (
