@@ -4805,3 +4805,19 @@ undefined
 {"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:32:25.974Z"}
 {"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:32:25.974Z"}
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:32:25.982Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T14:13:12.548Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T14:13:12.664Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T14:13:12.671Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T14:13:12.674Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T14:13:12.676Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T14:13:12.679Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T14:13:12.742Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T14:13:12.745Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T14:13:12.747Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T14:13:12.752Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T14:13:12.757Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T14:13:12.761Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T14:13:12.764Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T14:13:12.765Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T14:13:12.768Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T14:13:12.777Z"}
