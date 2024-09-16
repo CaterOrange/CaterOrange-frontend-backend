@@ -1,179 +1,80 @@
 const client = require('../config/dbConfig');
 const logger = require('../config/logger');
 const {
-    createCustomerTableQuery,
-    createVendorsTableQuery,
-    createDriversTableQuery,
-    createCorporatePaymentTableQuery,
-    createEventPaymentTableQuery,
-    createCorporateOrdersTableQuery,
-    createCorporateOrderDetailsTableQuery,
-    createEventOrdersTableQuery,
-    createEventOrderDetailsTableQuery,
-    createCategoryTableQuery,
-    createGroupsTableQuery,
-    createCorporateOrderMediaTableQuery,
-    createEventOrderMediaTableQuery,
-    createAddressesTableQuery,
-    createEventCartTableQuery,
-    createCorporateCartTableQuery,
-    createAllProductsTableQuery,
-    createEventAddressTableQuery
+  createCustomerTableQuery,
+  createPaymentTableQuery,
+  createCorporateOrdersTableQuery,
+  createCorporateOrderDetailsTableQuery,
+  createEventOrdersTableQuery,
+  createCorporateCategoryTableQuery,
+  createEventCategoryTableQuery,
+  createGroupsTableQuery,
+  createAddressesTableQuery,
+  createEventCartTableQuery,
+  createCorporateCartTableQuery,
+  createEventProductsTableQuery,
+  createAllProductsTableQuery
 } = require('../utils/tableSchema');
 
 const createTables = async () => {
-    try {
-        // Create tables with no foreign key dependencies first
-        try {
-            await client.query(createGroupsTableQuery());
-            console.log('Groups table created successfully');
-        } catch (error) {
-            console.error('Error creating Groups table:', error.message);
-            logger.error('Error creating Groups table:', error.stack);
-        }
+  try {
+    // Create Groups table
+    await client.query(createGroupsTableQuery());
+    logger.info('Groups table created successfully');
 
-        try {
-            await client.query(createCategoryTableQuery());
-            console.log('Category table created successfully');
-        } catch (error) {
-            console.error('Error creating Category table:', error.message);
-            logger.error('Error creating Category table:', error.stack);
-        }
+    // Create Customer table
+    await client.query(createCustomerTableQuery());
+    logger.info('Customer table created successfully');
 
-        try {
-            await client.query(createCustomerTableQuery());
-            console.log('Customer table created successfully');
-        } catch (error) {
-            console.error('Error creating Customer table:', error.message);
-            logger.error('Error creating Customer table:', error.stack);
-        }
+    // Create Payment table
+    await client.query(createPaymentTableQuery());
+    logger.info('Payment table created successfully');
 
-        try {
-            await client.query(createVendorsTableQuery());
-            console.log('Vendors table created successfully');
-        } catch (error) {
-            console.error('Error creating Vendors table:', error.message);
-            logger.error('Error creating Vendors table:', error.stack);
-        }
+    // Create Corporate Orders table
+    await client.query(createCorporateOrdersTableQuery());
+    logger.info('Corporate Orders table created successfully');
 
-        try {
-            await client.query(createDriversTableQuery());
-            console.log('Drivers table created successfully');
-        } catch (error) {
-            console.error('Error creating Drivers table:', error.message);
-            logger.error('Error creating Drivers table:', error.stack);
-        }
+    await client.query(createCorporateCategoryTableQuery());
+    logger.info('Corporate Category table created successfully');
+    // Create Corporate Order Details table
+    await client.query(createCorporateOrderDetailsTableQuery());
+    logger.info('Corporate Order Details table created successfully');
 
-        try {
-            await client.query(createAddressesTableQuery());
-            console.log('Addresses table created successfully');
-        } catch (error) {
-            console.error('Error creating Addresses table:', error.message);
-            logger.error('Error creating Addresses table:', error.stack);
-        }
+    // Create Event Orders table
+    await client.query(createEventOrdersTableQuery());
+    logger.info('Event Orders table created successfully');
+    
 
-        try {
-            await client.query(createEventAddressTableQuery());
-            console.log('Event Address table created successfully');
-        } catch (error) {
-            console.error('Error creating Event Address table:', error.message);
-            logger.error('Error creating Event Address table:', error.stack);
-        }
+    // Create Event Category table
+    await client.query(createEventCategoryTableQuery());
+    logger.info('Event Category table created successfully');
 
-        try {
-            await client.query(createAllProductsTableQuery());
-            console.log('All Products table created successfully');
-        } catch (error) {
-            console.error('Error creating All Products table:', error.message);
-            logger.error('Error creating All Products table:', error.stack);
-        }
+    // Create Addresses table
+    await client.query(createAddressesTableQuery());
+    logger.info('Addresses table created successfully');
 
-        // Now create tables that reference the above tables via foreign keys
-        try {
-            await client.query(createEventCartTableQuery());
-            console.log('Event Cart table created successfully');
-        } catch (error) {
-            console.error('Error creating Event Cart table:', error.message);
-            logger.error('Error creating Event Cart table:', error.stack);
-        }
+    // Create Event Cart table
+    await client.query(createEventCartTableQuery());
+    logger.info('Event Cart table created successfully');
 
-        try {
-            await client.query(createCorporateCartTableQuery());
-            console.log('Corporate Cart table created successfully');
-        } catch (error) {
-            console.error('Error creating Corporate Cart table:', error.message);
-            logger.error('Error creating Corporate Cart table:', error.stack);
-        }
+    // Create Corporate Cart table
+    await client.query(createCorporateCartTableQuery());
+    logger.info('Corporate Cart table created successfully');
 
-        try {
-            await client.query(createCorporateOrdersTableQuery());
-            console.log('Corporate Orders table created successfully');
-        } catch (error) {
-            console.error('Error creating Corporate Orders table:', error.message);
-            logger.error('Error creating Corporate Orders table:', error.stack);
-        }
+    // Create Event Products table
+    await client.query(createEventProductsTableQuery());
+    logger.info('Event Products table created successfully');
 
-        try {
-            await client.query(createEventOrdersTableQuery());
-            console.log('Event Orders table created successfully');
-        } catch (error) {
-            console.error('Error creating Event Orders table:', error.message);
-            logger.error('Error creating Event Orders table:', error.stack);
-        }
+    // Create All Products table
+    await client.query(createAllProductsTableQuery());
+    logger.info('All Products table created successfully');
 
-        try {
-            await client.query(createCorporateOrderDetailsTableQuery());
-            console.log('Corporate Order Details table created successfully');
-        } catch (error) {
-            console.error('Error creating Corporate Order Details table:', error.message);
-            logger.error('Error creating Corporate Order Details table:', error.stack);
-        }
-
-        try {
-            await client.query(createEventOrderDetailsTableQuery());
-            console.log('Event Order Details table created successfully');
-        } catch (error) {
-            console.error('Error creating Event Order Details table:', error.message);
-            logger.error('Error creating Event Order Details table:', error.stack);
-        }
-
-        try {
-            await client.query(createCorporatePaymentTableQuery());
-            console.log('Corporate Payment table created successfully');
-        } catch (error) {
-            console.error('Error creating Corporate Payment table:', error.message);
-            logger.error('Error creating Corporate Payment table:', error.stack);
-        }
-
-        try {
-            await client.query(createEventPaymentTableQuery());
-            console.log('Event Payment table created successfully');
-        } catch (error) {
-            console.error('Error creating Event Payment table:', error.message);
-            logger.error('Error creating Event Payment table:', error.stack);
-        }
-
-        try {
-            await client.query(createCorporateOrderMediaTableQuery());
-            console.log('Corporate Order Media table created successfully');
-        } catch (error) {
-            console.error('Error creating Corporate Order Media table:', error.message);
-            logger.error('Error creating Corporate Order Media table:', error.stack);
-        }
-
-        try {
-            await client.query(createEventOrderMediaTableQuery());
-            console.log('Event Order Media table created successfully');
-        } catch (error) {
-            console.error('Error creating Event Order Media table:', error.message);
-            logger.error('Error creating Event Order Media table:', error.stack);
-        }
-    } catch (error) {
-        console.error('Error in creating tables process:', error.message);
-        logger.error('Error in creating tables process:', error.stack);
-    }
-}
+  } catch (error) {
+    logger.error('Error creating tables: ', error);
+    throw error;
+  }
+};
 
 module.exports = {
-    createTables
-}
+  createTables
+};
