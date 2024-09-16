@@ -13,7 +13,6 @@ const {
   createEventCartTableQuery,
   createCorporateCartTableQuery,
   createEventProductsTableQuery,
-  createAllProductsTableQuery
 } = require('../utils/tableSchema');
 
 const createTables = async () => {
@@ -64,10 +63,6 @@ const createTables = async () => {
     // Create Event Products table
     await client.query(createEventProductsTableQuery());
     logger.info('Event Products table created successfully');
-
-    // Create All Products table
-    await client.query(createAllProductsTableQuery());
-    logger.info('All Products table created successfully');
 
   } catch (error) {
     logger.error('Error creating tables: ', error);

@@ -215,25 +215,6 @@ function createEventProductsTableQuery() {
   `;
 }
 
-// Create All Products Table
-function createAllProductsTableQuery() {
-  return `
-    CREATE TABLE IF NOT EXISTS all_products (
-      product_id SERIAL PRIMARY KEY,
-      product_name VARCHAR(255),
-      image TEXT,
-      category_name VARCHAR(255),
-      price_category VARCHAR(255),
-      isdual BOOLEAN,
-      unit_1 VARCHAR(255),
-      price_per_unit1 FLOAT,
-      min_unit1_per_plate INTEGER,
-      unit_2 VARCHAR(255),
-      price_per_unit2 FLOAT,
-      min_unit2_per_plate INTEGER
-    );
-  `;
-}
 
 module.exports = {
   createCustomerTableQuery,
@@ -247,6 +228,5 @@ module.exports = {
   createAddressesTableQuery,
   createEventCartTableQuery,
   createCorporateCartTableQuery,
-  createEventProductsTableQuery,
-  createAllProductsTableQuery
+  createEventProductsTableQuery
 };
