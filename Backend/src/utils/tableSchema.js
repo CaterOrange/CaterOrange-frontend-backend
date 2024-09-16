@@ -7,7 +7,6 @@ function createCustomerTableQuery() {
       customer_name VARCHAR(255) NOT NULL,
       customer_phoneNumber BIGINT,
       customer_email VARCHAR(255) NOT NULL UNIQUE,
-      customer_address JSON,
       customer_password VARCHAR(255),
       createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       lastLoginAt TIMESTAMP,
