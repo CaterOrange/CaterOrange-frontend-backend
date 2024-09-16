@@ -89,6 +89,13 @@ const createEventOrder = async (customer_id, orderData) => {
         throw new Error('Error retrieving event orders: ' + error.message);
     }
 }
+const getAddressesByCustomerId = async (customer_id) => {
+    const result = await client.query(DB_COMMANDS.GET_ADDRESSES_BY_CUSTOMER_ID, [customer_id]);
+    return result.rows;
+  };
+const userbytoken = async (access_token) => {
+    return client.query(DB_COMMANDS.GET_USER_BY_TOKEN, [access_token]);
+  }
 
 module.exports = {
     createCustomer,
@@ -97,7 +104,9 @@ module.exports = {
     updateCustomerPassword,
     createEventOrder,
     getEventOrderById,
-    getAllEventOrdersByCustomerId
+    getAllEventOrdersByCustomerId,
+    getAddressesByCustomerId,
+    userbytoken
 
    
 

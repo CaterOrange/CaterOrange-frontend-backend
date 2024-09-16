@@ -3,6 +3,7 @@ function createCustomerTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS customer (
       customer_id SERIAL PRIMARY KEY,
+      customer_generated_id VARCHAR UNIQUE,
       customer_name VARCHAR(255) NOT NULL,
       customer_phoneNumber BIGINT,
       customer_email VARCHAR(255) NOT NULL UNIQUE,
@@ -50,6 +51,7 @@ function createCorporateOrdersTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS corporate_orders (
       corporateorder_id SERIAL PRIMARY KEY,
+      corporateorder_generated_id VARCHAR UNIQUE,
       customer_id INTEGER,
       order_details JSON,
       total_amount FLOAT NOT NULL,
@@ -89,6 +91,7 @@ function createEventOrdersTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_orders (
       eventorder_id SERIAL PRIMARY KEY,
+      eventorder_generated_id VARCHAR UNIQUE,
       customer_id INTEGER,
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       delivery_status VARCHAR(50),
@@ -154,9 +157,11 @@ function createAddressesTableQuery() {
       group_id INTEGER,
       location POINT,
       ship_to_name VARCHAR(255),
-      ship_to_phone_no BIGINT,
+      ship_to_phone_no BIGINT, 
+      customer_id INTEGER,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (group_id) REFERENCES groups(group_id)
+      FOREIGN KEY (group_id) REFERENCES groups(group_id),
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
     );
   `;
 }

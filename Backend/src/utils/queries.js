@@ -22,7 +22,33 @@ const DB_COMMANDS = {
        SELECT * FROM event_orders WHERE eventorder_id = $1  `,
     getAllEventOrdersByCustomerId : `
         SELECT * FROM event_orders WHERE customer_id = $1`,
-        };
+    GET_EVENT_CART_BY_ID: `
+        SELECT * FROM event_cart WHERE eventcart_id = $1
+    `,
+    DELETE_EVENT_CART_BY_ID:`DELETE FROM event_cart WHERE eventcart_id = $1`,
+    INSERT_EVENT_ORDER:`INSERT INTO event_orders (
+    customer_id,
+    ordered_at,
+    delivery_status,
+    total_amount,
+    delivery_details,
+    event_order_details,
+    event_media,
+    customer_address,
+    payment_status,
+    event_order_status
+  ) VALUES (
+    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+  ) RETURNING *`,
+    GET_ADDRESSES_BY_CUSTOMER_ID: `
+    SELECT * FROM addresses WHERE customer_id = $1
+    `,
+    GET_USER_BY_TOKEN:`SELECT * FROM customer WHERE access_token=$1`,
+    getEventCategoriesQuery : `SELECT * FROM event_category`,
+    eventMenuPageQuery:`SELECT * FROM all_products 
+                   WHERE category_name = $1 
+                   LIMIT $2 OFFSET $3;`
+ };
         
 
 module.exports = { DB_COMMANDS };

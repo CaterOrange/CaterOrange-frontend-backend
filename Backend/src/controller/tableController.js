@@ -20,10 +20,14 @@ const createTables = async () => {
     // Create Groups table
     await client.query(createGroupsTableQuery());
     logger.info('Groups table created successfully');
-
     // Create Customer table
     await client.query(createCustomerTableQuery());
     logger.info('Customer table created successfully');
+    // Create Addresses table
+    await client.query(createAddressesTableQuery());
+    logger.info('Addresses table created successfully');
+
+    
 
     // Create Payment table
     await client.query(createPaymentTableQuery());
@@ -47,10 +51,6 @@ const createTables = async () => {
     // Create Event Category table
     await client.query(createEventCategoryTableQuery());
     logger.info('Event Category table created successfully');
-
-    // Create Addresses table
-    await client.query(createAddressesTableQuery());
-    logger.info('Addresses table created successfully');
 
     // Create Event Cart table
     await client.query(createEventCartTableQuery());

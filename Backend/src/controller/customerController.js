@@ -314,7 +314,36 @@ const getAllEventOrdersByCustomerIdController = async(req, res)=> {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+const getAddressByCustomerId = async (req, res) => {
+    const { customer_id } = req.params;
+  
+    try {
+      // Fetch addresses associated with the customer
+      const addresses = await customer_model.getAddressesByCustomerId(customer_id);
+  
+      if (!addresses.length) {
+        return res.status(404).json({ error: 'No addresses found for this customer' });
+      }
+  
+      res.status(200).json(addresses);
+    } catch (error) {
+      logger.error('Error fetching address details: ', error);
+      res.status(500).json({ error: 'Error fetching address details', details: error.message });
+    }
+  };
 
+  const getuserbytoken = async (req, res) => {
+    const {access_token} = req.body;
+    try {
+        const result = await customer_model.userbytoken(access_token);
+        console.log(result.rows[0])
+        return result.rows[0]
+        
+    }
+    catch (err) {
+        res.status(500).json({ error: 'An error occurred while retrieving complaints', err });
+    }
+};
 
 module.exports = {
     register,
@@ -323,7 +352,9 @@ module.exports = {
     google_auth,
     createEventOrderController,
     getAllEventOrdersByCustomerIdController,
-    getEventOrderByIdController
+    getEventOrderByIdController,
+    getAddressByCustomerId,
+    getuserbytoken
 };
 
 
