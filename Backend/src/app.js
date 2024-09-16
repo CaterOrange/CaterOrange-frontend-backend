@@ -7,10 +7,15 @@ const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const allRoutes = require('./routes/customerRoutes.js');
 const adminRoutes = require('./routes/adminRoutes');
-const eventRoutes = require('./routes/eventorderRoutes.js')
+const eventRoutes = require('./routes/eventorderRoutes.js');
+const corporateOrderDetailsRoutes = require('./routes/corporateorderRoutes.js');
+
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// Register the routes
+app.use('/', corporateOrderDetailsRoutes);
 
 app.use('/admin', adminRoutes);
 

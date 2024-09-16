@@ -1,13 +1,13 @@
-// Create Customer Table
 function createCustomerTableQuery() {
   return `
+    CREATE SEQUENCE IF NOT EXISTS custom_id_seq START 1;
+
     CREATE TABLE IF NOT EXISTS customer (
       customer_id SERIAL PRIMARY KEY,
-      customer_generated_id VARCHAR UNIQUE,
+      customer_generated_id VARCHAR(255) UNIQUE DEFAULT 'C' || LPAD(nextval('custom_id_seq')::text, 6, '0'),
       customer_name VARCHAR(255) NOT NULL,
       customer_phoneNumber BIGINT,
       customer_email VARCHAR(255) NOT NULL UNIQUE,
-      customer_address JSON,
       customer_password VARCHAR(255),
       createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       lastLoginAt TIMESTAMP,

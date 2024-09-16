@@ -319,7 +319,7 @@ const getAddressByCustomerId = async (req, res) => {
   
     try {
       // Fetch addresses associated with the customer
-      const addresses = await customer_model.getAddressesByCustomerId(customer_id);
+      const addresses = await customer_model.getAddressesByCustomerId( customer_id);
   
       if (!addresses.length) {
         return res.status(404).json({ error: 'No addresses found for this customer' });
@@ -345,6 +345,65 @@ const getAddressByCustomerId = async (req, res) => {
     }
 };
 
+const deleteAddressById = async (req, res) => {
+    const { address_id } = req.params;
+  
+    try {
+      const deletedAddress = await customer_model.deleteAddressById(address_id);
+  
+      if (!deletedAddress) {
+        return res.status(404).json({ error: 'Address not found' });
+      }
+  
+      res.status(200).json({ message: 'Address deleted successfully', deletedAddress });
+    } catch (error) {
+      logger.error('Error deleting address: ', error);
+      res.status(500).json({ error: 'Error deleting address', details: error.message });
+    }
+  };
+  
+  const updateAddressById = async (req, res) => {
+    const address_id = req.params.address_id;
+    const {
+      tag,
+      line1,
+      line2,
+      pincode,
+      latitude,
+      longitude,
+      ship_to_name,
+      ship_to_phone_no
+    } = req.body;
+  
+    const fields = [];
+    const values = [];
+  
+    if (tag) fields.push('tag = $' + (fields.length + 1)), values.push(tag);
+    if (line1) fields.push('line1 = $' + (fields.length + 1)), values.push(line1);
+    if (line2) fields.push('line2 = $' + (fields.length + 1)), values.push(line2);
+    if (pincode) fields.push('pincode = $' + (fields.length + 1)), values.push(pincode);
+    if (latitude && longitude) fields.push('location = POINT($' + (fields.length + 1) + ', $' + (fields.length + 2) + ')'), values.push(latitude, longitude);
+    if (ship_to_name) fields.push('ship_to_name = $' + (fields.length + 1)), values.push(ship_to_name);
+    if (ship_to_phone_no) fields.push('ship_to_phone_no = $' + (fields.length + 1)), values.push(ship_to_phone_no);
+  
+    if (fields.length === 0) {
+      return res.status(400).send('No fields to update');
+    }
+  
+    try {
+      const result = await customer_model.updateAddressById(address_id, fields, values);
+      if (result.rowCount === 0) {
+        return res.status(404).send('Address not found');
+      }
+      res.status(200).send('Address updated');
+    } catch (err) {
+      logger.error('Error:', err);
+      res.status(500).send('Internal server error');
+    }
+  };
+  
+
+
 module.exports = {
     register,
     login,
@@ -354,7 +413,9 @@ module.exports = {
     getAllEventOrdersByCustomerIdController,
     getEventOrderByIdController,
     getAddressByCustomerId,
-    getuserbytoken
+    getuserbytoken,
+    deleteAddressById,
+    updateAddressById
 };
 
 

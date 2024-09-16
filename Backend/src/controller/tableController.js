@@ -27,8 +27,6 @@ const createTables = async () => {
     await client.query(createAddressesTableQuery());
     logger.info('Addresses table created successfully');
 
-    
-
     // Create Payment table
     await client.query(createPaymentTableQuery());
     logger.info('Payment table created successfully');

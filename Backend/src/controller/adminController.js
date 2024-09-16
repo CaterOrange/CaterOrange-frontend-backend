@@ -63,4 +63,18 @@ const adminModel = require('../models/adminModels')
         res.status(500).send('Internal server error');
       }
     }
-module.exports = {updateUser,getCustomers, deleteCustomer,getCustomerById};
+
+    const getAllPayments = async (req, res) => {
+      try {
+        const payments = await adminModel.getAllPayments();
+        if (!payments.length) {
+          return res.status(404).json({ error: 'No payments found' });
+        }
+        res.status(200).json(payments);
+      } catch (error) {
+        logger.error('Error fetching payments: ', error);
+        res.status(500).json({ error: 'Error fetching payments', details: error.message });
+      }
+    };
+    
+module.exports = {updateUser,getCustomers, deleteCustomer,getCustomerById,getAllPayments};

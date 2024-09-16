@@ -15,7 +15,10 @@ const getAllCustomers = async () => {
     let query = DB_COMMANDS.UPDATE_USER + ' ' + fields.join(', ') + ' WHERE customer_id = $' + (fields.length + 1);
     return client.query(query, [...values, id]);
   }
-
+  const getAllPayments = async () => {
+    const result = await client.query(DB_COMMANDS.getAllPayments);
+    return result.rows;
+  };
 
   
 
@@ -23,6 +26,7 @@ module.exports = {
     getAllCustomers,
     getCustomerById,
     deleteCustomerById,
-    updateUser
+    updateUser,
+    getAllPayments
     
 }

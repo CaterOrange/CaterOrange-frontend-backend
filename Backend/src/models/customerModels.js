@@ -89,12 +89,22 @@ const createEventOrder = async (customer_id, orderData) => {
         throw new Error('Error retrieving event orders: ' + error.message);
     }
 }
-const getAddressesByCustomerId = async (customer_id) => {
-    const result = await client.query(DB_COMMANDS.GET_ADDRESSES_BY_CUSTOMER_ID, [customer_id]);
+const getAddressesByCustomerId = async ( customer_id) => {
+    const result = await client.query(DB_COMMANDS.GET_ADDRESSES_BY_CUSTOMER_ID, [ customer_id]);
     return result.rows;
   };
 const userbytoken = async (access_token) => {
     return client.query(DB_COMMANDS.GET_USER_BY_TOKEN, [access_token]);
+  }
+
+  const deleteAddressById = async (address_id) => {
+    const result = await client.query(DB_COMMANDS.DELETE_ADDRESS_BY_ID, [address_id]);
+    return result.rows[0]; // Return the deleted address details
+  };
+
+  const updateAddressById = async (id, fields, values) => {
+    let query = DB_COMMANDS.UPDATE_ADDRESS_BY_ID + ' ' + fields.join(', ') + ' WHERE address_id = $' + (fields.length + 1);
+    return client.query(query, [...values, id]);
   }
 
 module.exports = {
@@ -106,7 +116,9 @@ module.exports = {
     getEventOrderById,
     getAllEventOrdersByCustomerId,
     getAddressesByCustomerId,
-    userbytoken
+    userbytoken,
+    deleteAddressById,
+    updateAddressById
 
    
 

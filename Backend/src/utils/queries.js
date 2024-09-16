@@ -47,7 +47,24 @@ const DB_COMMANDS = {
     getEventCategoriesQuery : `SELECT * FROM event_category`,
     eventMenuPageQuery:`SELECT * FROM all_products 
                    WHERE category_name = $1 
-                   LIMIT $2 OFFSET $3;`
+                   LIMIT $2 OFFSET $3;`,
+    getAllPayments:`SELECT * FROM payment`,
+    DELETE_ADDRESS_BY_ID : `DELETE FROM addresses 
+                WHERE address_id = $1 
+                RETURNING *;`,
+    UPDATE_ADDRESS_BY_ID:`UPDATE addresses SET`,
+    INSERT_CORPORATE_ORDER_DETAILS: `
+    INSERT INTO corporateorder_details 
+    (corporateorder_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING *;
+  `,
+  
+  GET_ORDER_DETAILS_BY_ID: `
+    SELECT corporateorder_generated_id, order_details 
+    FROM corporate_orders 
+    WHERE customer_id = $1;
+  `
  };
         
 

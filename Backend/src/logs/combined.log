@@ -3235,3 +3235,1573 @@ undefined
 {"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T09:50:42.432Z"}
 {"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T09:50:42.433Z"}
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T09:50:42.441Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T09:50:44.660Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T09:50:44.786Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T09:50:44.791Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T09:50:44.794Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T09:50:44.796Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T09:50:44.799Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T09:50:44.802Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T09:50:44.804Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T09:50:44.807Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T09:50:44.809Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T09:50:44.811Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T09:50:44.813Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T09:50:44.815Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T09:50:44.817Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T09:50:44.818Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T09:50:44.827Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T09:54:51.391Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T09:54:51.458Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T09:54:51.462Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T09:54:51.464Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T09:54:51.466Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T09:54:51.469Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T09:54:51.470Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T09:54:51.472Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T09:54:51.474Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T09:54:51.475Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T09:54:51.477Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T09:54:51.479Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T09:54:51.480Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T09:54:51.482Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T09:54:51.482Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T09:54:51.489Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:30:03.852Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:30:03.958Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:30:03.963Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:30:03.968Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:30:03.972Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:30:03.976Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:30:03.978Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:30:03.980Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:30:03.983Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:30:03.987Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:30:03.990Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:30:03.992Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:30:03.993Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:30:03.995Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:30:03.996Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:30:04.007Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:30:06.248Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:30:06.344Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:30:06.347Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:30:06.349Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:30:06.352Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:30:06.354Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:30:06.356Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:30:06.357Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:30:06.359Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:30:06.360Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:30:06.362Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:30:06.363Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:30:06.365Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:30:06.366Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:30:06.367Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:30:06.374Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:31:34.984Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:31:35.105Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:31:35.110Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:31:35.136Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:31:35.138Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:31:35.141Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:31:35.143Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:31:35.145Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:31:35.148Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:31:35.152Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:31:35.154Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:31:35.156Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:31:35.157Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:31:35.158Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:31:35.158Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:31:35.165Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:31:57.083Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:31:57.191Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:31:57.257Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:31:57.306Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:31:57.334Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:31:57.361Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:31:57.461Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:31:57.492Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:31:57.517Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:31:57.553Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:31:57.578Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:31:57.606Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:31:57.637Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:31:57.675Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:31:57.676Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:31:57.684Z"}
+{"customer_email":"AditiCharon@example.com","level":"info","message":"User data added successfully","timestamp":"2024-09-16T10:34:27.280Z"}
+{"customer_email":"AditiCharon@example.com","level":"info","message":"Customer registered successfully","timestamp":"2024-09-16T10:34:27.282Z"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-16T10:34:40.291Z","token":{"email":"AditiCharon@example.com","exp":1726569267,"iat":1726482867}}
+{"customer_email":"Joshu@example.com","level":"info","message":"User data added successfully","timestamp":"2024-09-16T10:35:18.501Z"}
+{"customer_email":"Joshu@example.com","level":"info","message":"Customer registered successfully","timestamp":"2024-09-16T10:35:18.502Z"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-16T10:35:32.778Z","token":{"email":"Joshu@example.com","exp":1726569318,"iat":1726482918}}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:51:30.733Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:51:30.859Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:51:30.866Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:51:30.869Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:51:30.871Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:51:30.873Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:51:30.874Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:51:30.876Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:51:30.879Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:51:30.882Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:51:30.884Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:51:30.886Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:51:30.887Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:51:30.888Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:51:30.889Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:51:30.895Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:52:04.072Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:52:04.156Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:52:04.161Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:52:04.163Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:52:04.165Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:52:04.168Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:52:04.170Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:52:04.171Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:52:04.173Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:52:04.176Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:52:04.178Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:52:04.180Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:52:04.183Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:52:04.184Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:52:04.185Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:52:04.191Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:52:20.625Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:52:20.744Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:52:20.748Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:52:20.751Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:52:20.753Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:52:20.756Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:52:20.758Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:52:20.761Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:52:20.763Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:52:20.765Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:52:20.767Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:52:20.768Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:52:20.770Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:52:20.772Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:52:20.773Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:52:20.783Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:52:27.551Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:52:27.648Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:52:27.652Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:52:27.655Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:52:27.657Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:52:27.661Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:52:27.663Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:52:27.665Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:52:27.667Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:52:27.670Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:52:27.672Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:52:27.673Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:52:27.675Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:52:27.678Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:52:27.679Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:52:27.684Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:52:45.362Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:52:45.457Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:52:45.460Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:52:45.463Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:52:45.466Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:52:45.468Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:52:45.470Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:52:45.473Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:52:45.474Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:52:45.476Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:52:45.477Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:52:45.478Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:52:45.479Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:52:45.481Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:52:45.481Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:52:45.488Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:52:49.503Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:52:49.644Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:52:49.650Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:52:49.654Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:52:49.657Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:52:49.660Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:52:49.663Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:52:49.666Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:52:49.669Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:52:49.673Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:52:49.675Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:52:49.677Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:52:49.680Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:52:49.681Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:52:49.682Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:52:49.693Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:52:52.629Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:52:52.723Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:52:52.727Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:52:52.731Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:52:52.734Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:52:52.738Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:52:52.743Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:52:52.746Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:52:52.750Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:52:52.757Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:52:52.762Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:52:52.765Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:52:52.770Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:52:52.773Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:52:52.775Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:52:52.784Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:52:59.993Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:53:00.145Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:53:00.151Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:53:00.154Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:53:00.157Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:53:00.160Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:53:00.164Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:53:00.166Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:53:00.168Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:53:00.170Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:53:00.172Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:53:00.173Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:53:00.174Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:53:00.176Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:53:00.177Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:53:00.185Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:53:09.524Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:53:09.619Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:53:09.623Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:53:09.625Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:53:09.628Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:53:09.631Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:53:09.633Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:53:09.635Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:53:09.637Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:53:09.639Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:53:09.641Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:53:09.643Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:53:09.646Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:53:09.648Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:53:09.649Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:53:09.656Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:53:12.590Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:53:12.684Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:53:12.689Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:53:12.692Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:53:12.694Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:53:12.697Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:53:12.700Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:53:12.703Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:53:12.705Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:53:12.708Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:53:12.711Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:53:12.714Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:53:12.715Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:53:12.717Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:53:12.717Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:53:12.726Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:53:17.996Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:53:18.176Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:53:18.185Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:53:18.193Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:53:18.199Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:53:18.206Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:53:18.210Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:53:18.212Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:53:18.217Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:53:18.223Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:53:18.227Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:53:18.229Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:53:18.232Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:53:18.234Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:53:18.236Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:53:18.255Z"}
+{"code":"42703","file":"D:\\a\\postgresql-packaging-foundation\\postgresql-packaging-foundation\\postgresql-12.20\\src\\backend\\parser\\parse_relation.c","length":226,"level":"error","line":"3417","message":"Error fetching address details:  column \"customer_generated_id\" does not exist","name":"error","position":"36","routine":"errorMissingColumn","severity":"ERROR","stack":"error: column \"customer_generated_id\" does not exist\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\pg\\lib\\client.js:526:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.getAddressesByCustomerId (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\models\\customerModels.js:93:20)\n    at async getAddressByCustomerId (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\customerController.js:322:25)","timestamp":"2024-09-16T10:53:21.965Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:54:03.172Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:54:03.263Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:54:03.268Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:54:03.272Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:54:03.274Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:54:03.277Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:54:03.279Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:54:03.281Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:54:03.283Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:54:03.286Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:54:03.288Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:54:03.289Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:54:03.291Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:54:03.293Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:54:03.293Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:54:03.304Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:54:10.219Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:54:10.310Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:54:10.313Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:54:10.315Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:54:10.317Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:54:10.320Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:54:10.322Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:54:10.324Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:54:10.325Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:54:10.327Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:54:10.328Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:54:10.330Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:54:10.331Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:54:10.333Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:54:10.333Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:54:10.340Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:54:16.202Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:54:16.398Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:54:16.403Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:54:16.407Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:54:16.409Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:54:16.412Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:54:16.415Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:54:16.417Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:54:16.419Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:54:16.421Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:54:16.423Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:54:16.424Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:54:16.426Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:54:16.428Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:54:16.429Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:54:16.438Z"}
+{"code":"42703","file":"D:\\a\\postgresql-packaging-foundation\\postgresql-packaging-foundation\\postgresql-12.20\\src\\backend\\parser\\parse_relation.c","length":226,"level":"error","line":"3417","message":"Error fetching address details:  column \"customer_generated_id\" does not exist","name":"error","position":"36","routine":"errorMissingColumn","severity":"ERROR","stack":"error: column \"customer_generated_id\" does not exist\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\pg\\lib\\client.js:526:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.getAddressesByCustomerId (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\models\\customerModels.js:93:20)\n    at async getAddressByCustomerId (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\customerController.js:322:25)","timestamp":"2024-09-16T10:54:17.340Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:54:55.173Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:54:55.299Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:54:55.375Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:54:55.431Z"}
+{"code":"42804","detail":"Key columns \"customer_generated_id\" and \"customer_generated_id\" are of incompatible types: integer and character varying.","file":"D:\\a\\postgresql-packaging-foundation\\postgresql-packaging-foundation\\postgresql-12.20\\src\\backend\\commands\\tablecmds.c","length":387,"level":"error","line":"8429","message":"Error creating tables:  foreign key constraint \"addresses_customer_generated_id_fkey\" cannot be implemented","name":"error","routine":"ATAddForeignKeyConstraint","severity":"ERROR","stack":"error: foreign key constraint \"addresses_customer_generated_id_fkey\" cannot be implemented\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\pg\\lib\\client.js:526:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async createTables (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\tableController.js:27:5)\n    at async initializeApp (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\app.js:25:5)","timestamp":"2024-09-16T10:54:55.463Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:56:42.332Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:56:42.446Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:56:42.452Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:56:42.458Z"}
+{"code":"42703","file":"D:\\a\\postgresql-packaging-foundation\\postgresql-packaging-foundation\\postgresql-12.20\\src\\backend\\commands\\tablecmds.c","length":252,"level":"error","line":"10038","message":"Error creating tables:  column \"customer_id\" referenced in foreign key constraint does not exist","name":"error","routine":"transformColumnNameList","severity":"ERROR","stack":"error: column \"customer_id\" referenced in foreign key constraint does not exist\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\pg\\lib\\client.js:526:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async createTables (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\tableController.js:27:5)\n    at async initializeApp (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\app.js:25:5)","timestamp":"2024-09-16T10:56:42.500Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:56:46.144Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:56:46.288Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:56:46.297Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:56:46.305Z"}
+{"code":"42804","detail":"Key columns \"customer_id\" and \"customer_generated_id\" are of incompatible types: integer and character varying.","file":"D:\\a\\postgresql-packaging-foundation\\postgresql-packaging-foundation\\postgresql-12.20\\src\\backend\\commands\\tablecmds.c","length":367,"level":"error","line":"8429","message":"Error creating tables:  foreign key constraint \"addresses_customer_id_fkey\" cannot be implemented","name":"error","routine":"ATAddForeignKeyConstraint","severity":"ERROR","stack":"error: foreign key constraint \"addresses_customer_id_fkey\" cannot be implemented\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\pg\\lib\\client.js:526:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async createTables (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\tableController.js:27:5)\n    at async initializeApp (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\app.js:25:5)","timestamp":"2024-09-16T10:56:46.371Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:56:50.130Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:56:50.264Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:56:50.268Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:56:50.272Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:56:50.339Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:56:50.389Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:56:50.447Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:56:50.479Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:56:50.505Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:56:50.543Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:56:50.566Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:56:50.595Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:56:50.624Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:56:50.657Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:56:50.658Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:56:50.665Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:57:08.293Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:57:08.435Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:57:08.446Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:57:08.453Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:57:08.459Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:57:08.465Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:57:08.470Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:57:08.474Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:57:08.478Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:57:08.481Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:57:08.483Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:57:08.485Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:57:08.487Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:57:08.489Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:57:08.490Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:57:08.500Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:57:13.790Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:57:13.934Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:57:13.939Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:57:13.943Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:57:13.946Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:57:13.948Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:57:13.950Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:57:13.952Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:57:13.954Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:57:13.957Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:57:13.960Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:57:13.962Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:57:13.965Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:57:13.966Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:57:13.967Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:57:13.975Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:57:16.996Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:57:17.123Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:57:17.128Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:57:17.131Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:57:17.134Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:57:17.137Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:57:17.138Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:57:17.141Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:57:17.143Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:57:17.145Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:57:17.148Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:57:17.149Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:57:17.151Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:57:17.152Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:57:17.153Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:57:17.159Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:57:53.927Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:57:54.076Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:57:54.085Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:57:54.091Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:57:54.098Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:57:54.103Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:57:54.107Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:57:54.110Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:57:54.112Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:57:54.116Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:57:54.118Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:57:54.119Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:57:54.121Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:57:54.122Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:57:54.123Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:57:54.133Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:57:58.138Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:57:58.465Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:57:58.470Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:57:58.474Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:57:58.477Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:57:58.479Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:57:58.482Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:57:58.484Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:57:58.486Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:57:58.489Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:57:58.491Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:57:58.493Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:57:58.495Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:57:58.496Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:57:58.497Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:57:58.504Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:58:09.887Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:58:09.982Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:58:09.986Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:58:09.991Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:58:09.993Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:58:09.995Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:58:09.996Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:58:09.998Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:58:09.999Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:58:10.001Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:58:10.003Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:58:10.006Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:58:10.008Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:58:10.010Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:58:10.011Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:58:10.020Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:58:13.524Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:58:13.626Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:58:13.631Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:58:13.635Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:58:13.638Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:58:13.642Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:58:13.644Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:58:13.646Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:58:13.647Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:58:13.650Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:58:13.653Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:58:13.655Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:58:13.656Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:58:13.658Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:58:13.659Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:58:13.670Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T10:59:15.696Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T10:59:15.782Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T10:59:15.787Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T10:59:15.791Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T10:59:15.794Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T10:59:15.797Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T10:59:15.800Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T10:59:15.802Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T10:59:15.804Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T10:59:15.806Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T10:59:15.810Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T10:59:15.812Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T10:59:15.815Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T10:59:15.818Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T10:59:15.818Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T10:59:15.829Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:16:15.449Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:16:15.542Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:16:15.546Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:16:15.548Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:16:15.550Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:16:15.554Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:16:15.556Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:16:15.559Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:16:15.561Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:16:15.563Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:16:15.564Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:16:15.566Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:16:15.568Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:16:15.571Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:16:15.572Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:16:15.584Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:16:20.331Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:16:20.410Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:16:20.414Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:16:20.417Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:16:20.420Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:16:20.422Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:16:20.424Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:16:20.426Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:16:20.427Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:16:20.429Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:16:20.431Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:16:20.432Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:16:20.434Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:16:20.436Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:16:20.436Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:16:20.444Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:16:27.080Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:16:27.187Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:16:27.192Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:16:27.196Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:16:27.199Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:16:27.201Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:16:27.203Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:16:27.205Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:16:27.208Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:16:27.212Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:16:27.215Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:16:27.219Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:16:27.221Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:16:27.223Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:16:27.223Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:16:27.231Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:16:29.109Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:16:29.183Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:16:29.186Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:16:29.188Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:16:29.191Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:16:29.194Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:16:29.197Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:16:29.199Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:16:29.201Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:16:29.203Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:16:29.205Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:16:29.207Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:16:29.208Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:16:29.210Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:16:29.210Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:16:29.218Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:16:32.046Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:16:32.195Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:16:32.203Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:16:32.207Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:16:32.210Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:16:32.213Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:16:32.215Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:16:32.220Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:16:32.223Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:16:32.226Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:16:32.229Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:16:32.231Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:16:32.234Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:16:32.237Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:16:32.238Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:16:32.248Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:16:57.460Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:16:57.567Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:16:57.570Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:16:57.574Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:16:57.576Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:16:57.578Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:16:57.579Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:16:57.580Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:16:57.581Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:16:57.583Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:16:57.585Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:16:57.586Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:16:57.587Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:16:57.589Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:16:57.590Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:16:57.598Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:17:23.951Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:17:24.037Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:17:24.041Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:17:24.043Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:17:24.045Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:17:24.047Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:17:24.049Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:17:24.050Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:17:24.051Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:17:24.054Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:17:24.057Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:17:24.059Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:17:24.061Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:17:24.063Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:17:24.064Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:17:24.071Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:17:31.646Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:17:31.856Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:17:31.860Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:17:31.863Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:17:31.865Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:17:31.869Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:17:31.875Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:17:31.878Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:17:31.882Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:17:31.887Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:17:31.891Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:17:31.893Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:17:31.896Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:17:31.899Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:17:31.901Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:17:31.914Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:18:26.305Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:18:26.440Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:18:26.443Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:18:26.446Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:18:26.448Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:18:26.450Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:18:26.452Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:18:26.454Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:18:26.457Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:18:26.459Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:18:26.461Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:18:26.462Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:18:26.463Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:18:26.465Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:18:26.466Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:18:26.476Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:18:33.185Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:18:33.305Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:18:33.310Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:18:33.313Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:18:33.316Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:18:33.319Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:18:33.321Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:18:33.323Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:18:33.325Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:18:33.327Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:18:33.330Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:18:33.331Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:18:33.333Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:18:33.335Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:18:33.336Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:18:33.343Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:18:37.940Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:18:39.744Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:18:39.856Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:18:39.859Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:18:39.863Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:18:39.866Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:18:39.868Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:18:39.870Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:18:39.871Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:18:39.873Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:18:39.875Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:18:39.877Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:18:39.879Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:18:39.880Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:18:39.883Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:18:39.884Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:18:39.892Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:18:46.368Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:18:46.562Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:18:46.566Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:18:46.569Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:18:46.572Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:18:46.574Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:18:46.577Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:18:46.579Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:18:46.582Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:18:46.584Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:18:46.588Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:18:46.590Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:18:46.594Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:18:46.596Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:18:46.598Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:18:46.612Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:19:21.211Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:19:21.323Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:19:21.327Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:19:21.331Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:19:21.334Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:19:21.337Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:19:21.339Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:19:21.340Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:19:21.342Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:19:21.344Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:19:21.346Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:19:21.349Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:19:21.350Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:19:21.353Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:19:21.354Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:19:21.364Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:19:33.253Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:19:33.364Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:19:33.368Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:19:33.371Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:19:33.375Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:19:33.377Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:19:33.378Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:19:33.380Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:19:33.382Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:19:33.386Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:19:33.389Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:19:33.391Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:19:33.393Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:19:33.395Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:19:33.395Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:19:33.400Z"}
+{"level":"error","message":"Error fetching payments:  paymentModel is not defined","stack":"ReferenceError: paymentModel is not defined\n    at getAllPayments (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\adminController.js:69:26)\n    at Layer.handle [as handle_request] (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:47:12)","timestamp":"2024-09-16T11:20:22.251Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:20:47.878Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:20:48.022Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:20:48.026Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:20:48.030Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:20:48.032Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:20:48.035Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:20:48.037Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:20:48.038Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:20:48.040Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:20:48.042Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:20:48.043Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:20:48.045Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:20:48.046Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:20:48.048Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:20:48.048Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:20:48.055Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:21:51.840Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:21:51.999Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:21:52.004Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:21:52.007Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:21:52.011Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:21:52.013Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:21:52.015Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:21:52.017Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:21:52.020Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:21:52.022Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:21:52.024Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:21:52.025Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:21:52.027Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:21:52.028Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:21:52.029Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:21:52.038Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:28:24.289Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:28:24.375Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:28:24.378Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:28:24.380Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:28:24.383Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:28:24.385Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:28:24.387Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:28:24.389Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:28:24.391Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:28:24.393Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:28:24.394Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:28:24.396Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:28:24.397Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:28:24.399Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:28:24.399Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:28:24.408Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:30:37.327Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:30:37.429Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:30:37.433Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:30:37.436Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:30:37.440Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:30:37.442Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:30:37.444Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:30:37.445Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:30:37.447Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:30:37.449Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:30:37.451Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:30:37.454Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:30:37.455Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:30:37.457Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:30:37.457Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:30:37.466Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:31:36.027Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:31:36.139Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:31:36.147Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:31:36.155Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:31:36.161Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:31:36.169Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:31:36.174Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:31:36.180Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:31:36.185Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:31:36.189Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:31:36.192Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:31:36.194Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:31:36.197Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:31:36.199Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:31:36.200Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:31:36.212Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:31:40.994Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:31:41.105Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:31:41.110Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:31:41.113Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:31:41.115Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:31:41.118Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:31:41.120Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:31:41.122Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:31:41.123Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:31:41.125Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:31:41.127Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:31:41.129Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:31:41.131Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:31:41.132Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:31:41.133Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:31:41.139Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:31:56.238Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:31:56.325Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:31:56.329Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:31:56.331Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:31:56.333Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:31:56.336Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:31:56.338Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:31:56.340Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:31:56.342Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:31:56.344Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:31:56.346Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:31:56.347Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:31:56.348Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:31:56.350Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:31:56.351Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:31:56.359Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:32:07.484Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:32:07.592Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:32:07.595Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:32:07.598Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:32:07.601Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:32:07.605Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:32:07.607Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:32:07.609Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:32:07.611Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:32:07.614Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:32:07.616Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:32:07.618Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:32:07.621Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:32:07.623Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:32:07.624Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:32:07.629Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:32:30.565Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:32:30.679Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:32:30.684Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:32:30.687Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:32:30.689Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:32:30.692Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:32:30.694Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:32:30.696Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:32:30.698Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:32:30.700Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:32:30.702Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:32:30.704Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:32:30.705Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:32:30.707Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:32:30.708Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:32:30.716Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:32:37.204Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:32:37.299Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:32:37.303Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:32:37.306Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:32:37.308Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:32:37.311Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:32:37.313Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:32:37.315Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:32:37.317Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:32:37.319Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:32:37.322Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:32:37.323Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:32:37.325Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:32:37.326Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:32:37.327Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:32:37.334Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:32:39.110Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:32:39.228Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:32:39.233Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:32:39.236Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:32:39.239Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:32:39.241Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:32:39.243Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:32:39.246Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:32:39.248Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:32:39.250Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:32:39.252Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:32:39.254Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:32:39.255Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:32:39.257Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:32:39.258Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:32:39.265Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:32:48.209Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:32:48.335Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:32:48.339Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:32:48.343Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:32:48.346Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:32:48.350Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:32:48.353Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:32:48.355Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:32:48.357Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:32:48.360Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:32:48.363Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:32:48.366Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:32:48.369Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:32:48.371Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:32:48.371Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:32:48.384Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:33:14.404Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:33:14.535Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:33:14.541Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:33:14.544Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:33:14.548Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:33:14.550Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:33:14.553Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:33:14.555Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:33:14.557Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:33:14.559Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:33:14.561Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:33:14.563Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:33:14.565Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:33:14.566Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:33:14.567Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:33:14.573Z"}
+{"customer_email":"chandanasrisaikrishna@gmail.com","level":"info","message":"User data added successfully","timestamp":"2024-09-16T11:38:11.794Z"}
+{"customer_email":"chandanasrisaikrishna@gmail.com","level":"info","message":"Customer registered successfully","timestamp":"2024-09-16T11:38:11.795Z"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-16T11:38:20.471Z","token":{"email":"chandanasrisaikrishna@gmail.com","exp":1726573091,"iat":1726486691}}
+{"customer_email":"Joshu@example.com","level":"info","message":"User data added successfully","timestamp":"2024-09-16T11:38:54.426Z"}
+{"customer_email":"Joshu@example.com","level":"info","message":"Customer registered successfully","timestamp":"2024-09-16T11:38:54.427Z"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-16T11:38:58.450Z","token":{"email":"Joshu@example.com","exp":1726573134,"iat":1726486734}}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:42:48.463Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:42:48.599Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:42:48.602Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:42:48.606Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:42:48.610Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:42:48.612Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:42:48.614Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:42:48.616Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:42:48.618Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:42:48.620Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:42:48.622Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:42:48.625Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:42:48.627Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:42:48.629Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:42:48.630Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:42:48.636Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:42:56.623Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:42:56.823Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:42:56.827Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:42:56.829Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:42:56.832Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:42:56.834Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:42:56.836Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:42:56.837Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:42:56.839Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:42:56.841Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:42:56.843Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:42:56.845Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:42:56.847Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:42:56.849Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:42:56.850Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:42:56.858Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:43:00.234Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:43:00.351Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:43:00.355Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:43:00.358Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:43:00.362Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:43:00.365Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:43:00.369Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:43:00.371Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:43:00.374Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:43:00.377Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:43:00.380Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:43:00.383Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:43:00.384Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:43:00.387Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:43:00.388Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:43:00.405Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:43:02.514Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:43:02.601Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:43:02.608Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:43:02.611Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:43:02.614Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:43:02.616Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:43:02.618Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:43:02.620Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:43:02.623Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:43:02.626Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:43:02.628Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:43:02.629Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:43:02.631Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:43:02.632Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:43:02.633Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:43:02.642Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:43:13.531Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:43:13.640Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:43:13.644Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:43:13.647Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:43:13.651Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:43:13.655Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:43:13.657Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:43:13.658Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:43:13.660Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:43:13.662Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:43:13.664Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:43:13.667Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:43:13.670Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:43:13.673Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:43:13.673Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:43:13.682Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:43:23.126Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:43:23.234Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:43:23.241Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:43:23.248Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:43:23.255Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:43:23.260Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:43:23.266Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:43:23.271Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:43:23.276Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:43:23.280Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:43:23.285Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:43:23.287Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:43:23.289Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:43:23.291Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:43:23.292Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:43:23.304Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:45:01.127Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:45:01.235Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:45:01.242Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:45:01.245Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:45:01.247Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:45:01.249Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:45:01.251Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:45:01.253Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:45:01.254Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:45:01.257Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:45:01.260Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:45:01.261Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:45:01.262Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:45:01.264Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:45:01.264Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:45:01.272Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:45:29.371Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:45:29.457Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:45:29.462Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:45:29.471Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:45:29.473Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:45:29.476Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:45:29.478Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:45:29.481Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:45:29.483Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:45:29.485Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:45:29.487Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:45:29.489Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:45:29.491Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:45:29.493Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:45:29.494Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:45:29.502Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:45:35.921Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:45:36.030Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:45:36.034Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:45:36.039Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:45:36.042Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:45:36.045Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:45:36.047Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:45:36.049Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:45:36.051Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:45:36.054Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:45:36.056Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:45:36.058Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:45:36.059Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:45:36.061Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:45:36.062Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:45:36.070Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:45:40.120Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:45:40.207Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:45:40.212Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:45:40.215Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:45:40.217Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:45:40.220Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:45:40.221Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:45:40.223Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:45:40.225Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:45:40.228Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:45:40.231Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:45:40.233Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:45:40.235Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:45:40.237Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:45:40.238Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:45:40.245Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:45:45.837Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:45:45.957Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:45:45.962Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:45:45.966Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:45:45.969Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:45:45.971Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:45:45.973Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:45:45.975Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:45:45.977Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:45:45.980Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:45:45.982Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:45:45.984Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:45:45.986Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:45:45.988Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:45:45.988Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:45:45.995Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:45:53.460Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:45:53.575Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:45:53.579Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:45:53.581Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:45:53.584Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:45:53.586Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:45:53.588Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:45:53.590Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:45:53.592Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:45:53.595Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:45:53.598Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:45:53.601Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:45:53.604Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:45:53.608Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:45:53.610Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:45:53.633Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:46:02.989Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:46:03.084Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:46:03.089Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:46:03.092Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:46:03.094Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:46:03.096Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:46:03.099Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:46:03.101Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:46:03.103Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:46:03.105Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:46:03.106Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:46:03.108Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:46:03.110Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:46:03.111Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:46:03.112Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:46:03.120Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:46:37.362Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:46:37.457Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:46:37.462Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:46:37.464Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:46:37.466Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:46:37.470Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:46:37.471Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:46:37.473Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:46:37.474Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:46:37.477Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:46:37.479Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:46:37.480Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:46:37.481Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:46:37.483Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:46:37.483Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:46:37.490Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:47:38.256Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:47:38.405Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:47:38.414Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:47:38.423Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:47:38.428Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:47:38.434Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:47:38.438Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:47:38.441Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:47:38.445Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:47:38.451Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:47:38.456Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:47:38.458Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:47:38.462Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:47:38.467Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:47:38.468Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:47:38.482Z"}
+{"level":"error","message":"Error: adminModel is not defined","stack":"ReferenceError: adminModel is not defined\n    at updateAddressById (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\customerController.js:394:22)\n    at Layer.handle [as handle_request] (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:284:15\n    at param (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:421:3)\n    at next (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:280:10)","timestamp":"2024-09-16T11:48:14.680Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:48:42.394Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:48:42.545Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:48:42.550Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:48:42.553Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:48:42.555Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:48:42.558Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:48:42.563Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:48:42.567Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:48:42.570Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:48:42.574Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:48:42.579Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:48:42.582Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:48:42.586Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:48:42.590Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:48:42.591Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:48:42.612Z"}
+{"level":"error","message":"Error: customer_model.updateAddress is not a function","stack":"TypeError: customer_model.updateAddress is not a function\n    at updateAddressById (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\customerController.js:394:43)\n    at Layer.handle [as handle_request] (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at Route.dispatch (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\route.js:119:3)\n    at Layer.handle [as handle_request] (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:284:15\n    at param (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:365:14)\n    at param (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:376:14)\n    at Function.process_params (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:421:3)\n    at next (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\express\\lib\\router\\index.js:280:10)","timestamp":"2024-09-16T11:48:45.345Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:48:56.778Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:48:56.910Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:48:56.916Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:48:56.919Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:48:56.922Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:48:56.926Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:48:56.930Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:48:56.932Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:48:56.934Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:48:56.936Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:48:56.938Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:48:56.940Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:48:56.942Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:48:56.945Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:48:56.947Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:48:56.958Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:48:58.961Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:48:59.078Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:48:59.084Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:48:59.088Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:48:59.091Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:48:59.094Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:48:59.097Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:48:59.099Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:48:59.101Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:48:59.104Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:48:59.106Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:48:59.107Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:48:59.109Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:48:59.111Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:48:59.112Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:48:59.122Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:52:29.344Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:52:29.434Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:52:29.437Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:52:29.440Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:52:29.443Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:52:29.446Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:52:29.448Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:52:29.449Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:52:29.451Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:52:29.453Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:52:29.454Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:52:29.455Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:52:29.457Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:52:29.458Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:52:29.459Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:52:29.468Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:53:53.317Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:53:53.414Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:53:53.420Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:53:53.426Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:53:53.428Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:53:53.430Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:53:53.432Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:53:53.433Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:53:53.435Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:53:53.437Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:53:53.440Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:53:53.442Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:53:53.444Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:53:53.445Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:53:53.445Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:53:53.451Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:54:06.036Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:54:06.131Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:54:06.136Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:54:06.139Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:54:06.143Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:54:06.147Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:54:06.149Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:54:06.151Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:54:06.153Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:54:06.156Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:54:06.159Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:54:06.162Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:54:06.166Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:54:06.168Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:54:06.169Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:54:06.182Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:56:33.098Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:56:33.206Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:56:33.211Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:56:33.214Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:56:33.218Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:56:33.220Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:56:33.222Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:56:33.224Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:56:33.226Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:56:33.229Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:56:33.232Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:56:33.233Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:56:33.236Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:56:33.238Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:56:33.238Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:56:33.246Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T11:56:47.711Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T11:56:47.821Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T11:56:47.829Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T11:56:47.832Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T11:56:47.835Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T11:56:47.837Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T11:56:47.839Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T11:56:47.843Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T11:56:47.846Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T11:56:47.848Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T11:56:47.852Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T11:56:47.855Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T11:56:47.857Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T11:56:47.859Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T11:56:47.861Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T11:56:47.867Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:04:56.851Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:04:57.009Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:04:57.018Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:04:57.026Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:04:57.033Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:04:57.040Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:04:57.044Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:04:57.049Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:04:57.055Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:04:57.060Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:04:57.066Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:04:57.071Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:04:57.075Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:04:57.079Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:04:57.081Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:04:57.098Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:05:35.148Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:05:35.251Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:05:35.256Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:05:35.260Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:05:35.263Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:05:35.266Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:05:35.268Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:05:35.270Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:05:35.272Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:05:35.275Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:05:35.278Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:05:35.280Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:05:35.283Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:05:35.285Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:05:35.286Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:05:35.293Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:06:05.644Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:06:05.750Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:06:05.754Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:06:05.758Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:06:05.762Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:06:05.768Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:06:05.770Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:06:05.772Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:06:05.774Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:06:05.777Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:06:05.781Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:06:05.784Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:06:05.786Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:06:05.788Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:06:05.789Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:06:05.798Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:07:21.033Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:07:21.182Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:07:21.189Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:07:21.195Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:07:21.199Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:07:21.204Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:07:21.208Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:07:21.213Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:07:21.217Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:07:21.221Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:07:21.225Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:07:21.228Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:07:21.231Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:07:21.234Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:07:21.235Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:07:21.249Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:07:45.006Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:07:45.149Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:07:45.158Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:07:45.168Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:07:45.173Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:07:45.178Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:07:45.183Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:07:45.186Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:07:45.190Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:07:45.194Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:07:45.200Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:07:45.203Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:07:45.207Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:07:45.209Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:07:45.211Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:07:45.228Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:09:25.466Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:09:25.549Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:09:25.554Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:09:25.557Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:09:25.560Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:09:25.562Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:09:25.564Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:09:25.565Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:09:25.567Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:09:25.569Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:09:25.571Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:09:25.573Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:09:25.575Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:09:25.577Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:09:25.577Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:09:25.582Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:09:31.562Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:09:31.705Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:09:31.712Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:09:31.716Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:09:31.719Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:09:31.724Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:09:31.727Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:09:31.728Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:09:31.730Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:09:31.732Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:09:31.734Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:09:31.736Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:09:31.739Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:09:31.741Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:09:31.742Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:09:31.751Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:09:36.049Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:09:36.156Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:09:36.160Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:09:36.162Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:09:36.165Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:09:36.168Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:09:36.170Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:09:36.174Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:09:36.177Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:09:36.180Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:09:36.182Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:09:36.184Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:09:36.186Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:09:36.188Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:09:36.189Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:09:36.198Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:09:38.925Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:09:39.026Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:09:39.030Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:09:39.033Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:09:39.036Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:09:39.038Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:09:39.041Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:09:39.044Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:09:39.046Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:09:39.049Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:09:39.051Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:09:39.053Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:09:39.056Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:09:39.058Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:09:39.059Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:09:39.065Z"}
+{"code":"23503","constraint":"corporateorder_details_category_id_fkey","detail":"Key (category_id)=(2) is not present in table \"corporate_category\".","file":"D:\\a\\postgresql-packaging-foundation\\postgresql-packaging-foundation\\postgresql-12.20\\src\\backend\\utils\\adt\\ri_triggers.c","length":443,"level":"error","line":"2474","message":"Error inserting corporate order details: insert or update on table \"corporateorder_details\" violates foreign key constraint \"corporateorder_details_category_id_fkey\"","name":"error","routine":"ri_ReportViolation","schema":"public","severity":"ERROR","stack":"error: insert or update on table \"corporateorder_details\" violates foreign key constraint \"corporateorder_details_category_id_fkey\"\n    at C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\node_modules\\pg\\lib\\client.js:526:17\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.insertCorporateOrderDetails (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\models\\corporateorderModels.js:21:20)\n    at async addCorporateOrderDetails (C:\\Users\\chand\\OneDrive\\Desktop\\CaterOrange\\Backend\\src\\controller\\corporateorderController.js:26:30)","table":"corporateorder_details","timestamp":"2024-09-16T12:15:56.919Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:19:30.222Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:19:30.329Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:19:30.333Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:19:30.336Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:19:30.339Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:19:30.342Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:19:30.344Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:19:30.346Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:19:30.348Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:19:30.350Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:19:30.352Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:19:30.354Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:19:30.356Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:19:30.358Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:19:30.358Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:19:30.365Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:30:12.998Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:30:13.050Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:30:13.052Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:30:13.054Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:30:13.056Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:30:13.060Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:30:13.062Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:30:13.063Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:30:13.064Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:30:13.065Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:30:13.066Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:30:13.067Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:30:13.068Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:30:13.069Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:30:13.069Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:30:13.074Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:30:15.754Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:30:15.811Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:30:15.814Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:30:15.816Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:30:15.817Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:30:15.819Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:30:15.821Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:30:15.822Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:30:15.826Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:30:15.828Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:30:15.830Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:30:15.831Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:30:15.832Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:30:15.833Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:30:15.834Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:30:15.839Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:30:20.442Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:30:20.497Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:30:20.500Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:30:20.502Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:30:20.504Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:30:20.505Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:30:20.507Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:30:20.509Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:30:20.511Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:30:20.512Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:30:20.513Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:30:20.514Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:30:20.515Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:30:20.516Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:30:20.516Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:30:20.520Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:30:23.480Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:30:23.565Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:30:23.570Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:30:23.573Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:30:23.576Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:30:23.577Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:30:23.578Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:30:23.579Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:30:23.581Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:30:23.583Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:30:23.585Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:30:23.587Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:30:23.588Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:30:23.589Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:30:23.590Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:30:23.595Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:30:25.906Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:30:25.960Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:30:25.962Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:30:25.964Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:30:25.965Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:30:25.967Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:30:25.968Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:30:25.969Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:30:25.972Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:30:25.973Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:30:25.974Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:30:25.975Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:30:25.976Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:30:25.977Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:30:25.977Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:30:25.981Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:30:30.006Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:30:30.060Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:30:30.063Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:30:30.068Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:30:30.074Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:30:30.075Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:30:30.076Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:30:30.077Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:30:30.078Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:30:30.080Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:30:30.082Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:30:30.085Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:30:30.087Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:30:30.088Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:30:30.089Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:30:30.092Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-16T12:32:25.851Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-16T12:32:25.946Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-16T12:32:25.950Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-16T12:32:25.953Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-16T12:32:25.956Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-16T12:32:25.958Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-16T12:32:25.960Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-16T12:32:25.963Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-16T12:32:25.965Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-16T12:32:25.967Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-16T12:32:25.969Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-16T12:32:25.971Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-16T12:32:25.972Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T12:32:25.974Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T12:32:25.974Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T12:32:25.982Z"}
