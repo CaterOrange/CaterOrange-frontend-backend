@@ -130,3 +130,6 @@
 {"error":"value too long for type character varying(255)","level":"error","message":"Error during google login","timestamp":"2024-09-14 15:58:10"}
 {"customer_email":"sirisha@scaleorange.com","error":"value too long for type character varying(255)","level":"error","message":"Error updating customer token","timestamp":"2024-09-14 16:00:07"}
 {"error":"value too long for type character varying(255)","level":"error","message":"Error during google login","timestamp":"2024-09-14 16:00:07"}
+{"customer_email":"h@gmail.com","level":"error","message":"Email already in use","timestamp":"2024-09-16 13:42:30"}
+{"error":"customer_model.createCustomerToken is not a function","level":"error","message":"Error during customer registration","timestamp":"2024-09-16 18:00:38"}
+{"customer_email":"abc@gmail.com","level":"error","message":"Email already in use","timestamp":"2024-09-16 18:02:27"}

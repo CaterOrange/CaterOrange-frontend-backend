@@ -1,21 +1,21 @@
 function createCustomerTableQuery() {
     const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS customer (
-        customer_id SERIAL PRIMARY KEY,
-        customer_name VARCHAR(255) NOT NULL,
-        customer_phoneNumber BIGINT,
-        customer_email VARCHAR(255) NOT NULL UNIQUE,
-        customer_address JSON,
-        customer_password VARCHAR(255),
-        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        lastLoginAt TIMESTAMP,
-        wallet_amount INTEGER,
-        group_id INTEGER,
-        access_token VARCHAR(255),
-        FOREIGN KEY (group_id) REFERENCES groups(group_id),
-        is_deactivated BOOLEAN DEFAULT FALSE
-      );
-    `;
+      CREATE SEQUENCE IF NOT EXISTS custom_id_seq START 1;
+        CREATE TABLE IF NOT EXISTS customer (
+            customer_id SERIAL PRIMARY KEY,
+            customer_generated_id VARCHAR(255) UNIQUE DEFAULT 'C' || LPAD(nextval('custom_id_seq')::text, 6, '0'),
+            customer_name VARCHAR(255) NOT NULL,
+            customer_phoneNumber BIGINT,
+            customer_email VARCHAR(255) NOT NULL UNIQUE,
+            customer_password VARCHAR(255),
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            lastLoginAt TIMESTAMP,
+            wallet_amount INTEGER,
+            group_id INTEGER,
+            access_token VARCHAR(255),
+            isDeactivated BOOLEAN DEFAULT FALSE
+        );
+    `
     return createTableQuery;
   }
   
@@ -54,7 +54,6 @@ function createCustomerTableQuery() {
     `;
     return createTableQuery;
   }
-  
   function createDriversTableQuery() {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS drivers (
@@ -179,16 +178,19 @@ function createCustomerTableQuery() {
   
   function createAddressesTableQuery() {
     const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS addresses (
-        address_id SERIAL PRIMARY KEY,
-        tag VARCHAR(50),
-        line1 VARCHAR(255) NOT NULL,
-        line2 VARCHAR(255),
-        pincode INTEGER NOT NULL,
-        group_id INTEGER,
-        location POINT,
-        FOREIGN KEY (group_id) REFERENCES groups(group_id)
-      );
+      CREATE TABLE IF NOT EXISTS address (
+            address_id SERIAL PRIMARY KEY,
+            customer_id VARCHAR(600),
+            tag VARCHAR(255),
+            pincode BIGINT,
+            line1 VARCHAR(255),
+            line2 VARCHAR(255),
+            location TEXT[],  -- Array of text
+            ship_to_name VARCHAR(255),
+            ship_to_phone_number BIGINT,
+            added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            group_id INTEGER
+        );
     `;
     return createTableQuery;
   }

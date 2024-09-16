@@ -8,14 +8,12 @@ const Client1 = new Client({
   port: process.env.PG_PORT,
   password: process.env.PG_PASSWORD
 });
-
 const createDatabase = async () => {
   try {
     await Client1.connect();
     console.log("Connected to PostgreSQL server");
 
     const databaseName = process.env.DATABASE;
-
     // Query to check if the database exists
     const checkDatabaseExistsQuery = `
       SELECT 1

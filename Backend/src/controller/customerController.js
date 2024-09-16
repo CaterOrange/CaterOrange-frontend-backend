@@ -6,12 +6,8 @@ const customer_model = require('../models/customerModels'); // Fixed import
 const { body, validationResult } = require('express-validator');
 const {transporter}=require('../middlewares/mailAuth.js')
 const SECRET_KEY = process.env.SECRET_KEY;
-
 const nodemailer = require('nodemailer');
-
-
 let otpStore = {}; // This should be in memory or persistent storage in production
-
 const send_otp = async (req, res) => {
     const { email } = req.body;
 
@@ -94,6 +90,7 @@ const register = async (req, res) => {
         const maxEmailLength=50;
         const phoneNumberLength=10;
 
+
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(customer_phonenumber) || customer_phonenumber.length > phoneNumberLength) {
             return res.status(400).json({ success: false, message: 'Invalid phone number' });
@@ -136,22 +133,15 @@ const register = async (req, res) => {
         if (customer_password !== confirm_password) {
             return res.status(400).json({ success: false, message: 'Passwords do not match' });
         }
-
-        // Hash password before storing
+        
         const hashedPassword = await bcrypt.hash(customer_password, 10);
 
-        // Generate JWT token
-        const token = jwt.sign({ email: customer_email }, SECRET_KEY, { expiresIn: '24h' });
-
-        // Create a new customer
         const newCustomer = await customer_model.createCustomer(
             customer_name,
             customer_email,
             hashedPassword,
-            customer_phonenumber,
-            token
+            customer_phonenumber
         );
-
         if (newCustomer) {
             // Send Welcome Email
             const username = customer_email.substring(0, customer_email.indexOf('@'));
@@ -271,14 +261,20 @@ const register = async (req, res) => {
                 console.log('Email sent to:', customer_email, 'Response:', info.response);
             });
         }
+        // logger.info('Customer registered successfully', { newCustomer});
 
-        logger.info('Customer registered successfully', { customer_email });
+        const gid=newCustomer.customer_generated_id ;
+        const token = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
 
+        const newCustomerToken = await customer_model.createCustomerToken(
+            customer_email,
+            token
+        );
         return res.json({
             success: true,
             message: 'Customer registered successfully',
             token,
-            customer: newCustomer
+            customer: newCustomerToken
         });
 
     } catch (err) {
@@ -286,8 +282,6 @@ const register = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
-
-
 const login = [
     // Validate and sanitize input fields
     async (req, res) => {
@@ -604,10 +598,7 @@ const google_auth=async (req, res)=>{
     catch (err) {
         logger.error('Error during google oauth', { error: err.message });
         res.status(500).json({ error: err.message });
-    }
-       
-    
-        
+    }      
 }
 const checkCustomer = async (req, res) => {
     try {
