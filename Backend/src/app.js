@@ -1,19 +1,31 @@
 const express = require('express');
 const client = require('./config/dbConfig');
-const cors=require('cors')
+const cors=require('cors')     
 const logger = require('./config/logger');
 const { createTables } = require('./controller/tableController');
 const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const allRoutes = require('./routes/customerRoutes.js');
 const adminRoutes = require('./routes/adminRoutes');
+
 const addressRoutes = require('./routes/addressRoutes');
+const eventRoutes = require('./routes/eventorderRoutes.js');
+const corporateOrderDetailsRoutes = require('./routes/corporateorderRoutes.js');
+
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+
 app.use('/', adminRoutes);
 app.use('/',addressRoutes)
+
+
+app.use('/', corporateOrderDetailsRoutes);
+
+
+
 
 const initializeApp = async () => {
   try {
@@ -39,3 +51,4 @@ const initializeApp = async () => {
 
 initializeApp();
 app.use('/', allRoutes);
+app.use('/',eventRoutes);

@@ -44,6 +44,7 @@ const updateCustomerPassword = async (customer_email, hashedPassword,token) => {
     }
 };
 
+
 const updateAccessToken= async(customer_email, access_token)=>{
     try {
         const result = await client.query(
@@ -71,10 +72,65 @@ const createCustomerToken=async(customer_email,token)=>{
     }
 }
 
+const createEventOrder = async (customer_id, orderData) => {
+    const { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = orderData;
+    const values = [customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id];
+  
+    try {
+        const result = await client.query(DB_COMMANDS.createEventOrder, values);
+        return result.rows[0];
+    } catch (error) {
+        throw new Error('Error creating event order: ' + error.message);
+    }
+}
+
+  const getEventOrderById = async (eventorder_id)=> {
+    try {
+        const result = await client.query(DB_COMMANDS.getEventOrderById, [eventorder_id]);
+        return result.rows[0];
+    } catch (error) {
+        throw new Error('Error retrieving event order: ' + error.message);
+    }
+}
+
+ const  getAllEventOrdersByCustomerId = async(customer_id)=> {
+    try {
+        const result = await client.query(DB_COMMANDS.getAllEventOrdersByCustomerId, [customer_id]);
+        return result.rows;
+    } catch (error) {
+        throw new Error('Error retrieving event orders: ' + error.message);
+    }
+}
+const getAddressesByCustomerId = async ( customer_id) => {
+    const result = await client.query(DB_COMMANDS.GET_ADDRESSES_BY_CUSTOMER_ID, [ customer_id]);
+    return result.rows;
+  };
+const userbytoken = async (access_token) => {
+    return client.query(DB_COMMANDS.GET_USER_BY_TOKEN, [access_token]);
+  }
+
+  const deleteAddressById = async (address_id) => {
+    const result = await client.query(DB_COMMANDS.DELETE_ADDRESS_BY_ID, [address_id]);
+    return result.rows[0]; // Return the deleted address details
+  };
+
+  const updateAddressById = async (id, fields, values) => {
+    let query = DB_COMMANDS.UPDATE_ADDRESS_BY_ID + ' ' + fields.join(', ') + ' WHERE address_id = $' + (fields.length + 1);
+    return client.query(query, [...values, id]);
+  }
+
+
 module.exports = {
     createCustomer,
     findCustomerEmail,
     updateCustomerPassword,
     updateAccessToken,
-    createCustomerToken
+    createCustomerToken,
+    createEventOrder,
+    getEventOrderById,
+    getAllEventOrdersByCustomerId,
+    getAddressesByCustomerId,
+    userbytoken,
+    deleteAddressById,
+    updateAddressById
 };
