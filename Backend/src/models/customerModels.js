@@ -71,10 +71,28 @@ const createCustomerToken=async(customer_email,token)=>{
     }
 }
 
+// Function to find activated customer
+const findActivated = async (customer_email) => {
+    try {
+        const result = await client.query(DB_COMMANDS.CUSTOMER_EMAIL_SELECT, [customer_email]);
+        if (result.rows.length > 0) {
+            const check = await client.query(DB_COMMANDS.CUSTOMER_ACTIVATED_CHECK, [customer_email]);
+            console.log(check.rows[0])
+            return check.rows[0]; 
+        } else {
+            throw new Error("Customer not found becuase he is deactivated");
+        }
+    } catch (err) {
+        logger.error('Error checking if customer is deactivated', { error: err.message });
+        throw err; 
+    }
+}
+
 module.exports = {
     createCustomer,
     findCustomerEmail,
     updateCustomerPassword,
     updateAccessToken,
-    createCustomerToken
+    createCustomerToken,
+    findActivated
 };

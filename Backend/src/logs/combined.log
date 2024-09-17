@@ -1009,3 +1009,555 @@
 {"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 22:52:07"}
 {"level":"info","message":"Default address retrieved successfully","timestamp":"2024-09-16 22:59:03"}
 {"level":"info","message":"address added successfully","timestamp":"2024-09-16 22:59:03"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:28:43"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:28:46"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:28:46"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:28:46"}
+{"customer_email":"sirimani254@gmail.com","level":"warn","message":"Invalid login attempt","timestamp":"2024-09-17 11:32:33"}
+{"customer_email":"sirimani254@gmail.com","level":"info","message":"User data added successfully","timestamp":"2024-09-17 11:33:22"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-17 11:35:59","token":{"email":"sirimani254@gmail.com","exp":1726639402,"iat":1726553002,"id":"C000003"}}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:39:11"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:39:11"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:39:11"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:39:11"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:40:49"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:40:49"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:40:49"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:40:49"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:40:55"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:40:55"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:40:55"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:40:55"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:40:58"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:40:58"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:40:58"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:40:59"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:41:00"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:41:00"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:41:00"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:41:00"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:45:24"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:45:24"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:45:24"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:45:24"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:45:28"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:45:28"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:45:28"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:45:28"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:45:30"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:45:30"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:45:30"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:45:30"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:45:45"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:45:45"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:45:45"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:45:45"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:45:48"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:45:48"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:45:48"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:45:48"}
+{"level":"info","message":"Default address retrieved successfully","timestamp":"2024-09-17 11:47:15"}
+{"level":"info","message":"address added successfully","timestamp":"2024-09-17 11:47:16"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:57:31"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:57:31"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:57:31"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:57:31"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:57:41"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:57:41"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:57:41"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:57:41"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:57:52"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:57:52"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:57:52"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:57:52"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:04"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:58:04"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:58:04"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:58:04"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:08"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:58:08"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:58:08"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:58:08"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:30"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:58:30"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:58:30"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:58:30"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:35"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:58:35"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:58:35"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:58:35"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:42"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:58:42"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:58:42"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:44"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:45"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:58:45"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:58:45"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:58:45"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:58:47"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:58:47"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:58:47"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:58:47"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:59:17"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:59:17"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:59:17"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:59:17"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:59:18"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:59:18"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:59:18"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:59:18"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:59:35"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:59:35"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:59:35"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:59:35"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:59:44"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:59:44"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:59:44"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:59:44"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 11:59:49"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 11:59:49"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 11:59:49"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 11:59:49"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:00:09"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:00:09"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:00:09"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:00:09"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:00:11"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:00:11"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:00:11"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:00:11"}
+{"level":"info","message":"Default address retrieved successfully","timestamp":"2024-09-17 12:04:25"}
+{"level":"info","message":"address added successfully","timestamp":"2024-09-17 12:04:25"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:05:29"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:05:29"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:05:29"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:05:29"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:05:33"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:05:33"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:05:33"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:05:33"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:05:37"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:05:37"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:05:37"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:05:37"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:05:43"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:05:45"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:05:45"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:05:45"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:05:45"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:06:25"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:06:25"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:06:25"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:06:25"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:06:31"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:06:31"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:06:31"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:06:31"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:06:33"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:06:33"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:06:33"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:06:33"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:06:36"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:06:36"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:06:36"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:06:36"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:07:57"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:07:57"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:07:57"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:07:57"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:08:02"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:08:02"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:08:02"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:08:02"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:09"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:09"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:09"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:09"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:12"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:12"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:12"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:12"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:15"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:15"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:15"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:15"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:18"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:18"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:18"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:18"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:19"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:19"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:19"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:19"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:29"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:29"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:29"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:29"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:30"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:30"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:30"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:31"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:32"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:32"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:32"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:32"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:34"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:34"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:34"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:34"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:09:35"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:09:35"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:09:35"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:09:35"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:11:15"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:11:15"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:11:15"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:11:15"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:11:19"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:11:19"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:11:19"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:11:19"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:11:36"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:11:36"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:11:36"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:11:36"}
+{"level":"info","message":"Default address retrieved successfully","timestamp":"2024-09-17 12:16:52"}
+{"level":"info","message":"address added successfully","timestamp":"2024-09-17 12:16:52"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:19:13"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:19:13"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:19:13"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:19:13"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:19:52"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:19:52"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:19:52"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:19:52"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:19:55"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:19:55"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:19:55"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:19:55"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:20:01"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:20:01"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:20:01"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:20:01"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:20:04"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:20:04"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:20:04"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:20:04"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:20:08"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:20:08"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:20:08"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:20:08"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:20:19"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:20:19"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:20:19"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:20:19"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:20:26"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:20:26"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:20:26"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:20:26"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:21:35"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:21:35"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:21:35"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:21:35"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:22:04"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:22:04"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:22:04"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:22:04"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:22"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:22"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:22"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:23"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:24"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:25"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:25"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:25"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:34"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:34"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:34"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:34"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:37"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:37"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:37"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:38"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:39"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:39"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:39"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:39"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:40"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:40"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:40"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:40"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:42"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:42"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:42"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:42"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:24:45"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:24:45"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:24:45"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:24:45"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:25:03"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:25:03"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:25:03"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:25:03"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:25:15"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:25:15"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:25:15"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:25:15"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:25:19"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:25:19"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:25:19"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:25:19"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:25:24"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:25:24"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:25:24"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:25:24"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:25:27"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:25:27"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:25:27"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:25:27"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:52:27"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:52:27"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:52:27"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:52:27"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:53:04"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:53:04"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:53:04"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:53:04"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:53:06"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:53:06"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:53:06"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:53:06"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:53:18"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:53:18"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:53:18"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:53:18"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:53:22"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:53:22"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:53:22"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:53:22"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:53:30"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:53:30"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:53:30"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:53:30"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:53:34"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:53:34"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:53:34"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:53:34"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:53:37"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:53:37"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:53:37"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:53:37"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:56:55"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:56:55"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:56:55"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:56:55"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:57:00"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:57:00"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:57:00"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:57:00"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:57:05"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:57:05"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:57:05"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:57:05"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:57:10"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:57:10"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:57:10"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:57:10"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:57:19"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:57:19"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:57:19"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:57:19"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:57:20"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:57:20"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:57:20"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:57:20"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 12:57:23"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 12:57:23"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 12:57:23"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 12:57:23"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:00:20"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:00:20"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:00:20"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:00:20"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:00:24"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:00:24"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:00:24"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:00:24"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:00:33"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:00:33"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:00:33"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:00:33"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:00:38"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:00:38"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:00:38"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:00:38"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:00:41"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:00:41"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:00:41"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:00:41"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:00:46"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:00:46"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:00:46"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:00:46"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:00:52"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:00:52"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:00:52"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:00:52"}
+{"customer_email":"sirisha@gmail.com","level":"warn","message":"Invalid login attempt","timestamp":"2024-09-17 13:07:23"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:08:06"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:08:06"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:08:06"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:08:06"}
+{"customer_email":"h@gmail.com","level":"warn","message":"Invalid login attempt","timestamp":"2024-09-17 13:08:34"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:11:03"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:11:03"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:11:03"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:11:03"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:11:04"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:11:04"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:11:04"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:11:04"}
+{"customer_email":"chandrikab@scaleorange.com","level":"info","message":"User data added successfully","timestamp":"2024-09-17 13:47:30"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:48:50"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:48:50"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:48:51"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:48:51"}
+{"customer_email":"chandrikab@scaleorange.com","level":"info","message":"User data added successfully","timestamp":"2024-09-17 13:49:02"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-17 13:49:40","token":{"email":"chandrikab@scaleorange.com","exp":1726647542,"iat":1726561142,"id":"C000005"}}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:50:10"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:50:10"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:50:10"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:50:10"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:50:12"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:50:12"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:50:12"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:50:12"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-17 13:51:14","token":{"email":"chandrikab@scaleorange.com","exp":1726647542,"iat":1726561142,"id":"C000005"}}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:55:14"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:55:14"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:55:14"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:55:14"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:55:17"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:55:17"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:55:17"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:55:17"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:55:39"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:55:39"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:55:39"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:55:39"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:55:45"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:55:45"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:55:45"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:55:45"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:55:46"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:55:46"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:55:46"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:55:46"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:56:14"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:56:14"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:56:14"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:56:14"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:56:18"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:56:18"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:56:18"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:56:18"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 13:56:27"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 13:56:27"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 13:56:27"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 13:56:27"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:03:31"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:03:32"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:03:32"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:03:32"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:03:40"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:03:40"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:03:40"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:03:40"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:03:43"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:03:43"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:03:43"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:03:43"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:03:44"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:03:44"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:03:44"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:03:44"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:03:54"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:03:54"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:03:54"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:03:54"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:03:56"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:03:56"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:03:56"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:03:56"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:05"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:05"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:05"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:05"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:18"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:18"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:18"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:18"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:20"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:20"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:20"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:20"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:22"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:22"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:22"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:22"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:30"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:30"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:30"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:30"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:37"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:37"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:37"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:37"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:38"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:38"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:38"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:38"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:41"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:41"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:41"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:41"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:44"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:44"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:44"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:44"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:48"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:48"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:48"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:48"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:52"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:52"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:52"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:52"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:04:53"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:04:53"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:04:53"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:04:53"}
+{"error":"email is not defined","level":"error","message":"Error during user login","timestamp":"2024-09-17 14:05:13"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:05:39"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:05:39"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:05:39"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:05:39"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:06:24"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:06:24"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:06:24"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:06:24"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:06:29"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:06:32"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:06:32"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:06:32"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:06:32"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:07:31"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:07:31"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:07:31"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:07:31"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17 14:08:30"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17 14:08:30"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17 14:08:31"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:08:31"}
+{"customer_email":"chandrikab@scaleorange.com","level":"info","message":"User data added successfully","timestamp":"2024-09-17 14:09:16"}
+{"level":"info","message":"Token verified successfully","timestamp":"2024-09-17 14:09:45","token":{"email":"chandrikab@scaleorange.com","exp":1726648756,"iat":1726562356,"id":"C000006"}}

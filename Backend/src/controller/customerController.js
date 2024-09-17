@@ -325,8 +325,19 @@ const login = [
                     success: false,
                     message: 'Invalid password'
                 });
+            }  
+            const checkActivate= await customer_model.findActivated(customer_email);
+            if (!checkActivate) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'You are unable to login beacuse you are deactivated'
+                });
+                logger.error('You are not registered yet, please register', { email });
             }
-
+    
+            console.log('undefined means user is not there',customer)
+            console.log('undefined means user is deactivated',checkActivate)
+    
             // Validation for email and password
             body('customer_email')
                 .isEmail().withMessage('Please provide a valid email address.')
@@ -603,15 +614,23 @@ const google_auth=async (req, res)=>{
 const checkCustomer = async (req, res) => {
     try {
         const { email } = req.body;
-        // Ensure 'email' is used consistently
-        console.log('emial',email)
+        console.log('email',email)
         const existingUserByEmail = await customer_model.findCustomerEmail(email);
-        console.log('undefined',existingUserByEmail)
+        const checkActivate= await customer_model.findActivated(email);
+        console.log('undefined means user is not there',existingUserByEmail)
+        console.log('undefined means user is deactivated',checkActivate)
 
         if (!existingUserByEmail) {
             return res.status(400).json({
                 success: false,
                 message: 'Invalid email, user does not exist'
+            });
+        logger.error('You are not registered yet, please register', { email });
+        }
+        if (!checkActivate) {
+            return res.status(400).json({
+                success: false,
+                message: 'You are deactivated'
             });
             logger.error('You are not registered yet, please register', { email });
         }

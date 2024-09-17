@@ -70,33 +70,42 @@ const AddressForm = () => {
     }
 };
 
-  const validate = () => {
-    const errors = {};
-    if (!tag) errors.tag = 'Tag is required';
-    if (!pincode || isNaN(pincode)) errors.pincode = 'Valid pincode is required';
-    if (!city) errors.city = 'City is required';
-    if (!state) errors.state = 'State is required';
-    if (!location.lat || !location.lng) {
-      errors.location = 'Location is required';
-    } else {
-      if (isNaN(location.lat) || isNaN(location.lng)) {
-        errors.location = 'Valid latitude and longitude are required';
+    const validate = () => {
+      const errors = {};
+
+      if (!tag) errors.tag = 'Tag is required';
+      if (!pincode || isNaN(pincode)) errors.pincode = 'Valid pincode is required';
+      if (!city) errors.city = 'City is required';
+      if (!state) errors.state = 'State is required';
+      if (!location.lat || !location.lng) {
+        errors.location = 'Location is required';
+      } else {
+        if (isNaN(location.lat) || isNaN(location.lng)) {
+          errors.location = 'Valid latitude and longitude are required';
+        }
+        if (location.lat < -90 || location.lat > 90) {
+          errors.location = 'Latitude must be between -90 and 90';
+        }
+        if (location.lng < -180 || location.lng > 180) {
+          errors.location = 'Longitude must be between -180 and 180';
+        }
       }
-      if (location.lat < -90 || location.lat > 90) {
-        errors.location = 'Latitude must be between -90 and 90';
+
+      // Ensure either "shipping" or "default" option is selected
+      if (!selectedOption) {
+        errors.selectedOption = 'You must select either shipping details or set as default';
       }
-      if (location.lng < -180 || location.lng > 180) {
-        errors.location = 'Longitude must be between -180 and 180';
+
+      // If "Include shipping details" is selected, ensure the fields are filled
+      if (selectedOption === 'shipping') {
+        if (!shipToName) errors.shipToName = 'Ship to name is required'; 
+        if (!shipToPhoneNumber || isNaN(shipToPhoneNumber) || shipToPhoneNumber.length !== 10) {
+          errors.shipToPhoneNumber = 'Valid 10-digit phone number is required';
+        }
       }
-    }
-    if (selectedOption === 'shipping') {
-      if (!shipToName) errors.shipToName = 'Ship to name is required'; 
-      if (!shipToPhoneNumber || isNaN(shipToPhoneNumber) || shipToPhoneNumber.length !== 10) {
-        errors.shipToPhoneNumber = 'Valid 10-digit phone number is required';
-      }
-    }
-    return errors;
-  };
+
+      return errors;
+    };
 
   const clearForm = () => {
     setTag('');
@@ -128,6 +137,7 @@ const AddressForm = () => {
             value={tag}
             onChange={(e) => setTag(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
+            required
           />
           {errors.tag && <p className="text-red-500 text-xs">{errors.tag}</p>}
         </div>
@@ -149,7 +159,7 @@ const AddressForm = () => {
             type="text"
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="mt-1 p-1 border rounded w-full text-sm"
+            className="mt-1 p-1 border rounded w-full text-sm" required
           />
           {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
         </div>
@@ -160,7 +170,7 @@ const AddressForm = () => {
             type="text"
             value={state}
             onChange={(e) => setState(e.target.value)}
-            className="mt-1 p-1 border rounded w-full text-sm"
+            className="mt-1 p-1 border rounded w-full text-sm" required
           />
           {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
         </div>
@@ -171,7 +181,7 @@ const AddressForm = () => {
             type="text"
             value={flatNumber}
             onChange={(e) => setFlatNumber(e.target.value)}
-            className="mt-1 p-1 border rounded w-full text-sm"
+            className="mt-1 p-1 border rounded w-full text-sm" required
           />
           {errors.flatNumber && <p className="text-red-500 text-xs">{errors.flatNumber}</p>}
         </div>
@@ -182,7 +192,7 @@ const AddressForm = () => {
             type="text"
             value={landmark}
             onChange={(e) => setLandmark(e.target.value)}
-            className="mt-1 p-1 border rounded w-full text-sm"
+            className="mt-1 p-1 border rounded w-full text-sm" required
           />
         </div>
 
@@ -193,27 +203,27 @@ const AddressForm = () => {
         </div>
 
         <div className="mb-2 flex items-center">
-          <input
-            type="radio"
-            checked={selectedOption === 'shipping'}
-            onChange={() => setSelectedOption('shipping')}
-            className="mr-2"
-          />
-          <label className="text-gray-700 text-sm">Include shipping details</label>
-        </div>
+      <input
+        type="radio"
+        checked={selectedOption === 'shipping'}
+        onChange={() => setSelectedOption('shipping')}
+        className="mr-2"
+      />
+      <label className="text-gray-700 text-sm">Include shipping details</label>
+    </div>
 
-        {selectedOption === 'shipping' && (
-          <>
-            <div className="mb-2">
-              <label className="block text-gray-700 text-sm">Ship To Name</label>
-              <input
-                type="text"
-                value={shipToName}
-                onChange={(e) => setShipToName(e.target.value)}
-                className="mt-1 p-1 border rounded w-full text-sm"
-              />
-              {errors.shipToName && <p className="text-red-500 text-xs">{errors.shipToName}</p>}
-            </div>
+    {selectedOption === 'shipping' && (
+      <>
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">Ship To Name</label>
+          <input
+            type="text"
+            value={shipToName}
+            onChange={(e) => setShipToName(e.target.value)}
+            className="mt-1 p-1 border rounded w-full text-sm"
+          />
+          {errors.shipToName && <p className="text-red-500 text-xs">{errors.shipToName}</p>}
+        </div>
 
             <div className="mb-2">
               <label className="block text-gray-700 text-sm">Ship To Phone Number</label>
@@ -237,6 +247,8 @@ const AddressForm = () => {
           />
           <label className="text-gray-700 text-sm">Set as Default details</label>
         </div>
+
+        {errors.selectedOption && <p className="text-red-500 text-xs">{errors.selectedOption}</p>}
 
         <button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded w-full">Submit</button>
       </form>

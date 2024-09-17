@@ -29,10 +29,12 @@ const DB_COMMANDS = {
     SELECT customer_name, customer_phonenumber 
     FROM customer 
     WHERE customer_email = $1;
-    `
-
+    `,
+    CUSTOMER_ACTIVATED_CHECK: `
+    SELECT customer_name 
+    FROM customer 
+    WHERE customer_email = $1 AND isdeactivated IS FALSE;`
 };
-
 
 module.exports = { DB_COMMANDS };
 
