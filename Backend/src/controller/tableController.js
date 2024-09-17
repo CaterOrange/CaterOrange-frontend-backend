@@ -55,6 +55,13 @@ const { createCustomerTableQuery,
       } catch (error) {
         console.error('Error creating Corporate Cart table:', error);
       }
+
+      try {
+        await client.query(createPaymentTableQuery());
+        console.log(' Payment table created successfully');
+      } catch (error) {
+        console.error('Error  Payment table:', error);
+      }
       try {
         await client.query(createEventProductsTableQuery());
         console.log('Event_products table created successfully');
@@ -81,12 +88,6 @@ const { createCustomerTableQuery,
         console.error('Error creating Corporate Order Details table:', error);
       }
   
-      try {
-        await client.query(createPaymentTableQuery());
-        console.log('Corporate Payment table created successfully');
-      } catch (error) {
-        console.error('Error  Payment table:', error);
-      }
       
       
        
