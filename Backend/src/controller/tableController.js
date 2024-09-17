@@ -1,6 +1,7 @@
 const client = require('../config/dbConfig');
 const logger = require('../config/logger');
-const { createCustomerTableQuery,
+const {
+  createCustomerTableQuery,
   createPaymentTableQuery,
   createCorporateOrdersTableQuery,
   createCorporateOrderDetailsTableQuery,
@@ -10,7 +11,7 @@ const { createCustomerTableQuery,
   createAddressesTableQuery,
   createEventCartTableQuery,
   createCorporateCartTableQuery,
-  createEventProductsTableQuery} = require('../utils/tableSchema');
+  createEventProductsTableQuery } = require('../utils/tableSchema');
     const createTables = async() => 
     {
       try {

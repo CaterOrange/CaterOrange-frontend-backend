@@ -7,8 +7,8 @@ const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const allRoutes = require('./routes/customerRoutes.js');
 const adminRoutes = require('./routes/adminRoutes');
-
-const app = express();     
+ 
+const app = express();   
 app.use(express.json());
 app.use(cors());
 
@@ -22,7 +22,7 @@ const initializeApp = async () => {
     await client.connect();
     logger.info('Connected to the Caterorange DB');
 
-    await createTables();
+    await createTables();  
     logger.info('Tables created successfully');
 
     app.use(express.json());
