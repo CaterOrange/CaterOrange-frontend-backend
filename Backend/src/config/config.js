@@ -6,7 +6,8 @@ const Client1 = new Client({
   user: process.env.PG_USER,
   host: process.env.PG_HOST,
   port: process.env.PG_PORT,
-  password: process.env.PG_PASSWORD
+  password: process.env.PG_PASSWORD,
+  database:process.env.PG_DATABASE
 });
 
 const createDatabase = async () => {
@@ -20,7 +21,7 @@ const createDatabase = async () => {
     const checkDatabaseExistsQuery = `
       SELECT 1
       FROM pg_database
-      WHERE datname = $1;
+      WHERE LOWER(datname) = LOWER($1);
     `;
    
     const result = await Client1.query(checkDatabaseExistsQuery, [databaseName]);
@@ -29,7 +30,7 @@ const createDatabase = async () => {
       console.log('Database does not exist. Creating database...');
 
       // Create the database
-      const createDatabaseQuery =` CREATE DATABASE ${databaseName}`;
+      const createDatabaseQuery =` CREATE DATABASE "${databaseName}"`;
       await Client1.query(createDatabaseQuery);
 
       console.log('Database created successfully');

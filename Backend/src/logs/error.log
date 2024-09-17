@@ -185,3 +185,5 @@ undefined
 {"level":"error","message":"Initialization error:","timestamp":"2024-09-13T08:17:17.855Z"}
 {"level":"error","message":"Error creating database:","timestamp":"2024-09-17T09:19:59.208Z"}
 {"level":"error","message":"Initialization error:","timestamp":"2024-09-17T09:19:59.213Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-17T09:45:27.912Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-17T09:46:02.130Z"}
