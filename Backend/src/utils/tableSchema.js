@@ -228,25 +228,24 @@ function createGroupsTableQuery() {
 }
 
 // Create Addresses Table
-function createAddressesTableQuery() {
-  return `
-    CREATE TABLE IF NOT EXISTS addresses (
-      address_id SERIAL PRIMARY KEY,
-      address_label VARCHAR(50), 
-      line1 VARCHAR(255) NOT NULL,
-      line2 VARCHAR(255),
-      pincode INTEGER,
-      group_id INTEGER,
-      location POINT,
-      ship_to_name VARCHAR(255),
-      ship_to_phone_no BIGINT,
-      customer_generated_id VARCHAR(255),
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (group_id) REFERENCES groups(group_id),
-      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
-    );
-  `;
-}
+  function createAddressesTableQuery() {
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS address (
+            address_id SERIAL PRIMARY KEY,
+            customer_id VARCHAR(600),
+            tag VARCHAR(255),
+            pincode BIGINT,
+            line1 VARCHAR(255),
+            line2 VARCHAR(255),
+            location TEXT[],  -- Array of text
+            ship_to_name VARCHAR(255),
+            ship_to_phone_number BIGINT,
+            added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            group_id INTEGER
+        );
+    `;
+    return createTableQuery;
+  }
 
 
 // Create Event Cart Table
@@ -318,3 +317,4 @@ module.exports = {
   createCorporateCartTableQuery,
   createEventProductsTableQuery
 };
+

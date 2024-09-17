@@ -9,7 +9,7 @@ const createCustomer = async (customer_name, customer_email, customer_password, 
             DB_COMMANDS.CUSTOMER_INSERT,
             [customer_name, customer_email, customer_password, customer_phonenumber, access_token]
         );
-        logger.info('User data added successfully', { customer_email });
+        logger.info('User data added successfully', {customer_email});
         return result.rows[0];  // Return the created customer
     } catch (err) {
         logger.error('Error adding user data', { error: err.message, customer_email });
@@ -17,35 +17,18 @@ const createCustomer = async (customer_name, customer_email, customer_password, 
     }
 };
 
+
 const findCustomerEmail = async (customer_email ) => {
     try {
         const result = await client.query(DB_COMMANDS.CUSTOMER_EMAIL_SELECT, [customer_email]);
-        return result.rows[0];  // Return the customer details, or `undefined` if not found
+        console.log(result.rows[0])
+        return result.rows[0];  // Return the customer details, or undefined if not found
+
     } catch (err) {
         logger.error('Error querying the database for customer_email', { error: err.message });
         throw err;
     }
 };
-
-const loginCustomer = async (customer_email) => {
-    try {
-        const result = await client.query(
-            DB_COMMANDS.CUSTOMER_EMAIL_SELECT,
-            [customer_email]
-        );
-        if (result.rows.length === 0) {
-            logger.warn('No user data found for email', { customer_email });
-        } else {
-            logger.info('User data retrieved successfully', { customer_email });
-        }
-        return result.rows[0];
-    } catch (err) {
-        logger.error('Error checking user data', { error: err.message, customer_email });
-        throw err; 
-    }
-};
-
-
 
 const updateCustomerPassword = async (customer_email, hashedPassword,token) => {
     try {
@@ -60,6 +43,35 @@ const updateCustomerPassword = async (customer_email, hashedPassword,token) => {
         throw err;
     }
 };
+
+
+const updateAccessToken= async(customer_email, access_token)=>{
+    try {
+        const result = await client.query(
+            DB_COMMANDS.CUSTOMER_SET_ACCESSTOKEN,
+            [customer_email, access_token]
+        );
+        logger.info('Customer Token updated successfully', { customer_email });
+        return result.rowCount > 0; // Return true if any row was updated
+    } catch (err) {
+        logger.error('Error updating customer token', { error: err.message, customer_email });
+        throw err;
+    }
+}
+const createCustomerToken=async(customer_email,token)=>{
+    try {
+        const result = await client.query(
+            DB_COMMANDS.CUSTOMER_SET_TOKEN,
+            [customer_email,token]
+        );
+        // logger.info('Customer Data updated successfully', { customer_email });
+        return result.rowCount > 0; // Return true if any row was updated
+    } catch (err) {
+        logger.error('Error updating customer token', { error: err.message});
+        throw err;
+    }
+}
+
 const createEventOrder = async (customer_id, orderData) => {
     const { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = orderData;
     const values = [customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id];
@@ -107,11 +119,13 @@ const userbytoken = async (access_token) => {
     return client.query(query, [...values, id]);
   }
 
+
 module.exports = {
     createCustomer,
     findCustomerEmail,
-    loginCustomer,
     updateCustomerPassword,
+    updateAccessToken,
+    createCustomerToken,
     createEventOrder,
     getEventOrderById,
     getAllEventOrdersByCustomerId,
@@ -119,9 +133,4 @@ module.exports = {
     userbytoken,
     deleteAddressById,
     updateAddressById
-
-   
-
-
-    
 };

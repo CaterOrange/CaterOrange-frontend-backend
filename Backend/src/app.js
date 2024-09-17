@@ -7,17 +7,25 @@ const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const allRoutes = require('./routes/customerRoutes.js');
 const adminRoutes = require('./routes/adminRoutes');
+
+const addressRoutes = require('./routes/addressRoutes');
 const eventRoutes = require('./routes/eventorderRoutes.js');
 const corporateOrderDetailsRoutes = require('./routes/corporateorderRoutes.js');
+
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Register the routes
+
+app.use('/', adminRoutes);
+app.use('/',addressRoutes)
+
+
 app.use('/', corporateOrderDetailsRoutes);
 
-app.use('/admin', adminRoutes);
+
+
 
 const initializeApp = async () => {
   try {
