@@ -727,3 +727,6 @@ undefined
 {"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-13T08:36:29.838Z"}
 {"level":"info","message":"Tables created successfully","timestamp":"2024-09-13T08:36:30.632Z"}
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-13T08:36:30.643Z"}
+{"level":"error","message":"Error creating database:","timestamp":"2024-09-17T09:19:59.208Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T09:19:59.212Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-17T09:19:59.213Z"}
