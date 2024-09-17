@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {"level":"info","message":"Server is running on port undefined","timestamp":"2024-09-10T14:10:29.041Z"}
 {"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:10:29.391Z"}
 {"level":"info","message":"Server is running on port undefined","timestamp":"2024-09-10T14:11:03.718Z"}
@@ -1561,3 +1562,5 @@
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17 14:08:31"}
 {"customer_email":"chandrikab@scaleorange.com","level":"info","message":"User data added successfully","timestamp":"2024-09-17 14:09:16"}
 {"level":"info","message":"Token verified successfully","timestamp":"2024-09-17 14:09:45","token":{"email":"chandrikab@scaleorange.com","exp":1726648756,"iat":1726562356,"id":"C000006"}}
+=======
+>>>>>>> 6d4437c4aecc75836bca21d74245b48d3a690344

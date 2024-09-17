@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:10:29.391Z"}
 {"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:11:03.834Z"}
 {"level":"error","message":"Database connection error:","timestamp":"2024-09-10T14:11:15.092Z"}
@@ -160,3 +161,5 @@
 {"level":"error","message":"Error adding address data","timestamp":"2024-09-16 22:52:07"}
 {"error":"invalid input syntax for type bigint: \"\"","level":"error","message":"Error during address storing","timestamp":"2024-09-16 22:52:07"}
 {"error":"email is not defined","level":"error","message":"Error during user login","timestamp":"2024-09-17 14:05:13"}
+=======
+>>>>>>> 6d4437c4aecc75836bca21d74245b48d3a690344

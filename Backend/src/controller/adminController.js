@@ -1,59 +1,12 @@
-const categoryModel = require('../models/categoryModels');
-const groupModel = require('../models/groupModels');
 const logger = require('../config/logger');
-const customerModel = require('../models/customerModels');
-
-const addCategory = async (req, res) => {
-  try {
-    const { categoryName, categoryMedia } = req.body;
-    const newCategory = await categoryModel.addCategory(categoryName, categoryMedia);
-    res.status(201).json(newCategory);
-  } catch (err) {
-    logger.error('Error adding category:', err);
-    res.status(500).send('Error adding category');
-  }
-};
-
-
-const createGroup = async (req, res) => {
-    try {
-      const { groupLocation } = req.body;
-      if (!/^(\(\d+(\.\d+)?,-\d+(\.\d+)?\))$/.test(groupLocation)) {
-        return res.status(400).send('Invalid groupLocation format');
-      }
-      const newGroup = await groupModel.createGroup(groupLocation);
-      res.status(201).json(newGroup);
-    } catch (err) {
-      logger.error('Error creating group:', err);
-      res.status(500).send('Error creating group');
-    }
-  };
-  
-
-const deleteGroup = async (req, res) => {
-  try {
-    const { groupId } = req.params;
-    const deletedGroup = await groupModel.deleteGroup(groupId);
-    res.status(200).json({message:'Group deleted successfully',deletedGroup});
-  } catch (err) {
-    logger.error('Error deleting group:', err);
-    res.status(500).send('Error deleting group');
-  }
-};
-
-const getAllGroups = async (req, res) => {
-    try {
-      const groups = await groupModel.getAllGroups();
-      res.status(200).json(groups);
-    } catch (err) {
-      logger.error('Error fetching groups:', err);
-      res.status(500).send('Error fetching groups');
-    }
-  };
-
+const adminModel = require('../models/adminModels')
  const getCustomers = async(req, res)=>{
     try {
-      const result = await customerModel.getAllCustomers();
+
+
+    
+      const result = await adminModel.getAllCustomers();
+
       res.status(200).send(result.rows);
     } catch (err) {
       logger.error('Error:', err);
@@ -64,7 +17,7 @@ const getAllGroups = async (req, res) => {
   const getCustomerById = async(req, res)=> {
     const id = req.params.id;
     try {
-      const result = await getCustomerById(id);
+      const result = await adminModel.getCustomerById(id);
       res.status(200).send(result.rows);
     } catch (err) {
       logger.error('Error:', err);
@@ -75,7 +28,7 @@ const getAllGroups = async (req, res) => {
   const deleteCustomer = async (req, res)=> {
     const id = req.params.id;
     try {
-     const result = await deleteCustomerById(id);
+     const result = await adminModel.deleteCustomerById(id);
       res.status(200).send("Deleted");
     } catch (err) {
       logger.error('Error:', err);
@@ -83,33 +36,48 @@ const getAllGroups = async (req, res) => {
     }
   };
 
-  const addItem = async (req, res) =>{
-      try {
-        const result=await additems(req.body);
-        res.status(200).send("Items added successfully");
-      } catch (err) {
-        res.status(500).send("Error in adding Items");
+
+    const updateUser =async(req, res) => {
+      const id = req.params.id;
+      const {customer_name,customer_phonenumber,customer_email,customer_address,wallet_amount,group_id} = req.body;
+
+      const fields = [];
+      const values = [];
+  
+      if (customer_name) fields.push('customer_name = $' + (fields.length + 1)), values.push(customer_name);
+      if (customer_address) fields.push('customer_address = $' + (fields.length + 1)), values.push(customer_address);
+      if (customer_email) fields.push('customer_email = $' + (fields.length + 1)), values.push(customer_email);
+      if (customer_phonenumber) fields.push('customer_phonenumber = $' + (fields.length + 1)), values.push(customer_phonenumber);
+      if (wallet_amount) fields.push('wallet_amount = $' + (fields.length + 1)), values.push(wallet_amount);
+      if (group_id) fields.push('group_id = $' + (fields.length + 1)), values.push(group_id);
+  
+      if (fields.length === 0) {
+        return res.status(400).send('No fields to update');
       }
-    };
-    const deleteItem = async(req, res)=> {
+  
       try {
-        const id = parseInt(req.params.id);
-        const result=await deleteitems(id);
-        res.status(200).send("Items deleted successfully");
+        const result = await adminModel.updateUser(id,fields,values);
+        if (result.rowCount === 0) {
+          return res.status(404).send('User not found');
+        }
+        res.status(200).send('User updated');
       } catch (err) {
-        res.status(500).send("Error in deleting Item");
-      }
-    };
-    const updateItem = async(req, res)=> {
-      try {
-        const id =parseInt(req.params.id);
-        const result=await updateitems(id,req.body);
-        res.status(200).send("Item updated successfully");
-      } catch (err) {
-        res.status(500).send("Error in updating Item");
+        logger.error('Error:', err);
+        res.status(500).send('Internal server error');
       }
     }
 
-
-
-module.exports = { addCategory, createGroup, deleteGroup,getAllGroups,getCustomers, deleteCustomer,addItem,deleteItem, updateItem };
+    const getAllPayments = async (req, res) => {
+      try {
+        const payments = await adminModel.getAllPayments();
+        if (!payments.length) {
+          return res.status(404).json({ error: 'No payments found' });
+        }
+        res.status(200).json(payments);
+      } catch (error) {
+        logger.error('Error fetching payments: ', error);
+        res.status(500).json({ error: 'Error fetching payments', details: error.message });
+      }
+    };
+    
+module.exports = {updateUser,getCustomers, deleteCustomer,getCustomerById,getAllPayments};

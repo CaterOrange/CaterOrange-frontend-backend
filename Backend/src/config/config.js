@@ -1,6 +1,6 @@
 const { Client } = require('pg');
 require('dotenv').config();
-const logger = require('./logger'); // Ensure this path is correct
+const logger = require('./logger'); 
 
 const Client1 = new Client({
   user: process.env.PG_USER,
@@ -18,8 +18,9 @@ const createDatabase = async () => {
     const checkDatabaseExistsQuery = `
       SELECT 1
       FROM pg_database
-      WHERE datname = $1;
+      WHERE LOWER(datname) = LOWER($1);
     `;
+
    
     const result = await Client1.query(checkDatabaseExistsQuery, [databaseName]);
 
@@ -27,7 +28,7 @@ const createDatabase = async () => {
       console.log('Database does not exist. Creating database...');
 
       // Create the database
-      const createDatabaseQuery = `CREATE DATABASE ${databaseName};`;
+      const createDatabaseQuery =` CREATE DATABASE "${databaseName}"`;
       await Client1.query(createDatabaseQuery);
 
       console.log('Database created successfully');

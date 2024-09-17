@@ -611,6 +611,7 @@ const google_auth=async (req, res)=>{
         res.status(500).json({ error: err.message });
     }      
 }
+
 const checkCustomer = async (req, res) => {
     try {
         const { email } = req.body;
@@ -652,6 +653,137 @@ const checkCustomer = async (req, res) => {
     }
 };
 
+const createEventOrderController= async(req, res) => {
+    const { customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = req.body;
+  
+    try {
+        const order = await customer_model.createEventOrder(customer_id, { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id });
+        res.status(201).json({ message: 'Event order created successfully', order });
+    } catch (error) {
+        console.error('Error creating event order:', error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+const getEventOrderByIdController = async(req, res) => {
+    const {id } = req.params;
+  
+    try {
+        const order = await customer_model.getEventOrderById(id);
+  
+        if (!order) {
+            return res.status(404).json({ message: 'Event order not found' });
+        }
+  
+        res.status(200).json({ order });
+    } catch (error) {
+        console.error('Error retrieving event order:', error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+const getAllEventOrdersByCustomerIdController = async(req, res)=> {
+    const { customer_id } = req.body; 
+  
+    try {
+        const orders = await customer_model.getAllEventOrdersByCustomerId(customer_id);
+        res.status(200).json({ orders });
+    } catch (error) {
+        console.error('Error retrieving event orders:', error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+const getAddressByCustomerId = async (req, res) => {
+    const { customer_id } = req.params;
+  
+    try {
+      // Fetch addresses associated with the customer
+      const addresses = await customer_model.getAddressesByCustomerId( customer_id);
+  
+      if (!addresses.length) {
+        return res.status(404).json({ error: 'No addresses found for this customer' });
+      }
+  
+      res.status(200).json(addresses);
+    } catch (error) {
+      logger.error('Error fetching address details: ', error);
+      res.status(500).json({ error: 'Error fetching address details', details: error.message });
+    }
+  };
+
+  const getuserbytoken = async (req, res) => {
+    const {access_token} = req.body;
+    try {
+        const result = await customer_model.userbytoken(access_token);
+        console.log(result.rows[0])
+        return result.rows[0]
+        
+    }
+    catch (err) {
+        res.status(500).json({ error: 'An error occurred while retrieving complaints', err });
+    }
+};
+
+const deleteAddressById = async (req, res) => {
+    const { address_id } = req.params;
+  
+    try {
+      const deletedAddress = await customer_model.deleteAddressById(address_id);
+  
+      if (!deletedAddress) {
+        return res.status(404).json({ error: 'Address not found' });
+      }
+  
+      res.status(200).json({ message: 'Address deleted successfully', deletedAddress });
+    } catch (error) {
+      logger.error('Error deleting address: ', error);
+      res.status(500).json({ error: 'Error deleting address', details: error.message });
+    }
+  };
+  
+  const updateAddressById = async (req, res) => {
+    const address_id = req.params.address_id;
+    const {
+      tag,
+      line1,
+      line2,
+      pincode,
+      latitude,
+      longitude,
+      ship_to_name,
+      ship_to_phone_no
+    } = req.body;
+  
+    const fields = [];
+    const values = [];
+  
+    if (tag) fields.push('tag = $' + (fields.length + 1)), values.push(tag);
+    if (line1) fields.push('line1 = $' + (fields.length + 1)), values.push(line1);
+    if (line2) fields.push('line2 = $' + (fields.length + 1)), values.push(line2);
+    if (pincode) fields.push('pincode = $' + (fields.length + 1)), values.push(pincode);
+    if (latitude && longitude) fields.push('location = POINT($' + (fields.length + 1) + ', $' + (fields.length + 2) + ')'), values.push(latitude, longitude);
+    if (ship_to_name) fields.push('ship_to_name = $' + (fields.length + 1)), values.push(ship_to_name);
+    if (ship_to_phone_no) fields.push('ship_to_phone_no = $' + (fields.length + 1)), values.push(ship_to_phone_no);
+  
+    if (fields.length === 0) {
+      return res.status(400).send('No fields to update');
+    }
+  
+    try {
+      const result = await customer_model.updateAddressById(address_id, fields, values);
+      if (result.rowCount === 0) {
+        return res.status(404).send('Address not found');
+      }
+      res.status(200).send('Address updated');
+    } catch (err) {
+      logger.error('Error:', err);
+      res.status(500).send('Internal server error');
+    }
+  };
+  
+
+
+
 module.exports = {
     register,
     login,
@@ -659,5 +791,17 @@ module.exports = {
     google_auth,
     send_otp,
     verify_otp,
-    checkCustomer
+    checkCustomer,
+    createEventOrderController,
+    getAllEventOrdersByCustomerIdController,
+    getEventOrderByIdController,
+    getAddressByCustomerId,
+    getuserbytoken,
+    deleteAddressById,
+    updateAddressById
 };
+
+
+
+
+
