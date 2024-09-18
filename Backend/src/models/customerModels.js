@@ -16,7 +16,19 @@ const createCustomer = async (customer_name, customer_email, customer_password, 
         throw err;
     }
 };
-
+const findCustomerToken = async (access_token) => {
+    try {
+        const result = await client.query(DB_COMMANDS.CUSTOMER_TOKEN_SELECT, [access_token]);
+        if (result.rows.length === 0) {
+            logger.error('No customer found with token:',access_token);
+            return null;
+        }
+        return result.rows[0];  // Return the customer details, or undefined if not found
+    } catch (err) {
+        logger.error('Error querying the database for access_token', { error: err.message });
+        throw err;
+    }
+};
 
 const findCustomerEmail = async (customer_email ) => {
     try {
@@ -150,5 +162,7 @@ module.exports = {
     getAddressesByCustomerId,
     userbytoken,
     deleteAddressById,
-    updateAddressById
+    updateAddressById,
+    findCustomerToken,
+    findActivated
 };

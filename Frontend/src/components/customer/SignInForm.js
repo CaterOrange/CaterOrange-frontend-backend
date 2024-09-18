@@ -23,13 +23,15 @@ const SignInForm = ({ onSignIn }) => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [forgotPasswordStep, setForgotPasswordStep] = useState(1);
+  const [userProfile, setUserProfile] = useState(null); // for storing Google user profile
+  const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const navigate = useNavigate();
 
   const handleSendOtp = async () => {
     setError('');
     try {
       console.log('handle otp called');
-      await axios.post('http://localhost:4000/customer/checkcustomer', { email });
+      await axios.post('http://localhost:4000/customer/checkCustomerOtp', { email });
       const response = await axios.post('http://localhost:4000/customer/send-otp', { email });
       setError(response.data.message);
       setForgotPasswordStep(2);
@@ -81,22 +83,40 @@ const SignInForm = ({ onSignIn }) => {
       setError(state.errorMessage);
     }
   }, [state, onSignIn, navigate]);
+  const handleSignUp = ( isGoogleLogin ) =>{
+    console.log("in signup: ",isGoogleLogin)
+  setIsGoogleLogin(isGoogleLogin);
+  }
+  useEffect(() => {
+    
+    if (state.data && !state.isError) {
+      console.log("in useeffect: ",isGoogleLogin)
+      onSignIn(state.data, isGoogleLogin); // Call onSignIn with the token
+      console.log('signed in successfully');
+      navigate('/home')
+    }
+  }, [state.data, state.isError, onSignIn, navigate]);
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
-    try {
-      const tokenId = credentialResponse.credential;
-      const decodedToken = jwtDecode(tokenId);
-      const { name, email } = decodedToken;
-      setEmail(email);
-      localStorage.setItem('accessToken', tokenId);
-      await Login_google_auth(name, email, tokenId, dispatch);
-    } catch (error) {
-      setError('Google login failed. Please try again.');
-    }
-  };
+    const tokenId = credentialResponse.credential;
+    // Decode the Google token to get user info
+    const decodedToken = jwtDecode(tokenId);
+    console.log(decodedToken);
+    const { name , email } = decodedToken;
+    setEmail(email);
+    setUserProfile(decodedToken);
+  //   // Store the Google token in localStorage
+    localStorage.setItem('accessToken', tokenId);
+
+    console.log(name);
+    console.log(email);
+    const response= await Login_google_auth(name, email, tokenId,dispatch);
+    setIsGoogleLogin(true);
+   
+};
 
   const handleGoogleLoginError = () => {
-    setError('Google Login Failed. Please try again.');
+    console.log('Google Login Failed');
   };
 
   const handleImageError = (event) => {
@@ -122,13 +142,10 @@ const SignInForm = ({ onSignIn }) => {
       {showSignUpModal ? (
         <SignUpForm 
           closeModal={() => setShowSignUpModal(false)}
-          onSignUp={(data) => {
-            onSignIn(data);
-            setShowSignUpModal(false);
-          }}
+          onSignUp={handleSignUp}
         />
       ) : (
-        <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-md p-8">
           <div className="h-40 bg-blue-300 border-back-200 mb-4 overflow-hidden">
             <Carousel 
               autoPlay 
@@ -277,7 +294,6 @@ const SignInForm = ({ onSignIn }) => {
             >
               {forgotPassword ? 'Back to Sign In' : 'Forgot Password?'}
             </button>
-
             <button
               className="text-sm text-indigo-500 hover:underline focus:outline-none"
               onClick={() => setShowSignUpModal(true)}

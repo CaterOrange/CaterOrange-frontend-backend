@@ -312,7 +312,7 @@ const login = [
                 console.log('Error: customer.customer_password is undefined');
                 return res.status(500).json({
                     success: false,
-                    message: 'Internal server error: password not found'
+                    message: 'Password not found'
                 });
             }
             // Compare passwords
@@ -434,183 +434,91 @@ const forgotPassword = [
         }
     }
 ];
-const google_auth=async (req, res)=>{
-    try{
-        const { customer_name,customer_email, access_token } = req.body;
+const google_auth = async (req, res) => {
+    try {
+        const { customer_name, customer_email } = req.body;
 
-        const existingUserByEmail = await customer_model.findCustomerEmail(customer_email);
+        const existingCustomer = await customer_model.findCustomerEmail(customer_email);
 
-        if(existingUserByEmail){
-            try{
-            const customer = await customer_model.updateAccessToken(customer_email, access_token);
-            if (!customer) {
-                logger.warn('Error updating token', { customer_email });
-                return res.status(400).json({ message: 'Error updating token' });
-            }
+        if (!existingCustomer) {
+            const newCustomer = await customer_model.createCustomer(
+                customer_name,
+                customer_email,
+                null,  // password
+                null  // phone number 
+            );
 
-            res.json({
+            const gid=newCustomer.customer_generated_id ;
+            const token = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
+            const newCustomerToken = await customer_model.createCustomerToken(
+                customer_email,
+                token
+            );
+            logger.info('Customer registered successfully through Google', { customer_email });
+            const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
+            console.log("email,id",decoded.email,decoded.id)
+            return res.json({
                 success: true,
-                message: 'Login successfully with google',
-                token: access_token
-
+                message: 'Customer registered successfully',
+                token,
+                customer: newCustomerToken
             });
-        }catch (err) {
-            logger.error('Error during google login', { error: err.message });
-            res.status(500).json({ error: err.message });
-        }
-        }
-        else{
-            try{
-               const customer_phonenumber=0;
-               const customer_password="";
-               console.log('access in google reg',access_token)
-
-                const newCustomer = await customer_model.createCustomer(
-                    customer_name,
-                    customer_email ,
-                    customer_password,
-                    customer_phonenumber,
-                    access_token
-                );
-                if (newCustomer) {
-                    // Send Welcome Email
-                    const username = customer_email.substring(0, customer_email.indexOf('@'));
-        
-                    const mailOptions = {
-                        from: 'sirisha@scaleorange.com',
-                        to: customer_email,
-                        subject: 'Welcome to CaterOrange!',
-                        html: `<html>
-                    <head>
-                    <style>
-                        body {
-                        font-family: Arial, sans-serif;
-                        background-color: #f4f4f4;
-                        margin: 0;
-                        padding: 20px;
-                        color: #333;
-                        }
-                        .email-container {
-                        background-color: #ffffff;
-                        padding: 30px;
-                        border-radius: 12px;
-                        max-width: 600px;
-                        margin: 0 auto;
-                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                        border: 1px solid #f0f0f0;
-                        }
-                        .header {
-                        color: #ff6600;
-                        font-size: 32px;
-                        font-weight: bold;
-                        text-align: center;
-                        padding-bottom: 15px;
-                        border-bottom: 3px solid #ff6600;
-                        }
-                        .section {
-                        margin-top: 20px;
-                        }
-                        .section h2 {
-                        color: #ff6600;
-                        font-size: 22px;
-                        margin-bottom: 10px;
-                        }
-                        .category {
-                        margin-bottom: 15px;
-                        color: #555;
-                        padding-left: 15px;
-                        }
-                        .price {
-                        font-weight: bold;
-                        }
-                        .content {
-                        font-family: Arial, sans-serif;
-                        line-height: 1.8;
-                        color: #555;
-                        }
-                        .footer {
-                        margin-top: 40px;
-                        text-align: center;
-                        font-size: 12px;
-                        color: #777;
-                        }
-                        .footer a {
-                        color: #ff6600;
-                        text-decoration: none;
-                        }
-                    </style>
-                    </head>
-                    <body>
-                    <div class="email-container">
-                        <div class="header">Welcome to CaterOrange!</div>
-                        
-                        <p class="content">Dear ${username.charAt(0).toUpperCase() + username.slice(1)},</p>
-                        <p class="content">Thank you for registering with <strong>CaterOrange</strong>, the premier food delivery app dedicated to meeting all your corporate and event catering needs. We are thrilled to have you as part of our community and look forward to providing you with exceptional service and delicious food!</p>
-        
-                        <div class="section">
-                        <h2>Corporate Orders</h2>
-                        <p class="content">At CaterOrange, we offer a diverse range of corporate food options designed to suit any occasion. Here’s a breakdown of what we offer:</p>
-                        <ul>
-                            <li class="category"><strong>Breakfast:</strong> Start your day right with our carefully curated breakfast options, perfect for morning meetings and team gatherings.</li>
-                            <li class="category"><strong>Veg Lunch:</strong> Enjoy a satisfying lunch with our vegetarian options at just <span class="price">99/-</span> for 6 items, ensuring your team gets a wholesome and nutritious meal.</li>
-                            <li class="category"><strong>Non-Veg Lunch:</strong> For those who prefer non-vegetarian dishes, our non-veg lunch is available at <span class="price">120/-</span> for 6 items, providing a rich and flavorful meal.</li>
-                            <li class="category"><strong>Snacks:</strong> Keep the energy high with our assortment of snacks, ideal for breaks and light bites throughout the day.</li>
-                            <li class="category"><strong>Veg Dinner:</strong> End the day with our delicious vegetarian dinner options, available at <span class="price">99/-</span> for 6 items, offering a perfect evening meal.</li>
-                            <li class="category"><strong>Non-Veg Dinner:</strong> Our non-veg dinner options, priced at <span class="price">120/-</span> for 6 items, are designed to satisfy hearty appetites and provide a fulfilling end to the day.</li>
-                        </ul>
-                        </div>
-        
-                        <div class="section">
-                        <h2>Event Orders</h2>
-                        <p class="content">Planning an event? CaterOrange has you covered with our flexible event ordering options:</p>
-                        <ul class="content">
-                            <li><strong>Wide Selection:</strong> Choose from an extensive menu of food items to suit any type of event, whether it’s a formal gathering, casual get-together, or anything in between.</li>
-                            <li><strong>Customization:</strong> Tailor your plate to your preferences, ensuring every guest gets exactly what they want.</li>
-                            <li><strong>Quantity Selection:</strong> Specify the quantities of each item to perfectly match your event’s size and needs.</li>
-                        </ul>
-                        </div>
-        
-                        <p class="content">We are committed to making your food ordering experience seamless and enjoyable. Our team is here to support you every step of the way, from selecting the perfect menu to ensuring timely delivery.</p>
-                        <p class="content">We look forward to serving you and making every occasion memorable with our top-notch food and service!</p>
-        
-                        <p class="content">Best regards,<br>The <strong>CaterOrange</strong> Team</p>
-        
-                        <div class="footer">
-                        <p>For support or inquiries, contact us at <a href="mailto:support@caterorange.com">support@caterorange.com</a></p>
-                        </div>
-                    </div>
-                    </body>
-                    </html>
-                    ` // HTML content as you have provided
-                    };
-        
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            return console.log(`Error sending email to ${customer_email}:`, error);
-                        }
-                        console.log('Email sent to:', customer_email, 'Response:', info.response);
-                    });
-                }
-                logger.info('Customer registered through google successfully', { customer_email  });
+            
+        } else {
+            // Login existing customer
+            let token = existingCustomer.access_token;
+            try {
+                jwt.verify(token, SECRET_KEY);
+            } catch (err) {
+                // If token is invalid or expired, create a new one
+                const gid=existingCustomer.customer_generated_id ;
+                const token = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
+                // token = jwt.sign({ email: customer_email }, SECRET_KEY, { expiresIn: '24h' });
+                await customer_model.updateAccessToken(customer_email, token);
+                logger.info('Login successful through Google and token updated', { token });
+            }
 
             return res.json({
-            success: true,
-            message: 'Customer registered through google successfully',
-            customer: newCustomer
-
-        });
-            }
-            catch (err) {
-                logger.error('Error during customer registration with google', { error: err.message });
-                return res.status(500).json({ error: err.message });
-            }
+                success: true,
+                message: 'Login successful through Google',
+                token,
+                customer: existingCustomer
+            });
         }
+    } catch (err) {
+        logger.error('Error during Google OAuth', { error: err.message });
+        return res.status(500).json({ error: 'An error occurred during authentication' });
     }
-    catch (err) {
-        logger.error('Error during google oauth', { error: err.message });
-        res.status(500).json({ error: err.message });
-    }      
-}
+};
+
+const customer_info = async (req, res) => {
+  // Extract token from Authorization header
+  const token = req.headers['token'];
+  
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+  
+  try {
+    // Verify and decode the token
+    const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
+    // Extract user ID or other information from decoded token
+    const customer_email = decoded.email; // Adjust based on your token payload
+
+    // Fetch user data from the database
+    const result = await client.query('SELECT customer_name, customer_phonenumber FROM customer WHERE customer_email = $1', [customer_email]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    const { customer_name, customer_phonenumber } = result.rows[0];
+    return res.json({ customer_name, customer_phonenumber, customer_email });
+  } catch (error) {
+    console.error('Error verifying token or fetching user info:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 const checkCustomer = async (req, res) => {
     try {
@@ -652,6 +560,46 @@ const checkCustomer = async (req, res) => {
         });
     }
 };
+
+const checkCustomerOtp = async (req, res) => {
+    try {
+        console.log('called model')
+        const { email } = req.body;
+        console.log('email',email)
+        const existingUserByEmail = await customer_model.findCustomerEmail(email);
+        console.log('undefined means user is not there',existingUserByEmail)
+        if (!existingUserByEmail) {
+            logger.error('You are not registered yet, please register', { email });
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email, user does not exist'
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            message: ''
+        });
+    } catch (error) {
+        // Log the error
+        logger.error('An error occurred while checking the customer', { error });
+
+        // Send a 500 response for server errors
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while checking the customer'
+        });
+    }
+};
+
+
+
+
+
+
+
+
+
+
 
 const createEventOrderController= async(req, res) => {
     const { customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = req.body;
@@ -798,7 +746,9 @@ module.exports = {
     getAddressByCustomerId,
     getuserbytoken,
     deleteAddressById,
-    updateAddressById
+    updateAddressById,
+    customer_info,
+    checkCustomerOtp
 };
 
 

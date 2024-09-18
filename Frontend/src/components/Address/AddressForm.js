@@ -25,7 +25,6 @@ const AddressForm = () => {
       return rest;
     });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
