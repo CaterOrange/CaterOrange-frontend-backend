@@ -4350,3 +4350,40 @@
 {"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-16T14:13:12.765Z"}
 {"level":"info","message":"Tables created successfully","timestamp":"2024-09-16T14:13:12.768Z"}
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-16T14:13:12.777Z"}
+{"level":"error","message":"Error creating database:","timestamp":"2024-09-17T08:55:20.306Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T08:55:20.316Z"}
+{"level":"error","message":"Initialization error:","timestamp":"2024-09-17T08:55:20.338Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T08:56:21.465Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T08:56:21.491Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-17T08:56:21.497Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-17T08:56:21.500Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-17T08:56:21.503Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T08:57:13.927Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T08:57:13.949Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-17T08:57:13.954Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-17T08:57:13.957Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-17T08:57:13.960Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-17T08:57:13.964Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T08:57:17.424Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T08:57:17.474Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-17T08:57:17.483Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-17T08:57:17.486Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-17T08:57:17.490Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-17T08:57:17.504Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T08:59:10.922Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T08:59:10.962Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T08:59:12.807Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T08:59:12.829Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T09:02:48.931Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T09:02:48.965Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T09:02:52.716Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T09:02:52.738Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T09:03:08.340Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T09:03:08.373Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-17T09:03:08.378Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-17T09:03:15.373Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-17T09:03:15.399Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-17T09:03:15.404Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-17T09:03:15.406Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-17T09:03:15.408Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-17T09:03:15.418Z"}

@@ -29,17 +29,12 @@ const DB_COMMANDS = {
     SELECT customer_name, customer_phonenumber 
     FROM customer 
     WHERE customer_email = $1;
-<<<<<<< HEAD
     `,
     CUSTOMER_ACTIVATED_CHECK: `
     SELECT customer_name 
     FROM customer 
-    WHERE customer_email = $1 AND isdeactivated IS FALSE;`
-};
-=======
-    `
+    WHERE customer_email = $1 AND isdeactivated IS FALSE;  `
 ,
-
     GET_ALL_CUSTOMERS:`SELECT * FROM customer`,
     GET_CUSTOMER_BY_ID:`SELECT * FROM customer WHERE customer_id=$1`,
     DELETE_CUSTOMER:`DELETE FROM customer WHERE customer_id=$1`,
@@ -95,9 +90,7 @@ const DB_COMMANDS = {
     WHERE customer_id = $1;
   `
  };
-        
 
->>>>>>> 6d4437c4aecc75836bca21d74245b48d3a690344
 
 module.exports = { DB_COMMANDS };
 

@@ -72,7 +72,6 @@ const createCustomerToken=async(customer_email,token)=>{
     }
 }
 
-<<<<<<< HEAD
 // Function to find activated customer
 const findActivated = async (customer_email) => {
     try {
@@ -90,7 +89,7 @@ const findActivated = async (customer_email) => {
     }
 }
 
-=======
+
 const createEventOrder = async (customer_id, orderData) => {
     const { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = orderData;
     const values = [customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id];
@@ -139,16 +138,12 @@ const userbytoken = async (access_token) => {
   }
 
 
->>>>>>> 6d4437c4aecc75836bca21d74245b48d3a690344
 module.exports = {
     createCustomer,
     findCustomerEmail,
     updateCustomerPassword,
     updateAccessToken,
     createCustomerToken,
-<<<<<<< HEAD
-    findActivated
-=======
     createEventOrder,
     getEventOrderById,
     getAllEventOrdersByCustomerId,
@@ -156,5 +151,4 @@ module.exports = {
     userbytoken,
     deleteAddressById,
     updateAddressById
->>>>>>> 6d4437c4aecc75836bca21d74245b48d3a690344
 };
