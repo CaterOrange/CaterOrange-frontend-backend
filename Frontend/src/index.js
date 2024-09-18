@@ -11,8 +11,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId="99210557264-qdl18r8dfjs8ckent7f2387l52pjui65.apps.googleusercontent.com">
-      <App/>
-      {/* <AddressForm/> */}
+      {/* <App/> */}
+      <AddressForm/>
       {/* <MapAddressSelector/> */}
       </GoogleOAuthProvider>
   </React.StrictMode>

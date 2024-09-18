@@ -84,7 +84,9 @@ const SignInForm = ({ onSignIn }) => {
     }
   }, [state, onSignIn, navigate]);
   const handleSignUp = ( isGoogleLogin ) =>{
-    console.log("in signup: ",isGoogleLogin)
+    localStorage.setItem('token',isGoogleLogin);
+
+    console.log("in signup isgooglelogin: ",isGoogleLogin)
   setIsGoogleLogin(isGoogleLogin);
   }
   useEffect(() => {
@@ -106,11 +108,12 @@ const SignInForm = ({ onSignIn }) => {
     setEmail(email);
     setUserProfile(decodedToken);
   //   // Store the Google token in localStorage
-    localStorage.setItem('accessToken', tokenId);
+    // localStorage.setItem('token', tokenId);
 
     console.log(name);
     console.log(email);
     const response= await Login_google_auth(name, email, tokenId,dispatch);
+    console.log(response)
     setIsGoogleLogin(true);
    
 };

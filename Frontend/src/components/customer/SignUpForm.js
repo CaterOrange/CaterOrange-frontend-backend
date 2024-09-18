@@ -4,6 +4,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import React, { useContext, useState, useEffect } from 'react';
 import SignInForm from './SignInForm';
+import axios from 'axios';
 import { SignUpContext } from '../../services/contexts/SignUpContext';
 import { SignUp_customer, Login_google_auth } from '../../services/context_state_management/actions/action';
 
@@ -38,8 +39,11 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
     const decodedToken = jwtDecode(tokenId);
     const { name, email } = decodedToken;
 
+    // const tokens=await axios.post(`http://localhost:4000/customer/google_auth`,{name,email});
+
+    // const token=tokens.token
     setEmail(email);
-    localStorage.setItem('accessToken', tokenId);
+    // localStorage.setItem('token', tokenId);
 
     await Login_google_auth(name, email, tokenId, dispatch);
     onSignUp(tokenId, true);

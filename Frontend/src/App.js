@@ -8,7 +8,7 @@ function App() {
   const [user, setUser] = useState(null);
   const handleSignIn = (token) => {
     if (token) {
-      localStorage.setItem('accessToken', token);
+      localStorage.setItem('token', token);
       setUser({ token });
     }
   };

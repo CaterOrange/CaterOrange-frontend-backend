@@ -176,3 +176,6 @@
 {"error":{},"level":"error","message":"An error occurred while checking the customer","timestamp":"2024-09-18T07:17:44.322Z"}
 {"error":{},"level":"error","message":"An error occurred while checking the customer","timestamp":"2024-09-18T09:29:45.939Z"}
 {"level":"error","message":"You are not registered yet, please register","timestamp":"2024-09-18T09:41:19.592Z"}
+{"error":"localStorage is not defined","level":"error","message":"Error during Google OAuth","timestamp":"2024-09-18T11:38:08.925Z"}
+{"error":"null value in column \"customer_name\" of relation \"customer\" violates not-null constraint","level":"error","message":"Error adding user data","timestamp":"2024-09-18T12:10:00.321Z"}
+{"error":"null value in column \"customer_name\" of relation \"customer\" violates not-null constraint","level":"error","message":"Error during Google OAuth","timestamp":"2024-09-18T12:10:00.323Z"}
