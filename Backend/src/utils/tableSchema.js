@@ -296,8 +296,18 @@ function createEventProductsTableQuery() {
   `;
 }
 
-
+function createAdminTableQuery() {
+return `
+  CREATE TABLE IF NOT EXISTS admin (
+    admin_id SERIAL PRIMARY KEY,
+    isadmin BOOLEAN NOT NULL DEFAULT false,
+    customer_generated_id VARCHAR(255),
+    FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
+  );
+ `; 
+}
 module.exports = {
+  createAdminTableQuery,
   createCustomerTableQuery,
   createPaymentTableQuery,
   createCorporateOrdersTableQuery,
