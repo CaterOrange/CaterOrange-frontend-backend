@@ -1,0 +1,1 @@
+// Explain the functionality and context in which the component you’ve developed operates

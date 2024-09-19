@@ -7,7 +7,7 @@ const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const allRoutes = require('./routes/customerRoutes.js');
 const adminRoutes = require('./routes/adminRoutes');
-
+const paymentRoutes = require('./routes/paymentRoutes.js');
 const addressRoutes = require('./routes/addressRoutes');
 const eventRoutes = require('./routes/eventorderRoutes.js');
 const corporateOrderDetailsRoutes = require('./routes/corporateorderRoutes.js');
@@ -18,9 +18,9 @@ app.use(express.json());
 app.use(cors());
 
 
-app.use('/admin', adminRoutes);
+app.use('/', adminRoutes);
 app.use('/',addressRoutes)
-
+app.use('/',paymentRoutes)
 
 app.use('/', corporateOrderDetailsRoutes);
 
