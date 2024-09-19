@@ -24,9 +24,6 @@ app.use('/',paymentRoutes)
 
 app.use('/', corporateOrderDetailsRoutes);
 
-
-
-
 const initializeApp = async () => {
   try {
     await createDatabase();

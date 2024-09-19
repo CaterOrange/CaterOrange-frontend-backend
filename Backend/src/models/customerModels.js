@@ -16,7 +16,19 @@ const createCustomer = async (customer_name, customer_email, customer_password, 
         throw err;
     }
 };
-
+const findCustomerToken = async (access_token) => {
+    try {
+        const result = await client.query(DB_COMMANDS.CUSTOMER_TOKEN_SELECT, [access_token]);
+        if (result.rows.length === 0) {
+            logger.error('No customer found with token:',access_token);
+            return null;
+        }
+        return result.rows[0];  // Return the customer details, or undefined if not found
+    } catch (err) {
+        logger.error('Error querying the database for access_token', { error: err.message });
+        throw err;
+    }
+};
 
 const findCustomerEmail = async (customer_email ) => {
     try {
@@ -71,6 +83,24 @@ const createCustomerToken=async(customer_email,token)=>{
         throw err;
     }
 }
+
+// Function to find activated customer
+const findActivated = async (customer_email) => {
+    try {
+        const result = await client.query(DB_COMMANDS.CUSTOMER_EMAIL_SELECT, [customer_email]);
+        if (result.rows.length > 0) {
+            const check = await client.query(DB_COMMANDS.CUSTOMER_ACTIVATED_CHECK, [customer_email]);
+            console.log(check.rows[0])
+            return check.rows[0]; 
+        } else {
+            throw new Error("Customer not found becuase he is deactivated");
+        }
+    } catch (err) {
+        logger.error('Error checking if customer is deactivated', { error: err.message });
+        throw err; 
+    }
+}
+
 
 const createEventOrder = async (customer_id, orderData) => {
     const { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = orderData;
@@ -132,5 +162,7 @@ module.exports = {
     getAddressesByCustomerId,
     userbytoken,
     deleteAddressById,
-    updateAddressById
+    updateAddressById,
+    findCustomerToken,
+    findActivated
 };

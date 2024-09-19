@@ -3,6 +3,9 @@ const router = express.Router()
 const adminController = require('../controller/adminController');
 
 
+
+
+
 router.get('/api/customers/:id',adminController.getCustomerById)
 router.get('/api/customers',adminController.getCustomers)
 router.delete('/api/deleteCustomer/:id',adminController.deleteCustomer)
@@ -30,5 +33,6 @@ router.get('/api/corporatecategories',adminController.getcorporatecategory);
 
 router.put('/api/deactivetrue/:id',adminController.toggleDeactivation);
 router.get('/api/analytics', adminController.getAnalyticsData);
+
 
 module.exports = router;
