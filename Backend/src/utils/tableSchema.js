@@ -198,6 +198,9 @@ function createCorporateCategoryTableQuery() {
       category_id SERIAL PRIMARY KEY,
       category_name VARCHAR(255) NOT NULL,
       category_media TEXT,
+      category_description VARCHAR(500),
+      category_price FLOAT
+      
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       price FLOAT
     );
@@ -205,16 +208,7 @@ function createCorporateCategoryTableQuery() {
 }
 
 // Create Event Category Table
-function createEventCategoryTableQuery() {
-  return `
-    CREATE TABLE IF NOT EXISTS event_category (
-      category_id SERIAL PRIMARY KEY,
-      category_name VARCHAR(255) NOT NULL,
-      category_media TEXT,
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-  `;
-}
+
 
 // Create Groups Table
 function createGroupsTableQuery() {
@@ -310,7 +304,7 @@ module.exports = {
   createCorporateOrderDetailsTableQuery,
   createEventOrdersTableQuery,
   createCorporateCategoryTableQuery,
-  createEventCategoryTableQuery,
+ 
   createGroupsTableQuery,
   createAddressesTableQuery,
   createEventCartTableQuery,
