@@ -1,180 +1,233 @@
+// Create Customer Table
 function createCustomerTableQuery() {
-    const createTableQuery = `
-      CREATE SEQUENCE IF NOT EXISTS custom_id_seq START 1;
-        CREATE TABLE IF NOT EXISTS customer (
-            customer_id SERIAL PRIMARY KEY,
-            customer_generated_id VARCHAR(255) UNIQUE DEFAULT 'C' || LPAD(nextval('custom_id_seq')::text, 6, '0'),
-            customer_name VARCHAR(255) NOT NULL,
-            customer_phoneNumber BIGINT,
-            customer_email VARCHAR(255) NOT NULL UNIQUE,
-            customer_password VARCHAR(255),
-            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            lastLoginAt TIMESTAMP,
-            wallet_amount INTEGER,
-            group_id INTEGER,
-            access_token VARCHAR(255),
-            isDeactivated BOOLEAN DEFAULT FALSE
-        );
-    `
-    return createTableQuery;
-  }
-  // function createVendorsTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS vendors (
-  //       vendor_id SERIAL PRIMARY KEY,
-  //       vendor_name VARCHAR(255) NOT NULL,
-  //       vendor_address VARCHAR(255),
-  //       contact_person VARCHAR(255),
-  //       contact_number BIGINT,
-  //       alternate_number BIGINT,
-  //       vendor_email VARCHAR(255) NOT NULL UNIQUE,
-  //       vendor_password VARCHAR(255),
-  //       vendor_status VARCHAR(50),
-  //       rating FLOAT,
-  //       vendor_wallet FLOAT,
-  //       vendor_location POINT
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createLogisticCompaniesTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS logistic_companies (
-  //       logistic_id SERIAL PRIMARY KEY,
-  //       company_name VARCHAR(255) NOT NULL,
-  //       contact_person VARCHAR(255),
-  //       contact_number BIGINT,
-  //       alternate_number BIGINT,
-  //       email VARCHAR(255) NOT NULL UNIQUE,
-  //       password VARCHAR(255),
-  //       company_address JSON
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  // function createDriversTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS drivers (
-  //       driver_id SERIAL PRIMARY KEY,
-  //       driver_name VARCHAR(255) NOT NULL,
-  //       contact_number BIGINT,
-  //       license_number VARCHAR(255) NOT NULL,
-  //       license_expiry_date DATE NOT NULL,
-  //       logistic_id INTEGER,
-  //       status VARCHAR(50),
-  //       FOREIGN KEY (logistic_id) REFERENCES logistic_companies(logistic_id)
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createPaymentTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS payment (
-  //       PaymentId SERIAL PRIMARY KEY,
-  //       PaymentType VARCHAR(50),
-  //       MerchantReferenceId VARCHAR(255),
-  //       PhonePeReferenceId VARCHAR(255),
-  //       "From" VARCHAR(255),
-  //       Instrument VARCHAR(50),
-  //       CreationDate DATE,
-  //       TransactionDate DATE,
-  //       SettlementDate DATE,
-  //       BankReferenceNo VARCHAR(255),
-  //       Amount INTEGER NOT NULL,
-  //       Fee FLOAT,
-  //       IGST FLOAT,
-  //       CGST FLOAT,
-  //       SGST FLOAT,
-  //       order_id INTEGER,
-  //       customer_id INTEGER,
-  //       FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createOrdersTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS orders (
-  //       order_id SERIAL PRIMARY KEY,
-  //       customer_id INTEGER,
-  //       order_date DATE NOT NULL,
-  //       order_type VARCHAR(50),
-  //       status VARCHAR(50),
-  //       total_amount INTEGER NOT NULL,
-  //       PaymentId INTEGER,
-  //       order_details JSON,
-  //       vendor_id INTEGER,
-  //       delivery_id INTEGER,
-  //       FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
-  //       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId),
-  //       FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id),
-  //       FOREIGN KEY (delivery_id) REFERENCES deliveries(delivery_id)
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createCategoryTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS category (
-  //       category_id SERIAL PRIMARY KEY,
-  //       category_name VARCHAR(255) NOT NULL,
-  //       category_media BYTEA
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createGroupsTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS groups (
-  //       group_id SERIAL PRIMARY KEY,
-  //       group_location POINT
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createItemsTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS items (
-  //       item_id SERIAL PRIMARY KEY,
-  //       item_name VARCHAR(255) NOT NULL,
-  //       item_media BYTEA,
-  //       price_per_piece INTEGER NOT NULL
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createDeliveriesTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS deliveries (
-  //       delivery_id SERIAL PRIMARY KEY,
-  //       delivery_details JSON,
-  //       delivery_address JSON
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-  // function createOrderMediaTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS order_media (
-  //       order_id INTEGER,
-  //       your_order BYTEA,
-  //       under_cooking BYTEA,
-  //       packing BYTEA,
-  //       delivered BYTEA,
-  //       FOREIGN KEY (order_id) REFERENCES orders(order_id)
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
+  return `
+    CREATE SEQUENCE IF NOT EXISTS custom_id_seq START 1;
+
+    CREATE TABLE IF NOT EXISTS customer (
+      customer_id SERIAL PRIMARY KEY,
+      customer_generated_id VARCHAR(255) UNIQUE DEFAULT 'C' || LPAD(nextval('custom_id_seq')::text, 6, '0'),
+      customer_name VARCHAR(255) NOT NULL,
+      customer_phoneNumber BIGINT,
+      customer_email VARCHAR(255) NOT NULL UNIQUE,
+      customer_password VARCHAR(255),
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
+      lastLoginAt TIMESTAMP,
+      wallet_amount INTEGER,
+      group_id INTEGER,
+      access_token VARCHAR(255),
+      isDeactivated BOOLEAN DEFAULT FALSE,
+      FOREIGN KEY (group_id) REFERENCES groups(group_id)
+    );
+  `;
+}    
+
+// Create Payment Table
+function createPaymentTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS payment (
+      PaymentId SERIAL PRIMARY KEY,
+      PaymentType VARCHAR(50),
+      MerchantReferenceId VARCHAR(255),
+      PhonePeReferenceId VARCHAR(255),
+      "From" VARCHAR(255),
+      Instrument VARCHAR(50),
+      CreationDate DATE,
+      TransactionDate DATE,
+      SettlementDate DATE,
+      BankReferenceNo VARCHAR(255),
+      Amount INTEGER NOT NULL,
+      Fee FLOAT,
+      IGST FLOAT,
+      CGST FLOAT,
+      SGST FLOAT,
+      customer_generated_id INTEGER,
+      paymentDate TIMESTAMP,
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
+    );
+  `;
+}
+
+// Create Corporate Orders Table
+function createCorporateOrdersTableQuery() {
+  return `
+    -- Create function to generate corporateorder_generated_id
+    CREATE OR REPLACE FUNCTION generate_corporateorder_id() RETURNS TRIGGER AS $$
+    DECLARE
+        today_date TEXT;
+        order_count INT;
+        customer_gen_id TEXT;
+    BEGIN
+        -- Only generate corporateorder_generated_id if it's not set
+        IF NEW.corporateorder_generated_id IS NULL THEN
+            -- Get today's date in YYYYMMDD format
+            today_date := TO_CHAR(NOW(), 'YYYYMMDD');
+            
+            -- Get the customer's generated id
+            SELECT customer_generated_id INTO customer_gen_id 
+            FROM customer 
+            WHERE customer_id = NEW.customer_id;
+            
+            -- Count the number of orders placed by the customer today
+            SELECT COUNT(*) + 1 INTO order_count
+            FROM corporate_orders
+            WHERE customer_id = NEW.customer_id
+            AND TO_CHAR(ordered_at, 'YYYYMMDD') = today_date;
+            
+            -- Concatenate CO, today's date, the order count, and the customer_generated_id
+            NEW.corporateorder_generated_id := 'CO' || today_date || order_count || customer_gen_id;
+        END IF;
+
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    -- Drop the trigger if it already exists
+    DROP TRIGGER IF EXISTS corporateorder_id_trigger ON corporate_orders;
+
+    -- Create the corporate_orders table
+    CREATE TABLE IF NOT EXISTS corporate_orders (
+      corporateorder_id SERIAL PRIMARY KEY,
+      corporateorder_generated_id VARCHAR(255) UNIQUE,
+      customer_id INTEGER,
+      order_details JSON,  
+      total_amount FLOAT NOT NULL,
+      PaymentId INTEGER,
+      customer_address JSON,
+      ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      payment_status VARCHAR(50),
+      corporate_order_status VARCHAR(50),
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+      FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
+    );
+
+    -- Create trigger that calls the function to generate corporateorder_generated_id
+    CREATE TRIGGER corporateorder_id_trigger
+    BEFORE INSERT ON corporate_orders
+    FOR EACH ROW
+    EXECUTE FUNCTION generate_corporateorder_id();
+  `;
+}
+
+
+// Create Corporate Order Details Table
+function createCorporateOrderDetailsTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS corporateorder_details (
+      order_detail_id SERIAL PRIMARY KEY,
+      corporateorder_id INTEGER,
+      processing_date DATE,
+      delivery_status VARCHAR(50),
+      category_id INTEGER,
+      quantity INTEGER,
+      active_quantity INTEGER,
+      media JSON,
+      delivery_details JSON,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (corporateorder_id) REFERENCES corporate_orders(corporateorder_id),
+      FOREIGN KEY (category_id) REFERENCES corporate_category(category_id)
+    );
+  `;
+}
+
+
+// Create Event Orders Table
+function createEventOrdersTableQuery() {
+  return `
+    -- Create function to generate eventorder_generated_id
+    CREATE OR REPLACE FUNCTION generate_eventorder_id() RETURNS TRIGGER AS $$
+    DECLARE
+        today_date TEXT;
+        order_count INT;
+        customer_gen_id TEXT;
+    BEGIN
+        -- Get today's date in YYYYMMDD format
+        today_date := TO_CHAR(NOW(), 'YYYYMMDD');
+        
+        -- Get the customer's generated id
+        SELECT customer_generated_id INTO customer_gen_id FROM customer WHERE customer_id = NEW.customer_id;
+        
+        -- Count the number of orders placed by the customer today in the event_orders table
+        SELECT COUNT(*) + 1 INTO order_count
+        FROM event_orders
+        WHERE customer_id = NEW.customer_id
+        AND TO_CHAR(ordered_at, 'YYYYMMDD') = today_date;
+        
+        -- Concatenate EO, today's date, the order count, and the customer_generated_id
+        NEW.eventorder_generated_id := 'EO' || today_date || order_count || customer_gen_id;
+        
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+   -- Drop the trigger if it already exists
+    DROP TRIGGER IF EXISTS eventorder_id_trigger ON event_orders;
+
+    -- Create the event_orders table
+    CREATE TABLE IF NOT EXISTS event_orders (
+      eventorder_id SERIAL PRIMARY KEY,
+      eventorder_generated_id VARCHAR(255) UNIQUE,
+      customer_id INTEGER,
+      ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      delivery_status VARCHAR(50),
+      total_amount INTEGER NOT NULL,
+      PaymentId INTEGER,
+      delivery_details JSON,
+      event_order_details JSON,
+      event_media JSON,
+      customer_address JSON,
+      payment_status VARCHAR(50),
+      event_order_status VARCHAR(50),
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+      FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
+    );
+    
+
+    -- Create trigger that calls the function to generate eventorder_generated_id
+    CREATE TRIGGER eventorder_id_trigger
+    BEFORE INSERT ON event_orders
+    FOR EACH ROW
+    EXECUTE FUNCTION generate_eventorder_id();
+  `;
+}
+
+
+// Create Corporate Category Table
+function createCorporateCategoryTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS corporate_category (
+      category_id SERIAL PRIMARY KEY,
+      category_name VARCHAR(255) NOT NULL,
+      category_media TEXT,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      price FLOAT
+    );
+  `;
+}
+
+// Create Event Category Table
+function createEventCategoryTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS event_category (
+      category_id SERIAL PRIMARY KEY,
+      category_name VARCHAR(255) NOT NULL,
+      category_media TEXT,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+}
+
+// Create Groups Table
+function createGroupsTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS groups (
+      group_id SERIAL PRIMARY KEY,
+      group_location POINT,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+}
+
+// Create Addresses Table
   function createAddressesTableQuery() {
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS address (
@@ -193,25 +246,75 @@ function createCustomerTableQuery() {
     `;
     return createTableQuery;
   }
-  
-  // function createOrderDetailsTableQuery() {
-  //   const createTableQuery = `
-  //     CREATE TABLE IF NOT EXISTS order_details (
-  //       processing_id SERIAL PRIMARY KEY,
-  //       processing_date date,
-  //       category_id INTEGER,
-  //       items JSON,
-  //       order_id INTEGER,
-  //       quantity INTEGER NOT NULL,
-  //       FOREIGN KEY (order_id) REFERENCES orders(order_id),
-  //       FOREIGN KEY (category_id) REFERENCES category(category_id)
-  //     );
-  //   `;
-  //   return createTableQuery;
-  // }
-  
-module.exports = 
-{
-    createAddressesTableQuery,
-    createCustomerTableQuery
+
+
+// Create Event Cart Table
+function createEventCartTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS event_cart (
+      eventcart_id SERIAL PRIMARY KEY,
+      order_date DATE,
+      customer_id INTEGER,
+      total_amount FLOAT,
+      cart_order_details JSON,
+      address JSON,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+  `;
 }
+
+// Create Corporate Cart Table
+function createCorporateCartTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS corporate_cart (
+      corporatecart_id SERIAL PRIMARY KEY,
+      customer_id INTEGER,
+      cart_order_details JSON,
+      total_amount FLOAT,
+      customer_address JSON,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+    );
+  `;
+}
+
+// Create Event Products Table
+function createEventProductsTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS event_products (
+      product_id SERIAL PRIMARY KEY,
+      product_name VARCHAR(255),
+      image TEXT,
+      category_name VARCHAR(255),
+      price_category VARCHAR(255),
+      isdual BOOLEAN,
+      unit_1 VARCHAR(255),
+      price_per_unit1 FLOAT,
+      min_unit1_per_plate INTEGER,
+      unit_2 VARCHAR(255),
+      price_per_unit2 FLOAT,
+      min_unit2_per_plate INTEGER,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      category_id INTEGER,
+      FOREIGN KEY (category_id) REFERENCES event_category(category_id)
+    );
+  `;
+}
+
+
+module.exports = {
+  createCustomerTableQuery,
+  createPaymentTableQuery,
+  createCorporateOrdersTableQuery,
+  createCorporateOrderDetailsTableQuery,
+  createEventOrdersTableQuery,
+  createCorporateCategoryTableQuery,
+  createEventCategoryTableQuery,
+  createGroupsTableQuery,
+  createAddressesTableQuery,
+  createEventCartTableQuery,
+  createCorporateCartTableQuery,
+  createEventProductsTableQuery
+};
+

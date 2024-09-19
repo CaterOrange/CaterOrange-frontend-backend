@@ -156,6 +156,7 @@ const AddressForm = () => {
           <input
             type="text"
             value={tag}
+            id="tag"
             onChange={(e) => setTag(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
             required
@@ -168,6 +169,7 @@ const AddressForm = () => {
           <input
             type="text"
             value={pincode}
+            id="pincode"
             onChange={(e) => setPincode(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
           />
@@ -179,6 +181,7 @@ const AddressForm = () => {
           <input
             type="text"
             value={city}
+            id="city"
             onChange={(e) => setCity(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
             required
@@ -191,6 +194,7 @@ const AddressForm = () => {
           <input
             type="text"
             value={state}
+            id="state"
             onChange={(e) => setState(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
             required
@@ -202,6 +206,7 @@ const AddressForm = () => {
           <label className="block text-gray-700 text-sm">Flat Number</label>
           <input
             type="text"
+            id="flatNumber"
             value={flatNumber}
             onChange={(e) => setFlatNumber(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
@@ -214,6 +219,7 @@ const AddressForm = () => {
           <label className="block text-gray-700 text-sm">Landmark</label>
           <input
             type="text"
+            id="landmark"
             value={landmark}
             onChange={(e) => setLandmark(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
@@ -230,6 +236,7 @@ const AddressForm = () => {
         <div className="mb-2 flex items-center">
           <input
             type="radio"
+            id="address"
             checked={selectedOption === 'shipping'}
             onChange={() => setSelectedOption('shipping')}
             className="mr-2"
@@ -243,7 +250,11 @@ const AddressForm = () => {
               <input
                 type="text"
                 value={shipToName}
+
                 placeholder='Ship To Name'
+
+                id="shippingname"
+
                 onChange={(e) => setShipToName(e.target.value)}
                 className="mt-1 p-1 border rounded w-full text-sm"
               />
@@ -253,6 +264,7 @@ const AddressForm = () => {
             <div className="mb-2">
               <input
                 type="text"
+                id="shippingnumber"
                 value={shipToPhoneNumber}
                 placeholder='Ship To Phone Number'
                 onChange={(e) => setShipToPhoneNumber(e.target.value)}
@@ -266,6 +278,7 @@ const AddressForm = () => {
         <div className="mb-2 flex items-center">
           <input
             type="radio"
+            id="defaultdetails"
             checked={selectedOption === 'default'}
             onChange={() => setSelectedOption('default')}
             className="mr-2"
