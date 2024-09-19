@@ -7,7 +7,7 @@ const {
   createCorporateOrderDetailsTableQuery,
   createEventOrdersTableQuery,
   createCorporateCategoryTableQuery,
-  createEventCategoryTableQuery,
+ 
   createGroupsTableQuery,
   createAddressesTableQuery,
   createEventCartTableQuery,
@@ -47,9 +47,7 @@ const createTables = async () => {
     
 
     // // Create Event Category table
-    await client.query(createEventCategoryTableQuery());
-    logger.info('Event Category table created successfully');
-
+  
     // // Create Event Cart table
     await client.query(createEventCartTableQuery());
     logger.info('Event Cart table created successfully');
