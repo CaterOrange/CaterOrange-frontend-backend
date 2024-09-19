@@ -1,3 +1,4 @@
+
 const client = require('../config/dbConfig.js');
 const paymentmodel = require('../models/paymentModels.js')
 const payment = async (req, res) => {
@@ -72,3 +73,4 @@ const payment = async (req, res) => {
     }
 };
   module.exports ={payment,updateCorporateOrder }
+

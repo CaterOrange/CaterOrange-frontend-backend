@@ -40,9 +40,9 @@ function createPaymentTableQuery() {
       IGST FLOAT,
       CGST FLOAT,
       SGST FLOAT,
-      customer_generated_id INTEGER,
+      customer_id INTEGER,
       paymentDate TIMESTAMP,
-      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
+      FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
     );
   `;
 }

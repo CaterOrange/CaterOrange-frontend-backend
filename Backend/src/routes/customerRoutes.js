@@ -13,9 +13,6 @@ router.post('/customer/checkcustomer',customerController.checkCustomer)
 router.post('/customer/verify-otp',customerController.verify_otp)
 
 
-
-
-
 //customer routes
 router.post('/customer/login', customerController.login);
 router.post('/customer/register', customerController.register);

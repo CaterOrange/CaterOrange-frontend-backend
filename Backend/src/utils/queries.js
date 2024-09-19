@@ -33,7 +33,7 @@ const DB_COMMANDS = {
 ,
 
     GET_ALL_CUSTOMERS:`SELECT * FROM customer`,
-    GET_CUSTOMER_BY_ID:`SELECT * FROM customer WHERE customer_id=$1`,
+    GET_CUSTOMER_BY_ID:`SELECT customer_name FROM customer WHERE customer_id=$1`,
     DELETE_CUSTOMER:`DELETE FROM customer WHERE customer_id=$1`,
     UPDATE_USER: 'UPDATE customer SET',
     createEventOrder : `
@@ -85,7 +85,44 @@ const DB_COMMANDS = {
     SELECT corporateorder_generated_id, order_details 
     FROM corporate_orders 
     WHERE customer_id = $1;
-  `
+  `,
+getEventOrderById: `
+  SELECT * FROM event_orders WHERE eventorder_id = $1  `,
+getAllEventOrdersByCustomerId: `
+   SELECT * FROM event_orders WHERE customer_id = $1`,
+
+GET_ALL_EVENT_ORDER: `SELECT * FROM event_orders`,
+
+GET_ALL_CORPORATE_ORDER: `SELECT * FROM corporate_orders`,
+
+GET_ALL_ITEMS: `SELECT * FROM event_products`,
+
+GET_ALL_PAYMENTS: `SELECT * FROM payment`,
+
+
+DELETE_CORPORATE_ORDER: `DELETE FROM corporate_orders WHERE customer_id=$1`,
+
+DELETE_EVENT_ORDER: `DELETE FROM event_orders WHERE customer_id=$1`,
+
+DELETE_CORPORATE_ORDER_BY_ID: `DELETE FROM corporate_orders WHERE corporateorder_id=$1`,
+
+DELETE_EVENT_ORDER_BY_ID: `DELETE FROM event_orders WHERE eventorder_id=$1`,
+
+GET_ADDRESS_BY_ID: `SELECT * FROM addresses WHERE customer_id =$1`,
+
+GET_ALL_CORPORATE_CATEGORIES: `SELECT * FROM corporate_category`,
+
+DEACTIVE_TRUE: `UPDATE customer SET isdeactivated=$2 WHERE customer_id=$1`,
+
+UPDATE_CORPORATE_STATUS: `UPDATE corporate_orders SET corporate_order_status = $1 WHERE corporateorder_generated_id = $2 RETURNING *`,
+UPDATE_EVENT_STATUS: `UPDATE event_orders SET event_order_status = $1 WHERE eventorder_id = $2 RETURNING *`,
+
+findCustomerByEmail: `
+        SELECT c.*, a.isadmin 
+        FROM customer c
+        LEFT JOIN admins a ON c.customer_generated_id = a.customer_generated_id
+        WHERE c.customer_email = ?
+    `,
  };
         
 
