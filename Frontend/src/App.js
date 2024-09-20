@@ -1,36 +1,62 @@
-import SignInForm from "./components/customer/SignInForm.js";
-import { SignInProvider } from './services/contexts/SignInContext.js';
-import { SignUpProvider } from './services/contexts/SignUpContext.js';
-import React, { useEffect, useState } from 'react';
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import React from 'react';
+import './index.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
+import MenuItem from './menu';        
+import HomePage from './HomePage';
+// import MyOrdersPage from './myorders';
+// import PaymentForm from './components/PaymentForm';
+
+import OrderDashboard from './myorders';
+import EventOrders from './myorders';
+import AddressForm from './AddressForm';
+import SuccessPage from './SuccessPage';
+
 
 function App() {
-  const [user, setUser] = useState(null);
-  const handleSignIn = (token) => {
-    if (token) {
-      localStorage.setItem('token', token);
-      setUser({ token });
-    }
-  };
   return (
-    <SignInProvider>
-      <SignUpProvider>
-        <Router>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                user ? <Navigate to="/dashboard" /> : <SignInForm onSignIn={handleSignIn} />
-                
-              }
-            />
-            {/* Add additional routes here as needed */}
-            <Route path="/dashboard" element={<div>Dashboard Page</div>} />
-          </Routes>
-        </Router>
-      </SignUpProvider>
-    </SignInProvider>
+    <>
+    <Router>
+      <Routes>
+        <Route path = "/home" element = {<HomePage/>}/>
+        <Route path = "/menu" element = {<MenuItem/>}/>
+       
+        {/* <Route path = "/pay" element ={<PaymentForm/>}/> */}
+        <Route path = "/OrderDashboard" element ={<OrderDashboard/>}/>
+        <Route path = "/EventOrders" element ={<EventOrders/>}/>
+        <Route path = "/AddressForm" element ={<AddressForm/>}/>
+        {/* <Route path ="/OrderCard" element = {<OrderCard/>}/> */}
+        <Route path = "/success" element = {<SuccessPage/>}/>
+     
+      </Routes>
+    </Router>
+    </>
   );
 }
 
 export default App;
+
+
+
+// function App() {
+//     const [data, setData] = useState(null);
+
+//     useEffect(() => {
+//         fetch('http://localhost:5000/api/data')
+//             .then(response => response.json())
+//             .then(data => setData(data))
+//             .catch(error => console.error('Error fetching data:', error));
+//     }, []);
+
+//     return (
+//         <div>
+//             <h1>Data from JSON file1</h1>
+//             {data ? (
+//                 <pre>{JSON.stringify(data, null, 2)}</pre>
+//             ) : (
+//                 <p>Loading...</p>
+//             )}
+//         </div>
+//     );
+// }
+
+// export default App;
