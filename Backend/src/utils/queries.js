@@ -22,7 +22,7 @@ const DB_COMMANDS = {
     WHERE access_token = $1`,
   
     GET_CUSTOMER_CORPORATE_ORDERS:`SELECT * FROM corporate WHERE customer_id=$1`,
-    GET_CUSTOMER_EVENT_ORDERS:``,
+    GET_CUSTOMER_EVENT_ORDERS:`SELECT * FROM event_orders WHERE customer_id=$1`,
     CREATE_ADDRESS:`
     INSERT INTO address (customer_id,tag,pincode,line1,line2,location,ship_to_name,ship_to_phone_number) values 
     ($1, $2, $3, $4, $5,$6,$7,$8) 

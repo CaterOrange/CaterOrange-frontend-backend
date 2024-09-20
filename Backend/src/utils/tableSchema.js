@@ -169,7 +169,7 @@ function createEventOrdersTableQuery() {
       customer_id INTEGER,
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       delivery_status VARCHAR(50),
-      total_amount INTEGER NOT NULL,
+      total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
       delivery_details JSON,
       event_order_details JSON,
