@@ -4,7 +4,7 @@ const client = require('../config/dbConfig.js');
 
 const createaddress = async (customer_id,tag,pincode,line1,line2,location,ship_to_name,ship_to_phone_number) => {
     try {
-        console.log('in model address')
+       
         const result = await client.query(
             DB_COMMANDS.CREATE_ADDRESS,
             [customer_id,tag,pincode,line1,line2,location,ship_to_name,ship_to_phone_number]
@@ -19,12 +19,11 @@ const createaddress = async (customer_id,tag,pincode,line1,line2,location,ship_t
 
 const select_default_address = async (customer_email) => {
     try {
-        console.log('in model default address');
+    
         const result = await client.query(
             DB_COMMANDS.SELECT_NAME_PHONE,
             [customer_email]
         );
-        console.log("answer",result.rows[0]);
         
         logger.info('Default address retrieved successfully');
         return result.rows[0];  
@@ -33,8 +32,40 @@ const select_default_address = async (customer_email) => {
         throw err;
     }
 }
+const getAllAddresses= async (customer_id) => {
+    try {
+  
+        const result = await client.query(
+            DB_COMMANDS.GET_ALL_ADDRESSES,
+            [customer_id]
+        );
+        
+        logger.info('Default address retrieved successfully');
+        return result.rows;  
+    } catch (err) {
+        logger.error('Error retrieving default address data');
+        throw err;
+    }
+}
+const SelectAddress= async (address_id)=>{
+    try{
+        
+        const result = await client.query(
+            DB_COMMANDS.SELECT_ADDRESS,
+            [address_id]
+        );
+        
+        logger.info('address retrieved successfully');
+        return result.rows[0];  
+    }catch(err){
+        logger.error('Error retrieving address data');
+        throw err;
+    }
+  }
 
 module.exports={
     createaddress,
-    select_default_address
+    select_default_address,
+    getAllAddresses,
+    SelectAddress
 }

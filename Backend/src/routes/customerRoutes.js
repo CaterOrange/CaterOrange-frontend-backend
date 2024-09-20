@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router(); 
 const customerController = require('../controller/customerController.js');
 
-
 //customer routes
 
 router.post('/customer/google_auth',customerController.google_auth);
@@ -31,6 +30,7 @@ router.get('/getevent_order/:id', customerController.getEventOrderByIdController
 router.get('/event_customerorder/:id', customerController.getAllEventOrdersByCustomerIdController);
 router.delete('/addresses/:address_id', customerController.deleteAddressById);
 router.put('/addresses/:address_id', customerController.updateAddressById)
+router.get('/customer/getCustomerDetails',customerController.getCustomerDetails)
 module.exports = router;
 
 

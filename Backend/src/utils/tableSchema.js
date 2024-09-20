@@ -40,7 +40,7 @@ function createPaymentTableQuery() {
       IGST FLOAT,
       CGST FLOAT,
       SGST FLOAT,
-      customer_generated_id INTEGER,
+      customer_generated_id VARCHAR(255),
       paymentDate TIMESTAMP,
       FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
     );
@@ -65,12 +65,12 @@ function createCorporateOrdersTableQuery() {
             -- Get the customer's generated id
             SELECT customer_generated_id INTO customer_gen_id 
             FROM customer 
-            WHERE customer_id = NEW.customer_id;
+            WHERE customer_generated_id = NEW.customer_generated_id;
             
             -- Count the number of orders placed by the customer today
             SELECT COUNT(*) + 1 INTO order_count
             FROM corporate_orders
-            WHERE customer_id = NEW.customer_id
+            WHERE customer_generated_id = NEW.customer_generated_id
             AND TO_CHAR(ordered_at, 'YYYYMMDD') = today_date;
             
             -- Concatenate CO, today's date, the order count, and the customer_generated_id
@@ -88,7 +88,7 @@ function createCorporateOrdersTableQuery() {
     CREATE TABLE IF NOT EXISTS corporate_orders (
       corporateorder_id SERIAL PRIMARY KEY,
       corporateorder_generated_id VARCHAR(255) UNIQUE,
-      customer_id INTEGER,
+      customer_generated_id VARCHAR(100),
       order_details JSON,  
       total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
@@ -96,7 +96,7 @@ function createCorporateOrdersTableQuery() {
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       payment_status VARCHAR(50),
       corporate_order_status VARCHAR(50),
-      FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id),
       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
     );
 
@@ -197,11 +197,11 @@ function createCorporateCategoryTableQuery() {
     CREATE TABLE IF NOT EXISTS corporate_category (
       category_id SERIAL PRIMARY KEY,
       category_name VARCHAR(255) NOT NULL,
+      category_description VARCHAR(500),
+      category_price FLOAT,
       category_media TEXT,
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      price FLOAT
-    );
-  `;
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );`;
 }
 
 // Create Event Category Table

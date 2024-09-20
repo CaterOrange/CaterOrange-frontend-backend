@@ -72,8 +72,52 @@ const getDefaultAddress = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+const getAddressForUser = async (req, res) => {
+    try {
+        const token = req.headers['token'];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        // Verifying the token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.SECRET_KEY);
+        } catch (err) {
+            return res.status(401).json({ message: 'Invalid or expired token' });
+        }
+        const customer_id = decoded.id;
+
+       const result=await address_model.getAllAddresses(customer_id)
+        return res.json({
+            success: true,
+            message: 'all address retrieved successfully',
+            address:result
+        });
+    } catch (err) {
+        logger.error('Error retrieving all address', { error: err.message });
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+const getSelectedAddress=async(req, res)=>{
+    try {
+        const { address_id } = req.query; // Access the address_id from query parameters
+        console.log('id', address_id);
+        
+        const result = await address_model.SelectAddress(address_id);
+        
+        return res.json({
+          success: true,
+          result
+        });
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
+}
 
 module.exports = {
     createAddress,
-    getDefaultAddress
+    getDefaultAddress,
+    getAddressForUser,
+    getSelectedAddress
 };

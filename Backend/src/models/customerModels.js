@@ -33,7 +33,7 @@ const findCustomerToken = async (access_token) => {
 const findCustomerEmail = async (customer_email ) => {
     try {
         const result = await client.query(DB_COMMANDS.CUSTOMER_EMAIL_SELECT, [customer_email]);
-        console.log(result.rows[0])
+   
         return result.rows[0];  // Return the customer details, or undefined if not found
 
     } catch (err) {
@@ -149,7 +149,37 @@ const userbytoken = async (access_token) => {
     return client.query(query, [...values, id]);
   }
 
+  const getCustomerDetails= async ( customer_id )=>{
+    try{
+        const result= await client.query(DB_COMMANDS.CUSTOMER_SELECT_BY_GID,[customer_id]);
+        if(result.rows.length === 0){
+            logger.error('customer not found')
+            return null;
+        }
+        logger.info('customer in model', result.rows[0]);
+        return result.rows[0];
+    }catch(err){
+        logger.error('Error in querying database',{error:err.message});
+        throw err;
+    }
+  }
 
+  const getCustomerAddress= async (customer_id) =>{
+    try{
+    const res = await client.query(DB_COMMANDS.GET_ADDRESSES_BY_CUSTOMER_ID,[customer_id]);
+    console.log('in address m')  
+    if (res.rowCount === 0) {
+        logger.info('No carts found');
+    } else {
+        logger.info(`Corporate carts fetched successfully: ${res.rowCount} carts`);
+    }
+
+    return res.rows;
+} catch (err) {
+    logger.error('Error fetching carts:', err);
+    throw new Error('Error fetching carts from the database');
+}
+}
 module.exports = {
     createCustomer,
     findCustomerEmail,
@@ -164,5 +194,7 @@ module.exports = {
     deleteAddressById,
     updateAddressById,
     findCustomerToken,
-    findActivated
+    findActivated,
+    getCustomerAddress,
+    getCustomerDetails
 };
