@@ -68,5 +68,6 @@ const addCorporateOrderDetails = async (req, res) => {
     }
   
 module.exports = {
-  addCorporateOrderDetails,getOrderDetails
+  addCorporateOrderDetails,
+  getOrderDetails
 };

@@ -10,7 +10,7 @@ const insertEventOrder = async (orderData) => {
     orderData.customer_id,
     orderData.ordered_at,
     orderData.delivery_status,
-    orderData.total_amount,
+    orderData.total_amount,  // Ensure total_amount is a float
     orderData.delivery_details,
     orderData.event_order_details,
     orderData.event_media,
@@ -20,6 +20,7 @@ const insertEventOrder = async (orderData) => {
   ]);
   return result.rows[0];
 };
+
 
 const addToCart = async (customer_id, total_amount, cart_order_details, address) => {
   const query = `
@@ -48,6 +49,12 @@ const getcartbyCustomerId = async (customerId) => {
   return result.rows;
 };
 
+const getCartById = async(eventcart_id) => {
+  const query = `SELECT * FROM event_cart WHERE eventcart_id = $1;`;
+  const values = [eventcart_id];
+  const result = await client.query(query, values);
+  return result.rows;
+};
 // Update the cart (e.g., update total amount, cart details)
 
 const updateCart = async (query, values) => {
@@ -61,9 +68,9 @@ const updateCart = async (query, values) => {
 };
 
 // Delete a product from the cart
-const deleteCart = async (cartId) => {
+const deleteCart = async (eventcart_id) => {
   const query = `DELETE FROM event_cart WHERE eventcart_id = $1;`;
-  const values = [cartId];
+  const values = [eventcart_id];
   await client.query(query, values);
 };
 
@@ -93,5 +100,6 @@ module.exports = {
   updateCart,
   deleteCart,
   getAllEventCategories,
-  menuPageMethod
+  menuPageMethod,
+  getCartById
 };

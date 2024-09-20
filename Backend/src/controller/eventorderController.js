@@ -1,6 +1,6 @@
 const logger = require('../config/logger');
 const customerController = require('../controller/customerController.js');
-const cartModel = require('../models/eventorderModels.js')
+const cartModel = require('../models/eventorderModels');
 const { menuPageMethod } = require("../models/eventorderModels");
 const transferCartToOrder = async (req, res) => {
   const { eventcart_id } = req.body;
@@ -8,30 +8,34 @@ const transferCartToOrder = async (req, res) => {
   try {
     // Get the cart data
     const cart = await cartModel.getCartById(eventcart_id);
+    console.log("cart data",cart);
 
-    if (!cart || !cart.cart_order_details || cart.cart_order_details.length === 0) {
+    if (!cart) {
         return res.status(400).json({ error: 'Cart is empty or not found' });
       }
     
-    // Prepare order data
-    const orderData = {
-      customer_id: cart.customer_id,
-      ordered_at: cart.order_date, // Using order_date as ordered_at
-      delivery_status: 'Pending', // Default status; adjust as needed
-      total_amount: cart.total_amount,
-      delivery_details: cart.cart_order_details,
-      event_order_details: cart.cart_order_details, // Assuming cart_order_details as event_order_details
-      event_media: null, // event_media; set as needed
-      customer_address: cart.address,
-      payment_status: 'Unpaid', // Default payment status; adjust as needed
-      event_order_status: 'New' // Default order status; adjust as needed
-    };
+      const cartData = cart[0];
+
+      // Prepare order data
+      const orderData = {
+        customer_id: cartData.customer_id,
+        ordered_at: cartData.order_date, // Using order_date as ordered_at
+        delivery_status: 'Pending', // Default status; adjust as needed
+        total_amount: cartData.total_amount,
+        delivery_details: cartData.delivery_details,
+        event_order_details: cartData.event_order_details, // Assuming cart_order_details as event_order_details
+        event_media: null, // event_media; set as needed
+        customer_address: cartData.address,
+        payment_status: 'Unpaid', // Default payment status; adjust as needed
+        event_order_status: 'New' // Default order status; adjust as needed
+      };
+    console.log(orderData);
 
     // Insert the cart data into event_orders
-    const order = await eventModel.insertEventOrder(orderData);
+    const order = await cartModel.insertEventOrder(orderData);
 
     // Optionally, delete the cart after transfer
-    await eventModel.deleteCartById(eventcart_id);
+    await cartModel.deleteCart(eventcart_id);
 
     res.status(201).json(order);
   } catch (error) {
@@ -39,6 +43,7 @@ const transferCartToOrder = async (req, res) => {
     res.status(500).json({ error: 'Error transferring cart to order', details: error.message });
   }
 };
+
 
 const addToCart = async (req, res) => {
   const {  total_amount, cart_order_details, address } = req.body;

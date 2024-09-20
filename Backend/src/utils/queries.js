@@ -16,7 +16,7 @@ const DB_COMMANDS = {
         WHERE customer_email = $1`,
   
     GET_CUSTOMER_CORPORATE_ORDERS:`SELECT * FROM corporate WHERE customer_id=$1`,
-    GET_CUSTOMER_EVENT_ORDERS:``,
+    GET_CUSTOMER_EVENT_ORDERS:`SELECT * FROM event_orders WHERE customer_id=$1`,
     CREATE_ADDRESS:`
     INSERT INTO address (customer_id,tag,pincode,line1,line2,location,ship_to_name,ship_to_phone_number) values 
     ($1, $2, $3, $4, $5,$6,$7,$8) 
@@ -61,7 +61,7 @@ const DB_COMMANDS = {
   ) VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
   ) RETURNING *`,
-    GET_ADDRESSES_BY_CUSTOMER_ID: `
+    GET_ADDRESSES_BY_CUSTOMER_ID: ` 
     SELECT * FROM addresses WHERE customer_id = $1
     `,
     GET_USER_BY_TOKEN:`SELECT * FROM customer WHERE access_token=$1`,
