@@ -9,6 +9,10 @@
 //   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false); // State for logout dialog
 //   const navigate = useNavigate();
 
+//   // Retrieve and parse user data from localStorage
+//   var storedUserData = JSON.parse(localStorage.getItem('userData')) || {};
+//   console.log('Stored user data:', storedUserData);
+
 //   const toggleSidenav = () => {
 //     setIsSidenavOpen(!isSidenavOpen);
 //   };
@@ -17,13 +21,14 @@
 //     navigate('/cart');
 //   };
 
-//   const handleViewOrders=()=>{
+//   const handleViewOrders = () => {
 //     navigate('/orders');
-//   }
+//   };
 
 //   const handleLogout = () => {
-//     localStorage.removeItem('accessToken');
-//     localStorage.removeItem('userProfile');
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('userData');
+//     localStorage.removeItem('address');
 //     setTimeout(() => {
 //       window.location.href = '/';
 //     }, 0);
@@ -39,7 +44,11 @@
 //       handleLogout(); // If the user confirms, perform logout
 //     }
 //   };
-
+//   const capitalizeFirstLetter = (string) => {
+//     if (!string) return '';
+//     return string.charAt(0).toUpperCase() + string.slice(1);
+//   };
+  
 //   return (
 //     <>
 //       <header className="fixed top-0 left-0 w-full bg-green-500 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
@@ -79,19 +88,29 @@
 //               ✕
 //             </button>
 //           </div>
+
+//           {/* Display profile picture or fallback image */}
 //           <img
-//             src={user.profilePicture || '(link unavailable)'}
-//             alt="Profile"
-//             className="rounded-full w-16 h-16 mx-auto"
-//           />
-//           <h3 className="text-center mt-2">{user.name || 'Hello'}</h3>
-//           {user.phone && <p className="text-center">{user.phone}</p>}
-//           <p className="text-center">{user.email || 'Email Address'}</p>
+//   src={
+//     storedUserData.picture ||
+//     `https://avatars.dicebear.com/api/initials/${capitalizeFirstLetter(storedUserData.name)}.svg`
+//   }
+//   alt="Profile"
+//   className="rounded-full w-16 h-16 mx-auto"
+// />
+
+          
+//           {/* Display user's name or fallback */}
+//           <h3 className="text-center mt-2">{storedUserData.name || 'Hello'}</h3>
+//           {storedUserData.phone && <p className="text-center">{storedUserData.phone}</p>}
+//           {/* Display user's email */}
+//           <p className="text-center">{storedUserData.email || 'Email Address'}</p>
 //         </div>
+
 //         {/* Menu options */}
 //         <ul className="p-2 space-y-2">
 //           <Link to='/orders'>
-//           <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>My Orders</li>
+//             <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>My Orders</li>
 //           </Link>
 //           <li className="p-2 border-b border-gray-200 cursor-pointer">Order Events</li>
 //           <li className="p-2 border-b border-gray-200 cursor-pointer">Address</li>
@@ -136,16 +155,20 @@
 // };
 
 // export default Header;
+
 import React, { useState } from 'react';
 import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/react/outline';
-import Body from './Body'; // Import Body to use it within Header
-import './css/styles.css'; // Ensure you import your CSS file
+import Body from './Body';
+import './css/styles.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header = ({ user }) => {
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
-  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false); // State for logout dialog
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const navigate = useNavigate();
+
+  var storedUserData = JSON.parse(localStorage.getItem('userData')) || {};
+  console.log('Stored user data:', storedUserData);
 
   const toggleSidenav = () => {
     setIsSidenavOpen(!isSidenavOpen);
@@ -155,43 +178,53 @@ const Header = ({ user }) => {
     navigate('/cart');
   };
 
-  const handleViewOrders=()=>{
+  const handleViewOrders = () => {
     navigate('/orders');
-  }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    // localStorage.removeItem('userProfile');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('address');
     setTimeout(() => {
       window.location.href = '/';
     }, 0);
   };
 
   const handleViewLoginPage = () => {
-    setIsLogoutDialogOpen(true); // Open the logout confirmation dialog
+    setIsLogoutDialogOpen(true);
   };
 
   const handleConfirmLogout = (confirm) => {
-    setIsLogoutDialogOpen(false); // Close the dialog
+    setIsLogoutDialogOpen(false);
     if (confirm) {
-      handleLogout(); // If the user confirms, perform logout
+      handleLogout();
     }
   };
 
+  const capitalizeFirstLetter = (string) => {
+    if (!string) return '';
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const getInitials = (name) => {
+    if (!name) return '';
+    console.log(name)
+    const names = name.split(' ');
+    return names.map(n => n[0]).join('').toUpperCase();
+  };
+  
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-green-500 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
-        {/* Profile Icon */}
         <div className="flex items-center">
           <UserCircleIcon className="h-8 w-8 cursor-pointer" onClick={toggleSidenav} />
         </div>
 
-        {/* Corporate Title */}
         <h2 className="text-3xl font-bold mb-4 gradient-text animate-gradient text-center flex-1">
           CORPORATE MENU
         </h2>
 
-        {/* Cart Icon */}
         <div className="flex items-center">
           <Link to="/cart">
             <ShoppingCartIcon className="h-6 w-6 cursor-pointer" onClick={handleViewCart} />
@@ -199,32 +232,42 @@ const Header = ({ user }) => {
         </div>
       </header>
 
-      {/* Backdrop for body content */}
       {isSidenavOpen && (
         <div className="fixed inset-0 bg-black opacity-50 z-40 blur-sm"></div>
       )}
 
-      {/* Sidenav */}
       <div
         className={`fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out ${
           isSidenavOpen ? 'translate-x-0' : '-translate-x-full'
-        } z-50 overflow-y-auto`} // Ensure sidenav is scrollable
+        } z-50 overflow-y-auto`}
       >
-        {/* User profile details */}
         <div className="p-4 bg-green-500 text-white">
           <div className="flex justify-end p-4">
             <button className="text-black" onClick={toggleSidenav}>
               ✕
             </button>
           </div>
-          <h3 className="text-center mt-2">Hello</h3>
-          <p className="text-center">phone</p>
-          <p className="text-center">Email Address</p>
+
+          {storedUserData.picture ? (
+            <img
+              src={storedUserData.picture}
+              alt="Profile"
+              className="rounded-full w-16 h-16 mx-auto"
+            />
+          ) : (
+            <div className="rounded-full w-16 h-16 mx-auto bg-gray-300 flex items-center justify-center text-xl font-bold text-gray-700">
+              {getInitials(storedUserData.name)}
+            </div>
+          )}
+          
+          <h3 className="text-center mt-2">{storedUserData.name || 'Hello'}</h3>
+          {storedUserData.phone && <p className="text-center">{storedUserData.phone}</p>}
+          <p className="text-center">{storedUserData.email || 'Email Address'}</p>
         </div>
-        {/* Menu options */}
+
         <ul className="p-2 space-y-2">
           <Link to='/orders'>
-          <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>My Orders</li>
+            <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>My Orders</li>
           </Link>
           <li className="p-2 border-b border-gray-200 cursor-pointer">Order Events</li>
           <li className="p-2 border-b border-gray-200 cursor-pointer">Address</li>
@@ -237,7 +280,6 @@ const Header = ({ user }) => {
         </ul>
       </div>
 
-      {/* Logout Confirmation Dialog */}
       {isLogoutDialogOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg text-center">
@@ -260,9 +302,7 @@ const Header = ({ user }) => {
         </div>
       )}
 
-      {/* Body Content */}
-      <div className="pt-20 mt-5"> {/* Add padding to avoid overlap with fixed header */}
-        
+      <div className="pt-20 mt-5">
         <Body isSidenavOpen={isSidenavOpen} />
       </div>
     </>

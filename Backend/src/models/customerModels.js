@@ -152,6 +152,7 @@ const userbytoken = async (access_token) => {
   const getCustomerDetails= async ( customer_id )=>{
     try{
         const result= await client.query(DB_COMMANDS.CUSTOMER_SELECT_BY_GID,[customer_id]);
+        console.log('cus in model',result)
         if(result.rows.length === 0){
             logger.error('customer not found')
             return null;

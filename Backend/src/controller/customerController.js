@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator');
 const {transporter}=require('../middlewares/mailAuth.js')
 const SECRET_KEY = process.env.SECRET_KEY;
 const nodemailer = require('nodemailer');
+const client = require('../config/dbConfig.js');
 let otpStore = {}; // This should be in memory or persistent storage in production
 const send_otp = async (req, res) => {
     const { email } = req.body;
@@ -831,6 +832,7 @@ console.log('address',address)
   };
 
 const getCustomerDetails=async(req, res)=>{
+    console.log('cus')
     try{
         const token = req.headers['token'];
         console.log('cus',token)
@@ -841,7 +843,7 @@ const getCustomerDetails=async(req, res)=>{
           let verified_data;
           try {
             verified_data = jwt.verify(token, process.env.SECRET_KEY);
-           
+           console.log(verified_data)
           } catch (err) {
             logger.error('Token verification failed:', err);
             if (err instanceof jwt.TokenExpiredError) {
@@ -856,22 +858,51 @@ const getCustomerDetails=async(req, res)=>{
           const customer_id = verified_data.id;
           console.log('gid',customer_id)
           const customer=await customer_model.getCustomerDetails(customer_id);
+          console.log('in con',customer)
           const Myaddress=await customer_model.getCustomerAddress(customer_id)
-        const useradd=`${Myaddress[0].tag},${Myaddress[0].line1},${Myaddress[0].line2},${Myaddress[0].pincode}`
-    const data={
-        Name:customer.customer_name,
-        PhoneNumber: customer.customer_phonenumber,
-        email:customer.customer_email,
-        address:useradd,
-        id:customer.customer_generated_id
-    }
-       console.log('data',data)
+          console.log('sneha',Myaddress)
+
+        var useradd=`${Myaddress[0].tag},${Myaddress[0].line1},${Myaddress[0].line2},${Myaddress[0].pincode}`
+                const data={
+                    Name:customer.customer_name,
+                    PhoneNumber: customer.customer_phonenumber,
+                    email:customer.customer_email,
+                    address: useradd  ,
+                    id:customer.customer_generated_id
+                }
+           console.log('data1',data)
             return res.json(
                 data
             );
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
+}
+
+const getCustomerInfo=async(req, res)=>{
+    const token = req.headers['token'];
+  
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+    console.log('in getcus',token)
+    try {
+      const decoded = jwt.verify(token,SECRET_KEY);
+      const customer_email = decoded.email; 
+  
+      // Fetch user data from the database
+      const result = await client.query('SELECT customer_name, customer_phonenumber FROM customer WHERE customer_email = $1', [customer_email]);
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: 'Customer not found' });
+      }
+  
+      const { customer_name, customer_phonenumber } = result.rows[0];
+      return res.json({ customer_name, customer_phonenumber, customer_email });
+    } catch (error) {
+      console.error('Error verifying token or fetching user info:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 module.exports = {
@@ -892,7 +923,8 @@ module.exports = {
     customer_info,
     checkCustomerOtp,
     CustomerAddress,
-    getCustomerDetails
+    getCustomerDetails,
+    getCustomerInfo
 };
 
 

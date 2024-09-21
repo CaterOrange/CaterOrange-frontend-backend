@@ -59,7 +59,6 @@ const getDefaultAddress = async (req, res) => {
             return res.status(401).json({ message: 'Invalid or expired token' });
         }
         const customer_email = decoded.email;
-        // console.log(customer_email)
         const defaultAddress = await address_model.select_default_address(customer_email);
 
         return res.json({
@@ -102,7 +101,7 @@ const getAddressForUser = async (req, res) => {
 const getSelectedAddress=async(req, res)=>{
     try {
         const { address_id } = req.query; // Access the address_id from query parameters
-        console.log('id', address_id);
+     
         
         const result = await address_model.SelectAddress(address_id);
         

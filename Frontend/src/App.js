@@ -10,15 +10,44 @@ import CorporateOrders from "./components/corporate/CorporateOrders.js";
 import SuccessPage from "./components/corporate/payments/SuccessPage.js";
 import FailurePage from "./components/corporate/payments/Failurepage.js";
 import PendingPage from "./components/corporate/payments/PendingPage.js";
+import axios from "axios";
 
 function App() {
   const [user, setUser] = useState(null);
-  const handleSignIn = (token) => {
+
+  const handleSignIn =async (token,isGoogleLogin) => {
+    console.log('hi im in app')
     if (token) {
       localStorage.setItem('token', token);
       setUser({ token });
     }
-  };
+    
+if(!isGoogleLogin){
+    try {
+      console.log('in manual',token)
+      const response = await axios.get('http://localhost:4000/customer/info', {
+        headers: { token }
+      });
+      console.log('RESPONSE', response.data)
+      const profile = {
+        name: response.data.customer_name,
+        phone: response.data.customer_phonenumber,
+        email: response.data.customer_email
+      };
+      const a= localStorage.setItem('userData', JSON.stringify(profile));
+      console.log('a',a);
+      setUser({ token, ...profile });
+      console.log('user data', user)
+      setIsGoogleLogin(false);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  }
+}
+
+
+
+  
   return (
     <StoreProvider>
     <SignInProvider>
