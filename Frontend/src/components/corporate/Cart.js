@@ -236,8 +236,11 @@ const MyCart = () => {
   payment_status: 'pending'
  });
  if (response.status === 200) {
-  await PaymentDetails(response.data.order.corporateorder_generated_id);
-  await sendOrderDetails(response.data.order.corporateorder_id);
+   await PaymentDetails(response.data.order.corporateorder_generated_id);
+  console.log("payment over",response.data)
+
+  await sendOrderDetails(response.data.order);
+  
  console.log('Cart details added to orders', response.data);
  }  else {
   console.error('Failed to add details to order_table:', response.data);
@@ -251,6 +254,7 @@ console.error('Error adding details to order_table:', error);
 
 const sendOrderDetails = async (orderDetails) => {
   try {
+    console.log("in router",orderDetails)
     let response;
     let details = orderDetails.order_details;
     console.log('length', details.length);

@@ -193,7 +193,7 @@ const addCorporateOrderDetails = async (req, res) => {
   try {
    
    logger.info('hi ',{corporateorder_id,  processing_date,delivery_status,category_id,quantity,active_quantity,media, delivery_details})
-
+console.log("in controller")
       // Insert into the database using the model
       const insertedDetail = await corporate_model.insertCorporateOrderDetails(corporateorder_id, processing_date,delivery_status,category_id,quantity,active_quantity,media, delivery_details );
 
