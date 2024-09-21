@@ -50,6 +50,19 @@ const initializeApp = async () => {
 
     await createTables();
     logger.info('Tables created successfully');
+
+    const insertCategoryDataQuery = `
+      INSERT INTO corporate_category (category_name, category_description, category_price, category_media)
+      VALUES 
+        ('breakfast', 'We are offering tasty breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+        ('NonVeg Lunch', 'We are offering tasty Nonveg lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+        ('Veg Lunch', 'We are offering tasty veg lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+        ('Veg Dinner', 'We are offering tasty veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+        ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s');
+    `;
+
+    await client.query(insertCategoryDataQuery);
+    logger.info('Category data inserted successfully');
     const apolloServer = await startApolloServer();
     logger.info('Apollo Server started');
     app.use(express.json());

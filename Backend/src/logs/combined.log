@@ -7654,3 +7654,38 @@
 {"level":"info","message":"Apollo Server started","timestamp":"2024-09-21T13:00:20.085Z"}
 {"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-21T13:00:20.092Z"}
 {"level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-09-21T13:00:20.095Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-21T13:43:40.182Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-21T13:43:40.325Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-21T13:43:40.608Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-21T13:43:40.753Z"}
+{"level":"info","message":"Admin table created successfully","timestamp":"2024-09-21T13:43:40.784Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-21T13:43:40.858Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-21T13:43:40.892Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-21T13:43:40.993Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-21T13:43:41.038Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-21T13:43:41.071Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-21T13:43:41.121Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-21T13:43:41.161Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-21T13:43:41.193Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-21T13:43:41.225Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-21T13:43:41.262Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-21T13:43:41.263Z"}
+{"level":"info","message":"Apollo Server started","timestamp":"2024-09-21T13:43:41.567Z"}
+{"level":"info","message":"Server is running on port 4000","timestamp":"2024-09-21T13:43:41.576Z"}
+{"level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-09-21T13:43:41.577Z"}
+{"level":"info","message":"Database created or already exists","timestamp":"2024-09-21T13:52:01.422Z"}
+{"level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-09-21T13:52:01.508Z"}
+{"level":"info","message":"Groups table created successfully","timestamp":"2024-09-21T13:52:01.511Z"}
+{"level":"info","message":"Customer table created successfully","timestamp":"2024-09-21T13:52:01.513Z"}
+{"level":"info","message":"Admin table created successfully","timestamp":"2024-09-21T13:52:01.515Z"}
+{"level":"info","message":"Addresses table created successfully","timestamp":"2024-09-21T13:52:01.518Z"}
+{"level":"info","message":"Payment table created successfully","timestamp":"2024-09-21T13:52:01.520Z"}
+{"level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-09-21T13:52:01.541Z"}
+{"level":"info","message":"Corporate Category table created successfully","timestamp":"2024-09-21T13:52:01.544Z"}
+{"level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-09-21T13:52:01.547Z"}
+{"level":"info","message":"Event Orders table created successfully","timestamp":"2024-09-21T13:52:01.552Z"}
+{"level":"info","message":"Event Category table created successfully","timestamp":"2024-09-21T13:52:01.555Z"}
+{"level":"info","message":"Event Cart table created successfully","timestamp":"2024-09-21T13:52:01.557Z"}
+{"level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-09-21T13:52:01.558Z"}
+{"level":"info","message":"Event Products table created successfully","timestamp":"2024-09-21T13:52:01.560Z"}
+{"level":"info","message":"Tables created successfully","timestamp":"2024-09-21T13:52:01.561Z"}

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Trash,ChevronDown, ChevronUp, Plus, Minus,MapPin, ShoppingCart, X } from 'lucide-react';
+import { Trash, ChevronDown, ChevronUp, Plus, Minus, MapPin, ShoppingCart, X } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { addtocart, cartToOrder ,removeFromCart} from '../events/action';
+import { addtocart, cartToOrder, removeFromCart } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-
 
 // ToggleSwitch Component
 const ToggleSwitch = ({ isOn, onToggle }) => (
@@ -34,7 +33,7 @@ const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggl
       >
         <div className="flex items-center flex-grow">
           <img src={item.image} alt={item['productname']} className="w-16 h-16 object-cover rounded mr-4" />
-          <div className="flex items-center justify-between flex-grow">
+          <div className="flex items-center">
             <h3 className="font-semibold text-gray-800">{item['productname']}</h3>
             <input
               type="checkbox"
@@ -102,11 +101,7 @@ const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit
 };
 
 // CartSidebar Component
-
-// CartSidebar Component
- // Adjust the import path as necessary
-
-const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address }) => {
+const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address, onRemoveItem }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [cartId, setCartId] = useState(0);
@@ -180,6 +175,23 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
     }
   };
 
+  const handleDelete = async (productId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const decoded = jwtDecode(token);
+      const customer_id = decoded.id;
+
+      // Call removeFromCart function to handle backend/database removal
+      await removeFromCart(productId,cartId);
+
+      // Call onRemoveItem to update parent state and local storage
+      onRemoveItem(productId);
+    } catch (error) {
+      console.error('Error removing item:', error);
+      setError('Failed to remove item. Please try again.');
+    }
+  };
+
   return (
     <div className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       <div className="flex flex-col h-full">
@@ -222,10 +234,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                       <h3 className="font-semibold text-gray-800 mb-1">{item['productname']}</h3>
                       <img src={item.image} alt={item['productname']} className="w-24 h-24 object-cover rounded mb-2" />
                       <button 
-                        onClick={async () => {
-                          await removeFromCart(item['productid'],cartId)
-                          // Optionally trigger a state update to refresh the cart
-                        }} 
+                        onClick={() => handleDelete(item['productid'])}
                         className="text-red-500 hover:text-red-700 mb-2"
                         title="Remove from cart"
                       >
@@ -303,6 +312,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
 
 
 
+
 // Menu Component
 const Menu = () => {
   const [menuData, setMenuData] = useState([]);
@@ -313,8 +323,7 @@ const Menu = () => {
   const [mainToggleOn, setMainToggleOn] = useState(false);
   const location = useLocation();
   const numberOfPlates = location.state?.numberOfPlates || 1;
-  const selectedDate = location.state?.selectedDate
-  
+  const selectedDate = location.state?.selectedDate;
   const address = location.state?.address || {
     line1: 'address.line1',
     line2: 'address.line2',
@@ -334,7 +343,6 @@ const Menu = () => {
   useEffect(() => {
     // Load cart data from local storage
     const storedCart = localStorage.getItem('cartItems');
-    console.log("stored cart",storedCart)
     if (storedCart) {
       const parsedCart = JSON.parse(storedCart);
       setCheckedItems(parsedCart.checkedItems || {});
@@ -349,7 +357,6 @@ const Menu = () => {
 
     const fetchProducts = async () => {
       try {
-       
         const response = await fetch('http://localhost:4000/api/products');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -416,7 +423,7 @@ const Menu = () => {
     if (!checkedItems[itemId]) {
       newQuantities[itemId] = 1;
     } else {
-      newQuantities[itemId] = 0;
+      delete newQuantities[itemId];
     }
     setQuantities(newQuantities);
     updateLocalStorage(newCheckedItems, newQuantities);
@@ -424,6 +431,21 @@ const Menu = () => {
 
   const updateLocalStorage = (checkedItems, quantities) => {
     localStorage.setItem('cartItems', JSON.stringify({ checkedItems, quantities }));
+  };
+
+  const removeItem = (productId) => {
+    // Update checkedItems
+    const newCheckedItems = { ...checkedItems };
+    delete newCheckedItems[productId];
+    setCheckedItems(newCheckedItems);
+
+    // Update quantities
+    const newQuantities = { ...quantities };
+    delete newQuantities[productId];
+    setQuantities(newQuantities);
+
+    // Update local storage
+    updateLocalStorage(newCheckedItems, newQuantities);
   };
 
   const cartItems = menuData.flatMap(category =>
@@ -438,7 +460,7 @@ const Menu = () => {
 
   return (
     <div className="bg-gradient-to-b from-[#008000]">
-      <div className=" top-0 left-0 w-full bg-gradient-to-b from-[#008000] to-[#70c656] z-50">
+      <div className="top-0 left-0 w-full bg-gradient-to-b from-[#008000] to-[#70c656] z-50">
         <div className="flex justify-between items-center py-4 px-6">
           <h1 className="text-2xl font-bold text-white">EVENT MENU CARD</h1>
           <button
@@ -488,6 +510,7 @@ const Menu = () => {
         mainToggleOn={mainToggleOn}
         address={address} 
         selectedDate={selectedDate}
+        onRemoveItem={removeItem}
       />
     </div>
   );
