@@ -1,31 +1,30 @@
+
 const express = require('express');
+const { ApolloServer } = require('apollo-server-express');
 const client = require('./config/dbConfig');
-const cors=require('cors')     
+const cors = require('cors');
 const logger = require('./config/logger');
 const { createTables } = require('./controller/tableController');
 const { createDatabase } = require('./config/config');
 require('dotenv').config();
+
+// Import your GraphQL schema and resolvers
+const { typeDefs, resolvers } = require('./routes/adminRoutes'); // You'll need to create this file
 const allRoutes = require('./routes/customerRoutes.js');
-const adminRoutes = require('./routes/adminRoutes');
-
-const addressRoutes = require('./routes/addressRoutes');
-const eventRoutes = require('./routes/eventorderRoutes.js');
-const corporateOrderDetailsRoutes = require('./routes/corporateorderRoutes.js');
-
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use('/', allRoutes);
 
-
-app.use('/admin', adminRoutes);
-app.use('/',addressRoutes)
-
-
-app.use('/', corporateOrderDetailsRoutes);
-
-
-
+async function startApolloServer() {
+  const server = new ApolloServer({ typeDefs, resolvers });
+  await server.start();
+  
+  server.applyMiddleware({ app });
+  
+  return server;
+}
 
 const initializeApp = async () => {
   try {
@@ -38,10 +37,12 @@ const initializeApp = async () => {
     await createTables();
     logger.info('Tables created successfully');
 
-    app.use(express.json());
+    const apolloServer = await startApolloServer();
+    logger.info('Apollo Server started');
 
     app.listen(process.env.PORT, () => {
       logger.info(`Server is running on port ${process.env.PORT}`);
+      logger.info(`GraphQL endpoint: http://localhost:${process.env.PORT}${apolloServer.graphqlPath}`);
     });
   } catch (err) {
     logger.error('Initialization error:', err.message);
@@ -50,5 +51,3 @@ const initializeApp = async () => {
 };
 
 initializeApp();
-app.use('/', allRoutes);
-app.use('/',eventRoutes);
