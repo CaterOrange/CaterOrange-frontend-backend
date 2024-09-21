@@ -4,7 +4,7 @@ const updateOrder = async (order_id, payment_id, payment_status) => {
     const query = `
         UPDATE corporate_orders
         SET paymentid = $1, payment_status = $2
-        WHERE corporateorder_id = $3
+        WHERE corporateorder_generated_id = $3
         RETURNING *;
     `;
 

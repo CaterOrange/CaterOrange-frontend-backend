@@ -41,7 +41,7 @@ const payment = async (req, res) => {
     // Assume you have the order_id and payment_status from somewhere
     const order_id = corporateorder_id; // or however you get it
     const payment_status = 'Success'; // or however you determine the status
-
+console.log(order_id);
     // Now update the corporate order with the generated payment_id
     await updateCorporateOrder(order_id, generatedPaymentId, payment_status);
 
@@ -53,14 +53,12 @@ const payment = async (req, res) => {
 };
 
   const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
-    
-
   
 
     try {
         // Update corporate order details in the database
         const result = await paymentmodel.updateOrder(order_id, paymentid, payment_status);
-
+console.log('result in pay',result);
         if (result.rowCount > 0) {
             console.log('Corporate order updated successfully' );
         } else {

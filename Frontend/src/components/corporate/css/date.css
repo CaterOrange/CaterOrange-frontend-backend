@@ -1,0 +1,239 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+.calendar-container {
+    width: 350px;
+    height: 310px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.react-datepicker {
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 0.8em;
+}
+
+.react-datepicker__month-container {
+    width: 100%;
+    height: 100%;
+}
+
+.react-datepicker__month {
+    margin: 0;
+    padding: 0;
+}
+
+.react-datepicker__week {
+    display: flex;
+    justify-content: space-around;
+    margin: 6px;
+}
+
+.react-datepicker__day {
+    margin: 0;
+    padding: 3px;
+    line-height: 1;
+}
+
+.selected-container {
+    margin-top: 4px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.9em;
+}
+
+.form {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+}
+
+.react-datepicker__header {
+    background-color: white;
+    border-bottom: none;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.bold-text2 {
+    font-weight: bold;
+    font-size: large;
+}
+
+.bold-arrow-right {
+    font-size: 16px;
+    margin-right: 25px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    color: rgb(48, 114, 190);
+    font-weight: bold;
+    font: bolder; /* This increases the thickness */
+}
+
+.bold-arrow-left {
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 25px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    color:rgb(48, 114, 190);
+    font-weight: bold;
+    font: bolder; 
+}
+
+.bold-label {
+    font-weight: bold;
+    color: blue;
+}
+
+.bold-label.weekend {
+    color: red;
+}
+
+.dragged-day {
+    background-color: #f0f0f0;
+    font-weight: bold;
+    border-radius: 50%;
+}
+
+.dragged-day:hover {
+    background-color: #d1e7ff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.disabled-day {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.selected-day {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+}
+
+.selected-day:hover {
+    background-color: #0056b3;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.default-day {
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+}
+
+.default-day:hover {
+    background-color: #e6f2ff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.react-datepicker__day-names {
+    display: none;
+}
+
+.react-datepicker__day--weekend {
+    color: red;
+    font-weight: bold;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 20px;
+    border: 2px solid gray;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-color: white;
+    transition: background-color 0.3s ease;
+    transform: scale(1.5);
+    transform-origin: left center;
+    margin-right: 10px;
+}
+
+input[type="checkbox"]:checked {
+    background-color: green;
+    border-color: green;
+}
+
+input[type="checkbox"]:checked::before {
+        content: "\2714";
+        display: block;
+        color: white;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+        bottom: -1.5px;
+        font-size: 10px;
+        justify-content: center;
+    }
+    
+    input[type="checkbox"]:hover {
+        background-color: #e6f2ff;
+        border-color: gray;
+    }
+    
+    input[type="checkbox"]:checked:hover {
+        background-color: #2ff108a8;
+    }
+    .days {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .btn {
+        padding: 0px 3px 0px 3px;
+        font-size: 0.9em;
+        color: blue;
+     
+    }
+    
+    .react-datepicker__month-container {
+        padding-top: 10px; 
+    }
+    .date-range-display {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px; /* Adjust padding as needed */
+        font-size: 1em; /* Adjust font size if needed */
+    }
+    
+    .date-label {
+        font-weight: bold;
+        color: #333; /* Change color if needed */
+    }
+    
+    .date-label.bold-label {
+        color: blue;
+    }

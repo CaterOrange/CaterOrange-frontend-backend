@@ -65,12 +65,12 @@ function createCorporateOrdersTableQuery() {
             -- Get the customer's generated id
             SELECT customer_generated_id INTO customer_gen_id 
             FROM customer 
-            WHERE customer_id = NEW.customer_id;
+            WHERE customer_generated_id = NEW.customer_generated_id;
             
             -- Count the number of orders placed by the customer today
             SELECT COUNT(*) + 1 INTO order_count
             FROM corporate_orders
-            WHERE customer_id = NEW.customer_id
+            WHERE customer_generated_id = NEW.customer_generated_id
             AND TO_CHAR(ordered_at, 'YYYYMMDD') = today_date;
             
             -- Concatenate CO, today's date, the order count, and the customer_generated_id
@@ -88,7 +88,7 @@ function createCorporateOrdersTableQuery() {
     CREATE TABLE IF NOT EXISTS corporate_orders (
       corporateorder_id SERIAL PRIMARY KEY,
       corporateorder_generated_id VARCHAR(255) UNIQUE,
-      customer_id INTEGER,
+      customer_generated_id VARCHAR(100),
       order_details JSON,  
       total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
@@ -96,7 +96,7 @@ function createCorporateOrdersTableQuery() {
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       payment_status VARCHAR(50),
       corporate_order_status VARCHAR(50),
-      FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id),
       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
     );
 
@@ -169,7 +169,7 @@ function createEventOrdersTableQuery() {
       customer_id INTEGER,
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       delivery_status VARCHAR(50),
-      total_amount INTEGER NOT NULL,
+      total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
       delivery_details JSON,
       event_order_details JSON,
@@ -197,18 +197,24 @@ function createCorporateCategoryTableQuery() {
     CREATE TABLE IF NOT EXISTS corporate_category (
       category_id SERIAL PRIMARY KEY,
       category_name VARCHAR(255) NOT NULL,
-      category_media TEXT,
       category_description VARCHAR(500),
-      category_price FLOAT
-      
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      price FLOAT
-    );
-  `;
+      category_price FLOAT,
+      category_media TEXT,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );`;
 }
 
 // Create Event Category Table
-
+function createEventCategoryTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS event_category (
+      category_id SERIAL PRIMARY KEY,
+      category_name VARCHAR(255) NOT NULL,
+      category_media TEXT,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+}
 
 // Create Groups Table
 function createGroupsTableQuery() {
@@ -277,44 +283,33 @@ function createCorporateCartTableQuery() {
 function createEventProductsTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_products (
-      product_id SERIAL PRIMARY KEY,
-      product_name VARCHAR(255),
-      image TEXT,
-      category_name VARCHAR(255),
-      price_category VARCHAR(255),
-      isdual BOOLEAN,
-      unit_1 VARCHAR(255),
-      price_per_unit1 FLOAT,
-      min_unit1_per_plate INTEGER,
-      unit_2 VARCHAR(255),
-      price_per_unit2 FLOAT,
-      min_unit2_per_plate INTEGER,
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      category_id INTEGER,
-      FOREIGN KEY (category_id) REFERENCES event_category(category_id)
+      productId SERIAL PRIMARY KEY,
+      product_id_from_csv VARCHAR NOT NULL UNIQUE,
+      ProductName VARCHAR(255),
+      Image TEXT,
+      Category_Name VARCHAR(255),
+      Price_Category VARCHAR(255),
+      isDual BOOLEAN,
+      Units VARCHAR(255),
+      PriceperUnit FLOAT,
+      MinUnitsperPlate INTEGER,
+      Units2 VARCHAR(255),
+      PriceperUnits2 FLOAT,
+      MinUnits2perPlate INTEGER,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
-}
+  }
 
-function createAdminTableQuery() {
-return `
-  CREATE TABLE IF NOT EXISTS admin (
-    admin_id SERIAL PRIMARY KEY,
-    isadmin BOOLEAN NOT NULL DEFAULT false,
-    customer_generated_id VARCHAR(255),
-    FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
-  );
- `; 
-}
+
 module.exports = {
-  createAdminTableQuery,
   createCustomerTableQuery,
   createPaymentTableQuery,
   createCorporateOrdersTableQuery,
   createCorporateOrderDetailsTableQuery,
   createEventOrdersTableQuery,
   createCorporateCategoryTableQuery,
- 
+  createEventCategoryTableQuery,
   createGroupsTableQuery,
   createAddressesTableQuery,
   createEventCartTableQuery,
