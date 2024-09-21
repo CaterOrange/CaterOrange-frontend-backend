@@ -101,6 +101,7 @@ const HomePage = () => {
       navigate('/menu', { state: { numberOfPlates: plates, selectedDate: selectedDate, address: selectedAddress } });
     }
   };
+  
   console.log("hey",address);
   const handleSelect = (address_id) => {
     const selectedAddr = address.find(addr => addr.address_id === address_id);
@@ -108,6 +109,7 @@ const HomePage = () => {
     setSelectedAddress(selectedAddr); // Update selected address state
     console.log("address",selectedAddress);
     console.log(selectedAddr);
+    console.log("date:",selectedDate)
     // console.log(selectedAddress); //hi
   };
 

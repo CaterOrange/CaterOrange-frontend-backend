@@ -1,5 +1,6 @@
 const express = require('express');
 const client = require('./config/dbConfig');
+const { ApolloServer } = require('apollo-server-express');
 const cors=require('cors')     
 const logger = require('./config/logger');
 const { createTables } = require('./controller/tableController');
@@ -12,7 +13,7 @@ const crypto = require('crypto');
 const { jwtDecode } =require('jwt-decode')
 const jwt=require('jsonwebtoken')
 const allRoutes = require('./routes/customerRoutes.js');
-const adminRoutes = require('./routes/adminRoutes');
+const { typeDefs, resolvers } = require('./routes/adminRoutes'); 
 const paymentRoutes = require('./routes/paymentRoutes.js');
 const addressRoutes = require('./routes/addressRoutes');
 const eventRoutes = require('./routes/eventorderRoutes.js');
@@ -31,7 +32,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 fetchAndInsertCSVData()
-app.use('/', adminRoutes);
+
 app.use('/',addressRoutes)
 app.use('/',paymentRoutes)
 app.use('/',categoryRoutes);
@@ -49,11 +50,13 @@ const initializeApp = async () => {
 
     await createTables();
     logger.info('Tables created successfully');
-
+    const apolloServer = await startApolloServer();
+    logger.info('Apollo Server started');
     app.use(express.json());
 
     app.listen(process.env.PORT, () => {
       logger.info(`Server is running on port ${process.env.PORT}`);
+      logger.info(`GraphQL endpoint: http://localhost:${process.env.PORT}${apolloServer.graphqlPath}`);
     });
   } catch (err) {
     logger.error('Initialization error:', err.message);
@@ -121,6 +124,15 @@ const SALT_INDEX = 1;
 //       });
 //   });
   
+async function startApolloServer() {
+  const server = new ApolloServer({ typeDefs, resolvers });
+  await server.start();
+  
+  server.applyMiddleware({ app });
+  
+  return server;
+}
+
 app.post("/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
   const merchantTransactionId = uniqid();

@@ -420,7 +420,14 @@ const login = [
             body('customer_password')
                 .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
                 .trim()
+            
 
+                const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
+                console.log('Admin check result:', checkIsAdmin);
+    
+                const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
+                const customername=customer.customer_name;
+                console.log('Is admin:', isAdmin);
             // Verify the existing token or generate a new one
             let token;
             try {
@@ -428,7 +435,7 @@ const login = [
                 var uat = customer.access_token;
                 logger.info('Token verified successfully', { token });
             } catch (err) {
-                uat = jwt.sign({ email: customer_email }, SECRET_KEY, { expiresIn: '24h' });
+                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin}, SECRET_KEY, { expiresIn: '24h' });
                 await customer_model.updateAccessToken(customer_email, uat);
                 logger.info('New token generated', { token: uat });
             }
@@ -436,7 +443,8 @@ const login = [
             res.json({
                 success: true,
                 message: 'Login successful',
-                token: uat
+                token: uat,
+                isAdmin: isAdmin
             });
         } catch (err) {
             logger.error('Error during user login', { error: err.message });

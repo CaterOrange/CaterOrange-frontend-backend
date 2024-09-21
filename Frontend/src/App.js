@@ -35,7 +35,7 @@ function App() {
               }
             />
             <Route path="/home" element={<Home user={user}/>} />
-            <Route path="/menu" element={<Menu/>}/>
+            <Route path="/menu" element={<Menu />}/>
             <Route
             path="/cart"
             element={<Corporatecart/>}/>

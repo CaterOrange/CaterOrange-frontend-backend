@@ -2,27 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { myorders, addtocart } from './action';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-const OrderDashboard = () => {
+const OrderDashboard = ({selectedDate}) => {
   const [openOrderId, setOpenOrderId] = useState(null);
   const [OrdersData, setOrderData] = useState([]);
   const [processingOrders, setProcessingOrders] = useState({});
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
- 
-
-  const formatOrderDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  console.log("selected date",selectedDate)
+  
+  const formatOrderDate = (selectedDate) => {
+    const date = selectedDate;
+    return date;
   };
 
   useEffect(() => {
     const fetchOrders = async () => {
       const orderData = await myorders();
+      console.log("Order data here:",orderData)
       setOrderData(orderData);
     };
     fetchOrders();
   }, []);
-
+  
   const formattedOrders = OrdersData.map((order) => {
     const formattedItems = order.event_order_details.map((item) => ({
       name: item.productname,
@@ -32,14 +33,17 @@ const OrderDashboard = () => {
       quantity: item.quantity,
       amount: item.quantity * item.priceperunit,
     }));
+    const date = new Date(order.processing_date);
+  const formattedDate = date.toLocaleDateString('en-GB');
     return {
       id: order.eventorder_generated_id,
-      date: formatOrderDate(order.ordered_at),
+      date: formattedDate,
       amount: order.total_amount,
       items: formattedItems,
       status: order.event_order_status,
     };
   });
+  console.log("Formatted Orders",OrdersData)
 
   const handleOrderClick = (order) => {
     if (openOrderId === order.id) {
@@ -69,15 +73,10 @@ const OrderDashboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 bg-green-600 text-white p-2 rounded-t-lg">Your Orders</h1>
-      <div className="flex space-x-2 mb-4">
-        <button className="bg-orange-100 text-orange-500 border border-orange-500 rounded-full px-4 py-1">CORPORATE</button>
-        <button className="bg-blue-100 text-blue-500 border border-blue-500 rounded-full px-4 py-1">EVENT</button>
-      </div>
+    <div className="container mx-auto p-4 bg-gray-100 ">
       {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
       {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{success}</div>}
-      <div className="space-y-4">
+      <div>
         {formattedOrders.length > 0 && formattedOrders.map((order) => (
           <div key={order.id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4 cursor-pointer" onClick={() => handleOrderClick(order)}>

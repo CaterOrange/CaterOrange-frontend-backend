@@ -12,7 +12,8 @@ const {
   createAddressesTableQuery,
   createEventCartTableQuery,
   createCorporateCartTableQuery,
-  createEventProductsTableQuery
+  createEventProductsTableQuery,
+  createAdminTableQuery
 } = require('../utils/tableSchema');
 
 const createTables = async () => {
@@ -23,6 +24,8 @@ const createTables = async () => {
     // // Create Customer table
     await client.query(createCustomerTableQuery());
     logger.info('Customer table created successfully');
+    await client.query(createAdminTableQuery());
+    logger.info('Admin table created successfully');
     // Create Addresses table
     await client.query(createAddressesTableQuery());
     logger.info('Addresses table created successfully');

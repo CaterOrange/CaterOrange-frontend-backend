@@ -25,9 +25,9 @@ const getCartItems = async (customer_id) => {
   }
 };
 
-const addCart = async (customer_id, total_amount, cart_order_details, address) => {
-  const now = Date.now(); 
-  const isoString = new Date(now).toISOString();
+const addCart = async (customer_id, total_amount, cart_order_details, address,number_of_plates,processing_date) => {
+  // const now = Date.now(); 
+  // const isoString = new Date(now).toISOString();
   try {
     let cartId;
     const existingCartQuery = `
@@ -41,23 +41,23 @@ const addCart = async (customer_id, total_amount, cart_order_details, address) =
       const row = existingCartResult.rows[0];
       const updateQuery = `
         UPDATE event_cart
-        SET cart_order_details = $1, total_amount = $2, address = $3, order_date = $4
-        WHERE eventcart_id = $5
+        SET cart_order_details = $1, total_amount = $2, address = $3
+        WHERE eventcart_id = $4
         RETURNING eventcart_id;
       `;
       const updateValues = [
         JSON.stringify(cart_order_details),
         total_amount,
         JSON.stringify(address),
-        isoString,
+        // isoString,
         row.eventcart_id
       ];
       const updateResult = await client.query(updateQuery, updateValues);
       cartId = updateResult.rows[0].eventcart_id;
     } else {
       const insertQuery = `
-        INSERT INTO event_cart (customer_id, total_amount, cart_order_details, address, order_date)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO event_cart (customer_id, total_amount, cart_order_details, address, number_of_plates,processing_date)
+        VALUES ($1, $2, $3, $4, $5,$6)
         RETURNING eventcart_id;
       `;
       const insertValues = [
@@ -65,9 +65,12 @@ const addCart = async (customer_id, total_amount, cart_order_details, address) =
         total_amount,
         JSON.stringify(cart_order_details), 
         JSON.stringify(address),
-        isoString
+        // isoString,
+        number_of_plates,
+        processing_date
       ];
       const insertResult = await client.query(insertQuery, insertValues);
+      console.log("insertresult",insertResult);
       cartId = insertResult.rows[0].eventcart_id;
     }
 
@@ -120,13 +123,15 @@ const insertEventOrder = async (orderData) => {
     const result = await client.query(DB_COMMANDS.INSERT_EVENT_ORDER, [
       orderData.customer_id,
       orderData.delivery_status,
-      orderData.total_amount,
+      orderData.amount,
       orderData.delivery_details || null,
       cartOrderDetailsJson, 
       orderData.event_media || null,
       customerAddressJson,  
       orderData.payment_status,
-      orderData.event_order_status
+      orderData.event_order_status,
+      orderData.number_of_plates,
+      orderData.processing_date
     ]);
 
     return result.rows[0];

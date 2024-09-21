@@ -32,10 +32,12 @@ export const getCartFromOrderId = async (orderId) => {
 
 export const addtocart = async(payload)=>{
 try {   
+    const token = localStorage.getItem('token');
   console.log("payload action",payload);
     const response = await axios.post('http://localhost:4000/api/cart/add', payload, {
       headers: {
-        'Content-Type': 'application/json'  
+        token:token
+      
       }
     });
     console.log("Response from backend:", response.data);  
@@ -52,19 +54,22 @@ try {
       console.error("Error posting cart items:", err.message);  
     }
   }}
+  
 
-
-
-  export const cartToOrder = async(eventcart_id)=>{
+  export const cartToOrder = async(cartId)=>{
     try {
+        const eventcart_id=cartId
+        console.log("eventcart_id in action",eventcart_id)
       const response = await axios.post('http://localhost:4000/api/transfer-cart-to-order', {
       eventcart_id
       }, {
         headers: {
+            token: `${localStorage.getItem('token')}` ,
           'Content-Type': 'application/json'  
         }
       });
       console.log("response from cart",response);
+      return response.data;
     } catch (err) {
       console.log(err.response ? `Error: ${err.response.data.message || 'An error occurred. Please try again.'}` : 'Network error or no response from the server.');
     }
@@ -74,21 +79,49 @@ try {
 
 export const myorders = async()=>{
   try {
-            const response = await fetch('http://localhost:4000/api/myorders');
-            const data = await response.json();
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:4000/api/myorders',{
+        headers: {
+          token:token
+        
+        }
+      });
+      console.log("response in myorders",response)
+            
             if (response) {
           
-              return data;
+                return response.data;
             } else {
               console.log('No data received from the server.');
               
             }
+            
           } catch (error) {
             console.log('Failed to fetch orders. Please try again later.');
             
           } 
    }
-
+  export const removeFromCart = async (productid, eventcart_id) => {
+    try {
+      const response = await fetch('http://localhost:4000/api/cart/remove', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productid,eventcart_id }),
+      });
+      
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Item removed:', data);
+        // Update cart state or re-fetch cart data
+      } else {
+        console.error('Error removing item:', data.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 export const orderbuyagain = async(cartData)=>{
   console.log("in action.js:",cartData);
   try {

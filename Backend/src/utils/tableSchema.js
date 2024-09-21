@@ -177,6 +177,8 @@ function createEventOrdersTableQuery() {
       customer_address JSON,
       payment_status VARCHAR(50),
       event_order_status VARCHAR(50),
+      number_of_plates INTEGER,
+      processing_date DATE,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
     );
@@ -253,17 +255,27 @@ function createEventCartTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_cart (
       eventcart_id SERIAL PRIMARY KEY,
-      order_date DATE,
       customer_id INTEGER,
       total_amount FLOAT,
       cart_order_details JSON,
       address JSON,
+      number_of_plates INTEGER,
+      processing_date DATE,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
     );
   `;
 }
-
+function createAdminTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS admin (
+      adminid SERIAL PRIMARY KEY,
+      customer_generated_id VARCHAR,
+      isadmin boolean,
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
+    );
+  `;
+}
 // Create Corporate Cart Table
 function createCorporateCartTableQuery() {
   return `
@@ -314,6 +326,7 @@ module.exports = {
   createAddressesTableQuery,
   createEventCartTableQuery,
   createCorporateCartTableQuery,
-  createEventProductsTableQuery
+  createEventProductsTableQuery,
+  createAdminTableQuery
 };
 

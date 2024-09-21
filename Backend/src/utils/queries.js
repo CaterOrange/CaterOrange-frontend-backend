@@ -58,7 +58,7 @@ const DB_COMMANDS = {
     DELETE_EVENT_CART_BY_ID:`DELETE FROM event_cart WHERE eventcart_id = $1`,
     INSERT_EVENT_ORDER:`INSERT INTO event_orders (
     customer_id,
-    ordered_at,
+    
     delivery_status,
     total_amount,
     delivery_details,
@@ -66,9 +66,11 @@ const DB_COMMANDS = {
     event_media,
     customer_address,
     payment_status,
-    event_order_status
+    event_order_status,
+    number_of_plates,
+    processing_date
   ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
+    $1, $2, $3, $4, $5, $6, $7, $8, $9,$10,$11
   ) RETURNING *`,
     GET_ADDRESSES_BY_CUSTOMER_ID: `
     SELECT * FROM address WHERE customer_id = $1

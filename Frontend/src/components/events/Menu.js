@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, Plus, Minus,MapPin, ShoppingCart, X } from 'lucide-react';
+import { Trash,ChevronDown, ChevronUp, Plus, Minus,MapPin, ShoppingCart, X } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
-import { addtocart, cartToOrder } from '../events/action';
+import { addtocart, cartToOrder ,removeFromCart} from '../events/action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+
 
 // ToggleSwitch Component
 const ToggleSwitch = ({ isOn, onToggle }) => (
@@ -103,18 +104,18 @@ const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit
 // CartSidebar Component
 
 // CartSidebar Component
-const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuantity, toggleState, onToggleUnit, mainToggleOn, address }) => {
+ // Adjust the import path as necessary
+
+const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [cartId, setCartId] = useState('');
+  const [cartId, setCartId] = useState(0);
   const [redirectUrl, setRedirectUrl] = useState('');
 
-  function calculateTotalItemCost(item, numberOfPlates, selectedUnit, quantity) {
-    let totalItemCost = 0;
+  const calculateTotalItemCost = (item, numberOfPlates, selectedUnit, quantity) => {
     const pricePerUnit = selectedUnit === 'units2' ? item['priceperunits2'] : item['priceperunit'];
-    totalItemCost = pricePerUnit * quantity * numberOfPlates;
-    return totalItemCost.toFixed(2);
-  }
+    return (pricePerUnit * quantity * numberOfPlates).toFixed(2);
+  };
 
   const totalAmount = cartItems.reduce((sum, item) => {
     const selectedUnit = toggleState[item['productid']] || item['units'] || item['units2'];
@@ -122,34 +123,26 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
     return sum + parseFloat(totalItemCost);
   }, 0).toFixed(2);
 
-  const cartData = cartItems.reduce((acc, item) => {
-    const selectedUnit = toggleState[item['productid']] === 'units2' ? item['units2'] : item['units'];
-    const selectedPrice = toggleState[item['productid']] === 'units2' ? item['priceperunits2'] : item['priceperunit'];
-    const selectedMinUnitsPerPlate = toggleState[item['productid']] === 'units2' ? item['minunits2perplate'] : item['minunitsperplate'];
-  
-    acc.push({
-      addedat: item.addedat,
-      category_name: item.category_name,
-      image: item.image,
-      isdual: item.isdual,
-      minunitsperplate: selectedMinUnitsPerPlate,
-      price_category: item.price_category,
-      priceperunit: selectedPrice,
-      product_id_from_csv: item.product_id_from_csv,
-      productid: item.productid,
-      productname: item.productname,
-      quantity: item.quantity,
-      unit: selectedUnit
-    });
-  
-    return acc;
-  }, []);
+  const cartData = cartItems.map(item => ({
+    addedat: item.addedat,
+    category_name: item.category_name,
+    image: item.image,
+    isdual: item.isdual,
+    minunitsperplate: item.minunitsperplate || 1,
+    price_category: item.price_category,
+    priceperunit: item.priceperunit,
+    product_id_from_csv: item.product_id_from_csv,
+    productid: item.productid,
+    productname: item.productname,
+    quantity: item.quantity,
+    unit: toggleState[item['productid']] || item['units'] || item['units2']
+  }));
 
-  const cart = { totalAmount, cartData, address };
+  const cart = { totalAmount, cartData, address, numberOfPlates, selectedDate };
 
   const handleInputChange = (itemId, value) => {
-    const newQuantity = value === '' ? '' : Number(value); 
-    onUpdateQuantity(itemId, newQuantity); 
+    const newQuantity = value === '' ? '' : Number(value);
+    onUpdateQuantity(itemId, newQuantity);
   };
 
   const handleBlur = (itemId, quantity, minUnitsPerPlate) => {
@@ -161,19 +154,19 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
     const delay = setTimeout(async () => {
       const { cart_id } = await addtocart(cart);
       setCartId(cart_id);
-    }, 5000);
+    }, 1000);
     return () => clearTimeout(delay);
   }, [cart]);
 
   const handleSubmit = async (e) => {
     setLoading(true);
     try {
-      await cartToOrder(cartId);
+      const respond = await cartToOrder(cartId);
       const response = await axios.post('http://localhost:4000/pay', {
         amount: totalAmount,
-        corporateorder_id: 'EO202409201C000001'
-      },{headers: { token: `${localStorage.getItem('token')}` }});
-      
+        corporateorder_id: respond.eventorder_generated_id
+      }, { headers: { token: `${localStorage.getItem('token')}` } });
+
       if (response.data && response.data.redirectUrl) {
         setRedirectUrl(response.data.redirectUrl);
         window.location.href = response.data.redirectUrl;
@@ -182,8 +175,10 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
       }
     } catch (err) {
       setError(err.response ? `Error: ${err.response.data.message || 'An error occurred. Please try again.'}` : 'Network error or no response from the server.');
-    } 
-  }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={`fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
@@ -199,13 +194,13 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
             </button>
           </div>
           <div className="mt-2 text-white flex items-center">
-          <MapPin size={20} className="mr-2" /> {/* Location icon */}
-          <div>
-            <p>{address.line1}</p>
-            <p>{address.line2}</p>
-            <p>{address.pincode}</p>
+            <MapPin size={20} className="mr-2" />
+            <div>
+              <p>{address.line1}</p>
+              <p>{address.line2}</p>
+              <p>{address.pincode}</p>
+            </div>
           </div>
-        </div>
         </div>
         
         <div className="flex-1 overflow-y-auto p-4">
@@ -226,6 +221,16 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
                     <div className="flex flex-col items-center mb-2">
                       <h3 className="font-semibold text-gray-800 mb-1">{item['productname']}</h3>
                       <img src={item.image} alt={item['productname']} className="w-24 h-24 object-cover rounded mb-2" />
+                      <button 
+                        onClick={async () => {
+                          await removeFromCart(item['productid'],cartId)
+                          // Optionally trigger a state update to refresh the cart
+                        }} 
+                        className="text-red-500 hover:text-red-700 mb-2"
+                        title="Remove from cart"
+                      >
+                        <Trash size={20} />
+                      </button>
                       {item['units'] && item['units2'] && (
                         <div className="flex items-center mb-2">
                           <ToggleSwitch
@@ -237,9 +242,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
                           </p>
                         </div>
                       )}
-                      {!item['units2'] && (
-                        <p>{item['units']}</p>
-                      )}
+                      {!item['units2'] && <p>{item['units']}</p>}
                       <p className="text-sm text-gray-600 mb-2 flex flex-col items-center">
                         <span className="text-gray-700 mt-1">
                           {`${selectedUnitPrice} * ${item.quantity} * ${numberOfPlates} = `}
@@ -297,6 +300,9 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
   );
 };
 
+
+
+
 // Menu Component
 const Menu = () => {
   const [menuData, setMenuData] = useState([]);
@@ -307,7 +313,8 @@ const Menu = () => {
   const [mainToggleOn, setMainToggleOn] = useState(false);
   const location = useLocation();
   const numberOfPlates = location.state?.numberOfPlates || 1;
-
+  const selectedDate = location.state?.selectedDate
+  
   const address = location.state?.address || {
     line1: 'address.line1',
     line2: 'address.line2',
@@ -327,6 +334,7 @@ const Menu = () => {
   useEffect(() => {
     // Load cart data from local storage
     const storedCart = localStorage.getItem('cartItems');
+    console.log("stored cart",storedCart)
     if (storedCart) {
       const parsedCart = JSON.parse(storedCart);
       setCheckedItems(parsedCart.checkedItems || {});
@@ -479,6 +487,7 @@ const Menu = () => {
         onToggleUnit={onToggleUnit} 
         mainToggleOn={mainToggleOn}
         address={address} 
+        selectedDate={selectedDate}
       />
     </div>
   );

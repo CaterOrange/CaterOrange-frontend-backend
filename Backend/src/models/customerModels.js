@@ -180,6 +180,18 @@ const userbytoken = async (access_token) => {
     throw new Error('Error fetching carts from the database');
 }
 }
+const findAdminByCustomerId=async (customer_generated_id) => {
+    try{
+    const query = 'SELECT * FROM admin WHERE customer_generated_id = $1';
+  const result=await  client.query(query,[customer_generated_id]);
+  console.log("answer",result.rows[0])
+  
+    return result.rows[0];
+    }
+    catch(err){
+      return err;
+    }
+}
 module.exports = {
     createCustomer,
     findCustomerEmail,
@@ -196,5 +208,5 @@ module.exports = {
     findCustomerToken,
     findActivated,
     getCustomerAddress,
-    getCustomerDetails
+    getCustomerDetails,findAdminByCustomerId
 };

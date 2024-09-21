@@ -10,5 +10,5 @@ router.post('/transfer-cart-to-order', eventController.transferCartToOrder);
 router.post('/orderbuyagain',eventController.orderbuyagain);
 // router.get('/getcartitems',eventController.fetchCartItems);
 router.get('/cart/:customer_id', eventController.fetchCartItems);
-
+router.delete('/cart/remove', eventController.removeFromCart);
 module.exports = router;
