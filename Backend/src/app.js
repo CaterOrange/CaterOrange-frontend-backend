@@ -2,6 +2,7 @@ const express = require('express');
 const client = require('./config/dbConfig');
 const { ApolloServer } = require('apollo-server-express');
 const cors=require('cors')     
+const xss = require('xss-clean');
 const logger = require('./config/logger');
 const { createTables } = require('./controller/tableController');
 const { createDatabase } = require('./config/config');
@@ -24,6 +25,7 @@ const customerRoutes= require('./routes/customerRoutes.js');
 const { fetchAndInsertCSVData } = require('../products.js');
 const app = express();
 app.use(express.json());
+app.use(xss());
 const corsOptions = {
   origin: 'http://localhost:3000', // Update with your frontend origin
   optionsSuccessStatus: 200,
