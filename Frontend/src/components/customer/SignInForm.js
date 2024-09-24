@@ -348,12 +348,14 @@ const SignInForm = ({ onSignIn }) => {
 
   useEffect(() => {
     if (state.data && !state.isError) {
-      onSignIn(state.data);
+      onSignIn(state.data,isGoogleLogin);
       navigate('/home');
     } else if (state.isError) {
       setError(state.errorMessage);
     }
   }, [state, onSignIn, navigate]);
+
+
   const handleSignUp = (token, isGoogleLogin ) =>{
     localStorage.setItem('token',token);
     
@@ -376,14 +378,17 @@ const SignInForm = ({ onSignIn }) => {
     // Decode the Google token to get user info
     const decodedToken = jwtDecode(tokenId);
     console.log(decodedToken);
-    const { name , email } = decodedToken;
+    const { name , email, picture } = decodedToken;
     setEmail(email);
     setUserProfile(decodedToken);
-  //   // Store the Google token in localStorage
-    // localStorage.setItem('token', tokenId);
-
     console.log(name);
     console.log(email);
+    const userDP={
+      name:name,
+      email: email,
+      picture: picture
+    }
+    localStorage.setItem('userDP', JSON.stringify(userDP));
     const response= await Login_google_auth(name, email, tokenId,dispatch);
     console.log(response)
     setIsGoogleLogin(true);

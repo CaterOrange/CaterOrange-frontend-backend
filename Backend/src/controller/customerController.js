@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator');
 const {transporter}=require('../middlewares/mailAuth.js')
 const SECRET_KEY = process.env.SECRET_KEY;
 const nodemailer = require('nodemailer');
+const client = require('../config/dbConfig.js');
 let otpStore = {}; // This should be in memory or persistent storage in production
 const send_otp = async (req, res) => {
     const { email } = req.body;
@@ -575,34 +576,7 @@ const google_auth = async (req, res) => {
     }
 };
 
-const customer_info = async (req, res) => {
-  // Extract token from Authorization header
-  const token = req.headers['token'];
-  console.log('token',token)
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
-  
-  try {
-    // Verify and decode the token
-    const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
-    // Extract user ID or other information from decoded token
-    const customer_email = decoded.email; // Adjust based on your token payload
 
-    // Fetch user data from the database
-    const result = await client.query('SELECT customer_name, customer_phonenumber FROM customer WHERE customer_email = $1', [customer_email]);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Customer not found' });
-    }
-
-    const { customer_name, customer_phonenumber } = result.rows[0];
-    return res.json({ customer_name, customer_phonenumber, customer_email });
-  } catch (error) {
-    console.error('Error verifying token or fetching user info:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-};
 
 const checkCustomer = async (req, res) => {
     try {
@@ -838,7 +812,7 @@ console.log('address',address)
     }
   };
 
-const getCustomerDetails=async(req, res)=>{
+  const getCustomerDetails=async(req, res)=>{
     try{
         const token = req.headers['token'];
         console.log('cus',token)
@@ -881,6 +855,34 @@ const getCustomerDetails=async(req, res)=>{
             res.status(500).json({ error: err.message });
         }
 }
+const customer_info = async (req, res) => {
+    // Extract token from Authorization header
+    const token = req.headers['token'];
+    console.log('picchiiiii',token)
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+    
+    try {
+      // Verify and decode the token
+      const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
+      // Extract user ID or other information from decoded token
+      const customer_email = decoded.email; // Adjust based on your token payload
+  
+      // Fetch user data from the database
+      const result = await client.query('SELECT customer_name, customer_phonenumber FROM customer WHERE customer_email = $1', [customer_email]);
+  
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: 'Customer not found' });
+      }
+  
+      const { customer_name, customer_phonenumber } = result.rows[0];
+      return res.json({ customer_name, customer_phonenumber, customer_email });
+    } catch (error) {
+      console.error('Error verifying token or fetching user info:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 
 module.exports = {
     register,

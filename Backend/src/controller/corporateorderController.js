@@ -121,39 +121,6 @@ const getCorporateCart = async (req,res)=>{
  
 }
 
-const getCustomerDetails= async(req, res)=>{
-  try{
-      const token = req.headers['token'];
-      let verified_data;
-      try {
-          verified_data = jwt.verify(token, SECRET_KEY);
-      } catch (err) {
-          logger.error('Token verification failed:', err.message);
-          return res.status(401).json({ success: false, message: 'Invalid or expired token' });
-      }
-  
-      const customer_email = verified_data.email;
-  
-      // Fetch the user ID from the database using the email
-      const customer = await corporate_model.findCustomerEmail(customer_email);
-      if (!customer) {
-          return res.status(404).json({ success: false, message: 'Customer not found' });
-      }
-  const data={
-      Name:customer.customer_name,
-      PhoneNumber: customer.customer_phonenumber,
-      email:customer.customer_email,
-      address:customer.customer_address,
-      id:customer.customer_id
-  }
-     
-          return res.json(
-              data
-          );
-      } catch (err) {
-          res.status(500).json({ error: err.message });
-      }
-}
 
 const updateCartItem= async(req,res) =>{
   try {
@@ -267,17 +234,17 @@ const transferCartToOrder = async (req, res) => {
 };
 
 const getcategorynameById= async(req, res)=>{
-   const { categoryId }= req.body;
+  const { categoryId }= req.body;
 
-   try{
-      const categoryname= await corporate_model.getcategoryname(categoryId);
-      return res.json({
-          success: true,
-          categoryname
-        });
-      } catch (err) {
-        res.status(500).json({ error: err.message });
-      }
+  try{
+     const categoryname= await corporate_model.getcategoryname(categoryId);
+     return res.json({
+         success: true,
+         categoryname
+       });
+     } catch (err) {
+       res.status(500).json({ error: err.message });
+     }
 }
 
 module.exports = {
@@ -289,7 +256,7 @@ module.exports = {
   addCorporateOrderDetails,
   deleteCartItem,
   updateCartItem,
-  getCustomerDetails,
+  // getCustomerDetails,
   add_Corporate_Cart,
   getCorporateCart,
   GetCorporateCategory

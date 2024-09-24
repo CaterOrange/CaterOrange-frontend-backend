@@ -31,6 +31,8 @@ router.get('/event_customerorder/:id', customerController.getAllEventOrdersByCus
 router.delete('/addresses/:address_id', customerController.deleteAddressById);
 router.put('/addresses/:address_id', customerController.updateAddressById)
 router.get('/customer/getCustomerDetails',customerController.getCustomerDetails)
+
+
 module.exports = router;
 
 

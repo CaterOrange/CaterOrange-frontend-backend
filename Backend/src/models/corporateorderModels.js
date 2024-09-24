@@ -2,6 +2,8 @@
 const { DB_COMMANDS } = require('../utils/queries.js');
 const client = require('../config/dbConfig.js');
 const logger = require('../config/logger.js');
+
+
 const findCustomerByGid = async (customer_generated_id) => {
   try {
       const result = await client.query(DB_COMMANDS.CUSTOMER_SELECT_BY_GID, [customer_generated_id]);
@@ -111,7 +113,7 @@ const insertCartToOrder = async(customer_generated_id, order_details, total_amou
 
       // Convert order details to JSON string if it's not already
       //const orderDetailsJSON = JSON.stringify(order_details);
-
+  
       const result = await client.query(
           DB_COMMANDS.INSERT_CART_TO_ORDER,
           [ customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status]

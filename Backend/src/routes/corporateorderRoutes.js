@@ -5,7 +5,7 @@ const corporateOrderController = require('../controller/corporateorderController
 
 router.post('/customer/cart/corporate',corporateOrderController.add_Corporate_Cart)
 router.get('/customer/getCorporateCarts',corporateOrderController.getCorporateCart)
-router.get('/customer/getCustomerDetails', auth, corporateOrderController.getCustomerDetails);
+// router.get('/customer/getCustomerDetails', auth, corporateOrderController.getCustomerDetails);
 router.put('/customer/updateCartItem/:corporatecart_id',corporateOrderController.updateCartItem);
 router.delete('/customer/removeCartItem/:corporatecart_id',corporateOrderController.deleteCartItem)
 router.post('/customer/corporateOrderDetails',corporateOrderController.addCorporateOrderDetails);

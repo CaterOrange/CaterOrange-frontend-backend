@@ -1,3 +1,4 @@
+
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
@@ -10,7 +11,9 @@ import { FaCalendarAlt, FaUtensils } from 'react-icons/fa';
 import DateComponent from './DateComponents';
 import AddressForm from '../Address/AddressForm';
 import HomePage from '../HomePage'
-const Body = ({ isSidenavOpen }) => {
+
+
+const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
   const { state, dispatch } = useContext(StoreContext);
   const [flipped, setFlipped] = useState([]);
   const [quantities, setQuantities] = useState([]);
@@ -22,7 +25,7 @@ const Body = ({ isSidenavOpen }) => {
   const [displayAddress, setDisplayAddress] = useState('');
   const [addressToSend, setAddressToSend] = useState([]);
   const [showCartMessage, setShowCartMessage] = useState(false);
-  const [activeTab, setActiveTab] = useState('corporate');
+  // const [activeTab, setActiveTab] = useState('corporate');
 
   useEffect(() => {
     fetchFoodData();
@@ -152,59 +155,74 @@ const Body = ({ isSidenavOpen }) => {
                 )}
               </div>
               <button
-                className="ml-auto text-blue-500 bg-slate-300 w-24 h-10 text-sm"
+                className="ml-auto text-white bg-green-700 w-24 h-10 text-sm"
                 onClick={() => setShowMap(true)}
               >
-                {address && address.length > 0 ? 'Change' : 'Add Address'}
+                {displayAddress ? 'Change' : 'Add Address'}
               </button>
             </div>
             <div className={`relative ${isSidenavOpen ? 'blur-sm' : ''} z-10`}>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 mt-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6 mt-8">
                 {foodData.map((food, index) => (
                   <ReactCardFlip key={index} isFlipped={flipped[index]} flipDirection="horizontal">
                     {/* Front Side */}
-                    <div className="relative w-full h-96 max-h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between">
-                      <h2 className="text-xl font-bold">{food.category_name}</h2>
+                    <div className="relative w-full h-96 max-h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between mt-4">
+                      <h2 className="text-2xl font-bold mt-3">{food.category_name}</h2>
                       <button
                         onClick={() => handleFlip(index)}
                         className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none"
                       >
-                        <FontAwesomeIcon icon={faSyncAlt} size="sm" />
+                        <FontAwesomeIcon icon={faSyncAlt} size="md" />
                       </button>
                       <div className="w-full h-72 flex space-x-3">
-                        <div className="rounded-lg shadow-slate-300 bg-blue-50 shadow-xl overflow-auto w-1/2 flex justify-center items-center">
-                          <img src={food.category_media} className="rounded-full" alt="Food" />
+                        <div className="rounded-lg shadow-slate-300  h-auto bg-blue-50 shadow-xl overflow-auto w-1/2 flex justify-center items-center">
+                          <img src={food.category_media} className="rounded-full h-auto" alt="Food" />
                         </div>
-                        <div className="w-1/2">
-                          <h1>{food.category_description}</h1>
-                          <p className="mt-4">
-                            Price Per Plate: <span className="text-green-500">{food.category_price}/-</span>
-                          </p>
-                          <p className="mt-2 flex items-center">
-                            Quantity:
-                            <button
-                              className="text-red-500 text-2xl ml-3"
-                              onClick={() => incrementQuantity(index)}
-                            >
-                              +
-                            </button>
-                            <span className="mx-4 text-lg bg-red-200 ring-offset-red-500 h-7 w-7 text-center">
-                              {quantities[index]}
-                            </span>
-                            <button
-                              className="text-red-500 text-3xl ml-2"
-                              onClick={() => decrementQuantity(index)}
-                            >
-                              -
-                            </button>
-                          </p>
+                        <div className="w-1/2 flex flex-col mt-5 p-3 ">
+                          <h1 className="mb-4">{food.category_description}</h1>
+                          <div className="mt-4 mb-9">
+                            <p className="mt-2">
+                              Price Per Plate: <span className="text-green-500">{food.category_price}/-</span>
+                            </p>
+                            <p className="mt-2 flex items-center">
+                          Quantity:
+                          <button
+                            className="text-red-500 text-3xl ml-3"
+                            onClick={() => decrementQuantity(index)}
+                          >
+                            -
+                          </button>
+
+                        <input
+                          type="number"
+                          value={quantities[index]}
+                          onChange={(e) => {
+                            const newQuantities = [...quantities];
+                            const value = parseInt(e.target.value.replace('0') || '0', 10); // Remove leading zeros and convert to number
+                            newQuantities[index] = value;
+                            setQuantities(newQuantities);
+                          }}
+                          className="mx-4 text-lg bg-red-200 ring-offset-red-500 h-7 w-10 text-center rounded-lg"
+                          min="0"
+                        />
+
+                          <button
+                            className="text-red-500 text-3xl ml-1"
+                            onClick={() => incrementQuantity(index)}
+                          >
+                            +
+                          </button>
+                        </p>
+
+                          </div>
                         </div>
+
                       </div>
                     </div>
                     {/* Back Side */}
                     <div className="relative w-full h-96 max-h-96 p-4 rounded-lg shadow-xl shadow-slate-400 overflow-auto">
                       <button onClick={() => handleFlip(index)} className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none">
-                        <FontAwesomeIcon icon={faSyncAlt} size="sm" />
+                        <FontAwesomeIcon icon={faSyncAlt} size="md" />
                       </button>
                       <div className="mt-4">
                         <DateComponent 
@@ -225,26 +243,32 @@ const Body = ({ isSidenavOpen }) => {
       </div>
       
       <div className={`content ${activeTab === 'events' ? '' : 'hidden'}`}>
-       <HomePage />
+        <HomePage />
       </div>
 
       {/* Fixed Footer */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-md flex justify-around p-2 z-40">
-        <button 
-          onClick={() => setActiveTab('corporate')} 
-          className={`flex-1 text-center py-2 px-4 font-semibold rounded-full ${activeTab === 'corporate' ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-500'}`}
-        >
-          <FaCalendarAlt className="inline mr-1" /> Corporate
-        </button>
-        <button 
-          onClick={() => setActiveTab('events')} 
-          className={`flex-1 text-center py-2 px-4 font-semibold rounded-full ${activeTab === 'events' ? 'bg-green-500 text-white' : 'bg-green-100 text-green-500'}`}
-        >
-          <FaUtensils className="inline mr-1" /> Events
-        </button>
+      <button 
+  onClick={() => setActiveTab('corporate')} 
+  className={`flex-1 text-center py-2 px-4 font-semibold rounded-full border-2 ${activeTab === 'corporate' ?
+   'bg-green-500 text-white   focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-3 py-1 me-2 mb-2  focus:outline-none dark:focus:ring-yellow-800'  : 
+   'bg-green-500 text-white   focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-3 py-1 me-2 mb-2  focus:outline-none dark:focus:ring-yellow-800' }`}
+>
+  <FaCalendarAlt className="inline mr-1" /> Corporate
+</button>
+<button 
+  onClick={() => setActiveTab('events')} 
+  className={`flex-1 text-center py-2 px-4 font-semibold rounded-full border-2 ${activeTab === 'events' ?
+   'bg-green-500 text-white  focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-3 py-1 me-2 mb-2  focus:outline-none dark:focus:ring-yellow-800' : 
+   'bg-green-100 text-green-500 bg-green-500 text-white  focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-3 py-1 me-2 mb-2 focus:outline-none dark:focus:ring-yellow-800 '}`}
+>
+  <FaUtensils className="inline mr-1" /> Events
+</button>
+
       </div>
     </div>
   );
 };
 
 export default Body;
+

@@ -232,17 +232,23 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
     setConfirmPassword('');
   };
 
+  
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const tokenId = credentialResponse.credential;
     const decodedToken = jwtDecode(tokenId);
-    const { name, email } = decodedToken;
+    const { name, email, picture } = decodedToken;
 
     // const tokens=await axios.post(`http://localhost:4000/customer/google_auth`,{name,email});
 
     // const token=tokens.token
     setEmail(email);
     // localStorage.setItem('token', tokenId);
-
+    const userDP={
+      name:name,
+      email: email,
+      picture: picture
+    }
+    localStorage.setItem('userDP', JSON.stringify(userDP));
     await Login_google_auth(name, email, tokenId, dispatch);
     onSignUp(tokenId, true);
   };

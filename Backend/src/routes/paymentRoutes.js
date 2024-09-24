@@ -5,4 +5,5 @@ const eventpaymentController = require('../controller/eventpaymentController');
 
 router.post('/insert-payment',paymentController.payment)
 router.post('/insertevent-payment',eventpaymentController.event_payment)
+router.get('/corporate/getOrdergenId',paymentController.getOrdergenId);
 module.exports = router
