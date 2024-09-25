@@ -6,13 +6,14 @@ const logger = require('../config/logger.js');
 const getCorporateCategories = async () => {
     try {
         const res = await client.query(DB_COMMANDS.GETCORPORATECATEGORY);
+        logger.info('Corporate categories fetched successfully'); // Moved before return
         return res.rows;
-        logger.info('Corporate categories fetched successfully')
     } catch (err) {
+        logger.error('Error fetching categories from the database:', { error: err.message });
         throw new Error('Error fetching categories from the database');
     }
 }
 
-module.exports= {
+module.exports = {
     getCorporateCategories
 }

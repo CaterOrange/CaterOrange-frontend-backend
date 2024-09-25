@@ -202,9 +202,17 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import React, { useContext, useState, useEffect } from 'react';
 import SignInForm from './SignInForm';
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // carousel styles
 import axios from 'axios';
 import { SignUpContext } from '../../services/contexts/SignUpContext';
 import { SignUp_customer, Login_google_auth } from '../../services/context_state_management/actions/action';
+
+const images = [
+  "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727161124/Beige_and_Orange_Minimalist_Feminine_Fashion_Designer_Facebook_Cover_1_qnd0uz.png",
+  "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727104667/WhatsApp_Image_2024-09-23_at_20.47.25_gu19jf.jpg",
+  "https://cdn.leonardo.ai/users/8b9fa60c-fc98-4afb-b569-223446336c31/generations/f5b61c13-0d39-4b94-8f86-f9c748dae078/Leonardo_Phoenix_Vibrant_orangehued_events_menu_image_featurin_0.jpg"
+];
 
 const SignUpForm = ({ closeModal, onSignUp }) => {
   const { state, dispatch } = useContext(SignUpContext);
@@ -214,6 +222,7 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showSignInModal, setShowSignInModal] = useState(false);
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -232,17 +241,23 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
     setConfirmPassword('');
   };
 
+  
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const tokenId = credentialResponse.credential;
     const decodedToken = jwtDecode(tokenId);
-    const { name, email } = decodedToken;
+    const { name, email, picture } = decodedToken;
 
     // const tokens=await axios.post(`http://localhost:4000/customer/google_auth`,{name,email});
 
     // const token=tokens.token
     setEmail(email);
     // localStorage.setItem('token', tokenId);
-
+    const userDP={
+      name:name,
+      email: email,
+      picture: picture
+    }
+    localStorage.setItem('userDP', JSON.stringify(userDP));
     await Login_google_auth(name, email, tokenId, dispatch);
     onSignUp(tokenId, true);
   };
@@ -273,12 +288,17 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
       ) : (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-md p-8">
           <div className="h-40 bg-blue-300 border-back-200 mb-4 overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1490818387583-1baba5e638af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fGZvb2R8ZW58MHx8fHwxNjE2NzI2NDUz&ixlib=rb-1.2.1&q=80&w=400" 
-              alt="Food Image" 
-              className="object-cover h-40 w-full"
-              onError={handleImageError}
-            />
+            <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={3000}>
+            {images.map((src, index) => (
+              <div key={index}>
+                <img
+                  src={src}
+                  alt={`Carousel Image ${index + 1}`}
+                  className="object-cover h-40 w-full max-w-[120%]" // Increase width here
+                />
+              </div>
+            ))}
+          </Carousel>
           </div>
 
           <h2 className="text-2xl font-bold mb-6 text-black-600 text-center">Create an account</h2>

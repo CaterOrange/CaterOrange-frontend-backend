@@ -179,6 +179,7 @@ function createEventOrdersTableQuery() {
       event_order_status VARCHAR(50),
       number_of_plates INTEGER,
       processing_date DATE,
+      processing_time VARCHAR,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
     );
@@ -261,12 +262,12 @@ function createEventCartTableQuery() {
       address JSON,
       number_of_plates INTEGER,
       processing_date DATE,
+      processing_time VARCHAR,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
     );
   `;
-}
-function createAdminTableQuery() {
+}function createAdminTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS admin (
       adminid SERIAL PRIMARY KEY,
@@ -295,19 +296,19 @@ function createCorporateCartTableQuery() {
 function createEventProductsTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_products (
-      productId SERIAL PRIMARY KEY,
-      product_id_from_csv VARCHAR NOT NULL UNIQUE,
+      product_id SERIAL PRIMARY KEY,
+      productId VARCHAR NOT NULL UNIQUE,
       ProductName VARCHAR(255),
       Image TEXT,
       Category_Name VARCHAR(255),
       Price_Category VARCHAR(255),
       isDual BOOLEAN,
-      Units VARCHAR(255),
+      Plate_Units VARCHAR(255),
       PriceperUnit FLOAT,
       MinUnitsperPlate INTEGER,
-      Units2 VARCHAR(255),
-      PriceperUnits2 FLOAT,
-      MinUnits2perPlate INTEGER,
+      WtOrVol_Units VARCHAR(255),
+      Price_Per_WtOrVol_Units FLOAT,
+      Min_WtOrVol_Units_per_Plate INTEGER,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;

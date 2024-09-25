@@ -1,5 +1,3 @@
-
-
 const { ApolloServer, gql } = require('apollo-server');
 const { GraphQLScalarType, Kind } = require('graphql');
 const client = require('../config/dbConfig.js');
@@ -52,8 +50,7 @@ const typeDefs = gql`
   
   type CorporateOrder {
     corporateorder_generated_id: String!
-        customer_id: Int
-
+    customer_id: Int
     order_details: JSON!
     total_amount:Int
     paymentid:Int
@@ -85,7 +82,8 @@ const typeDefs = gql`
   {
     category_id:Int,
     category_name:String,
-    price:Int,
+    category_description:String,
+    category_price:Int,
     addedat:String
   }
   type EventOrders
@@ -132,6 +130,9 @@ const typeDefs = gql`
     toggleDeactivation(id: ID!, isdeactivated: Boolean!): Customer!
     updateEventOrderStatus(id: ID!, status: String!): EventOrders!
     updateCorporateOrderStatus(id: ID!, status: String!): CorporateOrder!
+    createCategory(category_name: String!, category_description:String!,category_price: Int!): Category!
+    updateCategory(category_id: Int, category_name: String,category_description:String, category_price: Int): Category!
+    deleteCategory(category_id: Int!): Boolean!
   }
 `;
 
@@ -229,6 +230,49 @@ const resolvers = {
       );
       return result.rows[0];
     },
+    createCategory: async (_, { category_name, category_description,category_price }) => {
+      const result = await client.query(
+        'INSERT INTO corporate_category (category_name,category_description,category_price, addedat) VALUES ($1, $2,$3, NOW()) RETURNING *',
+        [category_name,category_description, category_price]
+      );
+      return result.rows[0];
+    },
+   
+    updateCategory: async (_, { category_id, category_name, category_description, category_price }) => {
+      const fields = [];
+      const values = [];
+      let query = 'UPDATE corporate_category SET ';
+    
+      if (category_name) {
+        fields.push(`category_name = $${fields.length + 1}`);
+        values.push(category_name);
+      }
+      if (category_description !== undefined) {
+        fields.push(`category_description = $${fields.length + 1}`);
+        values.push(category_description);
+      }
+      if (category_price !== undefined) {
+        fields.push(`category_price = $${fields.length + 1}`);
+        values.push(category_price);
+      }
+    
+      if (fields.length === 0) {
+        throw new Error('No fields to update');
+      }
+    
+      values.push(category_id);
+      query += fields.join(', ') + ` WHERE category_id = $${fields.length + 1} RETURNING *`;
+    
+      const result = await client.query(query, values);
+      return result.rows[0];
+    },
+    
+    deleteCategory: async (_, { category_id }) => {
+      const result = await client.query('DELETE FROM corporate_category WHERE category_id = $1', [category_id]);
+      return result.rowCount > 0;
+    },
+
+
   },
 };
 
