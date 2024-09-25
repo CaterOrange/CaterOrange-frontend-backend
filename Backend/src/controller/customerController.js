@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator');
 const {transporter}=require('../middlewares/mailAuth.js')
 const SECRET_KEY = process.env.SECRET_KEY;
 const nodemailer = require('nodemailer');
+const client = require('../config/dbConfig.js');
 const gidStorage = require('../middlewares/loggingMiddleware.js');
 
 let otpStore = {}; // This should be in memory or persistent storage in production
@@ -791,6 +792,7 @@ const getCustomerDetails=async(req, res)=>{
        console.log('data',data)
             return res.json(
                 data
+                
             );
         } catch (err) {
             res.status(500).json({ error: err.message });

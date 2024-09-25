@@ -362,7 +362,7 @@ const HomePage = () => {
 
   return (
     <div
-      className="bg-gradient-to-b from-[#008000] to-[#70c656] min-h-screen p-4"
+      className="bg-green-600 min-h-screen p-4"
       style={{ fontFamily: process.env.REACT_APP_FONT }} // Use font from .env
     >
       <div className="bg-white rounded-lg shadow-lg p-6">

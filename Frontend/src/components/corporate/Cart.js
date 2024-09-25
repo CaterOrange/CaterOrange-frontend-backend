@@ -3,6 +3,8 @@ import axios from 'axios';
 import { ChevronLeft, ShoppingCart, Plus, Minus, Trash2, ParkingSquareOffIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+
 import AddressForm from '../Address/AddressForm';
 // import AddressForm from '../Address/AddressForm';
 
@@ -343,7 +345,10 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
  Name: ChangedAddress.ship_to_name || ChangedAddress.default_name || prevData.Name,
  PhoneNumber: ChangedAddress.ship_to_phone_number || prevData.PhoneNumber,
  address: `${ChangedAddress.line1}, ${ChangedAddress.line2}, ${ChangedAddress.pincode}`
- }));
+ })
+
+);
+
  }
  } catch (error) {
  console.error('Error fetching address:', error);
@@ -427,6 +432,11 @@ console.log('oldparsed',oldQuantityParsed);
 
 };
 
+  const tokens=localStorage.getItem('token')
+  const decodedToken = jwtDecode(tokens);
+  const emails=decodedToken.email;
+  console.log(emails)
+
 
 
 
@@ -458,7 +468,7 @@ console.log('oldparsed',oldQuantityParsed);
               </div>
               <div>
                 <p className="font-bold">Email:</p>
-                <p>{userData.email}</p>
+                <p>{emails}</p>
               </div>
               <div>
                 <p className="font-bold">Phone Number:</p>

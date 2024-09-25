@@ -725,7 +725,7 @@ const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggl
                 checked={checked}
                 onChange={onCheck}
                 className="ml-2 w-12" 
-                style={{ transform: 'scale(1.0)', margin: '2' }} 
+                style={{ margin: '0 0 2px 0', width: '12px', height: '12px', margin: '7px' }} 
               />
             </div>
           </div>
