@@ -35,5 +35,18 @@ const getOrdergenId=async(customer_id)=>{
      }
    }
  
-
-module.exports ={updateOrder, getOrdergenId}
+   const getEOrdergenId=async(customer_id)=>{
+    try{
+     const result= await client.query(DB_COMMANDS.GET_ORDER_EVENTGENID,[customer_id]);
+         if(result.rows.length === 0){
+             logger.error('order not found')
+             return null;
+         }
+         return result.rows[0];
+     }catch(err){
+         logger.error('Error in querying database',{error:err.message});
+         throw err;
+     }
+   }
+ 
+module.exports ={updateOrder, getOrdergenId,getEOrdergenId}

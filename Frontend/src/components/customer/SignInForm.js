@@ -282,6 +282,16 @@ import { Login_customer, Login_forgotPassword, Login_google_auth } from '../../s
 import { SignInContext } from '../../services/contexts/SignInContext.js';
 import axios from 'axios';
 
+
+
+
+const images = [
+  "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727161124/Beige_and_Orange_Minimalist_Feminine_Fashion_Designer_Facebook_Cover_1_qnd0uz.png",
+  "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727104667/WhatsApp_Image_2024-09-23_at_20.47.25_gu19jf.jpg",
+  "https://cdn.leonardo.ai/users/8b9fa60c-fc98-4afb-b569-223446336c31/generations/f5b61c13-0d39-4b94-8f86-f9c748dae078/Leonardo_Phoenix_Vibrant_orangehued_events_menu_image_featurin_0.jpg"
+];
+
+
 const SignInForm = ({ onSignIn }) => {
   const { state, dispatch } = useContext(SignInContext);
   const [email, setEmail] = useState('');
@@ -356,11 +366,32 @@ const SignInForm = ({ onSignIn }) => {
   }, [state, onSignIn, navigate]);
 
 
-  const handleSignUp = (token, isGoogleLogin ) =>{
+  const handleSignUp = async(token, isGoogleLogin ) =>{
     localStorage.setItem('token',token);
     
     console.log("in signup isgooglelogin: ",isGoogleLogin)
   setIsGoogleLogin(isGoogleLogin);
+  if(!isGoogleLogin){
+    try {
+      console.log('in manual',token)
+      const response = await axios.get('http://localhost:4000/customer/info', {
+        headers: { token }
+      });
+      console.log('RESPONSE', response.data)
+      const profile = {
+        name: response.data.customer_name,
+        phone: response.data.customer_phonenumber,
+        email: response.data.customer_email
+      };
+      const a= localStorage.setItem('userDP', JSON.stringify(profile));
+      console.log('a',a);
+      setUser({ token, ...profile });
+      console.log('user data', user)
+      setIsGoogleLogin(false);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  }
   navigate('/home');
   }
   useEffect(() => {
@@ -426,25 +457,18 @@ const SignInForm = ({ onSignIn }) => {
         />
       ) : (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-md p-8">
-          <div className="h-40 bg-blue-300 border-back-200 mb-4 overflow-hidden">
-            <Carousel 
-              autoPlay 
-              infiniteLoop 
-              showThumbs={false} 
-              showStatus={false}
-              interval={3000}
-            >
-              {[1, 2, 3].map((_, index) => (
-                <div key={index}>
-                  <img 
-                    src={`https://images.unsplash.com/photo-1490818387583-1baba5e638af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fGZvb2R8ZW58MHx8fHwxNjE2NzI2NDUz&ixlib=rb-1.2.1&q=80&w=400`} 
-                    alt={`Food Image ${index + 1}`} 
-                    className="object-cover h-40 w-full"
-                    onError={handleImageError}
-                  />
-                </div>
-              ))}
-            </Carousel>
+          <div className="h-50 bg-blue-300 border-back-200 mb-4 overflow-hidden">
+            <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={3000}>
+            {images.map((src, index) => (
+              <div key={index}>
+                <img
+                  src={src}
+                  alt={`Carousel Image ${index + 1}`}
+                  className="object-cover h-40 w-full max-w-[120%]" // Increase width here
+                />
+              </div>
+            ))}
+          </Carousel>
           </div>
 
           <h2 className="text-2xl font-bold mb-6 text-center">CaterOrange</h2>

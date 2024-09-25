@@ -4,24 +4,35 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const address_model = require('../models/addressModels'); // Fixed import
 
+const SECRET_KEY = process.env.SECRET_KEY;
 // Create a new address for the customer
 const createAddress = async (req, res) => {
     try {
         const token = req.headers['token'];
-        
+        console.log('token in add2',token)
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });
         }
 
         // Verifying the token
-        let decoded;
+        let verified_data;
+
         try {
-            decoded = jwt.verify(token, process.env.SECRET_KEY); 
+          verified_data = jwt.verify(token,SECRET_KEY);
+         
         } catch (err) {
-            return res.status(401).json({ message: 'Invalid or expired token' });
+          logger.error('Token verification failed:', err);
+          if (err instanceof jwt.TokenExpiredError) {
+            return res.status(401).json({ success: false, message: 'Token has expired' });
+          } else if (err instanceof jwt.JsonWebTokenError) {
+            return res.status(401).json({ success: false, message: 'Invalid token' });
+          } else {
+            return res.status(401).json({ success: false, message: 'Token verification failed' });
+          }
         }
 
-        const customer_id = decoded.id;
+      const customer_id = verified_data.id;
+        console.log('add lo token',customer_id)
         const { tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number } = req.body;
 
         // Validate that required fields are provided

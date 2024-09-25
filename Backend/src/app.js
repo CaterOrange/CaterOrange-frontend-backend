@@ -268,9 +268,12 @@ app.get('/redirect-url/:merchantTransactionId', async(req, res) => {
           } catch (error) {
             console.error("Error in sending payment data: ", error);
           }
-
+          if(corporateorder_id[0]==='C'){
           // Redirect to success page
-          res.redirect('http://localhost:3000/success');
+          res.redirect('http://localhost:3000/success');}
+          else if(corporateorder_id[0]==='E'){
+            res.redirect('http://localhost:3000/Esuccess');
+          }
           // Redirect to the success page
         } else {
           res.redirect('http://localhost:3000/failure'); // Redirect to a failure page if needed

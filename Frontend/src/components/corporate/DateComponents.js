@@ -195,14 +195,25 @@ const formatDate = (date) => {
 
 const handleSaveDates = async () => {
     const dates = selectedDates;
+   var local=dates.length*quantity
+   if(!localStorage.getItem('count')){
+    localStorage.setItem('count',local)
+   }else{
+    const cartCount=localStorage.getItem('count')
+local=parseInt(cartCount)+parseInt(local)
+    localStorage.setItem('count',local)
+    
+   }
     const CartDetails = [];
     let amount;
 
     if (quantity === 0) {
         console.log('Oops! You did not mention the quantity.');
+        alert('Oops! You did not mention the quantity.');
         return;
     } else if (dates.length === 0) {
         console.log('Oops! You did not mention the dates.');
+        alert('Oops! You did not mention the dates.');
         return;
     }
 

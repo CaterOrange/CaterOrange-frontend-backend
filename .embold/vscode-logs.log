@@ -1,0 +1,28 @@
+2024-09-25 11:20:30 info: Congratulations, your extension "Embold" is now active!
+2024-09-25 11:20:30 info: tempDirectory : c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\temp
+2024-09-25 11:20:31 info: Extraction complete for source: c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\resources\embold-scanner-archive.zip, destination: c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\temp
+2024-09-25 11:20:31 info: Extension installed on machine OS : win32
+2024-09-25 11:20:31 info: Fetched the issues from DB
+2024-09-25 11:20:31 info: Embold extension version response:{"hasSupport":false,"version":"0.1.6","changeNotes":"<div> <p>Release Date: 09 Oct, 2023 <br><span>Bug fixes and improvements.</span></p> </div>"}
+2024-09-25 11:20:31 info: Current installed embold extension version : 0.1.8
+2024-09-25 11:20:31 info: Latest embold extension version on marketplace : 0.1.6
+2024-09-25 11:20:32 info: Java version installed on machine : 
+java version "22.0.2" 2024-07-16
+Java(TM) SE Runtime Environment (build 22.0.2+9-70)
+Java HotSpot(TM) 64-Bit Server VM (build 22.0.2+9-70, mixed mode, sharing)
+
+2024-09-25 11:20:32 info: Java installed on machine.
+2024-09-25 11:23:21 info: Congratulations, your extension "Embold" is now active!
+2024-09-25 11:23:21 info: tempDirectory : c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\temp
+2024-09-25 11:23:22 info: Extraction complete for source: c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\resources\embold-scanner-archive.zip, destination: c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\temp
+2024-09-25 11:23:22 info: Extension installed on machine OS : win32
+2024-09-25 11:23:22 info: Fetched the issues from DB
+2024-09-25 11:23:23 info: Java version installed on machine : 
+java version "22.0.2" 2024-07-16
+Java(TM) SE Runtime Environment (build 22.0.2+9-70)
+Java HotSpot(TM) 64-Bit Server VM (build 22.0.2+9-70, mixed mode, sharing)
+
+2024-09-25 11:23:23 info: Java installed on machine.
+2024-09-25 11:23:23 info: Embold extension version response:{"hasSupport":false,"version":"0.1.6","changeNotes":"<div> <p>Release Date: 09 Oct, 2023 <br><span>Bug fixes and improvements.</span></p> </div>"}
+2024-09-25 11:23:23 info: Current installed embold extension version : 0.1.8
+2024-09-25 11:23:23 info: Latest embold extension version on marketplace : 0.1.6

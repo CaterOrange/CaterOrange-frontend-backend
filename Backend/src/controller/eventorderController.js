@@ -26,7 +26,7 @@ const fetchCartItems = async (req, res) => {
 };
 
 const addToCart = async (req, res) => {
-  const { totalAmount,cartData,address,selectedDate,numberOfPlates } = req.body;
+  const { totalAmount,cartData,address,selectedDate,numberOfPlates,selectedTime } = req.body;
   try { 
     const token = req.headers['token'];
   
@@ -58,10 +58,11 @@ const addToCart = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    console.log('Customer found:', customer);
+    //console.log('Customer found:', customer);
     const customer_id = customer.customer_id;
-    console.log('Adding cart for customer_id:', customer_id);
-    const result = await cartModel.addCart( customer_id,totalAmount,cartData,address,numberOfPlates,selectedDate);
+    //console.log('Adding cart for customer_id:', customer_id);
+    const result = await cartModel.addCart( customer_id,totalAmount,cartData,address,numberOfPlates,selectedDate,selectedTime);
+    console.log("result:",result);
     res.status(200).json(result);
     console.log("result in controller",result);
   } catch (error) {
@@ -199,7 +200,7 @@ const transferCartToOrder = async (req, res) => {
       console.lof
       const orderData = {
         customer_id: customer_id,
-        delivery_status: 'Pending', 
+        delivery_status: cartData.delivery_status, 
         amount: cartData.total_amount,
         delivery_details: cartData.delivery_details,
         cart_order_details: cartData.cart_order_details,

@@ -74,7 +74,11 @@ const CorporateOrders = () => {
   }, []);
 
   const handleViewHome = () => {
+    if(showCorporate){
     navigate('/home');
+   }else{
+      navigate('/menu'); 
+    }
   };
 
   const renderProgressIcons = (progress) => {
@@ -124,20 +128,16 @@ const CorporateOrders = () => {
 </p>
 
           </div>
-          <div>
-            <span className="text-gray-500 text-xl sm:text-2xl">
-              {isExpanded ? '[-]' : '[+]'}
-            </span>
-          </div>
+         
         </div>
 
-        {isExpanded && (
+        {/* {isExpanded && (
           <div className="p-4 sm:p-6 overflow-x-auto">
             <table className="w-full bg-white min-w-max">
               <thead className="bg-gray-100 text-left text-xs sm:text-sm">
                 <tr>
                   <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Category Name</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Progress</th>
+                  <th className="p-2 sm:p-6 lg:p-4 whitespace-nowrap">Progress</th>
                   <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Date</th>
                   <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Qty</th>
                   <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Active Qty</th>
@@ -150,7 +150,7 @@ const CorporateOrders = () => {
                     <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">
                       {detail.category_name || 'Unknown Category'}
                     </td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{renderProgressIcons(detail.delivery_status)}</td>
+                    <td className="p-2 sm:p-6 lg:p-4 whitespace-nowrap">{renderProgressIcons(detail.delivery_status)}</td>
                     <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.processing_date}</td>
                     <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.quantity}</td>
                     <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.active_quantity}</td>
@@ -166,45 +166,144 @@ const CorporateOrders = () => {
               </tbody>
             </table>
           </div>
-        )}
+        )} */}
+
+{isExpanded && (
+  <div className="p-4 sm:p-6 overflow-x-auto">
+    <table className="w-full bg-white min-w-max">
+      <thead className="bg-gray-100 text-left text-xs sm:text-sm">
+        <tr>
+          <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Category Name</th>
+          <th className="p-2 sm:p-6 lg:p-4 whitespace-nowrap w-1/3 text-center">Progress</th> {/* Adjust the width here */}
+          <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Date</th>
+          <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Qty</th>
+          <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Active Qty</th>
+          <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {order.order_details.map((detail, i) => (
+          <tr key={i} className="border-t text-xs sm:text-sm hover:bg-gray-50">
+            <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">
+              {detail.category_name || 'Unknown Category'}
+            </td>
+            <td className="p-2 sm:p-6 lg:p-4 whitespace-nowrap w-1/4"> {/* Ensure the same width in the body as in the header */}
+              {renderProgressIcons(detail.delivery_status)}
+            </td>
+            <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.processing_date}</td>
+            <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.quantity}</td>
+            <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.active_quantity}</td>
+            <td
+              className={`p-2 sm:p-3 lg:p-4 font-bold whitespace-nowrap ${
+                detail.status === 'cancelled' ? 'text-red-500' : 'text-green-500'
+              }`}
+            >
+              {detail.status}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
       </div>
     );
   }, [expandedOrders, toggleOrderDetails]);
 
+  // return (
+  //   <>
+
+  //     <header className="fixed top-0 left-0 w-full bg-green-500 h-16 flex items-center pl-4">
+  //       <Link to='/home'>
+  //         <HomeIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white mr-2" onClick={handleViewHome}/> 
+  //       </Link>
+  //       <h1 className="text-2xl sm:text-3xl lg:text-4xl text-white">
+  //         My Orders
+  //       </h1>
+  //     </header>
+
+  //     <div className="w-full my-4 sm:my-10 px-4 sm:px-6 lg:px-8 xl:px-0 bg-gradient-to-r from-blue-50 to-white shadow-xl rounded-lg">
+  //       <div className="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-10">
+  //         <button
+  //           className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
+  //             showCorporate ? 'bg-yellow-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+  //           }`}
+  //           onClick={() => setShowCorporate(true)}
+  //         >
+  //           <CakeIcon className="h-5 w-5 inline-block mr-2" />
+  //           Corporate
+  //         </button>
+  //         <button
+  //           className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
+  //             !showCorporate ? 'bg-green-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+  //           }`}
+  //           onClick={() => setShowCorporate(false)}
+  //         >
+  //           <CalendarIcon className="h-5 w-5 inline-block mr-2" />
+  //           Events
+  //         </button>
+  //       </div>
+
+  //       {showCorporate && (
+  //         <div className="space-y-4 sm:space-y-8 w-full">
+  //           {isLoading ? (
+  //             <p>Loading orders...</p>
+  //           ) : error ? (
+  //             <p className="text-red-500">{error}</p>
+  //           ) : orderData ? (
+  //             orderData.map(renderOrder)
+  //           ) : (
+  //             <p>No corporate orders found.</p>
+  //           )}
+  //         </div>
+  //       )}
+
+  //       {!showCorporate && (
+  //         <div className="text-center py-8">
+  //           <p className="text-lg text-gray-700"><OrderDashboard /></p>
+  //         </div>
+  //       )}
+  //     </div>
+  //   </>
+  // );
   return (
     <>
-      <header className="w-full bg-green-500 h-16 flex items-center pl-4">
-        <Link to='/home'>
+      {/* Header */}
+      <header className="fixed top-0 left-0 w-full bg-green-500 h-16 flex items-center pl-4 z-50">
+     
           <HomeIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white mr-2" onClick={handleViewHome}/> 
-        </Link>
+   
         <h1 className="text-2xl sm:text-3xl lg:text-4xl text-white">
-          Your Orders
+          My Orders
         </h1>
       </header>
-
-      <div className="w-full my-4 sm:my-10 px-4 sm:px-6 lg:px-8 xl:px-0 bg-gradient-to-r from-blue-50 to-white shadow-xl rounded-lg">
-        <div className="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-10">
-          <button
-            className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
-              showCorporate ? 'bg-yellow-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
-            }`}
-            onClick={() => setShowCorporate(true)}
-          >
-            <CakeIcon className="h-5 w-5 inline-block mr-2" />
-            Corporate
-          </button>
-          <button
-            className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
-              !showCorporate ? 'bg-green-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
-            }`}
-            onClick={() => setShowCorporate(false)}
-          >
-            <CalendarIcon className="h-5 w-5 inline-block mr-2" />
-            Events
-          </button>
-        </div>
-
-        {showCorporate && (
+  
+      {/* Fixed Button Group below the header */}
+      <div className="fixed p-5 top-16 left-0 w-full bg-white shadow-md z-40 flex justify-center gap-4 sm:gap-6 py-2 sm:py-4">
+        <button
+          className={`py-2 px-4 sm:py-3 sm:px-8 w-full max-w-[200px] rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
+            showCorporate ? 'bg-yellow-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+          }`}
+          onClick={() => setShowCorporate(true)}
+        >
+          <CakeIcon className="sm:h-5 w-5 lg:h-10 w-10 inline-block mr-2" />
+          Corporate
+        </button>
+        <button
+          className={`py-2 px-4 sm:py-3 sm:px-8 w-full max-w-[200px] rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
+            !showCorporate ? 'bg-green-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+          }`}
+          onClick={() => setShowCorporate(false)}
+        >
+          <CalendarIcon className="h-5 w-5 inline-block mr-2" />
+          Events
+        </button>
+      </div>
+  
+      {/* Content Container */}
+      <div className="w-full mt-32 sm:mt-48 px-4 sm:px-4 lg:px-8 xl:px-8 bg-gradient-to-r from-blue-50 to-white shadow-xl rounded-lg">
+        {showCorporate ? (
           <div className="space-y-4 sm:space-y-8 w-full">
             {isLoading ? (
               <p>Loading orders...</p>
@@ -216,9 +315,7 @@ const CorporateOrders = () => {
               <p>No corporate orders found.</p>
             )}
           </div>
-        )}
-
-        {!showCorporate && (
+        ) : (
           <div className="text-center py-8">
             <p className="text-lg text-gray-700"><OrderDashboard /></p>
           </div>
@@ -226,6 +323,8 @@ const CorporateOrders = () => {
       </div>
     </>
   );
+  
+  
 };
 
 export default CorporateOrders;

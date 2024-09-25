@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import { ChevronLeft, ShoppingCart, Plus, Minus, Trash2 } from 'lucide-react';
+import { ChevronLeft, ShoppingCart, Plus, Minus, Trash2, ParkingSquareOffIcon } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AddressForm from '../Address/AddressForm';
@@ -16,6 +16,7 @@ const MyCart = () => {
  const [loading, setLoading] = useState(false);
  const [Address, setAddress] = useState([]);
  const OrderData = [];
+
  var parsedAddress;
  const [userAddressDetails,setUserAddressDetails]=useState({
  Name:'',
@@ -36,19 +37,19 @@ const MyCart = () => {
  const navigate = useNavigate();
 
  useEffect(() => {
- const fetchCart = async () => {
- setIsLoading(true);
- try {
- const response = await axios.get('http://localhost:4000/customer/getCorporateCarts', {
- headers: { token: `${localStorage.getItem('token')}` },
- });
- console.log('in carts', response.data);
- setCartData(response.data || []);
- } catch (error) {
- console.error('Error fetching cart data:', error);
- } finally {
- setIsLoading(false);
- }
+        const fetchCart = async () => {
+        setIsLoading(true);
+        try {
+        const response = await axios.get('http://localhost:4000/customer/getCorporateCarts', {
+        headers: { token: `${localStorage.getItem('token')}` },
+        });
+        console.log('in carts', response.data);
+        setCartData(response.data || []);
+        } catch (error) {
+        console.error('Error fetching cart data:', error);
+        } finally {
+        setIsLoading(false);
+        }
  };
  
  fetchCart();
@@ -102,6 +103,7 @@ const MyCart = () => {
  setTotal(totalAmount);
  }, [sortedData]);
 
+
  useEffect(() => {
  let tempCartData = [];
  CartData.forEach(cart => {
@@ -130,26 +132,40 @@ const MyCart = () => {
 
 
 
+
 const handleIncrement = async (index) => {
-      setSortedData((prevItems) => {
-        const updatedItems = [...prevItems];
-        updatedItems[index] = { ...updatedItems[index], quantity: updatedItems[index].quantity + 1 };
-        updateCartItem(updatedItems[index]);
-        return updatedItems;
-      });
+  setSortedData((prevItems) => {
+    const updatedItems = [...prevItems];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      quantity: parseInt(updatedItems[index].quantity) + parseInt(1), // Increment the quantity
     };
+    var local=localStorage.getItem('count')
+    var c=parseInt(local)+1
+localStorage.setItem('count',c)
+    updateCartItem(updatedItems[index]); // Update cart on server
+    return updatedItems;
+  });
+};
+
 
 
 const handleDecrement = async (index) => {
-      setSortedData((prevItems) => {
-        const updatedItems = [...prevItems];
-        if (updatedItems[index].quantity > 1) {
-          updatedItems[index] = { ...updatedItems[index], quantity: updatedItems[index].quantity - 1 };
-          updateCartItem(updatedItems[index]);
-        }
-        return updatedItems;
-      });
-    };
+  setSortedData((prevItems) => {
+    const updatedItems = [...prevItems];
+    if (updatedItems[index].quantity > 1) {
+      updatedItems[index] = {
+        ...updatedItems[index],
+        quantity: updatedItems[index].quantity - 1, // Decrement the quantity
+      };
+      var local=localStorage.getItem('count')
+    var c=parseInt(local)-1
+localStorage.setItem('count',c)
+      updateCartItem(updatedItems[index]); // Update cart on server
+    }
+    return updatedItems;
+  });
+};
 
     const updateCartItem = async (item) => {
           try {
@@ -166,7 +182,8 @@ const handleDecrement = async (index) => {
         };
 
 
-  const handleRemove = async (index) => {
+  const handleRemove = async (index,old) => {
+   
     const itemToRemove = sortedData[index];
     setSortedData((prevItems) => prevItems.filter((_, i) => i !== index));
     try {
@@ -176,6 +193,23 @@ const handleDecrement = async (index) => {
     } catch (error) {
       console.error('Error removing cart item:', error);
     }
+    var local=localStorage.getItem('count')
+    const localParsed = parseInt(local, 10);
+    if (isNaN(localParsed)) {
+      console.error('Invalid localStorage value for count');
+      return;
+    }
+  
+    // Ensure oldQuantity is a valid number
+    const oldQuantityParsed = parseInt(old, 10);
+   
+    if (isNaN(oldQuantityParsed)) {
+      console.error('Invalid oldQuantity value');
+      return;
+    }
+    const updatedQuantity = localParsed - oldQuantityParsed;
+   
+localStorage.setItem('count',updatedQuantity)
   };
  const handleViewHome = () => {
  navigate('/home');
@@ -186,74 +220,80 @@ const handleDecrement = async (index) => {
  };
 
  const handleViewPayment = async () => {
- try {
- for (let i = 0; i < cartIndividualData.length; i++) {
- const content = cartIndividualData[i].content;
- const Data = {
- category_id: content.category_id,
- processing_date: content.date,
- delivery_status: 'shipped',
- quantity: content.quantity,
- active_quantity: content.quantity,
- media: null,
- delivery_details: null
- };
- OrderData.push(Data);
- }
- const OrderDataJSON = JSON.stringify(OrderData);
- console.log('parsed',localStorage.getItem('address'))
- console.log('orderdatajson',OrderDataJSON)
- const response = await axios.post('http://localhost:4000/customer/corporate/transfer-cart-to-order', {
-  customer_generated_id: userData.id,
-  order_details: OrderDataJSON,
-  total_amount: Total,
-  paymentid: null,
-  customer_address: localStorage.getItem('address'),
-  payment_status: 'pending'
- });
- if (response.status === 200) {
-  await PaymentDetails(response.data.order.corporateorder_generated_id);
-  await sendOrderDetails(response.data.order);
- console.log('Cart details added to orders', response.data);
- }  else {
-  console.error('Failed to add details to order_table:', response.data);
-}
-} catch (error) {
-console.error('Error adding details to order_table:', error);
-}
-};
+  // if (!userData ||userData.length === 0) {
+  //   // Display a message if userData is not available
+  //   alert("Please provide your details before proceeding to payment.");
+  //   return;
+  // }
+        try {
+          
+        for (let i = 0; i < cartIndividualData.length; i++) {
+        const content = cartIndividualData[i].content;
+        const Data = {
+        category_id: content.category_id,
+        processing_date: content.date,
+        delivery_status: 'shipped',
+        quantity: content.quantity,
+        active_quantity: content.quantity,
+        media: null,
+        delivery_details: null
+        };
+        OrderData.push(Data);
+        }
+        const OrderDataJSON = JSON.stringify(OrderData);
+        console.log('parsed',localStorage.getItem('address'))
+        console.log('orderdatajson',OrderDataJSON)
+        const response = await axios.post('http://localhost:4000/customer/corporate/transfer-cart-to-order', {
+          customer_generated_id: userData.id,
+          order_details: OrderDataJSON,
+          total_amount: Total,
+          paymentid: null,
+          customer_address: localStorage.getItem('address'),
+          payment_status: 'pending'
+        });
+        if (response.status === 200) {
+          await PaymentDetails(response.data.order.corporateorder_generated_id);
+          await sendOrderDetails(response.data.order);
+        console.log('Cart details added to orders', response.data);
+        }  else {
+          console.error('Failed to add details to order_table:', response.data);
+        }
+        } catch (error) {
+        console.error('Error adding details to order_table:', error);
+        }
+        };
 
 
 
-const sendOrderDetails = async (orderDetails) => {
-  try {
-    let response;
-    let details = orderDetails.order_details;
-    console.log('length', details.length);
+        const sendOrderDetails = async (orderDetails) => {
+          try {
+            let response;
+            let details = orderDetails.order_details;
+            console.log('length', details.length);
 
-    for (let i = 0; i < details.length; i++) {
-    response = await axios.post('http://localhost:4000/customer/corporateOrderDetails', {
-        corporateorder_id: orderDetails.corporateorder_id,
-        processing_date: details[i].processing_date,
-        delivery_status: details[i].delivery_status,
-        category_id: details[i].category_id,
-        quantity: details[i].quantity,
-        active_quantity: details[i].active_quantity,
-        media: details[i].media,
-        delivery_details: details[i].delivery_details
-      });
-      console.log('Order details sent in loop');
-    }
+            for (let i = 0; i < details.length; i++) {
+            response = await axios.post('http://localhost:4000/customer/corporateOrderDetails', {
+                corporateorder_id: orderDetails.corporateorder_id,
+                processing_date: details[i].processing_date,
+                delivery_status: details[i].delivery_status,
+                category_id: details[i].category_id,
+                quantity: details[i].quantity,
+                active_quantity: details[i].active_quantity,
+                media: details[i].media,
+                delivery_details: details[i].delivery_details
+              });
+              console.log('Order details sent in loop');
+            }
 
-    console.log('Order details sent:', orderDetails);
-    if (response) {
-      console.log('Order details successfully added:', response.data);
-    } else {
-      console.error('Failed to add details to order_table:', response.data);
-    }
-  } catch (error) {
-    console.error('Error sending order details:', error);
-  }
+            console.log('Order details sent:', orderDetails);
+            if (response) {
+              console.log('Order details successfully added:', response.data);
+            } else {
+              console.error('Failed to add details to order_table:', response.data);
+            }
+          } catch (error) {
+            console.error('Error sending order details:', error);
+          }
 };
 
 const PaymentDetails= async(corporateorder_generated_id)=>{
@@ -325,6 +365,71 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
  return <div className="text-center mt-8">Loading...</div>;
  }
 
+const handleQuantityChange = (index, value, oldQuantity) => {
+  console.log('old1', oldQuantity);
+  const oldQuantityParsed = parseInt(oldQuantity, 10);
+  console.log("oldbefore",oldQuantityParsed)
+  // Check if value is an empty string to allow clearing the input
+  if (value === '') {
+    setSortedData((prevItems) => {
+      const updatedItems = [...prevItems];
+      updatedItems[index] = {
+        ...updatedItems[index],
+        quantity: '', // Set the quantity to an empty string
+      };
+      return updatedItems;
+    });
+    return;
+  }
+
+  // Parse the input value and local storage value
+  const newQuantity = parseInt(value, 10);
+  console.log("in text box",newQuantity);
+  // Validate and update the state
+  if (!isNaN(newQuantity) && newQuantity > 0) {
+    setSortedData((prevItems) => {
+      const updatedItems = [...prevItems];
+      updatedItems[index] = {
+        ...updatedItems[index],
+        quantity: newQuantity,
+      };
+
+      // Call updateCartItem with the updated item
+      updateCartItem(updatedItems[index]);
+
+      return updatedItems;
+    });
+  }
+  let local = localStorage.getItem('count');
+  const localParsed = parseInt(local, 10); // Make sure local is a valid number
+ console.log("local parsed",localParsed)
+  // Handle invalid or missing localStorage value
+  if (isNaN(localParsed)) {
+    console.error('Invalid localStorage value for count');
+    return;
+  }
+
+  // Ensure oldQuantity is a valid number
+ 
+  console.log("oldafter",oldQuantityParsed)
+  // if (isNaN(oldQuantity)) {
+  //   console.error('Invalid oldQuantity value');
+  //   return;
+  // }
+console.log('oldparsed',oldQuantityParsed);
+  // Calculate the new count v
+  const updatedQuantity = localParsed - oldQuantityParsed;
+  console.log('updatedQuantity after subtraction', updatedQuantity);
+
+  const newCount = updatedQuantity + newQuantity;
+  console.log('newCount after addition', newCount);
+  localStorage.setItem('count', newCount);
+
+};
+
+
+
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <header className="bg-white shadow-md p-4 fixed top-0 left-0 right-0 z-10">
@@ -385,7 +490,7 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
                   {/* Remove Button */}
                   <button
                     className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                    onClick={() => handleRemove(index)}
+                    onClick={() => handleRemove(index , sortedData[index].quantity)}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -411,61 +516,14 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
                         >
                           <Minus size={12} />
                         </button>
+                <input
+                  type="number"
+                  min="1"
+                  value={sortedData[index].quantity || ''} // Ensure this is always a number
+                  onChange={(e) => handleQuantityChange(index, e.target.value,sortedData[index].quantity)}
+                  className="w-10 text-center border border-gray-300 rounded-md p-1 text-xs"
+                />
 
-                        {/* <input
-                          type="number"
-                          min="1"
-                          value={sortedData[index].quantity}
-                          onChange={(e) => {
-                            const inputValue = e.target.value;
-                            const newQuantity = inputValue === '' ? '' : parseInt(inputValue, 10);
-
-                            setSortedData((prevItems) => {
-                              const updatedItems = [...prevItems];
-                              updatedItems[index] = {
-                                ...updatedItems[index],
-                                quantity: newQuantity === '' ? '' : (isNaN(newQuantity) ? 1 : newQuantity),
-                              };
-
-                              if (newQuantity !== '' && !isNaN(newQuantity) && newQuantity > 0) {
-                                updateCartItem(updatedItems[index]);
-                              }
-
-                              return updatedItems;
-                            });
-                          }}
-                          className="w-10 text-center border border-gray-300 rounded-md p-1 text-xs"
-                        />
-                         */}
-
-              <input
-              type="number"
-              min="1"
-              value={sortedData[index].quantity}
-              onChange={(e) => {
-                const inputValue = e.target.value;
-
-                // Allow input to be cleared (empty string) or only positive numbers
-                const newQuantity = inputValue === '' ? '' : parseInt(inputValue, 10);
-
-                // Update state accordingly
-                setSortedData((prevItems) => {
-                  const updatedItems = [...prevItems];
-                  updatedItems[index] = {
-                    ...updatedItems[index],
-                    quantity: newQuantity === '' ? '' : (isNaN(newQuantity) ? 1 : newQuantity),
-                  };
-
-                  // Only update cart if newQuantity is valid
-                  if (newQuantity !== '' && !isNaN(newQuantity) && newQuantity > 0) {
-                    updateCartItem(updatedItems[index]);
-                  }
-
-                  return updatedItems;
-                });
-              }}
-              className="w-10 text-center border border-gray-300 rounded-md p-1 text-xs"
-            />
 
                         <button
                           className="bg-gray-200 text-gray-700 p-1 rounded-full hover:bg-gray-300 text-xs"
