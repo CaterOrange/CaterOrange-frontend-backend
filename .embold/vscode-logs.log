@@ -26,3 +26,27 @@ Java HotSpot(TM) 64-Bit Server VM (build 22.0.2+9-70, mixed mode, sharing)
 2024-09-25 11:23:23 info: Embold extension version response:{"hasSupport":false,"version":"0.1.6","changeNotes":"<div> <p>Release Date: 09 Oct, 2023 <br><span>Bug fixes and improvements.</span></p> </div>"}
 2024-09-25 11:23:23 info: Current installed embold extension version : 0.1.8
 2024-09-25 11:23:23 info: Latest embold extension version on marketplace : 0.1.6
+2024-09-25 13:30:33 info: Row(s) deleted
+2024-09-25 13:30:45 info: Row(s) deleted
+2024-09-25 13:31:15 info: Row(s) deleted
+2024-09-25 13:33:17 info: Row(s) deleted
+2024-09-25 13:34:54 info: Row(s) deleted
+2024-09-25 13:49:53 info: Row(s) deleted
+2024-09-25 13:50:05 info: Row(s) deleted
+2024-09-25 14:50:39 info: Row(s) deleted
+2024-09-25 16:04:06 info: Row(s) deleted
+2024-09-25 16:04:18 info: Row(s) deleted
+2024-09-25 16:17:01 info: FIle extension : js
+2024-09-25 16:17:02 info: Reading config.json file from resources
+2024-09-25 16:17:02 info: configFile :c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\resources\config.json
+2024-09-25 16:17:02 info: EMBOLD_URL  :https://packages.embold.io/
+2024-09-25 16:17:02 info: EMBOLD_TOKEN  :eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTY0MDA4ODY2NDA2OSwiaWF0IjoxNjQwMDg4NjY0fQ.4_lyJE2yRq21-hg6EuXfi1xAS1IFQGnBOXIHktia7JlZo6Hu6vLpov_tHBMHHD-DbtO5fyYN_vPlGpSQh1Uacw
+2024-09-25 16:17:02 info: Executing embold-cli command
+2024-09-25 16:17:02 info: "c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\temp\embold-scanner-archive\bin\embold-scanner.bat" local-analyse -c "c:\Users\chand\.vscode\extensions\embold-vscode.embold-0.1.8\resources\repository-configuration.json" -u https://packages.embold.io/ -t eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTY0MDA4ODY2NDA2OSwiaWF0IjoxNjQwMDg4NjY0fQ.4_lyJE2yRq21-hg6EuXfi1xAS1IFQGnBOXIHktia7JlZo6Hu6vLpov_tHBMHHD-DbtO5fyYN_vPlGpSQh1Uacw -sh "c:\Users\chand\Music\Caterorange\CaterOrange\.embold" -l "c:\Users\chand\Music\Caterorange\CaterOrange\.embold\corona_logs" -r dummy -la  -od "c:\Users\chand\Music\Caterorange\CaterOrange\.embold" -of db -si pmbnsm4i8ij
+2024-09-25 16:17:07 info: stdout: [CodeQuality] Downloading scanner packages...                   
+
+2024-09-25 16:17:07 info: stdout: [CodeQuality] Downloading packages:CORE,JAVASCRIPT              
+
+2024-09-25 16:17:13 info: User canceled the Embold scan
+2024-09-25 16:17:13 info: child process exited with code 0
+2024-09-25 16:17:13 info: Fetched issues from DB

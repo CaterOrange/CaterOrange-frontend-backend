@@ -1,0 +1,29 @@
+2024-09-25 16:17:05.548 [main] INFO  [] com.acellere.corona.commons.proxy.ProxyUtils - Proxy No_Proxy: null
+2024-09-25 16:17:05.553 [main] INFO  [] com.acellere.corona.commons.proxy.ProxyUtils - Proxy Host : null
+2024-09-25 16:17:05.553 [main] INFO  [] com.acellere.corona.commons.proxy.ProxyUtils - Proxy Port : null
+2024-09-25 16:17:05.554 [main] INFO  [] com.acellere.corona.commons.proxy.ProxyUtils - Proxy Username : null
+2024-09-25 16:17:05.554 [main] INFO  [] com.acellere.corona.commons.proxy.ProxyUtils - Proxy Password : null
+2024-09-25 16:17:05.994 [main] INFO  [] io.embold.scanner.cli.opt.EmboldScannerParamsBase - Product details URL : https://packages.embold.io/api/product/details
+2024-09-25 16:17:07.198 [main] INFO  [] io.embold.scanner.cli.opt.EmboldScannerParamsBase - Product details - {
+  "productVersion": "v1",
+  "releaseVersion": "1.9.23.0",
+  "validToken": true,
+  "scanAccess": true,
+  "userRoles": [
+    "ACCOUNT_ADMINISTRATOR"
+  ],
+  "license": {
+    "type": "paid"
+  },
+  "isExpired": false
+}
+2024-09-25 16:17:07.198 [main] INFO  [] io.embold.scanner.cli.opt.EmboldScannerParamsBase - serverType : v1, userType : paid
+2024-09-25 16:17:07.201 [main] OUT   [] io.embold.scanner.logger.CustomLogger - [CodeQuality] Downloading scanner packages...                   
+
+2024-09-25 16:17:07.224 [main] OUT   [] io.embold.scanner.logger.CustomLogger - [CodeQuality] Downloading packages:CORE,JAVASCRIPT              
+
+2024-09-25 16:17:07.226 [main] INFO  [] io.embold.scan.ModularSyncSession - Synching package: CORE
+2024-09-25 16:17:07.226 [main] INFO  [] io.embold.scan.ModularSyncSession - Checksum is calculated, null
+2024-09-25 16:17:07.227 [main] INFO  [] io.embold.scan.ModularSyncSession - os:Windows
+2024-09-25 16:17:07.228 [main] INFO  [] io.embold.scan.exec.Downloader - downloadPackageFromUrl : https://packages.embold.io/api/v1/shardedpackagedownload/
+2024-09-25 16:17:07.228 [main] INFO  [] io.embold.scan.exec.Downloader - targetUrl : https://packages.embold.io/api/v1/shardedpackagedownload/CORE?os=windows
