@@ -7,30 +7,30 @@ const { body, validationResult } = require('express-validator');
 const {transporter}=require('../middlewares/mailAuth.js')
 const SECRET_KEY = process.env.SECRET_KEY;
 const nodemailer = require('nodemailer');
-const client = require('../config/dbConfig.js');
+const gidStorage = require('../middlewares/loggingMiddleware.js');
+
 let otpStore = {}; // This should be in memory or persistent storage in production
 const send_otp = async (req, res) => {
     const { email } = req.body;
 
     // Check if email is provided
     if (!email) {
+        logger.warn('Email is required but not provided');
         return res.status(400).send({ error: 'Email is required' });
     }
     const existingUserByEmail = await customer_model.findCustomerEmail(email);
-    console.log('undefined 2',existingUserByEmail)
+    // logger.info('Checking if user exists for email:', email);
 
     if (!existingUserByEmail) {
+        logger.warn('Invalid email, user does not exist:', email);
         return res.status(400).json({
-                success: false,
-                message: 'Invalid email, user does not exist'
-            });
+            success: false,
+            message: 'Invalid email, user does not exist'
+        });
     }
-
-    console.log('Sending OTP to:', email);
-
-    const generatedOtp = Math.floor(100000 + Math.random() * 900000); 
+    logger.info('Sending OTP to:', email);
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000);
     const expiresIn = Date.now() + 60000; // OTP expires in 60 seconds
-
     // Store OTP and expiration time
     otpStore[email] = { otp: generatedOtp, expiresAt: expiresIn };
 
@@ -44,18 +44,22 @@ const send_otp = async (req, res) => {
     // Send OTP via email
     transporter.sendMail(mailOtp, (error, info) => {
         if (error) {
+            logger.error('Failed to send OTP to:', email, error);
             return res.status(500).send({ error: 'Failed to send OTP' });
         }
-        console.log('OTP sent successfully to:', email);
+
+        logger.info('OTP sent successfully to:', email);
         res.status(200).send({ message: 'OTP sent successfully', otp: generatedOtp }); // Optionally, hide OTP in prod
     });
 };
+
 
 const verify_otp = async (req, res) => {
     const { email, otp } = req.body;
 
     // Check if email and OTP are provided
     if (!email || !otp) {
+        logger.warn('Email and OTP are required but not provided');
         return res.status(400).send({ error: 'Email and OTP are required' });
     }
 
@@ -63,21 +67,23 @@ const verify_otp = async (req, res) => {
 
     // Check if OTP exists and has not expired
     if (!otpData || otpData.expiresAt < Date.now()) {
+        logger.warn('OTP expired or not found for:', email);
         return res.status(400).send({ error: 'OTP expired or not found' });
     }
 
     // Validate OTP
     if (parseInt(otp) === otpData.otp) {
-        console.log('OTP verified successfully for:', email);
+        logger.info('OTP verified successfully for:', email);
         res.status(200).send({ message: 'OTP verified successfully' });
 
         // Remove the OTP after successful verification
         delete otpStore[email];
     } else {
-        console.log('Invalid OTP provided by:', email);
+        logger.error('Invalid OTP provided by:', email);
         res.status(400).send({ error: 'Invalid OTP' });
     }
 };
+
 
 
 // Register function
@@ -90,37 +96,30 @@ const register = async (req, res) => {
         const maxPasswordLength = 20;
         const maxEmailLength=50;
         const phoneNumberLength=10;
-
-
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(customer_phonenumber) || customer_phonenumber.length > phoneNumberLength) {
             return res.status(400).json({ success: false, message: 'Invalid phone number' });
         }
-
         // Validate all required fields
         if (!customer_name || !customer_email || !customer_password || !confirm_password) {
             return res.status(400).json({ success: false, message: 'All fields are required' });
         }
-
         // Validate name format and length
         const nameRegex = /^[a-zA-Z\s]+$/;
         if (!nameRegex.test(customer_name) || customer_name.length < minNameLength || customer_name.length > maxNameLength) {
             return res.status(400).json({ success: false, message:`Name must be between ${minNameLength}-${maxNameLength} characters and contain only alphabets. `});
         }
-
         // Validate email format and length
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(customer_email) || customer_email.length > maxEmailLength) {
             return res.status(400).json({ success: false, message: 'Invalid email format or too long' });
         }
-
         // Check if email is already in use
         const existingUserByEmail = await customer_model.findCustomerEmail(customer_email);
         if (existingUserByEmail) {
             logger.error('Email already in use', { customer_email });
             return res.status(400).json({ success: false, message: 'Email already in use' });
         }
-
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/;
         // Validate password length and complexity
         if (customer_password.length < minPasswordLength || customer_password.length > maxPasswordLength || !passwordRegex.test(customer_password)) {
@@ -134,9 +133,7 @@ const register = async (req, res) => {
         if (customer_password !== confirm_password) {
             return res.status(400).json({ success: false, message: 'Passwords do not match' });
         }
-        
         const hashedPassword = await bcrypt.hash(customer_password, 10);
-
         const newCustomer = await customer_model.createCustomer(
             customer_name,
             customer_email,
@@ -265,6 +262,7 @@ const register = async (req, res) => {
         // logger.info('Customer registered successfully', { newCustomer});
 
         const gid=newCustomer.customer_generated_id ;
+        gidStorage.setGid(gid);
         const token = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
 
         const newCustomerToken = await customer_model.createCustomerToken(
@@ -283,83 +281,6 @@ const register = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
-// const login = [
-//     // Validate and sanitize input fields
-//     async (req, res) => {
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             return res.status(400).json({ errors: errors.array() });
-//         }
-
-//         try {
-//             const { customer_email, customer_password } = req.body;
-//             console.log('Provided password:', customer_password);
-
-//             // Fetch user data from the database
-//             const customer = await customer_model.findCustomerEmail(customer_email);
-//             console.log('Customer fetched from database:', customer);
-
-//             // Check if the customer exists
-//             if (!customer) {
-//                 logger.warn('Invalid login attempt', { customer_email });
-//                 return res.status(400).json({
-//                     success: false,
-//                     message: 'Invalid email, user does not exist'
-//                 });
-//             }
-
-//             // Check if customer_password exists in customer object
-//             if (!customer.customer_password) {
-//                 console.log('Error: customer.customer_password is undefined');
-//                 return res.status(500).json({
-//                     success: false,
-//                     message: 'Internal server error: password not found'
-//                 });
-//             }
-//             // Compare passwords
-//             const isPasswordValid = await bcrypt.compare(customer_password, customer.customer_password);
-//             console.log(isPasswordValid)
-//             console.log('Password validation result:', isPasswordValid);
-
-//             if (!isPasswordValid) {
-//                 return res.status(400).json({
-//                     success: false,
-//                     message: 'Invalid password'
-//                 });
-//             }
-
-//             // Validation for email and password
-//             body('customer_email')
-//                 .isEmail().withMessage('Please provide a valid email address.')
-//                 .normalizeEmail(),
-//             body('customer_password')
-//                 .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
-//                 .trim()
-
-//             // Verify the existing token or generate a new one
-//             let token;
-//             try {
-//                 token = jwt.verify(customer.access_token, SECRET_KEY);
-//                 var uat = customer.access_token;
-//                 logger.info('Token verified successfully', { token });
-//             } catch (err) {
-//                 uat = jwt.sign({ email: customer_email }, SECRET_KEY, { expiresIn: '24h' });
-//                 await customer_model.updateAccessToken(customer_email, uat);
-//                 logger.info('New token generated', { token: uat });
-//             }
-
-//             res.json({
-//                 success: true,
-//                 message: 'Login successful',
-//                 token: uat
-//             });
-//         } catch (err) {
-//             logger.error('Error during user login', { error: err.message });
-//             res.status(500).json({ error: err.message });
-//         }
-//     }
-// ];
-
 
 const login = [
     // Validate and sanitize input fields
@@ -379,13 +300,12 @@ const login = [
 
             // Check if the customer exists
             if (!customer) {
-                logger.warn('Invalid login attempt', { customer_email });
+                console.log('Invalid login attempt', { customer_email });
                 return res.status(400).json({
                     success: false,
                     message: 'Invalid email, user does not exist'
                 });
             }
-
             // Check if customer_password exists in customer object
             if (!customer.customer_password) {
                 console.log('Error: customer.customer_password is undefined');
@@ -398,7 +318,6 @@ const login = [
             const isPasswordValid = await bcrypt.compare(customer_password, customer.customer_password);
             console.log(isPasswordValid)
             console.log('Password validation result:', isPasswordValid);
-
             if (!isPasswordValid) {
                 return res.status(400).json({
                     success: false,
@@ -407,13 +326,12 @@ const login = [
             }  
             const checkActivate= await customer_model.findActivated(customer_email);
             if (!checkActivate) {
+                logger.error('You are not registered yet, please register', { email });
                 return res.status(400).json({
                     success: false,
                     message: 'You are unable to login beacuse you are deactivated'
-                });
-                logger.error('You are not registered yet, please register', { email });
+                });  
             }
-    
             // Validation for email and password
             body('customer_email')
                 .isEmail().withMessage('Please provide a valid email address.')
@@ -421,11 +339,8 @@ const login = [
             body('customer_password')
                 .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
                 .trim()
-            
-
                 const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
                 console.log('Admin check result:', checkIsAdmin);
-    
                 const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
                 const customername=customer.customer_name;
                 console.log('Is admin:', isAdmin);
@@ -434,13 +349,17 @@ const login = [
             try {
                 token = jwt.verify(customer.access_token, SECRET_KEY);
                 var uat = customer.access_token;
-                logger.info('Token verified successfully', { token });
+                const id=customer.customer_generated_id;
+                gidStorage.setGid(id);
+                console.log("id is here",id) // ok i am getting the code 
+                logger.info('Token verified successfully',uat );
             } catch (err) {
-                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin}, SECRET_KEY, { expiresIn: '24h' });
+                const gid=customer.customer_generated_id;
+                gidStorage.setGid(gid);
+                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin,id:gid}, SECRET_KEY, { expiresIn: '24h' });
                 await customer_model.updateAccessToken(customer_email, uat);
                 logger.info('New token generated', { token: uat });
             }
-
             res.json({
                 success: true,
                 message: 'Login successful',
@@ -455,23 +374,17 @@ const login = [
 ];
 
 const forgotPassword = [
-   
-   
-
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-        
-
         try {
             const { customer_email, customer_password,confirm_password } = req.body;
             const existingUserByEmail = await customer_model.findCustomerEmail(customer_email);
             if (customer_password !== confirm_password) {
                 return res.status(400).json({ success: false, message: 'Passwords do not match' });
             }
-        
             if (!existingUserByEmail) {
                 logger.error('You are not registered yet, please register', { customer_email });
                 return res.status(400).json({
@@ -492,20 +405,21 @@ const forgotPassword = [
             try {
                 token = jwt.verify(customer.access_token, SECRET_KEY);
                 var uat = customer.access_token;
+                const gid=existingUserByEmail.customer_generated_id;
+                gidStorage.setGid(gid);
                 logger.info('Token verified successfully', { token });
             } catch (err) {
-                uat = jwt.sign({ email: customer_email }, SECRET_KEY, { expiresIn: '24h' });
+                const gid=existingUserByEmail.customer_generated_id;
+                gidStorage.setGid(gid);
+                var uat = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
                 logger.info('New token generated', { token: uat });
             }
-
-            
             const customer = await customer_model.updateCustomerPassword(customer_email, hashedPassword,uat);
 
             if (!customer) {
                 logger.warn('Error updating password', { customer_email });
                 return res.status(400).json({ message: 'Error updating password' });
             }
-
             res.json({
                 success: true,
                 message: 'Login successfully with new Password',
@@ -521,9 +435,7 @@ const forgotPassword = [
 const google_auth = async (req, res) => {
     try {
         const { customer_name, customer_email } = req.body;
-
         const existingCustomer = await customer_model.findCustomerEmail(customer_email);
-
         if (!existingCustomer) {
             const newCustomer = await customer_model.createCustomer(
                 customer_name,
@@ -531,8 +443,8 @@ const google_auth = async (req, res) => {
                 null,  // password
                 null  // phone number 
             );
-
             const gid=newCustomer.customer_generated_id ;
+            gidStorage.setGid(gid);
             const token = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
             const newCustomerToken = await customer_model.createCustomerToken(
                 customer_email,
@@ -542,6 +454,7 @@ const google_auth = async (req, res) => {
             const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
             console.log("email,id",decoded.email,decoded.id)
             // localStorage.setItem('token', token);
+            // gidStorage.setGid(gid);
             return res.json({
                 success: true,
                 message: 'Customer registered successfully',
@@ -553,12 +466,17 @@ const google_auth = async (req, res) => {
             // Login existing customer
             let token = existingCustomer.access_token;
             try {
-                jwt.verify(token, SECRET_KEY);
+                token = jwt.verify(customer.access_token, SECRET_KEY);
+                var uat = customer.access_token;
+                const id=customer.customer_generated_id;
+                gidStorage.setGid(id);
             } catch (err) {
                 // If token is invalid or expired, create a new one
                 const gid=existingCustomer.customer_generated_id ;
+                gidStorage.setGid(gid);
                 const token = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
                 // token = jwt.sign({ email: customer_email }, SECRET_KEY, { expiresIn: '24h' });
+                // gidStorage.setGid(gid);
                 await customer_model.updateAccessToken(customer_email, token);
                 logger.info('Login successful through Google and token updated', { token });
             }
@@ -576,7 +494,30 @@ const google_auth = async (req, res) => {
     }
 };
 
-
+const customer_info = async (req, res) => {
+  // Extract token from Authorization header
+  const token = req.headers['token'];
+  console.log('token',token)
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+  try {
+    // Verify and decode the token
+    const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
+    // Extract user ID or other information from decoded token
+    const customer_email = decoded.email; // Adjust based on your token payload
+    // Fetch user data from the database
+    const result = await client.query('SELECT customer_name, customer_phonenumber FROM customer WHERE customer_email = $1', [customer_email]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+    const { customer_name, customer_phonenumber } = result.rows[0];
+    return res.json({ customer_name, customer_phonenumber, customer_email });
+  } catch (error) {
+    console.error('Error verifying token or fetching user info:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 const checkCustomer = async (req, res) => {
     try {
@@ -650,57 +591,57 @@ const checkCustomerOtp = async (req, res) => {
 };
 
 
-const createEventOrderController= async(req, res) => {
+const createEventOrderController = async (req, res) => {
     const { customer_id, order_date, status, total_amount, vendor_id, delivery_id, eventcart_id } = req.body;
-  
+
     try {
         const order = await customer_model.createEventOrder(customer_id, { order_date, status, total_amount, vendor_id, delivery_id, eventcart_id });
+        logger.info('Event order created successfully for customer_id:', customer_id);
         res.status(201).json({ message: 'Event order created successfully', order });
     } catch (error) {
-        console.error('Error creating event order:', error.message);
+        logger.error('Error creating event order:', error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
-const getEventOrderByIdController = async(req, res) => {
-    const {id } = req.params;
-  
+const getEventOrderByIdController = async (req, res) => {
+    const { id } = req.params;
+
     try {
         const order = await customer_model.getEventOrderById(id);
-  
         if (!order) {
+            logger.warn('Event order not found for id:', id);
             return res.status(404).json({ message: 'Event order not found' });
         }
-  
+        logger.info('Event order retrieved successfully for id:', id);
         res.status(200).json({ order });
     } catch (error) {
-        console.error('Error retrieving event order:', error.message);
+        logger.error('Error retrieving event order:', error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
-const getAllEventOrdersByCustomerIdController = async(req, res)=> {
-    const { customer_id } = req.body; 
-  
+const getAllEventOrdersByCustomerIdController = async (req, res) => {
+    const { customer_id } = req.body;
+
     try {
         const orders = await customer_model.getAllEventOrdersByCustomerId(customer_id);
+        logger.info('Event orders retrieved successfully for customer_id:', customer_id);
         res.status(200).json({ orders });
     } catch (error) {
-        console.error('Error retrieving event orders:', error.message);
+        logger.error('Error retrieving event orders for customer_id:', error.message);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
+
 const getAddressByCustomerId = async (req, res) => {
     const { customer_id } = req.params;
-  
     try {
       // Fetch addresses associated with the customer
       const addresses = await customer_model.getAddressesByCustomerId( customer_id);
-  
       if (!addresses.length) {
         return res.status(404).json({ error: 'No addresses found for this customer' });
       }
-  
       res.status(200).json(addresses);
     } catch (error) {
       logger.error('Error fetching address details: ', error);
@@ -722,37 +663,35 @@ const getAddressByCustomerId = async (req, res) => {
 
 const deleteAddressById = async (req, res) => {
     const { address_id } = req.params;
-  
     try {
-      const deletedAddress = await customer_model.deleteAddressById(address_id);
-  
-      if (!deletedAddress) {
-        return res.status(404).json({ error: 'Address not found' });
-      }
-  
-      res.status(200).json({ message: 'Address deleted successfully', deletedAddress });
+        const deletedAddress = await customer_model.deleteAddressById(address_id);
+        if (!deletedAddress) {
+            logger.warn('Address not found for address_id:', address_id);
+            return res.status(404).json({ error: 'Address not found' });
+        }
+        logger.info('Address deleted successfully for address_id:', address_id);
+        res.status(200).json({ message: 'Address deleted successfully', deletedAddress });
     } catch (error) {
-      logger.error('Error deleting address: ', error);
-      res.status(500).json({ error: 'Error deleting address', details: error.message });
+        logger.error('Error deleting address:', error.message);
+        res.status(500).json({ error: 'Error deleting address', details: error.message });
     }
-  };
-  
-  const updateAddressById = async (req, res) => {
+};
+const updateAddressById = async (req, res) => {
     const address_id = req.params.address_id;
     const {
-      tag,
-      line1,
-      line2,
-      pincode,
-      latitude,
-      longitude,
-      ship_to_name,
-      ship_to_phone_no
+        tag,
+        line1,
+        line2,
+        pincode,
+        latitude,
+        longitude,
+        ship_to_name,
+        ship_to_phone_no
     } = req.body;
-  
+
     const fields = [];
     const values = [];
-  
+
     if (tag) fields.push('tag = $' + (fields.length + 1)), values.push(tag);
     if (line1) fields.push('line1 = $' + (fields.length + 1)), values.push(line1);
     if (line2) fields.push('line2 = $' + (fields.length + 1)), values.push(line2);
@@ -760,33 +699,35 @@ const deleteAddressById = async (req, res) => {
     if (latitude && longitude) fields.push('location = POINT($' + (fields.length + 1) + ', $' + (fields.length + 2) + ')'), values.push(latitude, longitude);
     if (ship_to_name) fields.push('ship_to_name = $' + (fields.length + 1)), values.push(ship_to_name);
     if (ship_to_phone_no) fields.push('ship_to_phone_no = $' + (fields.length + 1)), values.push(ship_to_phone_no);
-  
+
     if (fields.length === 0) {
-      return res.status(400).send('No fields to update');
+        logger.warn('No fields provided to update for address_id:', address_id);
+        return res.status(400).send('No fields to update');
     }
-  
+
     try {
-      const result = await customer_model.updateAddressById(address_id, fields, values);
-      if (result.rowCount === 0) {
-        return res.status(404).send('Address not found');
-      }
-      res.status(200).send('Address updated');
+        const result = await customer_model.updateAddressById(address_id, fields, values);
+        if (result.rowCount === 0) {
+            logger.warn('Address not found for address_id:', address_id);
+            return res.status(404).send('Address not found');
+        }
+        logger.info('Address updated successfully for address_id:', address_id);
+        res.status(200).send('Address updated');
     } catch (err) {
-      logger.error('Error:', err);
-      res.status(500).send('Internal server error');
+        logger.error('Error updating address for address_id:', address_id, err);
+        res.status(500).send('Internal server error');
     }
-  };
+};
+
   const CustomerAddress =async (req, res) => {
     try {
         const token = req.headers['token'];
     if (!token) {
       return res.status(401).json({ success: false, message: 'Access token is missing or not provided' });
     }
-
     let verified_data;
     try {
       verified_data = jwt.verify(token, process.env.SECRET_KEY);
-     
     } catch (err) {
       logger.error('Token verification failed:', err);
       if (err instanceof jwt.TokenExpiredError) {
@@ -812,7 +753,7 @@ console.log('address',address)
     }
   };
 
-  const getCustomerDetails=async(req, res)=>{
+const getCustomerDetails=async(req, res)=>{
     try{
         const token = req.headers['token'];
         console.log('cus',token)
@@ -855,34 +796,6 @@ console.log('address',address)
             res.status(500).json({ error: err.message });
         }
 }
-const customer_info = async (req, res) => {
-    // Extract token from Authorization header
-    const token = req.headers['token'];
-    console.log('picchiiiii',token)
-    if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
-    }
-    
-    try {
-      // Verify and decode the token
-      const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
-      // Extract user ID or other information from decoded token
-      const customer_email = decoded.email; // Adjust based on your token payload
-  
-      // Fetch user data from the database
-      const result = await client.query('SELECT customer_name, customer_phonenumber FROM customer WHERE customer_email = $1', [customer_email]);
-  
-      if (result.rows.length === 0) {
-        return res.status(404).json({ message: 'Customer not found' });
-      }
-  
-      const { customer_name, customer_phonenumber } = result.rows[0];
-      return res.json({ customer_name, customer_phonenumber, customer_email });
-    } catch (error) {
-      console.error('Error verifying token or fetching user info:', error);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-  };
 
 module.exports = {
     register,
@@ -904,7 +817,6 @@ module.exports = {
     CustomerAddress,
     getCustomerDetails
 };
-
 
 
 
