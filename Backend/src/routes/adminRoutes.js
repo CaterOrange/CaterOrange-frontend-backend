@@ -84,6 +84,7 @@ const typeDefs = gql`
     category_name:String,
     category_description:String,
     category_price:Int,
+    category_media:String,
     addedat:String
   }
   type EventOrders
@@ -130,7 +131,7 @@ const typeDefs = gql`
     toggleDeactivation(id: ID!, isdeactivated: Boolean!): Customer!
     updateEventOrderStatus(id: ID!, status: String!): EventOrders!
     updateCorporateOrderStatus(id: ID!, status: String!): CorporateOrder!
-    createCategory(category_name: String!, category_description:String!,category_price: Int!): Category!
+    createCategory(category_name: String!, category_description:String!,category_price: Int!,category_media:String!): Category!
     updateCategory(category_id: Int, category_name: String,category_description:String, category_price: Int): Category!
     deleteCategory(category_id: Int!): Boolean!
   }
@@ -230,10 +231,10 @@ const resolvers = {
       );
       return result.rows[0];
     },
-    createCategory: async (_, { category_name, category_description,category_price }) => {
+    createCategory: async (_, { category_name, category_description,category_price,category_media }) => {
       const result = await client.query(
-        'INSERT INTO corporate_category (category_name,category_description,category_price, addedat) VALUES ($1, $2,$3, NOW()) RETURNING *',
-        [category_name,category_description, category_price]
+        'INSERT INTO corporate_category (category_name,category_description,category_price,category_media,addedat) VALUES ($1, $2,$3,$4, NOW()) RETURNING *',
+        [category_name,category_description,category_price,category_media]
       );
       return result.rows[0];
     },
