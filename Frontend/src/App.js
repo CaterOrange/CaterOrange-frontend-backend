@@ -27,7 +27,7 @@ function App() {
     if(!isGoogleLogin){
       try {
         console.log('in manual',token)
-        const response = await axios.get('http://localhost:4000/customer/info', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/info`, {
           headers: { token }
         });
         console.log('RESPONSE', response.data)

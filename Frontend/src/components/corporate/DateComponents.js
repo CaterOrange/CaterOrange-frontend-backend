@@ -4,10 +4,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './css/date.css';
 import { StoreContext } from "../../services/contexts/store";
-import { add_corporate_cart } from "../../services/context_state_management/actions/action";
 import axios from "axios";
 
-function DateComponent({ foodtype, quantity ,onSaveSuccess }) {
+function DateComponent({ foodtype, quantity ,onSaveSuccess,onError }) {
     const [selectedDates, setSelectedDates] = useState([]);
     const [monthlyIncludedDays, setMonthlyIncludedDays] = useState({});
     const [individualToggles, setIndividualToggles] = useState({});
@@ -195,25 +194,22 @@ const formatDate = (date) => {
 
 const handleSaveDates = async () => {
     const dates = selectedDates;
-   var local=dates.length*quantity
-   if(!localStorage.getItem('count')){
-    localStorage.setItem('count',local)
-   }else{
-    const cartCount=localStorage.getItem('count')
-local=parseInt(cartCount)+parseInt(local)
-    localStorage.setItem('count',local)
-    
-   }
+    var local = dates.length * quantity;
+    if (!localStorage.getItem('count')) {
+        localStorage.setItem('count', local);
+    } else {
+        const cartCount = localStorage.getItem('count');
+        local = parseInt(cartCount) + parseInt(local);
+        localStorage.setItem('count', local);
+    }
     const CartDetails = [];
     let amount;
 
     if (quantity === 0) {
-        console.log('Oops! You did not mention the quantity.');
-        alert('Oops! You did not mention the quantity.');
+        onError('Please select a quantity');
         return;
     } else if (dates.length === 0) {
-        console.log('Oops! You did not mention the dates.');
-        alert('Oops! You did not mention the dates.');
+        onError('Please select dates');
         return;
     }
 
@@ -246,23 +242,26 @@ local=parseInt(cartCount)+parseInt(local)
     try {
         const token = localStorage.getItem('token');
         console.log('Token being sent:', token);
-        const response = await axios.post('http://localhost:4000/customer/cart/corporate', {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/cart/corporate`, {
             cart_order_details: cartDetailsJSON,
             total_amount: amount
         }, {
-            headers: { token }  // Ensure this is set correctly
+            headers: { token }
         });
         
         if (response.status === 200) {
             console.log('Cart details saved successfully:', response.data);
-            onSaveSuccess()
+            onSaveSuccess();
         } else {
             console.error('Failed to save cart details:', response.data);
+            onError('Failed to save cart details');
         }
     } catch (error) {
         console.error('Error saving cart details:', error);
+        onError('Error saving cart details');
     }
 };
+
 
     const handleclear = () => {
         setSelectedDates([]);
@@ -383,4 +382,4 @@ local=parseInt(cartCount)+parseInt(local)
     );
 }
 
-export default DateComponent;
+export default DateComponent;

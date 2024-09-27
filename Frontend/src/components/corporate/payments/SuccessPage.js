@@ -121,7 +121,7 @@ const SuccessPage = () => {
   useEffect(() => {
     const getordergenid = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/corporate/getOrdergenId', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/corporate/getOrdergenId`, {
           headers: { token: localStorage.getItem('token') },
         });
         setOrderId(response.data.order_genid.corporateorder_generated_id); 

@@ -19,7 +19,7 @@ const CorporateOrders = () => {
       try {
         console.log('hiiiiii')
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:4000/customer/corporate/myorders', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
           headers: { token: `${token}` },
         });
         if (response.data && response.data.data) {
@@ -53,7 +53,7 @@ const CorporateOrders = () => {
   const fetchCategoryName = async (categoryId) => {
     try {
       const response = await axios.post(
-        'http://localhost:4000/customer/getcategorynameById',
+        `${process.env.REACT_APP_URL}/api/customer/getcategorynameById`,
         { categoryId }
       );
       return response.data.categoryname.category_name;
@@ -287,7 +287,7 @@ const CorporateOrders = () => {
           }`}
           onClick={() => setShowCorporate(true)}
         >
-          <CakeIcon className="sm:h-5 w-5 lg:h-10 w-10 inline-block mr-2" />
+          <CakeIcon className="sm:h-5 w-5 lg:h-10inline-block mr-2" />
           Corporate
         </button>
         <button

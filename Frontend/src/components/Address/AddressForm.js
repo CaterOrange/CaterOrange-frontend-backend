@@ -1,6 +1,3 @@
-// 
-
-
 import axios from 'axios';
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -33,7 +30,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
         throw new Error('No token found, please log in again.');
       }
       try {
-        const response = await axios.get('http://localhost:4000/address/getDefaultAddress', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
           headers: { token: `${localStorage.getItem('token')}` }
         });
         const { customer_name, customer_phonenumber } = response.data.customer;
@@ -71,7 +68,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
           return;
         }
 
-        const response = await axios.get('http://localhost:4000/address/getalladdresses', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
 
           headers: { token: `${localStorage.getItem('token')}` }
 
@@ -102,7 +99,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
-          'http://localhost:4000/address/createAddres',
+          `${process.env.REACT_APP_URL}/api/address/createAddres`,
           {
             tag,
             pincode,
@@ -183,7 +180,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
   const handleSelect = async (address_id) => {
     console.log('id', address_id);
     try {
-      const response = await axios.get('http://localhost:4000/customer/getAddress', {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getAddress`, {
         params: { address_id } // Use params to send the address_id as a query parameter
       });
       console.log('select', response.data.result);

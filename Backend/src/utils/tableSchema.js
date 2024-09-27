@@ -194,17 +194,28 @@ function createEventOrdersTableQuery() {
 }
 
 
-// Create Corporate Category Table
 function createCorporateCategoryTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS corporate_category (
       category_id SERIAL PRIMARY KEY,
-      category_name VARCHAR(255) NOT NULL,
+      category_name VARCHAR(255) NOT NULL UNIQUE,  -- Add UNIQUE constraint
       category_description VARCHAR(500),
       category_price FLOAT,
       category_media TEXT,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );`;
+    );
+
+    -- Insert initial categories if the table is empty
+    INSERT INTO corporate_category (category_name, category_description, category_price, category_media)
+    VALUES
+      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('Snacks', 'We are offering tasty Snacks here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s')
+    ON CONFLICT (category_name) DO NOTHING;  -- Prevent inserting duplicate category names
+  `;
 }
 
 // Create Event Category Table

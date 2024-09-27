@@ -25,7 +25,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
         throw new Error('No token found, please log in again.');
       }
       try {
-        const response = await axios.get('http://localhost:4000/address/getDefaultAddress', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
           headers: { 'token': token },
         });
         const { customer_name = '', customer_phonenumber = '' } = response.data.customer || {};
@@ -116,8 +116,8 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const url = existingAddress
-          ? `http://localhost:4000/address/edit/${existingAddress.address_id}`
-          : 'http://localhost:4000/address/createAddres';
+          ? `${process.env.REACT_APP_URL}/api//address/edit/${existingAddress.address_id}`
+          : `${process.env.REACT_APP_URL}/api/address/createAddres`;
         
         const response = await axios.post(
           url,
