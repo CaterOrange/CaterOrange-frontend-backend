@@ -14,6 +14,9 @@ const DB_COMMANDS = {
     CUSTOMER_SET_ACCESSTOKEN: `UPDATE customer 
         SET access_token = $2
         WHERE customer_email = $1`,
+    CUSTOMER_TOKEN_SELECT: `
+    SELECT * FROM customer 
+    WHERE access_token = $1`,
   
     GET_CUSTOMER_CORPORATE_ORDERS:`SELECT * FROM corporate WHERE customer_id=$1`,
     GET_CUSTOMER_EVENT_ORDERS:``,
@@ -29,9 +32,12 @@ const DB_COMMANDS = {
     SELECT customer_name, customer_phonenumber 
     FROM customer 
     WHERE customer_email = $1;
-    `
+    `,
+    CUSTOMER_ACTIVATED_CHECK: `
+    SELECT customer_name 
+    FROM customer 
+    WHERE customer_email = $1 AND isdeactivated IS FALSE;  `
 ,
-
     GET_ALL_CUSTOMERS:`SELECT * FROM customer`,
     GET_CUSTOMER_BY_ID:`SELECT * FROM customer WHERE customer_id=$1`,
     DELETE_CUSTOMER:`DELETE FROM customer WHERE customer_id=$1`,
@@ -87,8 +93,6 @@ const DB_COMMANDS = {
     WHERE customer_id = $1;
   `
  };
-        
-
 
 
 module.exports = { DB_COMMANDS };

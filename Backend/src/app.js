@@ -11,7 +11,10 @@ const paymentRoutes = require('./routes/paymentRoutes.js');
 const addressRoutes = require('./routes/addressRoutes');
 const eventRoutes = require('./routes/eventorderRoutes.js');
 const corporateOrderDetailsRoutes = require('./routes/corporateorderRoutes.js');
+const invoiceRoutes = require('./routes/invoiceRoutes');
 
+
+// Use invoice routes
 
 const app = express();
 app.use(express.json());
@@ -23,9 +26,7 @@ app.use('/',addressRoutes)
 app.use('/',paymentRoutes)
 
 app.use('/', corporateOrderDetailsRoutes);
-
-
-
+app.use('/api/invoices', invoiceRoutes);
 
 const initializeApp = async () => {
   try {
