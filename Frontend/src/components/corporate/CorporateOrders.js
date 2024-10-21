@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
 import { CakeIcon, CalendarIcon, CheckCircleIcon, HomeIcon, MinusCircleIcon } from '@heroicons/react/solid';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import OrderDashboard from '../events/myorders';
+
+
 
 const CorporateOrders = () => {
   const [showCorporate, setShowCorporate] = useState(true);
@@ -19,7 +21,7 @@ const CorporateOrders = () => {
       try {
         console.log('hiiiiii')
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
+        const response = await axios.get('http://localhost:4000/customer/corporate/myorders', {
           headers: { token: `${token}` },
         });
         if (response.data && response.data.data) {
@@ -47,13 +49,14 @@ const CorporateOrders = () => {
         setIsLoading(false);
       }
     };
+   
     fetchOrders();
   }, []);
 
   const fetchCategoryName = async (categoryId) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_URL}/api/customer/getcategorynameById`,
+        'http://localhost:4000/customer/getcategorynameById',
         { categoryId }
       );
       return response.data.categoryname.category_name;
@@ -131,42 +134,7 @@ const CorporateOrders = () => {
          
         </div>
 
-        {/* {isExpanded && (
-          <div className="p-4 sm:p-6 overflow-x-auto">
-            <table className="w-full bg-white min-w-max">
-              <thead className="bg-gray-100 text-left text-xs sm:text-sm">
-                <tr>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Category Name</th>
-                  <th className="p-2 sm:p-6 lg:p-4 whitespace-nowrap">Progress</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Date</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Qty</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Active Qty</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.order_details.map((detail, i) => (
-                  <tr key={i} className="border-t text-xs sm:text-sm hover:bg-gray-50">
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">
-                      {detail.category_name || 'Unknown Category'}
-                    </td>
-                    <td className="p-2 sm:p-6 lg:p-4 whitespace-nowrap">{renderProgressIcons(detail.delivery_status)}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.processing_date}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.quantity}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.active_quantity}</td>
-                    <td
-                      className={`p-2 sm:p-3 lg:p-4 font-bold whitespace-nowrap ${
-                        detail.status === 'cancelled' ? 'text-red-500' : 'text-green-500'
-                      }`}
-                    >
-                      {detail.status}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )} */}
+     
 
 {isExpanded && (
   <div className="p-4 sm:p-6 overflow-x-auto">
@@ -287,7 +255,7 @@ const CorporateOrders = () => {
           }`}
           onClick={() => setShowCorporate(true)}
         >
-          <CakeIcon className="sm:h-5 w-5 lg:h-10inline-block mr-2" />
+          <CakeIcon className="sm:h-5 w-5 lg:h-10 w-10 inline-block mr-2" />
           Corporate
         </button>
         <button

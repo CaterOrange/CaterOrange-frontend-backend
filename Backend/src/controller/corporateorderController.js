@@ -46,15 +46,15 @@ const add_Corporate_Cart = async (req, res) => {
     }
 
     const customer_generated_id = verified_data.id;
-    const customer = await corporate_model.findCustomerByGid(customer_generated_id);
+    // const customer = await corporate_model.findCustomerByGid(customer_generated_id);
 
-    if (!customer) {
-      logger.error('Customer not found', { customerId: customer_generated_id });
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    // if (!customer) {
+    //   logger.error('Customer not found', { customerId: customer_generated_id });
+    //   return res.status(404).json({ success: false, message: 'User not found' });
+    // }
 
-    logger.info('Adding cart for customer', { customerId: customer.customer_id });
-    const newCart = await corporate_model.add_cart(customer.customer_id, cart_order_details, total_amount);
+    // logger.info('Adding cart for customer', { customerId: customer.customer_id });
+    const newCart = await corporate_model.add_cart(customer_generated_id, cart_order_details, total_amount);
 
     if (!newCart) {
       throw new Error('Cart creation failed');
@@ -95,15 +95,15 @@ const getCorporateCart = async (req, res) => {
     }
 
     const customer_generated_id = verified_data.id;
-    const customer = await corporate_model.findCustomerByGid(customer_generated_id);
+    // const customer = await corporate_model.findCustomerByGid(customer_generated_id);
 
-    if (!customer) {
-      logger.error('User not found', { customerId: customer_generated_id });
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    // if (!customer) {
+    //   logger.error('User not found', { customerId: customer_generated_id });
+    //   return res.status(404).json({ success: false, message: 'User not found' });
+    // }
 
-    logger.info('Fetching cart for customer', { customerId: customer.customer_id });
-    const carts = await corporate_model.getCarts(customer.customer_id);
+    // logger.info('Fetching cart for customer', { customerId: customer.customer_id });
+    const carts = await corporate_model.getCarts(customer_generated_id);
     res.json(carts);
   } catch (err) {
     logger.error('Error fetching corporate cart', { error: err.message });

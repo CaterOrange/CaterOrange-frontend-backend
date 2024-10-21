@@ -1,12 +1,14 @@
+import axios from "axios";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import './css/date.css';
+import { useCart } from '../../services/contexts/CartContext';
 import { StoreContext } from "../../services/contexts/store";
-import axios from "axios";
+import './css/date.css';
 
-function DateComponent({ foodtype, quantity ,onSaveSuccess,onError }) {
+
+function DateComponent({ foodtype, quantity ,onSaveSuccess }) {
     const [selectedDates, setSelectedDates] = useState([]);
     const [monthlyIncludedDays, setMonthlyIncludedDays] = useState({});
     const [individualToggles, setIndividualToggles] = useState({});
@@ -16,9 +18,11 @@ function DateComponent({ foodtype, quantity ,onSaveSuccess,onError }) {
     const [isDragging, setIsDragging] = useState(false);
     const [lastClickedDate, setLastClickedDate] = useState(null);
     const [fromDate, setFromDate] = useState(null);
+    const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+    
     const { state, dispatch } = useContext(StoreContext);
 const [toDate, setToDate] = useState(null);
-
+const { updateCartCount } = useCart();
 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const currentDate = new Date();
@@ -191,36 +195,45 @@ const formatDate = (date) => {
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
-
 const handleSaveDates = async () => {
+   
     const dates = selectedDates;
-    var local = dates.length * quantity;
-    if (!localStorage.getItem('count')) {
-        localStorage.setItem('count', local);
-    } else {
-        const cartCount = localStorage.getItem('count');
-        local = parseInt(cartCount) + parseInt(local);
-        localStorage.setItem('count', local);
-    }
+    const local = dates.length * quantity;
+  
+    // Update count dynamically
+    const newCount = (storedUserDP.cartCount || 0) + local;
+    updateCartCount(newCount);
+  
+    // Update `cartCount` in `userDP` in local storage
+    const updatedUserDP = {
+      ...storedUserDP,
+      cartCount: newCount
+    };
+    localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
     const CartDetails = [];
-    let amount;
 
+    // Update local storage for count
+  
     if (quantity === 0) {
-        onError('Please select a quantity');
+        console.log('Oops! You did not mention the quantity.');
+        alert('Oops! You did not mention the quantity.');
         return;
     } else if (dates.length === 0) {
-        onError('Please select dates');
+        console.log('Oops! You did not mention the dates.');
+        alert('Oops! You did not mention the dates.');
         return;
     }
 
     console.log('Input dates:', dates);
-    amount = (foodtype.category_price * quantity) * dates.length;
+
+    // Initialize amount here
+    let amount = (foodtype.category_price * quantity) * dates.length;
 
     for (let i = 0; i < dates.length; i++) {
         const originalDate = dates[i];
         const formattedDate = formatDate(originalDate);
         console.log(`Original date: ${originalDate}, Formatted date: ${formattedDate}`);
-        
+
         const data = {
             date: formattedDate,
             type: foodtype.category_name,
@@ -229,7 +242,7 @@ const handleSaveDates = async () => {
             price: foodtype.category_price,
             category_id: foodtype.category_id
         };
-        
+
         CartDetails.push(data);
     }
 
@@ -242,23 +255,21 @@ const handleSaveDates = async () => {
     try {
         const token = localStorage.getItem('token');
         console.log('Token being sent:', token);
-        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/cart/corporate`, {
+        const response = await axios.post('http://localhost:4000/customer/cart/corporate', {
             cart_order_details: cartDetailsJSON,
             total_amount: amount
         }, {
             headers: { token }
         });
-        
+
         if (response.status === 200) {
             console.log('Cart details saved successfully:', response.data);
             onSaveSuccess();
         } else {
             console.error('Failed to save cart details:', response.data);
-            onError('Failed to save cart details');
         }
     } catch (error) {
         console.error('Error saving cart details:', error);
-        onError('Error saving cart details');
     }
 };
 
@@ -382,4 +393,4 @@ const handleSaveDates = async () => {
     );
 }
 
-export default DateComponent;
+export default DateComponent;

@@ -18,12 +18,12 @@ const findCustomerByGid = async (customer_generated_id) => {
     }
 };
 
-const add_cart = async (customer_id, cart_order_details, total_amount) => {
+const add_cart = async (customer_generated_id, cart_order_details, total_amount) => {
     try {
         const result = await client.query(
-            DB_COMMANDS.ADD_CORPORATECART, [customer_id, cart_order_details, total_amount]
+            DB_COMMANDS.ADD_CORPORATECART, [customer_generated_id, cart_order_details, total_amount]
         );
-        logger.info('Cart data added successfully for customer ID:', customer_id);
+        logger.info('Cart data added successfully for customer ID:', customer_generated_id);
         return result.rows[0];
     } catch (err) {
         logger.error('Error adding cart data in model', { error: err.message });
@@ -31,15 +31,15 @@ const add_cart = async (customer_id, cart_order_details, total_amount) => {
     }
 }
 
-const getCarts = async (customer_id) => {
+const getCarts = async (customer_generated_id) => {
     try {
-        logger.info('Fetching corporate carts for customer ID:', customer_id);
-        const res = await client.query(DB_COMMANDS.GETCARTS, [customer_id]);
+        logger.info('Fetching corporate carts for customer ID:',customer_generated_id);
+        const res = await client.query(DB_COMMANDS.GETCARTS, [customer_generated_id]);
 
         if (res.rowCount === 0) {
-            logger.info('No carts found for customer ID:', customer_id);
+            logger.info('No carts found for customer ID:', customer_generated_id);
         } else {
-            logger.info(`Corporate carts fetched successfully: ${res.rowCount} carts for customer ID:`, customer_id);
+            logger.info(`Corporate carts fetched successfully: ${res.rowCount} carts for customer ID:`, customer_generated_id);
         }
 
         return res.rows;

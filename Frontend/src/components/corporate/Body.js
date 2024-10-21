@@ -1,17 +1,16 @@
 
-
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import ReactCardFlip from 'react-card-flip';
-import { MdLocationPin } from 'react-icons/md';
-import { add_address, corporate_category } from '../../services/context_state_management/actions/action';
-import { StoreContext } from '../../services/contexts/store';
 import { FaCalendarAlt, FaUtensils } from 'react-icons/fa';
-import DateComponent from './DateComponents';
+import { MdLocationPin } from 'react-icons/md';
+import { corporate_category } from '../../services/context_state_management/actions/action';
+import { StoreContext } from '../../services/contexts/store';
 import AddressForm from '../Address/AddressForm';
 import HomePage from '../HomePage';
+import DateComponent from './DateComponents';
 
 const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
   const { state, dispatch } = useContext(StoreContext);
@@ -26,7 +25,6 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
   const [addressToSend, setAddressToSend] = useState([]);
   // const [showCartMessage, setShowCartMessage] = useState(false);
   // const [count, setCount]=useState(0)
-  const [errorMessages, setErrorMessages] = useState({});
 
   useEffect(() => {
     fetchFoodData();
@@ -46,7 +44,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
 
   const fetchAddress = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/customerAddress`, {
+      const response = await axios.get('http://localhost:4000/customer/corporate/customerAddress', {
         headers: { token: localStorage.getItem('token') },
       });
       setAddress(response.data.address);
@@ -111,29 +109,15 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
   };
 
   const handleSaveSuccess = (index) => {
+   
+    
     setTimeout(() => {
       handleFlip(index);
     }, 100);
-    // Clear any existing error for this index
-    setErrorMessages(prevErrors => {
-      const newErrors = { ...prevErrors };
-      delete newErrors[index];
-      return newErrors;
-    });
-  };
-  const handleError = (index, message) => {
-    setErrorMessages(prevErrors => ({
-      ...prevErrors,
-      [index]: message
-    }));
-    // Automatically clear the error message after 5 seconds
-    setTimeout(() => {
-      setErrorMessages(prevErrors => {
-        const newErrors = { ...prevErrors };
-        delete newErrors[index];
-        return newErrors;
-      });
-    }, 5000);
+    // setTimeout(() => {
+    //   setShowCartMessage(false);
+    // }, 5000);
+  
   };
 
   const handleRemove = () => {
@@ -158,95 +142,104 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
 
       <div className={`content ${activeTab === 'corporate' ? '' : 'hidden'}`}>
         {!showMap ? (
-             <div>
-             <div className="bg-white shadow-lg shadow-slate-400 mt-5 rounded-lg p-4 mb-6 flex items-center">
-               <MdLocationPin className="mr-2 text-gray-500" size={20} />
-               <div>
-                 {displayAddress ? (
-                   <p className="text-sm font-semibold">{displayAddress}</p>
-                 ) : (
-                   <p className="text-sm font-semibold text-red-500">Address is not added</p>
-                 )}
-               </div>
-               <button
-                 className="ml-auto text-white bg-green-700 w-24 h-10 text-sm"
-                 onClick={() => setShowMap(true)}
-               >
-                 {displayAddress ? 'Change' : 'Add Address'}
-               </button>
-             </div>
+          <div>
+            <div className="bg-white shadow-lg shadow-slate-400 mt-5 rounded-lg p-4 mb-6 flex items-center">
+              <MdLocationPin className="mr-2 text-gray-500" size={20} />
+              <div>
+                {displayAddress ? (
+                  <p className="text-sm font-semibold">{displayAddress}</p>
+                ) : (
+                  <p className="text-sm font-semibold text-red-500">Address is not added</p>
+                )}
+              </div>
+              <button
+                className="ml-auto text-white bg-green-700 w-24 h-10 text-sm"
+                onClick={() => setShowMap(true)}
+              >
+                {displayAddress ? 'Change' : 'Add Address'}
+              </button>
+            </div>
             <div className={`relative ${isSidenavOpen ? 'blur-sm' : ''} z-10`}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-6 mt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-6 mt-8">
                 {foodData.map((food, index) => (
                   <ReactCardFlip key={index} isFlipped={flipped[index]} flipDirection="horizontal">
                     {/* Front Side */}
-                    <div className="relative w-full h-full sm:h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between mt-4 mx-2">
+                    <div className="relative w-full h-auto sm:h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between mt-4">
                       <h2 className="text-lg sm:text-2xl font-bold mt-3">{food.category_name}</h2>
-                      <button
-                        onClick={() => handleFlip(index)}
-                        className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none"
-                      >
-                        <FontAwesomeIcon icon={faSyncAlt} size="md" />
-                      </button>
-                      <div className="w-full flex items-center mb-20">
-                        <div className="w-full max-w-[200px] sm:max-w-[300px] aspect-square overflow-hidden flex justify-center items-center sm:mt-3">
-                          <img
-                            src={food.category_media}
-                            className="w-full h-full object-cover rounded-lg"
-                            alt="Food"
-                          />
-                        </div>
-                        <div className="mt-4 w-full sm:w-auto ml-5">
-  <p className="text-sm sm:text-base text-gray-600 mt-2">{food.category_description}</p>
-  <p className="mt-2">
-    Price Per Plate: <span className="text-green-500">{food.category_price}/-</span>
-  </p>
-  <div className="mt-2 flex items-center">
-    Quantity:
-    <button className="text-red-500 text-3xl ml-3" onClick={() => decrementQuantity(index)}>-</button>
-    <input
-      type="number"
-      placeholder='0'
-      value={quantities[index] === 0 ? '' : quantities[index]}
-      onChange={(e) => {
-        const newQuantities = [...quantities];
-        const parsedValue = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
-        newQuantities[index] = parsedValue >= 0 ? parsedValue : 0;
-        setQuantities(newQuantities);
-      }}
-      className="mx-4 text-lg bg-red-200 h-7 w-10 text-center rounded-lg"
-      min="0"
-    />
-    <button className="text-red-500 text-3xl ml-1" onClick={() => incrementQuantity(index)}>+</button>
-  </div>
-</div>
+                      <div className="relative">
+                            {/* Flip button */}
+                            <button
+                              onClick={() => handleFlip(index)}
+                              className="absolute top-2 right-2 text-blue-500 text-lg rounded-full focus:outline-none"
+                            >
+                              <FontAwesomeIcon icon={faSyncAlt} size="lg" />
+                            </button>
+                            
+                            {/* Straight arrow pointing to flip icon */}
+                            <div className="absolute top-2 right-12 flex">
+                            <p>Dates </p><FontAwesomeIcon icon={faArrowRight} size="lg" className="text-gray-500" />
+                            </div>
+                          </div>
 
+                      <div className="w-full flex items-center mb-6">
+                      {/* Image container */}
+                      <div className="w-full max-w-[150px] sm:max-w-[300px] aspect-square overflow-hidden flex justify-center items-center sm:mt-3">
+                        <img
+                          src={food.category_media}
+                          className="w-full h-full object-cover rounded-lg"
+                          alt="Food"
+                        />
                       </div>
-                      {errorMessages[index] && (
-                        <div className="absolute bottom-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                          {errorMessages[index]}
+
+                      {/* Content container */}
+                      <div className="mt-4 w-full sm:w-auto ml-5">
+                        <p className="text-sm sm:text-base text-gray-600 mt-2">{food.category_description}</p>
+                        <p className="mt-2">
+                          Price Per Plate: <span className="text-green-500">{food.category_price}/-</span>
+                        </p>
+                        <div className="mt-2 flex items-center">
+                          Quantity:
+                          <button className="text-red-500 text-3xl ml-3" onClick={() => decrementQuantity(index)}>
+                            -
+                          </button>
+                          <input
+                      type="number"
+                      placeholder='0'
+                      value={quantities[index] === 0 ? '' : quantities[index]}  // Avoid displaying leading 0
+                      onChange={(e) => {
+                        const newQuantities = [...quantities];
+                        const value = e.target.value;  // Capture the raw input value as a string first
+
+                        // Parse value as an integer, and prevent leading 0s
+                        const parsedValue = value === '' ? 0 : parseInt(value, 10);
+                        newQuantities[index] = parsedValue >= 0 ? parsedValue : 0;  // Ensure no negative values
+                        setQuantities(newQuantities);
+                      }}
+                      className="mx-4 text-lg bg-red-200 h-7 w-10 text-center rounded-lg"
+                      min="0"
+                    />
+
+                          <button className="text-red-500 text-3xl ml-1" onClick={() => incrementQuantity(index)}>
+                            +
+                          </button>
                         </div>
-                      )}
+                      </div>
+                    </div>
+
                     </div>
 
                     {/* Back Side */}
-                    <div className="relative w-full h-full sm:h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between overflow-hidden">
+                    <div className="relative w-full h-auto sm:h-80 p-4 rounded-lg shadow-xl shadow-slate-400 overflow-auto">
                       <button onClick={() => handleFlip(index)} className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none">
                         <FontAwesomeIcon icon={faSyncAlt} size="md" />
                       </button>
-                      <div className="flex-grow overflow-hidden mt-5">
+                      <div className="mt-5">
                         <DateComponent 
                           foodtype={food} 
                           quantity={quantities[index]}
                           onSaveSuccess={() => handleSaveSuccess(index)}
-                          onError={(message) => handleError(index, message)}
                         />
                       </div>
-                      {errorMessages[index] && (
-                        <div className="absolute bottom-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                          {errorMessages[index]}
-                        </div>
-                      )}
                     </div>
                   </ReactCardFlip>
                 ))}
@@ -282,3 +275,4 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
 };
 
 export default Body;
+
