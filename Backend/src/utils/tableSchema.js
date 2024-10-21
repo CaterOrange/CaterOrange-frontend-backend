@@ -40,7 +40,7 @@ function createPaymentTableQuery() {
       IGST FLOAT,
       CGST FLOAT,
       SGST FLOAT,
-      customer_generated_id INTEGER,
+      customer_generated_id VARCHAR(255),
       paymentDate TIMESTAMP,
       FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
     );
@@ -65,12 +65,12 @@ function createCorporateOrdersTableQuery() {
             -- Get the customer's generated id
             SELECT customer_generated_id INTO customer_gen_id 
             FROM customer 
-            WHERE customer_id = NEW.customer_id;
+            WHERE customer_generated_id = NEW.customer_generated_id;
             
             -- Count the number of orders placed by the customer today
             SELECT COUNT(*) + 1 INTO order_count
             FROM corporate_orders
-            WHERE customer_id = NEW.customer_id
+            WHERE customer_generated_id = NEW.customer_generated_id
             AND TO_CHAR(ordered_at, 'YYYYMMDD') = today_date;
             
             -- Concatenate CO, today's date, the order count, and the customer_generated_id
@@ -88,7 +88,7 @@ function createCorporateOrdersTableQuery() {
     CREATE TABLE IF NOT EXISTS corporate_orders (
       corporateorder_id SERIAL PRIMARY KEY,
       corporateorder_generated_id VARCHAR(255) UNIQUE,
-      customer_id INTEGER,
+      customer_generated_id VARCHAR(100),
       order_details JSON,  
       total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
@@ -96,7 +96,7 @@ function createCorporateOrdersTableQuery() {
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       payment_status VARCHAR(50),
       corporate_order_status VARCHAR(50),
-      FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id),
       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
     );
 
@@ -169,7 +169,7 @@ function createEventOrdersTableQuery() {
       customer_id INTEGER,
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       delivery_status VARCHAR(50),
-      total_amount INTEGER NOT NULL,
+      total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
       delivery_details JSON,
       event_order_details JSON,
@@ -177,6 +177,9 @@ function createEventOrdersTableQuery() {
       customer_address JSON,
       payment_status VARCHAR(50),
       event_order_status VARCHAR(50),
+      number_of_plates INTEGER,
+      processing_date DATE,
+      processing_time VARCHAR,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
     );
@@ -191,16 +194,27 @@ function createEventOrdersTableQuery() {
 }
 
 
-// Create Corporate Category Table
 function createCorporateCategoryTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS corporate_category (
       category_id SERIAL PRIMARY KEY,
-      category_name VARCHAR(255) NOT NULL,
+      category_name VARCHAR(255) NOT NULL UNIQUE,  -- Add UNIQUE constraint
+      category_description VARCHAR(500),
+      category_price FLOAT,
       category_media TEXT,
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      price FLOAT
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    -- Insert initial categories if the table is empty
+    INSERT INTO corporate_category (category_name, category_description, category_price, category_media)
+    VALUES
+      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('Snacks', 'We are offering tasty Snacks here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s')
+    ON CONFLICT (category_name) DO NOTHING;  -- Prevent inserting duplicate category names
   `;
 }
 
@@ -253,17 +267,27 @@ function createEventCartTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_cart (
       eventcart_id SERIAL PRIMARY KEY,
-      order_date DATE,
       customer_id INTEGER,
       total_amount FLOAT,
       cart_order_details JSON,
       address JSON,
+      number_of_plates INTEGER,
+      processing_date DATE,
+      processing_time VARCHAR,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
     );
   `;
+}function createAdminTableQuery() {
+  return `
+    CREATE TABLE IF NOT EXISTS admin (
+      adminid SERIAL PRIMARY KEY,
+      customer_generated_id VARCHAR,
+      isadmin boolean,
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
+    );
+  `;
 }
-
 // Create Corporate Cart Table
 function createCorporateCartTableQuery() {
   return `
@@ -284,23 +308,22 @@ function createEventProductsTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_products (
       product_id SERIAL PRIMARY KEY,
-      product_name VARCHAR(255),
-      image TEXT,
-      category_name VARCHAR(255),
-      price_category VARCHAR(255),
-      isdual BOOLEAN,
-      unit_1 VARCHAR(255),
-      price_per_unit1 FLOAT,
-      min_unit1_per_plate INTEGER,
-      unit_2 VARCHAR(255),
-      price_per_unit2 FLOAT,
-      min_unit2_per_plate INTEGER,
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      category_id INTEGER,
-      FOREIGN KEY (category_id) REFERENCES event_category(category_id)
+      productId VARCHAR NOT NULL UNIQUE,
+      ProductName VARCHAR(255),
+      Image TEXT,
+      Category_Name VARCHAR(255),
+      Price_Category VARCHAR(255),
+      isDual BOOLEAN,
+      Plate_Units VARCHAR(255),
+      PriceperUnit FLOAT,
+      MinUnitsperPlate INTEGER,
+      WtOrVol_Units VARCHAR(255),
+      Price_Per_WtOrVol_Units FLOAT,
+      Min_WtOrVol_Units_per_Plate INTEGER,
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
-}
+  }
 
 
 module.exports = {
@@ -315,6 +338,7 @@ module.exports = {
   createAddressesTableQuery,
   createEventCartTableQuery,
   createCorporateCartTableQuery,
-  createEventProductsTableQuery
+  createEventProductsTableQuery,
+  createAdminTableQuery
 };
 

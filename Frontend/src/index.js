@@ -3,17 +3,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
-import AddressForm from './components/Address/AddressForm';
-import MapAddressSelector from './components/Maps/MapAddresSelector';
-// import AdminApp from './AdminApp';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="99210557264-qdl18r8dfjs8ckent7f2387l52pjui65.apps.googleusercontent.com">
-      {/* <App/> */}
-      <AddressForm/>
-      {/* <MapAddressSelector/> */}
+    <GoogleOAuthProvider clientId="636281200529-dl48re3g9q9221e7dcruuqls3f46v311.apps.googleusercontent.com">
+      <App/>
+      
       </GoogleOAuthProvider>
   </React.StrictMode>
 );

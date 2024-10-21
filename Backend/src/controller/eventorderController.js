@@ -1,219 +1,277 @@
 const logger = require('../config/logger');
-const customerController = require('../controller/customerController.js');
 const cartModel = require('../models/eventorderModels.js')
-const { menuPageMethod } = require("../models/eventorderModels");
-const transferCartToOrder = async (req, res) => {
-  const { eventcart_id } = req.body;
+const client = require("../config/dbConfig.js")
+const corporate_model = require('../models/corporateorderModels.js')
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
+const fetchProducts = async (req, res) => {
   try {
-    // Get the cart data
-    const cart = await cartModel.getCartById(eventcart_id);
-
-    if (!cart || !cart.cart_order_details || cart.cart_order_details.length === 0) {
-        return res.status(400).json({ error: 'Cart is empty or not found' });
-      }
-    
-    // Prepare order data
-    const orderData = {
-      customer_id: cart.customer_id,
-      ordered_at: cart.order_date, // Using order_date as ordered_at
-      delivery_status: 'Pending', // Default status; adjust as needed
-      total_amount: cart.total_amount,
-      delivery_details: cart.cart_order_details,
-      event_order_details: cart.cart_order_details, // Assuming cart_order_details as event_order_details
-      event_media: null, // event_media; set as needed
-      customer_address: cart.address,
-      payment_status: 'Unpaid', // Default payment status; adjust as needed
-      event_order_status: 'New' // Default order status; adjust as needed
-    };
-
-    // Insert the cart data into event_orders
-    const order = await eventModel.insertEventOrder(orderData);
-
-    // Optionally, delete the cart after transfer
-    await eventModel.deleteCartById(eventcart_id);
-
-    res.status(201).json(order);
+    const categories = await cartModel.getAllProductCategories();
+    res.send(categories);
   } catch (error) {
-    logger.error('Error transferring cart to order: ', error);
-    res.status(500).json({ error: 'Error transferring cart to order', details: error.message });
-  }
-};
-
-const addToCart = async (req, res) => {
-  const {  total_amount, cart_order_details, address } = req.body;
-  try {
-    // Validate required fields
-    const token = req.headers["access_token"]
-    const response = await customerController.getuserbytoken({ body: { access_token: token } })
-    const customer_id = response.customer_id
-    if (!customer_id || !total_amount || !cart_order_details || !address) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-
-    // Insert into database
-    const cartItem = await cartModel.addToCart(customer_id, total_amount, cart_order_details, address);
-    res.status(201).json({ message: 'Product added to cart', data: cartItem });
-  } catch (error) {
-    console.error('Error adding product to cart:', error);
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-
-const getCartByCustomerId = async (req, res) => {
-  const {id} = req.params;
-  try {
-    const cart = await cartModel.getcartbyCustomerId(id);
-   
-    if (cart.length >0) {
-      res.status(200).json({ data: cart });
-    } else {
-      res.status(404).json({ message: 'Cart not found for this customer' });
-    }
-  } catch (error) {
-    console.error('Error fetching cart:', error);
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-
-
-const getCart = async (req, res) => {
-  
-  try {
-    const token = req.headers["access_token"]
-    console.log(token)
-    const response = await customerController.getuserbytoken({ body: { access_token: token } })
-   
-    const id = response.customer_id
-    const cart = await cartModel.getcartbyCustomerId(id);
-   
-    if (cart.length >0) {
-      res.status(200).json({ data: cart });
-    } else {
-      res.status(404).json({ message: 'Cart not found for this customer' });
-    }
-  } catch (error) {
-    console.error('Error fetching cart:', error);
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-// Controller to update a cart
-const updateCart = async (req, res) => {
-  const { id} = req.params;
-  const { total_amount, cart_order_details, address } = req.body;
-
-  const fields = [];
-  const values = [];
-
-  // Build dynamic fields and values for the SQL query
-  if (total_amount !== undefined) fields.push('total_amount = $' + (fields.length + 1)), values.push(total_amount);
-  if (cart_order_details !== undefined) fields.push('cart_order_details = $' + (fields.length + 1)), values.push(cart_order_details);
-  if (address !== undefined) fields.push('address = $' + (fields.length + 1)), values.push(address);
-
-  if (fields.length === 0) {
-    return res.status(400).send('No fields to update');
-  }
-
-  // Build the SQL query string
-  const query = `
-    UPDATE event_cart
-    SET ${fields.join(', ')}
-    WHERE eventcart_id = $${fields.length + 1}
-    RETURNING *;
-  `;
-
-  // Add the eventcart_id to the values array
-  values.push(id);
-
-  try {
-    // Execute the update query
-    const result = await cartModel.updateCart(query, values);
-
-    if (result.rowCount === 0) {
-      return res.status(404).send('Cart not found');
-    }
-
-    res.status(200).json({ message: 'Cart updated successfully', data: result.rows[0] });
-  } catch (err) {
-    logger.error('Error updating cart:', err);
-    res.status(500).send('Internal server error');
-  }
-};
-
-// Controller to delete a cart by its ID
-const deleteCart = async (req, res) => {
-  const { id } = req.params;
-  try {
-    await cartModel.deleteCart(id);
-    res.status(200).json({ message: 'Cart item deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting cart item:', error);
-    res.status(500).json({ message: 'Server error', error });
-  }
-};
-
-async function fetchEventCategories(req, res) {
-  try {
-    const categories = await cartModel.getAllEventCategories();
-
-    if (categories.length === 0) {
-      return res.status(404).json({ message: 'No categories found' });
-    }
-
-    res.status(200).json(categories);
-  } catch (error) {
-    console.error(error);
+    logger.error('Error fetching product categories:', error);
     res.status(500).json({ message: 'Server error' });
   }
 }
 
+const fetchCartItems = async (req, res) => {
+  try {
+    const { customer_id } = req.params;
+    const cartItems = await cartModel.getCartItems(customer_id);
+    res.json(cartItems);
+  } catch (error) {
+    logger.error('Error fetching cart items:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
-
-const menuPage = async (req, res) => {
-    try {
-      
-      const categoryName = req.query.Category_name; 
-      const start = parseInt(req.query.start, 10) || 0;
-      const limit = parseInt(req.query.limit, 10) || 10;
+const addToCart = async (req, res) => {
+  const { totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime } = req.body;
+  try { 
+    const token = req.headers['token'];
   
-      if (!categoryName) {
-        return res.status(400).json({ error: 'Category_name is required' });
-      }
-      
-      if (isNaN(start) || start < 0) {
-        return res.status(400).json({ error: 'Start parameter must be a non-negative number' });
-      }
-  
-      if (isNaN(limit) || limit <= 0) {
-        return res.status(400).json({ error: 'Limit parameter must be a positive number' });
-      }
-  
-      // Call your model method to fetch data
-      const result = await menuPageMethod(categoryName, start, limit);
-  
-      // Send response
-      res.status(200).json({
-        data: result,
-        hasMore: result.length === limit, 
-      });
-  
-      logger.info(`Fetched products for category_name: ${categoryName} successfully`);
-    } catch (err) {
-      logger.error(`Error in fetching products for category_name: ${req.query.Category_name}`);
-      res.status(500).json({ error: 'Internal Server Error' });
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Access token is missing or not provided' });
     }
-  };
+
+    let verified_data;
+    try {
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
+    } catch (err) {
+      logger.error('Token verification failed:', err);
+      if (err instanceof jwt.TokenExpiredError) {
+        return res.status(401).json({ success: false, message: 'Token has expired' });
+      } else if (err instanceof jwt.JsonWebTokenError) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      } else {
+        return res.status(401).json({ success: false, message: 'Token verification failed' });
+      }
+    }
+
+    const customer_generated_id = verified_data.id;
+    const customer = await corporate_model.findCustomerByGid(customer_generated_id);
+
+    if (!customer) {
+      logger.warn('User not found for ID:', customer_generated_id);
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const customer_id = customer.customer_id;
+    const result = await cartModel.addCart(customer_id, totalAmount, cartData, address, numberOfPlates, selectedDate, selectedTime);
+    logger.info("Item added to cart successfully:", result);
+    res.status(200).json(result);
+  } catch (error) {
+    logger.error('Error adding product to cart:', error);
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+const getOrderDetails = async (req, res) => {
+  try { 
+    const token = req.headers['token'];
+    logger.info("Received token:", token);
+    
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Access token is missing or not provided' });
+    }
+  
+    let verified_data;
+    try {
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
+    } catch (err) {
+      logger.error('Token verification failed:', err);
+      if (err instanceof jwt.TokenExpiredError) {
+        return res.status(401).json({ success: false, message: 'Token has expired' });
+      } else if (err instanceof jwt.JsonWebTokenError) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      } else {
+        return res.status(401).json({ success: false, message: 'Token verification failed' });
+      }
+    }
+
+    const customer_generated_id = verified_data.id;
+    const customer = await corporate_model.findCustomerByGid(customer_generated_id);
+
+    if (!customer) {
+      logger.warn('User not found for ID:', customer_generated_id);
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    logger.info('Customer found:', customer);
+    const customer_id = customer.customer_id;
+    const order = await cartModel.getEventOrderDetailsById(customer_id); 
+    logger.info("Order details fetched:", order);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.status(200).json(order);
+  } catch (error) {
+    logger.error('Error retrieving order details:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+const removeFromCart = async (req, res) => {
+  const { productid, eventcart_id } = req.body;
+
+  try {
+    const result = await client.query(
+      `UPDATE event_cart
+       SET cart_order_details = (
+         SELECT json_build_object(
+           'items', json_agg(item)
+         )
+         FROM json_array_elements(cart_order_details->'items') AS item
+         WHERE item->>'productid' != $1
+       )
+       WHERE eventcart_id = $2
+       RETURNING *;`,
+      [productid, eventcart_id]
+    );
+
+    if (result.rowCount === 0) {
+      logger.warn('Cart or item not found for product ID:', productid);
+      return res.status(404).json({ error: 'Cart or item not found' });
+    }
+
+    logger.info('Item removed successfully from cart:', result.rows[0]);
+    res.json({
+      message: 'Item removed successfully',
+      cart: result.rows[0]
+    });
+  } catch (err) {
+    logger.error('Error removing item from cart:', err);
+    res.status(500).json({ error: 'An error occurred while removing the item' });
+  }
+};
+
+const transferCartToOrder = async (req, res) => {
+  const { eventcart_id } = req.body;
+  
+  logger.info("Event cart ID received:", eventcart_id);
+
+  try {
+    const cart = await cartModel.getCartById(eventcart_id);
+    logger.info("Cart data fetched:", cart);
+
+    if (!cart) {
+      return res.status(400).json({ error: 'Cart is empty or not found' });
+    }
+
+    const token = req.headers['token'];
+
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Access token is missing or not provided' });
+    }
+
+    let verified_data;
+    try {
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
+    } catch (err) {
+      logger.error('Token verification failed:', err);
+      if (err instanceof jwt.TokenExpiredError) {
+        return res.status(401).json({ success: false, message: 'Token has expired' });
+      } else if (err instanceof jwt.JsonWebTokenError) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      } else {
+        return res.status(401).json({ success: false, message: 'Token verification failed' });
+      }
+    }
+
+    const customer_generated_id = verified_data.id;
+    const customer = await corporate_model.findCustomerByGid(customer_generated_id);
+    
+    if (!customer) {
+      logger.warn('User not found for ID:', customer_generated_id);
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    logger.info('Customer found:', customer);
+    const customer_id = customer.customer_id;
+    const cartData = cart[0];
+
+    const orderData = {
+      customer_id: customer_id,
+      delivery_status: cartData.delivery_status, 
+      amount: cartData.total_amount,
+      delivery_details: cartData.delivery_details,
+      cart_order_details: cartData.cart_order_details,
+      event_media: null, 
+      customer_address: cartData.address,
+      payment_status: 'Unpaid', 
+      event_order_status: 'New',
+      number_of_plates: cartData.number_of_plates,
+      processing_date: cartData.processing_date 
+    };
+    
+    logger.info("Order data to be inserted:", orderData);
+    const order = await cartModel.insertEventOrder(orderData);
+    logger.info("Order created successfully:", order);
+    
+    await cartModel.deleteCart(eventcart_id);
+    res.status(201).json(order);
+  } catch (error) {
+    logger.error('Error transferring cart to order:', error);
+    res.status(500).json({ error: 'Error transferring cart to order', details: error.message });
+  }
+};
+
+const orderbuyagain = async(req, res) => {
+  const customer_id = 1;
+  
+  try {
+    logger.info("Received orderbuyagain data:", req.body);
+    const cartData = req.body;
+    const orderData = {
+      customer_id: customer_id,
+      delivery_status: 'Pending', 
+      total_amount: cartData.total_amount,
+      delivery_details: cartData.delivery_details,
+      cart_order_details: cartData.event_order_details,
+      event_media: null, 
+      customer_address: cartData.customer_address,
+      payment_status: 'Unpaid', 
+      event_order_status: 'New' 
+    };
+    
+    logger.info("Order data to be inserted:", orderData);
+    const order = await cartModel.insertEventOrder(orderData);
+    logger.info("Order created successfully:", order); 
+  } catch (error) {
+    logger.error("Error in adding data to orders table:", error);
+    res.status(500).json({ error: 'Error in adding data to orders table' });
+  }
+}
+
+const getCartItemCount = async (req, res) => {
+  try {
+    const customerId = req.user.id; 
+    const query = 'SELECT cart_order_details FROM Cart WHERE customer_id = $1';
+    const result = await client.query(query, [customerId]);
+
+    if (result.rows.length > 0) {
+      const cart = result.rows[0];
+      const itemCount = cart.cart_order_details.length; 
+      return res.status(200).json({ count: itemCount });
+    } else {
+      logger.warn('No items found in cart for customer ID:', customerId);
+      return res.status(200).json({ count: 0 }); 
+    }
+  } catch (error) {
+    logger.error('Error fetching cart item count:', error);
+    return res.status(500).json({ error: 'An error occurred while fetching the cart item count' });
+  }
+};
 
 module.exports = {
-  transferCartToOrder,
+  fetchProducts,
   addToCart,
-  getCartByCustomerId,
-  updateCart,
-  deleteCart,
-  getCart,
-  fetchEventCategories,
-  menuPage
+  getOrderDetails,
+  transferCartToOrder,
+  orderbuyagain,
+  getCartItemCount,
+  fetchCartItems,
+  removeFromCart 
 };

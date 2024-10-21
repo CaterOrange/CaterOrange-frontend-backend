@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import GoogleMapComponent from '../Maps/GMaps';
 
-const AddressForm = () => {
+const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
   const [tag, setTag] = useState('');
   const [pincode, setPincode] = useState('');
   const [city, setCity] = useState('');
+  const [address, setAddress] = useState([]);
   const [state, setState] = useState('');
   const [flatNumber, setFlatNumber] = useState('');
   const [landmark, setLandmark] = useState('');
@@ -16,8 +18,10 @@ const AddressForm = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [isViewAddresses, setIsViewAddresses] = useState(false);
   const [defaultDetails, setDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
   const [editableDefaultDetails, setEditableDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
 
   useEffect(() => {
     const fetchDefaultDetails = async () => {
@@ -26,11 +30,11 @@ const AddressForm = () => {
         throw new Error('No token found, please log in again.');
       }
       try {
-        const response = await axios.get('http://localhost:4000/address/getDefaultAddress', {
-          headers: { 'token': token },
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
+          headers: { token: `${localStorage.getItem('token')}` }
         });
         const { customer_name, customer_phonenumber } = response.data.customer;
-        console.log('hey', customer_name, customer_phonenumber);
+
         setDefaultDetails({ customer_name, customer_phonenumber });
         setEditableDefaultDetails({ customer_name, customer_phonenumber });
       } catch (error) {
@@ -39,6 +43,7 @@ const AddressForm = () => {
     };
     fetchDefaultDetails();
   }, []);
+
 
   const handleLocationSelect = ({ lat, lng, address }) => {
     setLocation({ lat, lng, address });
@@ -53,20 +58,48 @@ const AddressForm = () => {
     setEditableDefaultDetails(prev => ({ ...prev, [name]: value }));
   };
 
+
+  const handleViewAddresses = async () => {
+    if (!isViewAddresses) {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found in localStorage');
+          return;
+        }
+
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
+
+          headers: { token: `${localStorage.getItem('token')}` }
+
+        });
+
+        if (response.data.address) {
+          setAddress(response.data.address);
+        } else {
+          console.error('Failed to fetch addresses:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+      }
+    }
+    setIsViewAddresses(!isViewAddresses);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     const line1 = `${flatNumber}, ${landmark}`;
     const line2 = `${city}, ${state}`;
     const token = localStorage.getItem('token');
-    console.log('Token:', token);
+
     if (!token) {
       throw new Error('No token found, please log in again.');
     }
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
-          'http://localhost:4000/address/createAddres',
+          `${process.env.REACT_APP_URL}/api/address/createAddres`,
           {
             tag,
             pincode,
@@ -77,12 +110,12 @@ const AddressForm = () => {
             ship_to_phone_number: selectedOption === 'shipping' ? shipToPhoneNumber : editableDefaultDetails.customer_phonenumber,
           },
           {
-            headers: { 'token': token },
+            headers: { token: `${localStorage.getItem('token')}` }
           }
         );
-
+        onAddressAdd();
         clearForm();
-        console.log('Form Data Submitted:', response.data);
+        
         setSuccessMessage('Address saved successfully.');
       } catch (error) {
         console.error('Error saving address:', error);
@@ -143,33 +176,62 @@ const AddressForm = () => {
     setErrors({});
   };
 
+
+  const handleSelect = async (address_id) => {
+    console.log('id', address_id);
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getAddress`, {
+        params: { address_id } // Use params to send the address_id as a query parameter
+      });
+      console.log('select', response.data.result);
+      onAddressSelect(response.data.result);
+    } catch (error) {
+      console.error('Error fetching address:', error.response ? error.response.data : error.message);
+    }
+  };
+  const handleClose =()=>{
+    onClose()
+  }
+
   return (
-    <div>
+    <div className="relative p-4 border rounded-lg shadow-lg max-w-md mx-auto bg-white">
+      <button
+        onClick={onClose}
+        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        aria-label="Close"
+      >
+        <X size={24} />
+      </button>
+
+      <h2 className="text-xl font-bold mb-4">Address Form</h2>
+
       {successMessage && (
         <p className={`text-center ${successMessage.includes('success') ? 'text-green-500' : 'text-red-500'}`}>
           {successMessage}
         </p>
       )}
-      <form onSubmit={handleSubmit} className="p-2 border rounded max-w-xs mx-auto">
-        <div className="mb-2">
-          <label className="block text-gray-700 text-sm">Address Label</label>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="tag">
+            Address Label
+          </label>
           <input
+            id="tag"
             type="text"
             value={tag}
-            id="tag"
             onChange={(e) => setTag(e.target.value)}
-            className="mt-1 p-1 border rounded w-full text-sm"
+            className="w-full px-3 py-2 border rounded-md"
             required
           />
-          {errors.tag && <p className="text-red-500 text-xs">{errors.tag}</p>}
+          {errors.tag && <p className="text-red-500 text-xs mt-1">{errors.tag}</p>}
         </div>
 
         <div className="mb-2">
-          <label className="block text-gray-700 text-sm">Pincode</label>
+           <label className="block text-gray-700 text-sm">Pincode</label>
           <input
             type="text"
             value={pincode}
-            id="pincode"
             onChange={(e) => setPincode(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
           />
@@ -181,7 +243,6 @@ const AddressForm = () => {
           <input
             type="text"
             value={city}
-            id="city"
             onChange={(e) => setCity(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
             required
@@ -194,7 +255,6 @@ const AddressForm = () => {
           <input
             type="text"
             value={state}
-            id="state"
             onChange={(e) => setState(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
             required
@@ -206,7 +266,6 @@ const AddressForm = () => {
           <label className="block text-gray-700 text-sm">Flat Number</label>
           <input
             type="text"
-            id="flatNumber"
             value={flatNumber}
             onChange={(e) => setFlatNumber(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
@@ -219,7 +278,6 @@ const AddressForm = () => {
           <label className="block text-gray-700 text-sm">Landmark</label>
           <input
             type="text"
-            id="landmark"
             value={landmark}
             onChange={(e) => setLandmark(e.target.value)}
             className="mt-1 p-1 border rounded w-full text-sm"
@@ -227,94 +285,118 @@ const AddressForm = () => {
           />
         </div>
 
-        <div className="mb-2">
-          <label className="block text-gray-700 text-sm">Location</label>
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
           <GoogleMapComponent onLocationSelect={handleLocationSelect} />
-          {errors.location && <p className="text-red-500 text-xs">{errors.location}</p>}
+          {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
         </div>
 
-        <div className="mb-2 flex items-center">
-          <input
-            type="radio"
-            id="address"
-            checked={selectedOption === 'shipping'}
-            onChange={() => setSelectedOption('shipping')}
-            className="mr-2"
-          />
-          <label className="text-gray-700 text-sm">Include shipping details</label>
-        </div>
+        <button
+          type="button"
+          onClick={handleViewAddresses}
+          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          View Saved Addresses
+        </button>
 
-        {selectedOption === 'shipping' && (
-          <>
-            <div className="mb-2">
+        {isViewAddresses && (
+          <div className="mt-4 border-t pt-4">
+            <h3 className="font-bold mb-2">Saved Addresses</h3>
+            {address.length > 0 ? (
+              address.map((add) => (
+                <div
+                  key={add.address_id}
+                  className="p-2 border-b border-gray-200 flex items-center justify-between"
+                >
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name="address"
+                      value={add.address_id}
+                      checked={selectedAddressId === add.address_id}
+                      onChange={() => handleSelect(add.address_id)}
+                      className="mr-2"
+                    />
+                    <p>{add.tag}, {add.pincode}, {add.line1}, {add.line2}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No addresses available</p>
+            )}
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="shipping"
+              checked={selectedOption === 'shipping'}
+              onChange={() => setSelectedOption('shipping')}
+              className="mr-2"
+            />
+            <label htmlFor="shipping" className="text-gray-700 text-sm">Include shipping details</label>
+          </div>
+
+          {selectedOption === 'shipping' && (
+            <>
               <input
                 type="text"
                 value={shipToName}
-
-                placeholder='Ship To Name'
-
-                id="shippingname"
-
                 onChange={(e) => setShipToName(e.target.value)}
-                className="mt-1 p-1 border rounded w-full text-sm"
+                placeholder="Ship To Name"
+                className="w-full px-3 py-2 border rounded-md"
               />
-              {errors.shipToName && <p className="text-red-500 text-xs">{errors.shipToName}</p>}
-            </div>
+              {errors.shipToName && <p className="text-red-500 text-xs mt-1">{errors.shipToName}</p>}
 
-            <div className="mb-2">
               <input
                 type="text"
-                id="shippingnumber"
                 value={shipToPhoneNumber}
-                placeholder='Ship To Phone Number'
                 onChange={(e) => setShipToPhoneNumber(e.target.value)}
-                className="mt-1 p-1 border rounded w-full text-sm"
+                placeholder="Ship To Phone Number"
+                className="w-full px-3 py-2 border rounded-md"
               />
-              {errors.shipToPhoneNumber && <p className="text-red-500 text-xs">{errors.shipToPhoneNumber}</p>}
-            </div>
-          </>
-        )}
+              {errors.shipToPhoneNumber && <p className="text-red-500 text-xs mt-1">{errors.shipToPhoneNumber}</p>}
+            </>
+          )}
 
-        <div className="mb-2 flex items-center">
-          <input
-            type="radio"
-            id="defaultdetails"
-            checked={selectedOption === 'default'}
-            onChange={() => setSelectedOption('default')}
-            className="mr-2"
-          />
-          <label className="text-gray-700 text-sm">Set as Default details</label>
-        </div>
+          <div className="flex items-center">
+            <input
+              type="radio"
+              id="default"
+              checked={selectedOption === 'default'}
+              onChange={() => setSelectedOption('default')}
+              className="mr-2"
+            />
+            <label htmlFor="default" className="text-gray-700 text-sm">Set as Default details</label>
+          </div>
 
-        {selectedOption === 'default' && (
-          <>
-            <div className="mb-2">
-              <label className="block text-gray-700 text-sm">Default Name</label>
+          {selectedOption === 'default' && (
+            <>
               <input
                 type="text"
                 name="customer_name"
                 value={editableDefaultDetails.customer_name}
-                className="mt-1 p-1 border rounded w-full text-sm"
                 onChange={handleDefaultDetailsChange}
+                placeholder="Default Name"
+                className="w-full px-3 py-2 border rounded-md"
               />
-            </div>
-
-            <div className="mb-2">
-              <label className="block text-gray-700 text-sm">Default Phone Number</label>
               <input
                 type="text"
                 name="customer_phonenumber"
                 value={editableDefaultDetails.customer_phonenumber}
-                className="mt-1 p-1 border rounded w-full text-sm"
                 onChange={handleDefaultDetailsChange}
+                placeholder="Default Phone Number"
+                className="w-full px-3 py-2 border rounded-md"
               />
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
 
-        {errors.selectedOption && <p className="text-red-500 text-xs">{errors.selectedOption}</p>}
+        {errors.selectedOption && <p className="text-red-500 text-xs mt-1">{errors.selectedOption}</p>}
 
-        <button type="submit" className="mt-2 p-2 bg-blue-500 text-white rounded w-full">
+        <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Submit
         </button>
       </form>

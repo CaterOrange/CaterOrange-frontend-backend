@@ -14,7 +14,7 @@ export const Failed = (payload) => ({
 export const Login_customer = async (customer_email, customer_password, dispatch) => {
     dispatch(Request());
     try {
-        const response = await axios.post('http://localhost:4000/customer/login', {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/login`, {
             customer_email,
             customer_password
         });
@@ -41,7 +41,7 @@ export const SignUp_customer = async (
     dispatch(Request());
     try {
         console.log("Dispatching request");
-        const response = await axios.post('http://localhost:4000/customer/register', {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/register`, {
             customer_name, 
             customer_email,
             customer_password,
@@ -68,7 +68,7 @@ export const Login_forgotPassword = async (customer_email, customer_password,con
     dispatch(Request());
     try {
         
-        const response = await axios.post('http://localhost:4000/customer/forgotPassword', {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/forgotPassword`, {
             customer_email,
             customer_password,
             confirm_password
@@ -90,7 +90,7 @@ export const Login_google_auth= async(customer_name,customer_email, access_token
     try {
         // Send the user data to the backend for registration
         console.log("google")
-        const response = await axios.post('http://localhost:4000/customer/google_auth', {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/google_auth`, {
             customer_name,
             customer_email,
             access_token
@@ -117,3 +117,46 @@ export const Login_google_auth= async(customer_name,customer_email, access_token
         dispatch(Failed(errorMessage));
     }
 } //action.js
+export const corporate_category = async (dispatch) => {
+    dispatch(Request());
+    try {
+        console.log('Fetching categories...');
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/categories`);
+        console.log('API response:', response.data);
+        
+        if (response.data.success) {
+            return response.data.categories; // Make sure this matches your API response structure
+        } else {
+            throw new Error(response.data.message || 'Failed to fetch categories');
+        }
+    } catch (error) {
+        console.error('Error in corporate_category:', error);
+        const errorMessage = error.response ? error.response.data.message : 'Category data not fetched!';
+        dispatch(Failed(errorMessage));
+        throw error; // Re-throw the error so it can be caught in the component
+    }
+};
+
+export const add_address = async  ( address , dispatch ) =>{
+    dispatch(Request());
+    try {
+        console.log('in action',address)
+        const token = localStorage.getItem('token'); // Or wherever you store the token
+        console.log(token)
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporate/addAddress`, {
+            address
+        }, {
+            headers: {
+                'token': `${token} `// Pass the token in the Authorization header
+            }
+        });
+        if (response.data.success) {
+            dispatch(Success(response.data.token));
+        } else {
+            dispatch(Failed(response.data.message));
+        }
+    } catch (error) {
+        const errorMessage = error.response ? error.response.data.message : 'Address not added to customer';
+        dispatch(Failed(errorMessage));
+    }
+}

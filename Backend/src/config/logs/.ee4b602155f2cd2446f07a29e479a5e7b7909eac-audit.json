@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "C:\\Users\\chand\\Music\\Caterorange\\CaterOrange\\Backend\\src\\config\\logs\\.ee4b602155f2cd2446f07a29e479a5e7b7909eac-audit.json",
+    "files": [
+        {
+            "date": 1727251459087,
+            "name": "C:\\Users\\chand\\Music\\Caterorange\\CaterOrange\\Backend\\src\\config\\logs\\application-2024-09-25.log",
+            "hash": "3bc7cd0487ca96e61247c15334f9185b601ba6df0dedd6ed27da58040156a39d"
+        }
+    ],
+    "hashType": "sha256"
+}
