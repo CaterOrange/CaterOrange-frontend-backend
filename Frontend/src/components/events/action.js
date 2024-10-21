@@ -1,17 +1,14 @@
 import axios from 'axios';
 import { useState } from 'react';
 
-// Function to get cart details from an order ID
 export const getCartFromOrderId = async (orderId) => {
   try {
-    // Replace the URL with your actual API endpoint
     const response = await axios.get(`${process.env.REACT_APP_URL}/api/orders/${orderId}/cart`, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    // Check if the response is successful and return the cart data
     if (response.status === 200) {
       console.log('Cart data fetched successfully:', response.data);
       return response.data.cart; // Assuming the cart data is under the 'cart' field in the response
@@ -101,7 +98,8 @@ export const myorders = async()=>{
             
           } 
    }
-  export const removeFromCart = async (productid, eventcart_id) => {
+
+export const removeFromCart = async (productid, eventcart_id) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_URL}/api/cart/remove`, {
         method: 'DELETE',
@@ -114,7 +112,6 @@ export const myorders = async()=>{
       const data = await response.json();
       if (response.ok) {
         console.log('Item removed:', data);
-        // Update cart state or re-fetch cart data
       } else {
         console.error('Error removing item:', data.error);
       }
@@ -122,6 +119,7 @@ export const myorders = async()=>{
       console.error('Error:', error);
     }
   };
+
 export const orderbuyagain = async(cartData)=>{
   console.log("in action.js:",cartData);
   try {

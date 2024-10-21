@@ -152,16 +152,18 @@ const getCartById = async (eventcart_id) => {
 };
 
 const deleteCart = async (eventcart_id) => {
-    const query = `DELETE FROM event_cart WHERE eventcart_id = $1;`;
+    const query = `DELETE FROM event_cart WHERE eventcart_id = $1;`; // Using $1 for parameterized query
     const values = [eventcart_id];
+
     try {
         await client.query(query, values);
         logger.info('Cart deleted:', { eventcart_id });
     } catch (error) {
         logger.error('Error deleting cart:', error);
-        throw new Error('Error deleting cart:' + error.message);
+        throw new Error('Error deleting cart: ' + error.message);
     }
 };
+
 
 module.exports = {
     getAllProductCategories,
