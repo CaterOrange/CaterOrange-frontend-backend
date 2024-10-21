@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { UserCircle, Trash, ChevronDown, ChevronUp, Plus, Minus, MapPin, ShoppingCart, X } from 'lucide-react';
 import { Navigate, useLocation, Link, useNavigate } from 'react-router-dom';
@@ -6,7 +5,7 @@ import { addtocart, cartToOrder, removeFromCart } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
-// ToggleSwitch Component
+
 const ToggleSwitch = ({ isOn, onToggle }) => (
  <div
  className={`w-8 h-4 flex items-center rounded-full p-1 cursor-pointer ${isOn ? `bg-red-500` : `bg-gray-300`}`}
@@ -112,7 +111,7 @@ const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit
 
 
 
-const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address, selectedTime, onRemoveItem }) => {
+const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address, selectedTime, onRemoveItem,onChangeAddress,onClearCart }) => {
  const [loading, setLoading] = useState(false);
  const [error, setError] = useState('');
  const [cartId, setCartId] = useState(0);
@@ -139,10 +138,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  // totalCost = costperkg;
  if (quantity < 1) {
  totalCost = quantity * costperkg * numberOfPlates
- console.log("quantity:", quantity);
- console.log("costperkg:", costperkg);
- console.log("numberofplates:", numberOfPlates);
- console.log("TOTALcOST:", totalCost);
+
  }
  else {
  totalCost = costperkg * quantity
@@ -225,27 +221,59 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  return () => clearTimeout(delay);
  }, [cartItems]);
 
- const handleSubmit = async (e) => {
- setLoading(true);
- try {
- const respond = await cartToOrder(cartId);
- const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
- amount: totalAmount,
- corporateorder_id: respond.eventorder_generated_id
- }, { headers: { token: `${localStorage.getItem('token')}` } });
 
- if (response.data && response.data.redirectUrl) {
- setRedirectUrl(response.data.redirectUrl);
- window.location.href = response.data.redirectUrl;
- } else {
- console.log('Unexpected response format.');
- }
- } catch (err) {
- setError(err.response ? `Error: ${err.response.data.message || 'An error occurred. Please try again.'}` : 'Network error or no response from the server.');
- } finally {
- setLoading(false);
- }
- };
+ const clearLocalStorageExceptToken = () => {
+  const token = localStorage.getItem('token');
+  localStorage.clear();
+  if (token) {
+    localStorage.setItem('token', token);
+  }
+};
+
+ const handleSubmit = async (e) => {
+  setLoading(true);
+  try {
+      const respond = await cartToOrder(cartId);
+
+      const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
+         corporateorder_id : respond.eventorder_generated_id,
+          amount: totalAmount,
+         
+
+          // You might want to include other necessary fields here
+      }, { headers: { token: `${localStorage.getItem('token')}` } });
+
+      if (response.data && response.data.redirectUrl) {
+          // Move cartToOrder here to execute after successful payment
+      
+
+
+          setRedirectUrl(response.data.redirectUrl);
+          window.location.href = response.data.redirectUrl;
+          const currentUser = JSON.parse(localStorage.getItem('userDP'))?.email;
+          if (currentUser) {
+            localStorage.removeItem(`cartItems_${currentUser}`);
+          }
+      clearLocalStorageExceptToken();
+      setLocalQuantities({});
+      onUpdateQuantity({});
+
+      onClearCart();
+      localStorage.setItem(`paymentComplete_${currentUser}`, 'true');
+      } else {
+          console.log('Unexpected response format.');
+      }
+  } catch (err) {
+      setError(err.response ? `Error: ${err.response.data.message || 'An error occurred. Please try again.'}` : 'Network error or no response from the server.');
+  } finally {
+      setLoading(false);
+  }
+};
+
+
+
+
+ 
 
  const handleDelete = async (productid) => {
  try {
@@ -256,6 +284,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  setError('Failed to remove item. Please try again.');
  }
  };
+
+ 
  const isAddressValid = address && address.line1 && address.line2 && address.pincode;
 
  return (
@@ -267,12 +297,12 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  <button onClick={onClose} className="text-white hover:text-gray-200 ">
  <X size={24} />
  </button>
- <button
- onClick={() => navigate('/changeaddress')}
- className="bg-pink-100 text-pink-500 px-1 py-1 rounded-full mt-14"
- >
- Change Address
- </button>
+             <button
+              onClick={onChangeAddress}
+                className="bg-pink-100 text-pink-500 px-1 py-1 rounded-full mt-14"
+                >
+                Change Address
+            </button>
  </div>
  <div className="flex items-center mt-2">
  <ShoppingCart size={24} className="text-white mr-2" />
@@ -347,7 +377,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  let totalCost;
  if (selectedUnit === 'plate_units') {
  const priceperunit = item['priceperunit'];
- calculationString = `${quantity} * ${priceperunit} * ${numberOfPlates} = `;
+ calculationString = `${quantity} * ₹${priceperunit} * ${numberOfPlates} = `;
  } else if (selectedUnit === 'wtorvol_units') {
  const price_per_wtorvol_units = item['price_per_wtorvol_units'];
  const costperkg = price_per_wtorvol_units * 1000;
@@ -425,8 +455,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  </div>
  </div>
  );
-
-
 };
 
 
@@ -434,349 +462,395 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
 
 
 const Menu = () => {
- const [menuData, setMenuData] = useState([]);
- const [checkedItems, setCheckedItems] = useState({});
- const [quantities, setQuantities] = useState({});
- const [toggleState, setToggleState] = useState({});
- const [isCartOpen, setIsCartOpen] = useState(false);
- const [mainToggleOn, setMainToggleOn] = useState(false);
- const [isSidebarOpen, setIsSidebarOpen] = useState(false);
- const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
- const [currentUser, setCurrentUser] = useState(null);
- const location = useLocation();
- const numberOfPlates = location.state?.numberOfPlates || 1;
- const selectedDate = location.state?.selectedDate;
- const selectedTime = location.state?.selectedTime;
- const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+  const [menuData, setMenuData] = useState([]);
+  const [checkedItems, setCheckedItems] = useState({});
+  const [quantities, setQuantities] = useState({});
+  const [toggleState, setToggleState] = useState({});
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [mainToggleOn, setMainToggleOn] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [numberofplates, setNumberOfPlates] = useState(1);
+  const location = useLocation();
+  const numberOfPlates = location.state?.numberOfPlates || 1 ;
+  const selectedDate = location.state?.selectedDate;
+  const selectedTime = location.state?.selectedTime;
+  const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+ 
+  const address = location.state?.address || {
+  line1: '',
+  line2: '',
+  pincode: '',
+  };
 
- const address = location.state?.address || {
- line1: '',
- line2: '',
- pincode: '',
- };
+  useEffect(() => {
 
- useEffect(() => {
- const token = localStorage.getItem('token');
- if (token) {
- const decodedToken = jwtDecode(token);
- setCurrentUser(decodedToken.email);
- }
- }, []);
+    const token = localStorage.getItem('token');
+    let decodedEmail = null;
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      decodedEmail = decodedToken.email;
+      setCurrentUser(decodedEmail);
+    }
 
- const handleLogout = () => {
- // Don't remove cart items from localStorage
- localStorage.removeItem('token');
- localStorage.removeItem('userDP');
- localStorage.removeItem('address');
- setCurrentUser(null);
- // Clear current state, but don't remove from localStorage
- setCheckedItems({});
- setQuantities({});
- setTimeout(() => {
- window.location.href = '/';
- }, 0);
- };
+    if (location.state?.numberOfPlates) {
+      const newNumberOfPlates = location.state.numberOfPlates;
+      setNumberOfPlates(newNumberOfPlates);
+      localStorage.setItem('numberOfPlates', newNumberOfPlates.toString());
+    } else {
+      const storedNumberOfPlates = localStorage.getItem('numberOfPlates');
+      if (storedNumberOfPlates) {
+        setNumberOfPlates(parseInt(storedNumberOfPlates, 10));
+      }
+    }
+        if (decodedEmail) {
+      const paymentComplete = localStorage.getItem(`paymentComplete_${decodedEmail}`);
+      if (paymentComplete === 'true') {
+        setCheckedItems({});
+        setQuantities({}); 
+        localStorage.removeItem(`paymentComplete_${decodedEmail}`);
+        localStorage.removeItem(`cartItems_${decodedEmail}`);
+      } else {
+        const storedCart = localStorage.getItem(`cartItems_${decodedEmail}`);
+        if (storedCart) {
+          const parsedCart = JSON.parse(storedCart);
+          setCheckedItems(parsedCart.checkedItems || {});
+          setQuantities(parsedCart.quantities || {});
+        } else {
+          setCheckedItems({});
+          setQuantities({});
+        }
+      }
+    }
+    const storedToggleState = localStorage.getItem('toggleState');
+    if (storedToggleState) {
+      setToggleState(JSON.parse(storedToggleState));
+    }
+    fetchProducts();
+  }, [location.state?.numberOfPlates]);
 
-
-
- const handleViewLoginPage = () => {
- setIsLogoutDialogOpen(true);
- };
-
- const handleConfirmLogout = (confirm) => {
- setIsLogoutDialogOpen(false);
- if (confirm) {
- handleLogout();
- }
- };
-
-
- const navigate = useNavigate();
-
- const onToggleUnit = (productId) => {
- const newToggleState = {
- ...toggleState,
- [productId]: toggleState[productId] === 'wtorvol_units' ? 'plate_units' : 'wtorvol_units'
- };
- setToggleState(newToggleState);
- localStorage.setItem('toggleState', JSON.stringify(newToggleState));
- };
- const handleViewOrders = () => {
- navigate('/orders');
- }
+ 
 
 
- useEffect(() => {
- // Load cart data from local storage
- if (currentUser) {
- // Load cart data from local storage for the current user
- const storedCart = localStorage.getItem(`cartItems_${currentUser}`);
- if (storedCart) {
- const parsedCart = JSON.parse(storedCart);
- setCheckedItems(parsedCart.checkedItems || {});
- setQuantities(parsedCart.quantities || {});
- } else {
- // Initialize empty cart for new users
- setCheckedItems({});
- setQuantities({});
- }
- }
-
- // Load toggle state from local storage
- const storedToggleState = localStorage.getItem('toggleState');
- if (storedToggleState) {
- setToggleState(JSON.parse(storedToggleState));
- }
-
- const fetchProducts = async () => {
- try {
- const response = await fetch(`${process.env.REACT_APP_URL}/api/products`);
- if (!response.ok) {
- throw new Error(`HTTP error! status: ${response.status}`);
- }
-
- const data = await response.json();
- const transformedData = data.reduce((acc, item) => {
- const category = item['category_name'];
- if (!acc[category]) {
- acc[category] = { category, items: [] };
- }
-
- acc[category].items.push(item);
- return acc;
- }, {});
-
- setMenuData(Object.values(transformedData));
-
- // Initialize toggle state for new items
- const initialToggleState = { ...toggleState };
- data.forEach(item => {
- if (!(item['productid'] in initialToggleState)) {
- initialToggleState[item['productid']] = 'plate_units';
- }
- });
- setToggleState(initialToggleState);
- localStorage.setItem('toggleState', JSON.stringify(initialToggleState));
- } catch (error) {
- console.error('Error fetching data:', error);
- }
- };
-
- fetchProducts();
- }, [currentUser]);
-
- useEffect(() => {
- if (mainToggleOn) {
- const newToggleState = Object.keys(toggleState).reduce((acc, itemId) => {
- acc[itemId] = 'wtorvol_units';
- return acc;
- }, {});
- setToggleState(newToggleState);
- localStorage.setItem('toggleState', JSON.stringify(newToggleState));
- } else {
- const newToggleState = Object.keys(toggleState).reduce((acc, itemId) => {
- acc[itemId] = 'plate_units';
- return acc;
- }, {});
- setToggleState(newToggleState);
- localStorage.setItem('toggleState', JSON.stringify(newToggleState));
- }
- }, [mainToggleOn]);
-
- const updateQuantity = (itemId, newQuantity) => {
- const newQuantities = { ...quantities, [itemId]: newQuantity };
- setQuantities(newQuantities);
- updateLocalStorage(checkedItems, newQuantities);
- };
-
- const handleCheck = (itemId) => {
- const newCheckedItems = { ...checkedItems, [itemId]: !checkedItems[itemId] };
- setCheckedItems(newCheckedItems);
- const newQuantities = { ...quantities };
- if (!checkedItems[itemId]) {
- newQuantities[itemId] = 1;
- } else {
- delete newQuantities[itemId];
- }
- setQuantities(newQuantities);
- updateLocalStorage(newCheckedItems, newQuantities);
- };
-
- const updateLocalStorage = (checkedItems, quantities) => {
- if (currentUser) {
- localStorage.setItem(`cartItems_${currentUser}`, JSON.stringify({ checkedItems, quantities }));
- }
- };
-
- const removeItem = (productId) => {
- // Update checkedItems
- const newCheckedItems = { ...checkedItems };
- delete newCheckedItems[productId];
- setCheckedItems(newCheckedItems);
-
- // Update quantities
- const newQuantities = { ...quantities };
- delete newQuantities[productId];
- setQuantities(newQuantities);
-
- // Update local storage
- updateLocalStorage(newCheckedItems, newQuantities);
- };
-
- const getInitials = (name) => {
- if (!name) return '';
- const names = name.split(' ');
- return names.map(n => n[0]).join('').toUpperCase();
- };
-
- const cartItems = menuData.flatMap(category =>
- category.items
- .filter(item => quantities[item['productid']] > 0)
- .map(item => ({
- ...item,
- quantity: quantities[item['productid']],
- unit: toggleState[item['productid']] || item['plate_units']
- }))
- );
- // ... (keep all existing useEffects and functions)
-
- const toggleSidebar = () => {
- setIsSidebarOpen(!isSidebarOpen);
- };
-
- return (
- <div className="bg-gradient-to-b from-[#008000]">
- <div className=" top-0 left-0 w-full bg-gradient-to-b from-[#008000] to-[#70c656] z-50">
- <div className="flex justify-between items-center py-3 px-3">
- <button onClick={toggleSidebar} className="text-white">
- <UserCircle size={32} />
- </button>
- <h1 className="text-2xl font-bold text-white">EVENT MENU CARD</h1>
- <button
- onClick={() => setIsCartOpen(!isCartOpen)}
- className="relative bg-yellow-500 text-white p-2 rounded"
- >
- <div className="yellow-700">
- <ShoppingCart size={24} />
- </div>
- {cartItems.length > 0 && (
- <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 text-xs">
- {cartItems.length}
- </span>
- )}
- </button>
- </div>
-
- <div className="flex justify-end py-2 mr-6">
- <ToggleSwitch
- isOn={mainToggleOn}
- onToggle={() => setMainToggleOn(prev => !prev)}
- />
- </div>
- </div>
-
- {/* User Profile Sidebar */}
- {isSidebarOpen && (
- <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
- <div className="fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out translate-x-0 z-50 overflow-y-auto">
- <div className="p-4 bg-green-600 text-white">
- <div className="flex justify-end">
- <button className="text-white" onClick={toggleSidebar}>
- ✕
- </button>
- </div>
- {storedUserDP.picture ? (
- <img
- src={storedUserDP.picture}
- alt="Profile"
- className="rounded-full w-16 h-16 mx-auto object-cover"
- referrerPolicy="no-referrer"
- />
- ) : (
- <div className="rounded-full w-16 h-16 mx-auto bg-gray-300 flex items-center justify-center text-xl font-bold text-gray-700">
- {getInitials(storedUserDP.name)}
- </div>
- )}
-
- <h3 className="text-center mt-2">{storedUserDP.name || 'Hello'}</h3>
- {storedUserDP.phone && <p className="text-center">{storedUserDP.phone}</p>}
- <p className="text-center">{storedUserDP.email || 'Email Address'}</p>
-
- </div>
- <ul className="p-2 space-y-2">
- <Link to='/home'>
- <li className="p-2 border-b border-gray-200 cursor-pointer">Home</li>
- </Link>
- <Link to='/orders'>
- <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>My Orders</li>
- </Link>
-
- <li className="p-2 border-b border-gray-200 cursor-pointer">Address</li>
- <li className="p-2 border-b border-gray-200 cursor-pointer">Wallet</li>
- <li className="p-2 border-b border-gray-200 cursor-pointer">Contact Us</li>
- <li className="p-2 border-b border-gray-200 cursor-pointer">Settings</li>
- <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewLoginPage}>
- LogOut &rarr;
- </li>
- </ul>
- </div>
- </div>
- )}
-
- {isLogoutDialogOpen && (
- <div className="fixed inset-0 z-50 flex items-center justify-center">
- <div className="bg-white p-6 rounded shadow-lg text-center">
- <h2 className="text-lg font-bold mb-4">Do you really want to Logout?</h2>
- <div className="flex justify-center space-x-4">
- <button
- className="bg-green-500 text-white py-2 px-4 rounded"
- onClick={() => handleConfirmLogout(true)}
- >
- Yes
- </button>
- <button
- className="bg-gray-500 text-white py-2 px-4 rounded"
- onClick={() => handleConfirmLogout(false)}
- >
- No
- </button>
- </div>
- </div>
- </div>
- )}
-
- <div className="p-6 mt-15"> {/* Add top margin to account for fixed header */}
- {menuData.map(category => (
- <MenuCategory
- key={category.category}
- category={category.category}
- items={category.items}
- checkedItems={checkedItems}
- toggleState={toggleState}
- onToggleUnit={onToggleUnit}
- onCheck={handleCheck}
- mainToggleOn={mainToggleOn}
- />
- ))}
- </div>
- <CartSidebar
- isOpen={isCartOpen}
- onClose={() => setIsCartOpen(false)}
- cartItems={cartItems}
- numberOfPlates={numberOfPlates}
- onUpdateQuantity={updateQuantity}
- toggleState={toggleState}
- onToggleUnit={onToggleUnit}
- mainToggleOn={mainToggleOn}
- address={address}
- selectedDate={selectedDate}
- selectedTime={selectedTime}
- onRemoveItem={removeItem}
- />
- </div>
- );
+const handleChangeAddress = () => {
+  localStorage.setItem('numberOfPlates', numberofplates.toString());
+  navigate('/changeaddress');
 };
 
 
 
+   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setCurrentUser(decodedToken.email);
+    } else {
+      setCurrentUser(null);
+    }
+  }, []);
+
+  const clearCart = () => {
+    setCheckedItems({});
+    setQuantities({});
+    if (currentUser) {
+      localStorage.removeItem(`cartItems_${currentUser}`);
+    }
+  };
+
+
+
+ 
+  const handleLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('userDP');
+  localStorage.removeItem('address');
+  setCurrentUser(null);
+  setCheckedItems({});
+  setQuantities({});
+  setTimeout(() => {
+  window.location.href = '/';
+  }, 0);
+  };
+ 
+ 
+ 
+  const handleViewLoginPage = () => {
+  setIsLogoutDialogOpen(true);
+  };
+ 
+  const handleConfirmLogout = (confirm) => {
+  setIsLogoutDialogOpen(false);
+  if (confirm) {
+  handleLogout();
+  }
+  };
+ 
+ 
+  const navigate = useNavigate();
+  const onToggleUnit = (productId) => {
+  const newToggleState = {
+  ...toggleState,
+  [productId]: toggleState[productId] === 'wtorvol_units' ? 'plate_units' : 'wtorvol_units'
+  };
+  setToggleState(newToggleState);
+  localStorage.setItem('toggleState', JSON.stringify(newToggleState));
+  };
+  const handleViewOrders = () => {
+  navigate('/orders');
+  }
+ 
+  const fetchProducts = async () => {
+  try {
+  const response = await fetch(`${process.env.REACT_APP_URL}/api/products`);
+  if (!response.ok) {
+  throw new Error(`HTTP error! status: ${response.status}`);
+  }
+ 
+  const data = await response.json();
+  const transformedData = data.reduce((acc, item) => {
+  const category = item['category_name'];
+  if (!acc[category]) {
+  acc[category] = { category, items: [] };
+  }
+ 
+  acc[category].items.push(item);
+  return acc;
+  }, {});
+ 
+  setMenuData(Object.values(transformedData));
+  const initialToggleState = { ...toggleState };
+  data.forEach(item => {
+  if (!(item['productid'] in initialToggleState)) {
+  initialToggleState[item['productid']] = 'plate_units';
+  }
+  });
+  setToggleState(initialToggleState);
+  localStorage.setItem('toggleState', JSON.stringify(initialToggleState));
+  } catch (error) {
+  console.error('Error fetching data:', error);
+  }
+  };
+
+ 
+  useEffect(() => {
+         if (mainToggleOn) {
+         const newToggleState = Object.keys(toggleState).reduce((acc, itemId) => {
+         acc[itemId] = 'wtorvol_units';
+         return acc;
+         }, {});
+         setToggleState(newToggleState);
+         localStorage.setItem('toggleState', JSON.stringify(newToggleState));
+         } else {
+ 
+         const newToggleState = Object.keys(toggleState).reduce((acc, itemId) => {
+         acc[itemId] = 'plate_units';
+         return acc;
+  }, {});
+  setToggleState(newToggleState);
+  localStorage.setItem('toggleState', JSON.stringify(newToggleState));
+  }
+  }, [mainToggleOn]);
+ 
+  const updateQuantity = (itemId, newQuantity) => {
+  const newQuantities = { ...quantities, [itemId]: newQuantity };
+  setQuantities(newQuantities);
+  updateLocalStorage(checkedItems, newQuantities);
+  };
+ 
+  const handleCheck = (itemId) => {
+  const newCheckedItems = { ...checkedItems, [itemId]: !checkedItems[itemId] };
+  setCheckedItems(newCheckedItems);
+  const newQuantities = { ...quantities };
+  if (!checkedItems[itemId]) {
+  newQuantities[itemId] = 1;
+  } else {
+  delete newQuantities[itemId];
+  }
+  setQuantities(newQuantities);
+  updateLocalStorage(newCheckedItems, newQuantities);
+  };
+ 
+  const updateLocalStorage = (checkedItems, quantities) => {
+  if (currentUser) {
+  localStorage.setItem(`cartItems_${currentUser}`, JSON.stringify({ checkedItems, quantities }));
+  }
+  };
+ 
+  const removeItem = (productId) => {
+  // Update checkedItems
+  const newCheckedItems = { ...checkedItems };
+  delete newCheckedItems[productId];
+  setCheckedItems(newCheckedItems);
+ 
+
+  const newQuantities = { ...quantities };
+  delete newQuantities[productId];
+  setQuantities(newQuantities);
+ 
+  updateLocalStorage(newCheckedItems, newQuantities);
+  };
+ 
+  const getInitials = (name) => {
+  if (!name) return '';
+  const names = name.split(' ');
+  return names.map(n => n[0]).join('').toUpperCase();
+  };
+ 
+  const cartItems = menuData.flatMap(category =>
+  category.items
+  .filter(item => quantities[item['productid']] > 0)
+  .map(item => ({
+  ...item,
+  quantity: quantities[item['productid']],
+  unit: toggleState[item['productid']] || item['plate_units']
+  }))
+  );
+ 
+  const toggleSidebar = () => {
+  setIsSidebarOpen(!isSidebarOpen);
+  };
+ 
+  return (
+  <div className="bg-gradient-to-b from-[#008000]">
+  <div className=" top-0 left-0 w-full bg-gradient-to-b from-[#008000] to-[#70c656] z-50">
+  <div className="flex justify-between items-center py-3 px-3">
+  <button onClick={toggleSidebar} className="text-white">
+  <UserCircle size={32} />
+  </button>
+  <h1 className="text-2xl font-bold text-white">EVENT MENU CARD</h1>
+  <button
+  onClick={() => setIsCartOpen(!isCartOpen)}
+  className="relative bg-yellow-500 text-white p-2 rounded"
+  >
+  <div className="yellow-700">
+  <ShoppingCart size={24} />
+  </div>
+  {cartItems.length > 0 && (
+  <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-2 text-xs">
+  {cartItems.length}
+  </span>
+  )}
+  </button>
+  </div>
+ 
+  <div className="flex items-center justify-end py-2 mr-6">
+   <span className="mr-2 text-white font-semibold">
+     {mainToggleOn ? 'Kgs' : 'Plates'}
+   </span>
+   <ToggleSwitch
+     isOn={mainToggleOn}
+     onToggle={() => setMainToggleOn(prev => !prev)}
+   />
+ </div>
+  </div>
+ 
+  {/* User Profile Sidebar */}
+  {isSidebarOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+  <div className="fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out translate-x-0 z-50 overflow-y-auto">
+  <div className="p-4 bg-green-600 text-white">
+  <div className="flex justify-end">
+  <button className="text-white" onClick={toggleSidebar}>
+  ✕
+  </button>
+  </div>
+  {storedUserDP.picture ? (
+  <img
+  src={storedUserDP.picture}
+  alt="Profile"
+  className="rounded-full w-16 h-16 mx-auto object-cover"
+  referrerPolicy="no-referrer"
+  />
+  ) : (
+  <div className="rounded-full w-16 h-16 mx-auto bg-gray-300 flex items-center justify-center text-xl font-bold text-gray-700">
+  {getInitials(storedUserDP.name)}
+  </div>
+  )}
+ 
+  <h3 className="text-center mt-2">{storedUserDP.name || 'Hello'}</h3>
+  {storedUserDP.phone && <p className="text-center">{storedUserDP.phone}</p>}
+  <p className="text-center">{storedUserDP.email || 'Email Address'}</p>
+ 
+  </div>
+  <ul className="p-2 space-y-2">
+  <Link to='/home'>
+  <li className="p-2 border-b border-gray-200 cursor-pointer">Home</li>
+  </Link>
+  <Link to='/orders'>
+  <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>My Orders</li>
+  </Link>
+ 
+  <li className="p-2 border-b border-gray-200 cursor-pointer">Address</li>
+  <li className="p-2 border-b border-gray-200 cursor-pointer">Wallet</li>
+  <li className="p-2 border-b border-gray-200 cursor-pointer">Contact Us</li>
+  <li className="p-2 border-b border-gray-200 cursor-pointer">Settings</li>
+  <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewLoginPage}>
+  LogOut &rarr;
+  </li>
+  </ul>
+  </div>
+  </div>
+  )}
+ 
+  {isLogoutDialogOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center">
+  <div className="bg-white p-6 rounded shadow-lg text-center">
+  <h2 className="text-lg font-bold mb-4">Do you really want to Logout?</h2>
+  <div className="flex justify-center space-x-4">
+  <button
+  className="bg-green-500 text-white py-2 px-4 rounded"
+  onClick={() => handleConfirmLogout(true)}
+  >
+  Yes
+  </button>
+  <button
+  className="bg-gray-500 text-white py-2 px-4 rounded"
+  onClick={() => handleConfirmLogout(false)}
+  >
+  No
+  </button>
+  </div>
+  </div>
+  </div>
+  )}
+ 
+  <div className="p-6 mt-15"> {/* Add top margin to account for fixed header */}
+  {menuData.map(category => (
+  <MenuCategory
+  key={category.category}
+  category={category.category}
+  items={category.items}
+  checkedItems={checkedItems}
+  toggleState={toggleState}
+  onToggleUnit={onToggleUnit}
+  onCheck={handleCheck}
+  mainToggleOn={mainToggleOn}
+  />
+  ))}
+  </div>
+  <CartSidebar
+  isOpen={isCartOpen}
+  onClose={() => setIsCartOpen(false)}
+  cartItems={cartItems}
+  numberOfPlates={numberofplates}
+  onUpdateQuantity={updateQuantity}
+  toggleState={toggleState}
+  onToggleUnit={onToggleUnit}
+  mainToggleOn={mainToggleOn}
+  address={address}
+  selectedDate={selectedDate}
+  selectedTime={selectedTime}
+  onRemoveItem={removeItem}
+  onChangeAddress={handleChangeAddress}
+  onClearCart={clearCart}
+  />
+  </div>
+  );
+ };
+ 
+
+
 export default Menu;
+
+

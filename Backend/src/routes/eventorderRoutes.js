@@ -11,4 +11,5 @@ router.post('/orderbuyagain',eventController.orderbuyagain);
 // router.get('/getcartitems',eventController.fetchCartItems);
 router.get('/cart/:customer_id', eventController.fetchCartItems);
 router.delete('/cart/remove', eventController.removeFromCart);
+// router.delete('/cart/:cartId',eventController.deleteCartItems);
 module.exports = router;

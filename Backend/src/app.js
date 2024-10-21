@@ -26,7 +26,7 @@ const { fetchAndInsertCSVData } = require('../products.js');
 const app = express();
 app.use(express.json());
 const corsOptions = {
-  origin: 'https://dev.caterorange.com', // Update with your frontend origin
+  origin: 'http://localhost:3000', // Update with your frontend origin
   optionsSuccessStatus: 200,
 };
 
@@ -90,6 +90,7 @@ app.post("/api/pay", async(req, res) => {
   const decode = jwt.decode(token);
   console.log(decode);
   console.log(amount)
+  console.log("cid",corporateorder_id)
   const customer_id = decode.id;
   // console.log(token)
   // const response = await customerController.getuserbytoken({ body: { access_token: token } })
@@ -102,7 +103,7 @@ app.post("/api/pay", async(req, res) => {
     "merchantTransactionId": merchantTransactionId,
     "merchantUserId": 123,
     "amount": amountinrupee,
-    "redirectUrl": `http://localhost:4000/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
+    "redirectUrl": `http://localhost:4000/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
     "redirectMode": "REDIRECT",
     "callbackUrl": "https://webhook.site/callback-url",
     "mobileNumber": "9999999999",
@@ -187,11 +188,11 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
           try {
             if(corporateorder_id[0]==='C')
             {
-            const response=await axios.post('http://localhost:4000/insert-payment', paymentPayload);
+            const response=await axios.post('http://localhost:4000/api/insert-payment', paymentPayload);
             }
             if(corporateorder_id[0]==='E')
               {
-              const response=await axios.post('http://localhost:4000/insertevent-payment', paymentPayload);
+              const response=await axios.post('http://localhost:4000/api/insertevent-payment', paymentPayload);
               }
         res.status(200);
           } catch (error) {

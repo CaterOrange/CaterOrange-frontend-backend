@@ -77,7 +77,7 @@ const CorporateOrders = () => {
     if(showCorporate){
     navigate('/home');
    }else{
-      navigate('/menu'); 
+      navigate('/home'); 
     }
   };
 
