@@ -102,7 +102,7 @@ app.post("/api/pay", async(req, res) => {
     "merchantTransactionId": merchantTransactionId,
     "merchantUserId": 123,
     "amount": amountinrupee,
-    "redirectUrl": `http://localhost:4000/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
+    "redirectUrl": `http://localhost:4000/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
     "redirectMode": "REDIRECT",
     "callbackUrl": "https://webhook.site/callback-url",
     "mobileNumber": "9999999999",
@@ -187,11 +187,11 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
           try {
             if(corporateorder_id[0]==='C')
             {
-            const response=await axios.post('http://localhost:4000/insert-payment', paymentPayload);
+            const response=await axios.post('http://localhost:4000/api/insert-payment', paymentPayload);
             }
             if(corporateorder_id[0]==='E')
               {
-              const response=await axios.post('http://localhost:4000/insertevent-payment', paymentPayload);
+              const response=await axios.post('http://localhost:4000/api/insertevent-payment', paymentPayload);
               }
         res.status(200);
           } catch (error) {

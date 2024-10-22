@@ -1,5 +1,3 @@
-
-
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
@@ -122,7 +120,6 @@ const SignInForm = ({ onSignIn }) => {
     setError('');
     try {
       console.log('handle otp called');
-      console.log('email',email)
       await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email });
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
       setError(response.data.message);

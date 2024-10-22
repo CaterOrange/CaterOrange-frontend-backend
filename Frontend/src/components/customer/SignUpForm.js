@@ -1,3 +1,4 @@
+
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
@@ -6,6 +7,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import SignInForm from './SignInForm';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // carousel styles
+import axios from 'axios';
 import { SignUpContext } from '../../services/contexts/SignUpContext';
 import { SignUp_customer, Login_google_auth } from '../../services/context_state_management/actions/action';
 
@@ -23,6 +25,7 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showSignInModal, setShowSignInModal] = useState(false);
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({
@@ -178,7 +181,6 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
       }
     }
   };
-
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const tokenId = credentialResponse.credential;

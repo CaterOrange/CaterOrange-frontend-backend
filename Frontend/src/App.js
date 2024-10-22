@@ -16,17 +16,14 @@ import Menu from "./components/events/Menu.js";
 import OrderDashboard from "./components/events/myorders.js";
 import HomePage from "./components/HomePage.js";
 import ChangeAddress from "./components/events/changeAddress.js";
-
 function App() {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // To manage loading state
-
-  // Handle Sign-In
-  const handleSignIn = async (token, isGoogleLogin) => {
+  const handleSignIn =async (token,isGoogleLogin) => {
     if (token) {
       localStorage.setItem('token', token);
       setUser({ token });
     }
+
     if (!isGoogleLogin) {
       try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/info`, {
@@ -37,8 +34,11 @@ function App() {
           phone: response.data.customer_phonenumber,
           email: response.data.customer_email
         };
+
         localStorage.setItem('userDP', JSON.stringify(profile));
         setUser({ token, ...profile });
+        
+
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -84,6 +84,7 @@ function App() {
           </Router>
         </SignUpProvider>
       </SignInProvider>
+
     </StoreProvider>
   );
 }
