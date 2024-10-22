@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon src/app.js",
+     "start": "NODE_OPTIONS='--no-warnings' nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sirisha_harshitha_sneha",
@@ -13,20 +13,16 @@
     "apollo-server": "^3.13.0",
     "apollo-server-express": "^3.13.0",
     "bcryptjs": "^2.4.3",
+    "bull": "^4.16.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.20.0",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.15",
-    "nodemon": "^3.1.5",
+    "nodemon": "^3.1.7",
     "pg": "^8.12.0",
     "winston": "^3.14.2",
-    "winston-daily-rotate-file": "^5.0.0",
-    "axios": "^1.7.7",
-    "crypto": "^1.0.1",
-    "jwt-decode": "^4.0.0",
-    "sha256": "^0.2.0",
-    "uniqid": "^5.4.0"
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

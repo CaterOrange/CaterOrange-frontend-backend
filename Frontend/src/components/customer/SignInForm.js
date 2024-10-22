@@ -1,15 +1,18 @@
+
+
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; // Corrected import for jwt-decode
 import React, { useContext, useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // carousel styles
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode'; // Corrected import for jwt-decode
-import SignUpForm from './SignUpForm';
 import { Login_customer, Login_forgotPassword, Login_google_auth } from '../../services/context_state_management/actions/action.js';
 import { SignInContext } from '../../services/contexts/SignInContext.js';
-import axios from 'axios';
+import SignUpForm from './SignUpForm';
+import { useCart } from '../../services/contexts/CartContext.js';
 
 
 
@@ -22,6 +25,7 @@ const images = [
 
 
 const SignInForm = ({ onSignIn }) => {
+  const { cartCount } = useCart();
   const { state, dispatch } = useContext(SignInContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,103 +40,24 @@ const SignInForm = ({ onSignIn }) => {
   const [userProfile, setUserProfile] = useState(null); // for storing Google user profile
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const navigate = useNavigate();
-  const [fieldErrors, setFieldErrors] = useState({
-    email: ''
-  });
-
-  const validateField = (field, value) => {
-    let error = '';
-    switch (field) {
-      case 'name':
-        if (value.trim() === '') {
-          error = '*Name is required*';
-        } else if (value.length < 3) {
-          error = '*Name must be at least 3 characters long*';
-        }
-        break;
-      case 'phone':
-        const phoneRegex = /^\d{10}$/;  // Assumes a 10-digit phone number
-        if (value.trim() === '') {
-          error = '*Phone number is required*';
-        }
-        else if (value && !phoneRegex.test(value)) {
-          error = '*Invalid phone number format it must be 10-digit format*';
-        }
-        break;
-      case 'email':
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (value.trim() === '') {
-          error = '*Email is required*';
-        }
-        else if (!emailRegex.test(value)) {
-          error = '*Invalid email format*';
-        }
-        break;
-      case 'password':
-        if (value.trim() === '') {
-          error = '*Password is required*';
-        }
-        else if (value.length < 8 ) {
-          error = '*Password must be atleast 8 characters long with uppercase ,lowercase letters and numbers*';
-        }
-        break;
-      case 'confirmPassword':
-        if (value !== password) {
-          error = '*Passwords do not match*';
-        }
-        break;
-      default:
-        break;
-    }
-    setFieldErrors(prev => ({ ...prev, [field]: error }));
-    return error === '';
-  };
-
-  const handleChange = (field, value) => {
-    switch(field) {
-      case 'name':
-        setName(value);
-        break;
-      case 'phone':
-        setPhone(value);
-        break;
-      case 'email':
-        setEmail(value);
-        break;
-      case 'password':
-        setPassword(value);
-        break;
-      case 'confirmPassword':
-        setConfirmPassword(value);
-        break;
-      default:
-        break;
-    }
-    validateField(field, value);
-  };
-
-  const handleBlur = (field) => {
-    validateField(field, field === 'confirmPassword' ? confirmPassword : eval(field));
-  };
-  
 
   const handleSendOtp = async () => {
     setError('');
     try {
       console.log('handle otp called');
-      await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email });
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
+      await axios.post('http://localhost:4000/customer/checkCustomerOtp', { email });
+      const response = await axios.post('http://localhost:4000/customer/send-otp', { email });
       setError(response.data.message);
       setForgotPasswordStep(2);
     } catch (error) {
-      setError(error.response?.data?.error || 'You are not registered ,please register');
+      setError(error.response?.data?.error || 'An error occurred while sending OTP');
     }
   };
 
   const handleVerifyOtp = async () => {
     setError('');
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/verify-otp`, { email, otp });
+      const response = await axios.post('http://localhost:4000/customer/verify-otp', { email, otp });
       setError(response.data.message);
       setForgotPasswordStep(3);
     } catch (error) {
@@ -143,14 +68,6 @@ const SignInForm = ({ onSignIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    let isValid = true;
-
-    // Validate all fields
-    ['email'].forEach(field => {
-      if (!validateField(field, eval(field))) {
-        isValid = false;
-      }
-    });
     try {
       if (forgotPassword) {
         if (forgotPasswordStep === 1) {
@@ -165,11 +82,7 @@ const SignInForm = ({ onSignIn }) => {
           await Login_forgotPassword(email, password, confirmPassword, dispatch);
         }
       } else {
-        if (isValid){
-          setFieldErrors({
-            email: ''
-          });
-        await Login_customer(email, password, dispatch);}
+        await Login_customer(email, password, dispatch);
       }
     } catch (error) {
       setError(error.response?.data?.message || 'An unexpected error occurred');
@@ -194,7 +107,7 @@ const SignInForm = ({ onSignIn }) => {
   if(!isGoogleLogin){
     try {
       console.log('in manual',token)
-      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/info`, {
+      const response = await axios.get('http://localhost:4000/customer/info', {
         headers: { token }
       });
       console.log('RESPONSE', response.data)
@@ -234,12 +147,14 @@ const SignInForm = ({ onSignIn }) => {
     setUserProfile(decodedToken);
     console.log(name);
     console.log(email);
-    const userDP={
-      name:name,
+    const userDP = {
+      name: name,
       email: email,
-      picture: picture
-    }
+      picture: picture,
+      cartCount: cartCount || 0 // Initialize cart count to 0 or use an existing value
+    };
     localStorage.setItem('userDP', JSON.stringify(userDP));
+    
     const response= await Login_google_auth(name, email, tokenId,dispatch);
     console.log(response)
     setIsGoogleLogin(true);
@@ -296,30 +211,27 @@ const SignInForm = ({ onSignIn }) => {
           <form onSubmit={handleSubmit}>
             {!forgotPassword && (
               <>
-              <div className="mb-4 mt-4">
-                <input
-                  type="email"
-                  id="email"
-                  className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  onBlur={() => handleBlur('email')}
-                  required
-                  placeholder="Email"
-                />
-                {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
-              </div>
+                <div className="mb-4">
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter email"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
                 <div className="mb-4 relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  className={`w-full px-4 py-3 border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={password}
-                  onChange={(e) => handleChange('password', e.target.value)}
-                  onBlur={() => handleBlur('password')}
-                  required
-                  placeholder="Password"
-                />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    placeholder="Enter password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -334,18 +246,17 @@ const SignInForm = ({ onSignIn }) => {
             {forgotPassword && (
               <>
                 {forgotPasswordStep === 1 && (
-                  <div className="mb-4 mt-4">
-                <input
-                  type="email"
-                  id="email"
-                  className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  onBlur={() => handleBlur('email')}
-                  placeholder="Email"
-                />
-                {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
-              </div>
+                  <div className="mb-4">
+                    <input
+                      type="email"
+                      id="forgot-email"
+                      placeholder="Enter email for OTP"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
                 )}
 
                 {forgotPasswordStep === 2 && (
@@ -365,16 +276,14 @@ const SignInForm = ({ onSignIn }) => {
                 {forgotPasswordStep === 3 && (
                   <>
                     <div className="mb-4 relative">
-                     <input
+                      <input
                         type={showPassword ? 'text' : 'password'}
-                        id="password"
+                        id="new-password"
                         placeholder="Enter New Password"
-                        className={`w-full px-4 py-3 border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         value={password}
-                        onChange={(e) => handleChange('password', e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
-                        
-                        
                       />
                       <button
                         type="button"
@@ -385,17 +294,15 @@ const SignInForm = ({ onSignIn }) => {
                       </button>
                     </div>
                     <div className="mb-4 relative">
-                    <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  id="confirm-password"
-                  className={`w-full px-4 py-3 border ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={confirmPassword}
-                  onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                  onBlur={() => handleBlur('confirmPassword')}
-                  placeholder="Confirm New Password"
-                  required
-                 
-                />
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        id="confirm-password"
+                        placeholder="Confirm New Password"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                      />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}

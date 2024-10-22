@@ -11,7 +11,7 @@ const ESuccessPage = () => {
   useEffect(() => {
     const getordergenid = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/event/getEOrdergenId`, {
+        const response = await axios.get('http://localhost:4000/event/getEOrdergenId', {
           headers: { token: localStorage.getItem('token') },
         });
         console.log('in success',response)

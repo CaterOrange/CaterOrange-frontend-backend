@@ -6,8 +6,7 @@ const logger = require('./config/logger');
 const { createTables } = require('./controller/tableController');
 const { createDatabase } = require('./config/config');
 require('dotenv').config();
-const sha256 = require('sha256'); 
-
+const sha256 = require('sha256');
 const axios = require('axios');
 const uniqid = require('uniqid');
 const crypto = require('crypto');
@@ -31,15 +30,16 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
+fetchAndInsertCSVData()
 
-app.use('/api',addressRoutes)    
-app.use('/api',paymentRoutes)
-app.use('/api',categoryRoutes);
-app.use('/api',customerRoutes)
+app.use('/',addressRoutes)
+app.use('/',paymentRoutes)
+app.use('/',categoryRoutes);
+app.use('/',customerRoutes)
 
-app.use('/api', corporateorderRoutes);
+app.use('/', corporateorderRoutes);
 
 const initializeApp = async () => {
   try {
@@ -51,11 +51,27 @@ const initializeApp = async () => {
 
     await createTables();
     logger.info('Tables created successfully');
+    // const checkCategoryDataQuery = 'SELECT COUNT(*) FROM corporate_category';
+    // const result = await client.query(checkCategoryDataQuery);
+    // const categoryCount = parseInt(result.rows[0].count, 10);
 
+    // if (categoryCount === 0) {
+    //   const insertCategoryDataQuery = `
+    //     INSERT INTO corporate_category (category_name, category_description, category_price, category_media)
+    //     VALUES 
+    //       ('breakfast', 'We are offering tasty breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+    //       ('NonVeg Lunch', 'We are offering tasty Nonveg lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+    //       ('Veg Lunch', 'We are offering tasty veg lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+    //       ('Veg Dinner', 'We are offering tasty veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+    //       ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s');
+    //   `;
+
+    // await client.query(insertCategoryDataQuery);
+    // logger.info('Category data inserted successfully');
     const apolloServer = await startApolloServer();
     logger.info('Apollo Server started');
-    app.use(express.json());
-
+   
+console.log('port',process.env.PORT)
     app.listen(process.env.PORT, () => {
       logger.info(`Server is running on port ${process.env.PORT}`);
       logger.info(`GraphQL endpoint: http://localhost:${process.env.PORT}${apolloServer.graphqlPath}`);
@@ -65,13 +81,67 @@ const initializeApp = async () => {
     process.exit(1);
     }
   }
- 
-
-
+  
 const PHONEPE_HOST_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox";
 const MERCHANT_ID = "PGTESTPAYUAT86";
 const SALT_KEY = "96434309-7796-489d-8924-ab56988a6076";
 const SALT_INDEX = 1;
+
+//Routes
+//app.use('/p', paymentroutes);
+
+
+//     const { userid, amount } = req.body;
+//     //console.log("hello")
+//     const amountinrupee = amount * 100
+//     const payload = {
+//       "merchantId": MERCHANT_ID,
+//       "merchantTransactionId": merchantTransactionId,
+//       "merchantUserId": userid,
+//       "amount": amountinrupee,
+//       "redirectUrl": `http://localhost:7000/redirect-url/${merchantTransactionId}`,
+//       "redirectMode": "REDIRECT",
+//       "callbackUrl": "https://webhook.site/callback-url",
+//       "mobileNumber": "9999999999",
+//       "paymentInstrument": {
+//         "type": "PAY_PAGE"
+//       }
+//     };
+  
+//     const bufferObj = Buffer.from(JSON.stringify(payload), "utf8");
+//     const base64EncodedPayload = bufferObj.toString("base64");
+  
+//     const xVerify = crypto
+//       .createHash('sha256')
+//       .update(base64EncodedPayload + payEndpoint + SALT_KEY)
+//       .digest('hex') + "###" + SALT_INDEX;
+  
+//     const options = {
+//       method: 'post',
+//       url: PHONEPE_HOST_URL + payEndpoint,
+//       headers: {
+//         accept: 'application/json',
+//         'Content-Type': 'application/json',
+//         "X-VERIFY": xVerify
+//       },
+//       data: {
+//         request: base64EncodedPayload
+//       }
+//     };
+//     console.log("1")
+//     axios
+//       .request(options)
+//       .then(function (response) {
+//           console.log("2")
+//         console.log(response.data);
+//         const url = response.data.data.instrumentResponse.redirectInfo.url;
+//         res.json({ redirectUrl: url }); 
+//       })
+//       .catch(function (error) {
+//         console.error(error);
+//         res.status(500).send(error.message);
+//       });
+//   });
   
 async function startApolloServer() {
   const server = new ApolloServer({ typeDefs, resolvers });
@@ -82,7 +152,7 @@ async function startApolloServer() {
   return server;
 }
 
-app.post("/api/pay", async(req, res) => {
+app.post("/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
   const merchantTransactionId = uniqid();
   const {amount,corporateorder_id } = req.body;
@@ -103,7 +173,7 @@ app.post("/api/pay", async(req, res) => {
     "merchantTransactionId": merchantTransactionId,
     "merchantUserId": 123,
     "amount": amountinrupee,
-    "redirectUrl": `http://localhost:4000/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
+    "redirectUrl": `http://localhost:4000/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
     "redirectMode": "REDIRECT",
     "callbackUrl": "https://webhook.site/callback-url",
     "mobileNumber": "9999999999",
@@ -147,7 +217,7 @@ app.post("/api/pay", async(req, res) => {
     });
 });
 
-app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
+app.get('/redirect-url/:merchantTransactionId', async(req, res) => {
   const { merchantTransactionId } = req.params;
   const { customer_id, corporateorder_id  } = req.query;
   console.log(customer_id)
@@ -188,11 +258,11 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
           try {
             if(corporateorder_id[0]==='C')
             {
-            const response=await axios.post('http://localhost:4000/api/insert-payment', paymentPayload);
+            const response=await axios.post('http://localhost:4000/insert-payment', paymentPayload);
             }
             if(corporateorder_id[0]==='E')
               {
-              const response=await axios.post('http://localhost:4000/api/insertevent-payment', paymentPayload);
+              const response=await axios.post('http://localhost:4000/insertevent-payment', paymentPayload);
               }
         res.status(200);
           } catch (error) {
@@ -218,9 +288,60 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
   }
 });
 initializeApp();
-fetchAndInsertCSVData() 
-app.use('/api', allRoutes);
+app.use('/', allRoutes);
 app.use('/api',eventRoutes);
 
+// const express = require('express');
+// const { ApolloServer } = require('apollo-server-express');
+// const cors = require('cors');
+// const logger = require('./config/logger');
+// require('dotenv').config();
+// const { paymentQueue } = require('./services/paymentService');
+// const { initDatabase } = require('./services/databaseService');
+// const { startApolloServer } = require('./services/apolloService');
+// const { initializePaymentQueue } = require('./queues/paymentQueue');
+// const allRoutes = require('./routes/customerRoutes');
+// const paymentRoutes = require('./routes/paymentRoutes');
+// const addressRoutes = require('./routes/addressRoutes');
+// const eventRoutes = require('./routes/eventorderRoutes');
+// const corporateorderRoutes = require('./routes/corporateorderRoutes');
+// const categoryRoutes = require('./routes/categoryRoutes');
+// const customerRoutes = require('./routes/customerRoutes');
 
-//164.52.203.128
+// const app = express();
+
+// // Middleware
+// app.use(express.json());
+// app.use(cors({ origin: 'http://localhost:3000', optionsSuccessStatus: 200 }));
+
+// // Routes
+// app.use('/', addressRoutes);
+// app.use('/', paymentRoutes);
+// app.use('/', categoryRoutes);
+// app.use('/', customerRoutes);
+// app.use('/', corporateorderRoutes);
+// app.use('/api', eventRoutes);
+// app.use('/', allRoutes);
+
+// const initializeApp = async () => {
+//   try {
+//     await initDatabase();
+//     const apolloServer = await startApolloServer(app);
+//     await initializePaymentQueue();
+//     app.listen(process.env.PORT, () => {
+//       logger.info(`Server is running on port ${process.env.PORT}`);
+//       logger.info(`GraphQL endpoint: http://localhost:${process.env.PORT}${apolloServer.graphqlPath}`);
+//     });
+//     paymentQueue.on('completed', (job, result) => {
+//       console.log(`Payment job  completed. Redirect URL: ${result.redirectUrl}`);
+//     });
+//     paymentQueue.on('failed', (job, err) => {
+//       console.error(`Payment job failed with error: ${err.message}`);
+//     });
+//   } catch (err) {
+//     logger.error('Initialization error:', err.message);
+//     process.exit(1);
+//   }
+// };
+
+// initializeApp()

@@ -104,12 +104,12 @@ SELECT * FROM address WHERE address_id=$1`,
   select * from corporate_category
   `,
   ADD_CORPORATECART:`
-  INSERT INTO corporate_cart  (customer_id, cart_order_details,total_amount) 
+  INSERT INTO corporate_cart  (customer_generated_id, cart_order_details,total_amount) 
   VALUES ($1, $2, $3) 
   RETURNING *
 `,
 GETCARTS:`
-  SELECT * FROM corporate_cart WHERE customer_id = $1
+  SELECT * FROM corporate_cart WHERE customer_generated_id = $1
 `,
 GETPRICE: `
 SELECT 

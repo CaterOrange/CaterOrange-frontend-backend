@@ -22,6 +22,23 @@ const updateOrder = async (order_id, payment_id, payment_status) => {
     }
 };
 
+const deleteCart = async (customer_id) => {
+    const query = `
+     DELETE FROM corporate_cart WHERE customer_generated_id = $1;
+  ;
+    `;
+
+    const values = [customer_id];
+
+    try {
+        const result = await client.query(query, values);
+        logger.info('deleted carts successfully:', { customer_id });
+        return result.rows[0]; // Return the updated order details
+    } catch (error) {
+        logger.error('Error deleting carts after payment:', { error: error.message });
+        throw error;
+    }
+};
 const getOrdergenId = async (customer_id) => {
     try {
         const result = await client.query(DB_COMMANDS.GET_ORDER_GENID, [customer_id]);
@@ -52,4 +69,4 @@ const getEOrdergenId = async (customer_id) => {
     }
 };
 
-module.exports = { updateOrder, getOrdergenId, getEOrdergenId };
+module.exports = { updateOrder, getOrdergenId, getEOrdergenId ,deleteCart};

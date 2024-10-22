@@ -211,12 +211,13 @@ function createCorporateCategoryTableQuery() {
       ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
       ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
       ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
-      ('Snacks', 'We are offering tasty Snacks here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
+      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
       ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
-      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s')
+      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s')
     ON CONFLICT (category_name) DO NOTHING;  -- Prevent inserting duplicate category names
   `;
 }
+
 
 // Create Event Category Table
 function createEventCategoryTableQuery() {
@@ -293,12 +294,12 @@ function createCorporateCartTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS corporate_cart (
       corporatecart_id SERIAL PRIMARY KEY,
-      customer_id INTEGER,
+      customer_generated_id VARCHAR,
       cart_order_details JSON,
       total_amount FLOAT,
       customer_address JSON,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
     );
   `;
 }

@@ -81,6 +81,7 @@ const addCart = async (customer_id, total_amount, cart_order_details, address, n
         throw error;
     }
 };
+
 const getOrderDetailsById = async (customer_id) => {
     const query = DB_COMMANDS.GET_ORDER_DETAILS_BY_ID;
     const values = [customer_id];
@@ -111,8 +112,10 @@ const insertEventOrder = async (orderData) => {
     try {
         const cartOrderDetailsJson = JSON.stringify(orderData.cart_order_details);
         const customerAddressJson = JSON.stringify(orderData.customer_address);
+
         logger.info("cart_order_details JSON: ", cartOrderDetailsJson);
         logger.info("customer_address JSON: ", customerAddressJson);
+
         const result = await client.query(DB_COMMANDS.INSERT_EVENT_ORDER, [
             orderData.customer_id,
             orderData.delivery_status,
@@ -149,15 +152,14 @@ const getCartById = async (eventcart_id) => {
 };
 
 const deleteCart = async (eventcart_id) => {
-    const query = `DELETE FROM event_cart WHERE eventcart_id = $1;`; // Using $1 for parameterized query
+    const query = `DELETE FROM event_cart WHERE eventcart_id = $1;`;
     const values = [eventcart_id];
-
     try {
         await client.query(query, values);
         logger.info('Cart deleted:', { eventcart_id });
     } catch (error) {
         logger.error('Error deleting cart:', error);
-        throw new Error('Error deleting cart: ' + error.message);
+        throw new Error('Error deleting cart:' + error.message);
     }
 };
 

@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
 import { CakeIcon, CalendarIcon, CheckCircleIcon, HomeIcon, MinusCircleIcon } from '@heroicons/react/solid';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import OrderDashboard from '../events/myorders';
+
+
 
 const CorporateOrders = () => {
   const [showCorporate, setShowCorporate] = useState(true);
@@ -19,7 +21,7 @@ const CorporateOrders = () => {
       try {
         console.log('hiiiiii')
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
+        const response = await axios.get('http://localhost:4000/customer/corporate/myorders', {
           headers: { token: `${token}` },
         });
         if (response.data && response.data.data) {
@@ -47,13 +49,14 @@ const CorporateOrders = () => {
         setIsLoading(false);
       }
     };
+   
     fetchOrders();
   }, []);
 
   const fetchCategoryName = async (categoryId) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_URL}/api/customer/getcategorynameById`,
+        'http://localhost:4000/customer/getcategorynameById',
         { categoryId }
       );
       return response.data.categoryname.category_name;
@@ -131,42 +134,7 @@ const CorporateOrders = () => {
          
         </div>
 
-        {/* {isExpanded && (
-          <div className="p-4 sm:p-6 overflow-x-auto">
-            <table className="w-full bg-white min-w-max">
-              <thead className="bg-gray-100 text-left text-xs sm:text-sm">
-                <tr>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Category Name</th>
-                  <th className="p-2 sm:p-6 lg:p-4 whitespace-nowrap">Progress</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Date</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Qty</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Active Qty</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.order_details.map((detail, i) => (
-                  <tr key={i} className="border-t text-xs sm:text-sm hover:bg-gray-50">
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">
-                      {detail.category_name || 'Unknown Category'}
-                    </td>
-                    <td className="p-2 sm:p-6 lg:p-4 whitespace-nowrap">{renderProgressIcons(detail.delivery_status)}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.processing_date}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.quantity}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.active_quantity}</td>
-                    <td
-                      className={`p-2 sm:p-3 lg:p-4 font-bold whitespace-nowrap ${
-                        detail.status === 'cancelled' ? 'text-red-500' : 'text-green-500'
-                      }`}
-                    >
-                      {detail.status}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )} */}
+     
 
 {isExpanded && (
   <div className="p-4 sm:p-6 overflow-x-auto">
@@ -210,6 +178,63 @@ const CorporateOrders = () => {
       </div>
     );
   }, [expandedOrders, toggleOrderDetails]);
+
+  // return (
+  //   <>
+
+  //     <header className="fixed top-0 left-0 w-full bg-green-500 h-16 flex items-center pl-4">
+  //       <Link to='/home'>
+  //         <HomeIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white mr-2" onClick={handleViewHome}/> 
+  //       </Link>
+  //       <h1 className="text-2xl sm:text-3xl lg:text-4xl text-white">
+  //         My Orders
+  //       </h1>
+  //     </header>
+
+  //     <div className="w-full my-4 sm:my-10 px-4 sm:px-6 lg:px-8 xl:px-0 bg-gradient-to-r from-blue-50 to-white shadow-xl rounded-lg">
+  //       <div className="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-10">
+  //         <button
+  //           className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
+  //             showCorporate ? 'bg-yellow-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+  //           }`}
+  //           onClick={() => setShowCorporate(true)}
+  //         >
+  //           <CakeIcon className="h-5 w-5 inline-block mr-2" />
+  //           Corporate
+  //         </button>
+  //         <button
+  //           className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
+  //             !showCorporate ? 'bg-green-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+  //           }`}
+  //           onClick={() => setShowCorporate(false)}
+  //         >
+  //           <CalendarIcon className="h-5 w-5 inline-block mr-2" />
+  //           Events
+  //         </button>
+  //       </div>
+
+  //       {showCorporate && (
+  //         <div className="space-y-4 sm:space-y-8 w-full">
+  //           {isLoading ? (
+  //             <p>Loading orders...</p>
+  //           ) : error ? (
+  //             <p className="text-red-500">{error}</p>
+  //           ) : orderData ? (
+  //             orderData.map(renderOrder)
+  //           ) : (
+  //             <p>No corporate orders found.</p>
+  //           )}
+  //         </div>
+  //       )}
+
+  //       {!showCorporate && (
+  //         <div className="text-center py-8">
+  //           <p className="text-lg text-gray-700"><OrderDashboard /></p>
+  //         </div>
+  //       )}
+  //     </div>
+  //   </>
+  // );
   return (
     <>
       {/* Header */}
@@ -230,7 +255,7 @@ const CorporateOrders = () => {
           }`}
           onClick={() => setShowCorporate(true)}
         >
-          <CakeIcon className="sm:h-5 w-5 lg:h-10inline-block mr-2" />
+          <CakeIcon className="sm:h-5 w-5 lg:h-10 w-10 inline-block mr-2" />
           Corporate
         </button>
         <button

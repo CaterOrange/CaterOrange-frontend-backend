@@ -1,10 +1,10 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-import { ChevronLeft, ShoppingCart, Plus, Minus, Trash2, ParkingSquareOffIcon } from 'lucide-react';
+import { ChevronLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { useCart } from '../../services/contexts/CartContext';
 
+import { jwtDecode } from 'jwt-decode';
 import AddressForm from '../Address/AddressForm';
 // import AddressForm from '../Address/AddressForm';
 
@@ -18,8 +18,13 @@ const MyCart = () => {
  const [loading, setLoading] = useState(false);
  const [Address, setAddress] = useState([]);
  const OrderData = [];
+ const { updateCartCount } = useCart();
+ const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+ const tokens=localStorage.getItem('token')
+  const decodedToken = jwtDecode(tokens);
+  const emails=decodedToken.email;
 
- var parsedAddress;
+  var parsedAddress;
  const [userAddressDetails,setUserAddressDetails]=useState({
  Name:'',
  phonenumber:'',
@@ -42,7 +47,7 @@ const MyCart = () => {
         const fetchCart = async () => {
         setIsLoading(true);
         try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCorporateCarts`, {
+        const response = await axios.get('http://localhost:4000/customer/getCorporateCarts', {
         headers: { token: `${localStorage.getItem('token')}` },
         });
         console.log('in carts', response.data);
@@ -61,7 +66,7 @@ const MyCart = () => {
  const fetchCustomer = async () => {
  try {
   console.log('hiii im in cart')
- const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCustomerDetails`, {
+ const response = await axios.get('http://localhost:4000/customer/getCustomerDetails', {
  headers: { token: `${localStorage.getItem('token')}` },
  });
  console.log('user', response.data);
@@ -97,26 +102,101 @@ const MyCart = () => {
  }
  }, []);
 
- useEffect(() => {
- const totalAmount = sortedData.reduce(
- (sum, item) => sum + (item.price * item.quantity),
- 0
- );
- setTotal(totalAmount);
- }, [sortedData]);
+//  useEffect(() => {
+//   const totalAmount = sortedData.reduce(
+//       (sum, item) => sum + (Number(item.price) * Number(item.quantity)), // Ensure both price and quantity are numbers
+//       0
+//   );
+//   setTotal(totalAmount);
 
+//   const count = sortedData.reduce(
+//       (sum, item) => sum + (Number(item.quantity) || 0), // Convert quantity to number and handle undefined values
+//       0
+//   );
+
+//   // updateCartCount(count);
+//   // const updatedUserDP = {
+//   //   ...storedUserDP,
+//   //   cartCount: count
+//   // };
+//   // localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+//   useEffect(() => {
+//     // Function to handle changes in local storage
+//     const handleStorageChange = () => {
+//       const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+//       if (storedUserDP.cartCount !== undefined) {
+//         updateCartCount(storedUserDP.cartCount);
+//       }
+//     };
+  
+//     // Add event listener for changes in local storage
+//     window.addEventListener('storage', handleStorageChange);
+  
+//     // Clean up event listener on component unmount
+//     return () => window.removeEventListener('storage', handleStorageChange);
+//   }, []);
+  
+//   // Optionally, add another useEffect to update local storage when the cartCount changes
+//   useEffect(() => {
+//     localStorage.setItem(
+//       'userDP',
+//       JSON.stringify({
+//         ...JSON.parse(localStorage.getItem('userDP') || '{}'),
+//         cartCount,
+//       })
+//     );
+//   }, [cartCount]);
+  
+// }, [sortedData]);
+
+useEffect(() => {
+  const totalAmount = sortedData.reduce(
+    (sum, item) => sum + Number(item.price) * Number(item.quantity),
+    0
+  );
+  setTotal(totalAmount);
+
+  const count = sortedData.reduce(
+    (sum, item) => sum + (Number(item.quantity) || 0),
+    0
+  );
+  updateCartCount(count);
+
+  // Update local storage whenever count changes
+  const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+  const updatedUserDP = {
+    ...storedUserDP,
+    cartCount: count,
+  };
+  localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+}, [sortedData]);
+
+// useEffect to handle changes in local storage
+useEffect(() => {
+  const handleStorageChange = () => {
+    const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+    if (storedUserDP.cartCount !== undefined) {
+      updateCartCount(storedUserDP.cartCount);
+    }
+  };
+
+  window.addEventListener('storage', handleStorageChange);
+
+  // Clean up event listener on component unmount
+  return () => window.removeEventListener('storage', handleStorageChange);
+}, []);
 
  useEffect(() => {
- let tempCartData = [];
- CartData.forEach(cart => {
- cart.cart_order_details.forEach(detail => {
- tempCartData.push({
- id: cart.corporatecart_id,
- content: detail
- });
- });
- });
- setCartIndividualData(tempCartData);
+  let tempCartData = [];
+  CartData.forEach(cart => {
+  cart.cart_order_details.forEach(detail => {
+  tempCartData.push({
+  id: cart.corporatecart_id,
+  content: detail
+  });
+  });
+  });
+  setCartIndividualData(tempCartData);
  }, [CartData]);
 
  useEffect(() => {
@@ -142,9 +222,6 @@ const handleIncrement = async (index) => {
       ...updatedItems[index],
       quantity: parseInt(updatedItems[index].quantity) + parseInt(1), // Increment the quantity
     };
-    var local=localStorage.getItem('count')
-    var c=parseInt(local)+1
-localStorage.setItem('count',c)
     updateCartItem(updatedItems[index]); // Update cart on server
     return updatedItems;
   });
@@ -160,9 +237,7 @@ const handleDecrement = async (index) => {
         ...updatedItems[index],
         quantity: updatedItems[index].quantity - 1, // Decrement the quantity
       };
-      var local=localStorage.getItem('count')
-    var c=parseInt(local)-1
-localStorage.setItem('count',c)
+ 
       updateCartItem(updatedItems[index]); // Update cart on server
     }
     return updatedItems;
@@ -172,7 +247,7 @@ localStorage.setItem('count',c)
     const updateCartItem = async (item) => {
           try {
             await axios.put(
-              `${process.env.REACT_APP_URL}/api/customer/updateCartItem/${item.id}`,
+              `http://localhost:4000/customer/updateCartItem/${item.id}`,
               {
                 date: item.date,
                 quantity: item.quantity
@@ -189,29 +264,15 @@ localStorage.setItem('count',c)
     const itemToRemove = sortedData[index];
     setSortedData((prevItems) => prevItems.filter((_, i) => i !== index));
     try {
-      await axios.delete(`${process.env.REACT_APP_URL}/api/customer/removeCartItem/${itemToRemove.id}`, {
+      await axios.delete(`http://localhost:4000/customer/removeCartItem/${itemToRemove.id}`, {
         data: { date: itemToRemove.date }
       });
     } catch (error) {
       console.error('Error removing cart item:', error);
     }
-    var local=localStorage.getItem('count')
-    const localParsed = parseInt(local, 10);
-    if (isNaN(localParsed)) {
-      console.error('Invalid localStorage value for count');
-      return;
-    }
   
-    // Ensure oldQuantity is a valid number
-    const oldQuantityParsed = parseInt(old, 10);
+  
    
-    if (isNaN(oldQuantityParsed)) {
-      console.error('Invalid oldQuantity value');
-      return;
-    }
-    const updatedQuantity = localParsed - oldQuantityParsed;
-   
-localStorage.setItem('count',updatedQuantity)
   };
  const handleViewHome = () => {
  navigate('/home');
@@ -222,32 +283,26 @@ localStorage.setItem('count',updatedQuantity)
  };
 
  const handleViewPayment = async () => {
-  // if (!userData ||userData.length === 0) {
-  //   // Display a message if userData is not available
-  //   alert("Please provide your details before proceeding to payment.");
-  //   return;
-  // }
-  
+
         try {
           
-        for (let i = 0; i < cartIndividualData.length; i++) {
-        const content = cartIndividualData[i].content;
+        for (let i = 0; i < sortedData.length; i++) {
+        // const content = cartIndividualData[i].content;
         const Data = {
-        category_id: content.category_id,
-        processing_date: content.date,
+        category_id: sortedData.id,
+        processing_date: sortedData.Date,
         delivery_status: 'shipped',
-        quantity: content.quantity,
-        active_quantity: content.quantity,
+        quantity: sortedData.quantity,
+        active_quantity: sortedData.quantity,
         media: null,
         delivery_details: null
         };
         OrderData.push(Data);
         }
         const OrderDataJSON = JSON.stringify(OrderData);
-        console.log('parsed',localStorage.getItem('address'))
-        console.log('orderdatajson',OrderDataJSON)
-        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporate/transfer-cart-to-order`, {
-          customer_generated_id: userData.id,
+    
+        const response = await axios.post('http://localhost:4000/customer/corporate/transfer-cart-to-order', {
+          customer_generated_id: decodedToken.id,
           order_details: OrderDataJSON,
           total_amount: Total,
           paymentid: null,
@@ -257,6 +312,7 @@ localStorage.setItem('count',updatedQuantity)
         if (response.status === 200) {
           await PaymentDetails(response.data.order.corporateorder_generated_id);
           await sendOrderDetails(response.data.order);
+         
         console.log('Cart details added to orders', response.data);
         }  else {
           console.error('Failed to add details to order_table:', response.data);
@@ -264,7 +320,6 @@ localStorage.setItem('count',updatedQuantity)
         } catch (error) {
         console.error('Error adding details to order_table:', error);
         }
-      
         };
 
 
@@ -276,7 +331,7 @@ localStorage.setItem('count',updatedQuantity)
             console.log('length', details.length);
 
             for (let i = 0; i < details.length; i++) {
-            response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`, {
+            response = await axios.post('http://localhost:4000/customer/corporateOrderDetails', {
                 corporateorder_id: orderDetails.corporateorder_id,
                 processing_date: details[i].processing_date,
                 delivery_status: details[i].delivery_status,
@@ -304,16 +359,35 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
   try{
 
         const token=localStorage.getItem('token')
-        const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, 
+        
+        const response = await axios.post('http://localhost:4000/pay', 
           {amount: Total,corporateorder_id:corporateorder_generated_id},{headers: { token: `${localStorage.getItem('token')}` },
         });
-        if (response.data && response.data.redirectUrl) {
-          setRedirectUrl(response.data.redirectUrl);
-          // Redirect to the provided URL
-          window.location.href = response.data.redirectUrl;
-        } else {
-          setError('Unexpected response format.');
-        }
+        setSortedData([]);
+    setCartData([]);
+    setCartIndividualData([]);
+    setTotal(0);
+
+    // Get user-specific details from local storage
+    const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+    const updatedUserDP = {
+      ...storedUserDP,
+      cartCount: 0, // Update the cart count for the specific user to 0 after payment
+    };
+
+    // Update local storage with updated user cart count
+    localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+
+    // Update cart count in context
+    updateCartCount(0);
+
+    // Redirect to the payment URL if available
+    if (response.data && response.data.redirectUrl) {
+      setRedirectUrl(response.data.redirectUrl);
+      window.location.href = response.data.redirectUrl;
+    } else {
+      setError('Unexpected response format.');
+    }
       } catch (err) {
         // Check for specific error details
         if (err.response) {
@@ -333,7 +407,7 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
 
  const fetchAddress = async () => {
  try {
- const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/customerAddress`, {
+ const response = await axios.get('http://localhost:4000/customer/corporate/customerAddress', {
  headers: { token: localStorage.getItem('token') }
  });
  
@@ -372,10 +446,9 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
  return <div className="text-center mt-8">Loading...</div>;
  }
 
-const handleQuantityChange = (index, value, oldQuantity) => {
-  console.log('old1', oldQuantity);
-  const oldQuantityParsed = parseInt(oldQuantity, 10);
-  console.log("oldbefore",oldQuantityParsed)
+const handleQuantityChange = (index, value) => {
+
+
   // Check if value is an empty string to allow clearing the input
   if (value === '') {
     setSortedData((prevItems) => {
@@ -407,39 +480,12 @@ const handleQuantityChange = (index, value, oldQuantity) => {
       return updatedItems;
     });
   }
-  let local = localStorage.getItem('count');
-  const localParsed = parseInt(local, 10); // Make sure local is a valid number
- console.log("local parsed",localParsed)
-  // Handle invalid or missing localStorage value
-  if (isNaN(localParsed)) {
-    console.error('Invalid localStorage value for count');
-    return;
-  }
 
-  // Ensure oldQuantity is a valid number
- 
-  console.log("oldafter",oldQuantityParsed)
-  // if (isNaN(oldQuantity)) {
-  //   console.error('Invalid oldQuantity value');
-  //   return;
-  // }
-console.log('oldparsed',oldQuantityParsed);
-  // Calculate the new count v
-  const updatedQuantity = localParsed - oldQuantityParsed;
-  console.log('updatedQuantity after subtraction', updatedQuantity);
 
-  const newCount = updatedQuantity + newQuantity;
-  console.log('newCount after addition', newCount);
-  localStorage.setItem('count', newCount);
 
 };
 
-  const tokens=localStorage.getItem('token')
-  const decodedToken = jwtDecode(tokens);
-  const emails=decodedToken.email;
-  console.log(emails)
-
-
+ 
 
 
   return (
@@ -462,32 +508,41 @@ console.log('oldparsed',oldQuantityParsed);
         <div className="max-w-6xl mx-auto">
           {/* User details section */}
           <div className="bg-white shadow-lg rounded-lg p-4 mb-6">
-            <h2 className="text-xl font-bold mb-4">Your Details</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <p className="font-bold">Name:</p>
-                <p>{userAddressDetails.Name}</p>
-              </div>
-              <div>
-                <p className="font-bold">Email:</p>
-                <p>{emails}</p>
-              </div>
-              <div>
-                <p className="font-bold">Phone Number:</p>
-                <p>{userAddressDetails.PhoneNumber}</p>
-              </div>
-              <div>
-                <p className="font-bold">Address:</p>
-                <p>{userAddressDetails.address}</p>
-              </div>
-            </div>
-            <button
-              onClick={handleAddressFormToggle}
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-            >
-              {userData ? 'Change' : 'Add Address'}
-            </button>
-          </div>
+  <h2 className="text-xl font-bold mb-4">Shipping Details</h2>
+  
+  {!userAddressDetails.Name && (
+    <p className="text-red-500 font-bold mb-4">
+      *Shipping details are required to proceed with payment.
+    </p>
+  )}
+  
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <p className="font-bold">Name:</p>
+      <p className='text-gray-700'>{userAddressDetails.Name || 'Not provided'}</p>
+    </div>
+    <div>
+      <p className="font-bold">Email:</p>
+      <p className='text-gray-700'>{emails || 'Not provided'}</p>
+    </div>
+    <div>
+      <p className="font-bold">Phone Number:</p>
+      <p className='text-gray-700'>{userAddressDetails.PhoneNumber || 'Not provided'}</p>
+    </div>
+    <div>
+      <p className="font-bold">Address:</p>
+      <p className='text-gray-700'>{userAddressDetails.address || 'Not provided'}</p>
+    </div>
+  </div>
+  
+  <button
+    onClick={handleAddressFormToggle}
+    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+  >
+    {userAddressDetails.Name ? 'Change details' : 'Add details'}
+  </button>
+</div>
+
 
           {/* Cart items section */}
           {sortedData.length === 0 ? (
@@ -560,25 +615,17 @@ console.log('oldparsed',oldQuantityParsed);
         </div>
       </main>
 
-     <footer className="bg-white shadow-md p-4 fixed bottom-0 left-0 right-0 z-10">
-  <div className="flex justify-between items-center max-w-6xl mx-auto">
-    <h2 className="text-lg font-bold">Total: ₹{Total}/-</h2>
-    
-    {/* Pay Now button - disabled when cart is empty */}
-    <button
-      className={`p-2 px-4 rounded-lg shadow-md transition 
-        ${sortedData.length === 0
-          ? 'bg-gray-300 cursor-not-allowed' // Faded button when disabled
-          : 'bg-purple-600 text-white hover:bg-purple-700' // Normal button
-      }`}
-      onClick={handleViewPayment}
-      disabled={sortedData.length === 0} // Disable button when cart is empty
-    >
-      Pay Now
-    </button>
-  </div>
-</footer>
-
+      <footer className="bg-white shadow-md p-4 fixed bottom-0 left-0 right-0 z-10">
+        <div className="flex justify-between items-center max-w-6xl mx-auto">
+          <h2 className="text-lg font-bold">Total: ₹{Total}/-</h2>
+          <button 
+            className="bg-purple-600 text-white p-2 px-4 rounded-lg shadow-md hover:bg-purple-700 transition"
+            onClick={handleViewPayment}
+          >
+            Pay Now
+          </button>
+        </div>
+      </footer>
 
       {isAddressFormOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

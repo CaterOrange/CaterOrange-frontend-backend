@@ -242,7 +242,7 @@ const handleSaveDates = async () => {
     try {
         const token = localStorage.getItem('token');
         console.log('Token being sent:', token);
-        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/cart/corporate`, {
+        const response = await axios.post('http://localhost:4000/customer/cart/corporate', {
             cart_order_details: cartDetailsJSON,
             total_amount: amount
         }, {
