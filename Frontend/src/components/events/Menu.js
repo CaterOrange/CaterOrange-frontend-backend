@@ -5,7 +5,6 @@ import { addtocart, cartToOrder, removeFromCart } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 
-
 const ToggleSwitch = ({ isOn, onToggle }) => (
  <div
  className={`w-8 h-4 flex items-center rounded-full p-1 cursor-pointer ${isOn ? `bg-red-500` : `bg-gray-300`}`}
@@ -109,9 +108,8 @@ const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit
  );
 };
 
-
-
 const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address, selectedTime, onRemoveItem,onChangeAddress,onClearCart }) => {
+
  const [loading, setLoading] = useState(false);
  const [error, setError] = useState('');
  const [cartId, setCartId] = useState(0);
@@ -138,6 +136,10 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  // totalCost = costperkg;
  if (quantity < 1) {
  totalCost = quantity * costperkg * numberOfPlates
+ console.log("quantity:", quantity);
+ console.log("costperkg:", costperkg);
+ console.log("numberofplates:", numberOfPlates);
+ console.log("TOTALcOST:", totalCost);
 
  }
  else {
@@ -221,7 +223,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  return () => clearTimeout(delay);
  }, [cartItems]);
 
-
  const clearLocalStorageExceptToken = () => {
   const token = localStorage.getItem('token');
   localStorage.clear();
@@ -272,9 +273,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
 
 
 
-
- 
-
  const handleDelete = async (productid) => {
  try {
  await removeFromCart(productid, cartId);
@@ -284,8 +282,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  setError('Failed to remove item. Please try again.');
  }
  };
-
- 
  const isAddressValid = address && address.line1 && address.line2 && address.pincode;
 
  return (
@@ -377,7 +373,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
  let totalCost;
  if (selectedUnit === 'plate_units') {
  const priceperunit = item['priceperunit'];
- calculationString = `${quantity} * ₹${priceperunit} * ${numberOfPlates} = `;
+ calculationString = `${quantity} * ${priceperunit} * ${numberOfPlates} = `;
  } else if (selectedUnit === 'wtorvol_units') {
  const price_per_wtorvol_units = item['price_per_wtorvol_units'];
  const costperkg = price_per_wtorvol_units * 1000;
@@ -852,5 +848,3 @@ const handleChangeAddress = () => {
 
 
 export default Menu;
-
-

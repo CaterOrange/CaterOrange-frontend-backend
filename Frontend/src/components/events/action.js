@@ -98,8 +98,7 @@ export const myorders = async()=>{
             
           } 
    }
-
-export const removeFromCart = async (productid, eventcart_id) => {
+  export const removeFromCart = async (productid, eventcart_id) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_URL}/api/cart/remove`, {
         method: 'DELETE',
@@ -119,7 +118,6 @@ export const removeFromCart = async (productid, eventcart_id) => {
       console.error('Error:', error);
     }
   };
-
 export const orderbuyagain = async(cartData)=>{
   console.log("in action.js:",cartData);
   try {

@@ -55,7 +55,6 @@ const HomePage = () => {
     setIsEditingAddress(true);
     setIsAddAddressFormVisible(true);
   };
-
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {
       setAddress(
@@ -91,6 +90,7 @@ const HomePage = () => {
     <div
       className="bg-green-600 min-h-screen p-4"
       style={{ fontFamily: process.env.REACT_APP_FONT }} 
+
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
       <h2
@@ -188,18 +188,20 @@ const HomePage = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholderText="Select a date"
                 required
-                minDate={new Date()} 
+
+                minDate={new Date()} // Disable past dates
+
               />
             </div>
         
             <div>
-              <label className="block text-gray-700 mb-2 font-bold">Note (e.g., 3:30 PM)</label>
+              <label className="block text-gray-700 mb-2 font-bold">Time (e.g., 3:30 PM or 3:30 AM)</label>
               <input
                 type='text'
-                placeholder="Enter here..."
+                placeholder="Enter time here (e.g., 3:30 PM or 3:30 AM)"
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 required
               />
             </div>

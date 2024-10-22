@@ -81,7 +81,6 @@ const addCart = async (customer_id, total_amount, cart_order_details, address, n
         throw error;
     }
 };
-
 const getOrderDetailsById = async (customer_id) => {
     const query = DB_COMMANDS.GET_ORDER_DETAILS_BY_ID;
     const values = [customer_id];
@@ -112,10 +111,8 @@ const insertEventOrder = async (orderData) => {
     try {
         const cartOrderDetailsJson = JSON.stringify(orderData.cart_order_details);
         const customerAddressJson = JSON.stringify(orderData.customer_address);
-
         logger.info("cart_order_details JSON: ", cartOrderDetailsJson);
         logger.info("customer_address JSON: ", customerAddressJson);
-
         const result = await client.query(DB_COMMANDS.INSERT_EVENT_ORDER, [
             orderData.customer_id,
             orderData.delivery_status,
@@ -163,7 +160,6 @@ const deleteCart = async (eventcart_id) => {
         throw new Error('Error deleting cart: ' + error.message);
     }
 };
-
 
 module.exports = {
     getAllProductCategories,

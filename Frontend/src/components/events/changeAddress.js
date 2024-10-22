@@ -56,8 +56,6 @@ const ChangeAddress = () => {
     setIsEditingAddress(true);
     setIsAddAddressFormVisible(true);
   };
-
-
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {
       setAddress(
@@ -74,7 +72,6 @@ const ChangeAddress = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
-
     if (!form.checkValidity()) {
       form.reportValidity();
     } else {

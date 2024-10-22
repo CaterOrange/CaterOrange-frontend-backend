@@ -115,6 +115,7 @@ const getOrderDetails = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
   const { productid, eventcart_id } = req.body;
+  
   try {
     const result = await client.query(
       `UPDATE event_cart

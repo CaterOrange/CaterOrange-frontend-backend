@@ -90,7 +90,6 @@ app.post("/api/pay", async(req, res) => {
   const decode = jwt.decode(token);
   console.log(decode);
   console.log(amount)
-  console.log("cid",corporateorder_id)
   const customer_id = decode.id;
   // console.log(token)
   // const response = await customerController.getuserbytoken({ body: { access_token: token } })
