@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/sirisha/Desktop/Caterorange-hotfix/hi/Backend/src/config/logs/.e9d102949d36f349b07ab0c16cc6bc7086812ee9-audit.json",
+    "files": [
+        {
+            "date": 1729514942697,
+            "name": "/home/sirisha/Desktop/Caterorange-hotfix/hi/Backend/src/config/logs/error-2024-10-21.log",
+            "hash": "3a008cfd209c608272736c3d13321ef2efcbfa12f8f5acefd0c3a52a34dd6a60"
+        }
+    ],
+    "hashType": "sha256"
+}

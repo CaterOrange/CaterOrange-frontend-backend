@@ -210,63 +210,6 @@ const CorporateOrders = () => {
       </div>
     );
   }, [expandedOrders, toggleOrderDetails]);
-
-  // return (
-  //   <>
-
-  //     <header className="fixed top-0 left-0 w-full bg-green-500 h-16 flex items-center pl-4">
-  //       <Link to='/home'>
-  //         <HomeIcon className="h-6 w-6 sm:h-8 sm:w-8 text-white mr-2" onClick={handleViewHome}/> 
-  //       </Link>
-  //       <h1 className="text-2xl sm:text-3xl lg:text-4xl text-white">
-  //         My Orders
-  //       </h1>
-  //     </header>
-
-  //     <div className="w-full my-4 sm:my-10 px-4 sm:px-6 lg:px-8 xl:px-0 bg-gradient-to-r from-blue-50 to-white shadow-xl rounded-lg">
-  //       <div className="flex justify-center gap-4 sm:gap-6 mb-6 sm:mb-10">
-  //         <button
-  //           className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
-  //             showCorporate ? 'bg-yellow-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
-  //           }`}
-  //           onClick={() => setShowCorporate(true)}
-  //         >
-  //           <CakeIcon className="h-5 w-5 inline-block mr-2" />
-  //           Corporate
-  //         </button>
-  //         <button
-  //           className={`py-2 px-4 sm:py-3 sm:px-8 rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
-  //             !showCorporate ? 'bg-green-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
-  //           }`}
-  //           onClick={() => setShowCorporate(false)}
-  //         >
-  //           <CalendarIcon className="h-5 w-5 inline-block mr-2" />
-  //           Events
-  //         </button>
-  //       </div>
-
-  //       {showCorporate && (
-  //         <div className="space-y-4 sm:space-y-8 w-full">
-  //           {isLoading ? (
-  //             <p>Loading orders...</p>
-  //           ) : error ? (
-  //             <p className="text-red-500">{error}</p>
-  //           ) : orderData ? (
-  //             orderData.map(renderOrder)
-  //           ) : (
-  //             <p>No corporate orders found.</p>
-  //           )}
-  //         </div>
-  //       )}
-
-  //       {!showCorporate && (
-  //         <div className="text-center py-8">
-  //           <p className="text-lg text-gray-700"><OrderDashboard /></p>
-  //         </div>
-  //       )}
-  //     </div>
-  //   </>
-  // );
   return (
     <>
       {/* Header */}
