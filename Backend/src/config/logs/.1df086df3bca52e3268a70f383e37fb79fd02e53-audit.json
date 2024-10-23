@@ -6,9 +6,9 @@
     "auditLog": "/home/rgukt/Desktop/CO_PROJECT/CaterOrange/Backend/src/config/logs/.1df086df3bca52e3268a70f383e37fb79fd02e53-audit.json",
     "files": [
         {
-            "date": 1727415148558,
-            "name": "/home/rgukt/Desktop/CO_PROJECT/CaterOrange/Backend/src/config/logs/error-2024-09-27.log",
-            "hash": "ff34dd6be2634d41f412933d5495173fc22f2abcfb2d81799677427f36beef33"
+            "date": 1729575130339,
+            "name": "/home/rgukt/Desktop/CO_PROJECT/CaterOrange/Backend/src/config/logs/error-2024-10-22.log",
+            "hash": "cbb854ed1412919eb27b97d77f905e5d253adbb6e1be73b7d44e0d9b6a98aa4b"
         }
     ],
     "hashType": "sha256"

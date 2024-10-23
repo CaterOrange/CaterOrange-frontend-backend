@@ -27,7 +27,7 @@ const { fetchAndInsertCSVData } = require('../products.js');
 const app = express();
 app.use(express.json());
 const corsOptions = {
-  origin: 'http://localhost:3000', // Update with your frontend origin
+  origin: 'https://dev.caterorange.com', // Update with your frontend origin
   optionsSuccessStatus: 200,
 };
 
@@ -65,7 +65,7 @@ const initializeApp = async () => {
     process.exit(1);
     }
   }
- 
+   
 
 
 const PHONEPE_HOST_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox";

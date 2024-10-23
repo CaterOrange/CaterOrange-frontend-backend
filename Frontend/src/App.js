@@ -18,6 +18,7 @@ import HomePage from "./components/HomePage.js";
 import ChangeAddress from "./components/events/changeAddress.js";
 function App() {
   const [user, setUser] = useState(null);
+  const [isLoading,setIsLoading]=useState(true);
   const handleSignIn =async (token,isGoogleLogin) => {
     if (token) {
       localStorage.setItem('token', token);
