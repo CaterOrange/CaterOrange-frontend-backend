@@ -7,8 +7,7 @@ import { useCart } from '../../services/contexts/CartContext';
 import { StoreContext } from "../../services/contexts/store";
 import './css/date.css';
 
-
-function DateComponent({ foodtype, quantity ,onSaveSuccess }) {
+function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     const [selectedDates, setSelectedDates] = useState([]);
     const [monthlyIncludedDays, setMonthlyIncludedDays] = useState({});
     const [individualToggles, setIndividualToggles] = useState({});
@@ -19,7 +18,6 @@ function DateComponent({ foodtype, quantity ,onSaveSuccess }) {
     const [lastClickedDate, setLastClickedDate] = useState(null);
     const [fromDate, setFromDate] = useState(null);
     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
-    
     const { state, dispatch } = useContext(StoreContext);
 const [toDate, setToDate] = useState(null);
 const { updateCartCount } = useCart();
@@ -216,11 +214,11 @@ const handleSaveDates = async () => {
   
     if (quantity === 0) {
         console.log('Oops! You did not mention the quantity.');
-        alert('Oops! You did not mention the quantity.');
+        onError('Please select a quantity');
         return;
     } else if (dates.length === 0) {
         console.log('Oops! You did not mention the dates.');
-        alert('Oops! You did not mention the dates.');
+        onError('Please select dates');
         return;
     }
 
@@ -267,9 +265,11 @@ const handleSaveDates = async () => {
             onSaveSuccess();
         } else {
             console.error('Failed to save cart details:', response.data);
+            onError('Failed to save cart details');
         }
     } catch (error) {
         console.error('Error saving cart details:', error);
+        onError('Error saving cart details');
     }
 };
 

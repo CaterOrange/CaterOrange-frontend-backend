@@ -2,6 +2,7 @@ import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/react/outline';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
+import axios from 'axios';
 
 import Body from './Body';
 import './css/styles.css';
@@ -13,7 +14,11 @@ const Header = ({ user }) => {
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('corporate');
+  const [count, setCount]= useState(0);
   const navigate = useNavigate();
+
+  // setCount(cartCount)
+  console.log('cart count',cartCount )
 
   const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
 
@@ -63,6 +68,20 @@ const Header = ({ user }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const fetchCount = async () => {
+    try {
+    const response = await axios.get('http://localhost:4000/customer/getCartCount', {
+    headers: { token: `${localStorage.getItem('token')}` },
+    });
+    console.log('usercount', response.data.data);
+    // cartCount= response.data.data;
+    setCount(response.data.data);
+    } catch (error) {
+    console.error('Error fetching cart count:', error);
+    }}
+    fetchCount()
+  }, []);
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-green-600 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
@@ -79,9 +98,9 @@ const Header = ({ user }) => {
             <Link to="/cart">
               <ShoppingCartIcon className="h-8 w-8 cursor-pointer" onClick={handleViewCart} />
             </Link>
-            {cartCount > 0 && (
+            {count > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
-                {cartCount}
+                {cartCount || count}
               </span>
             )}
           </div>

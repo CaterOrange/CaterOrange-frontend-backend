@@ -172,6 +172,13 @@ GET_ORDER_GENID: `
 `,
 GET_ORDER_EVENTGENID: `
   SELECT eventorder_generated_id FROM event_orders WHERE customer_id=$1
+`,
+getCartCountById:`
+SELECT SUM((item->>'quantity')::integer) AS total_quantity
+FROM corporate_cart,
+     jsonb_array_elements(cart_order_details::jsonb) AS item
+WHERE customer_generated_id = $1
+
 `
 
  };

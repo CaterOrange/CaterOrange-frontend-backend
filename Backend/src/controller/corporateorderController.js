@@ -247,6 +247,43 @@ const getcategorynameById = async (req, res) => {
   }
 };
 
+const getCartCount = async (req, res) => {
+  try {
+    const token = req.headers['token'];
+
+    let verified_data;
+    try {
+      verified_data = jwt.verify(token, SECRET_KEY);
+      logger.info('Token verified successfully for fetching cart count');
+    } catch (err) {
+      logger.error('Token verification failed', { error: err.message });
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+
+    const customer_id = verified_data.id;
+    const customer = await customer_model.getCustomerDetails(customer_id);
+
+   console.log('sneha user id:', customer_id)
+
+    if (!customer) {
+      logger.warn('Customer not found', { customerId: customer_id });
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    console.log('Fetching cart count for customer', { customerId: customer_id });
+    const count = await corporate_model.getCartCountById(customer_id);
+
+    if (!count) {
+      return res.status(404).json({ message: 'Count not found' });
+    }
+
+    res.status(200).json({ data: count });
+  } catch (error) {
+    logger.error('Error retrieving cart count', { error: error.message });
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   addCorporateOrderDetails,
   getOrderDetails,
@@ -256,5 +293,6 @@ module.exports = {
   getCorporateCart,
   GetCorporateCategory,
   updateCartItem,
-  deleteCartItem
+  deleteCartItem,
+  getCartCount
 };

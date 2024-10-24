@@ -618,12 +618,18 @@ const handleQuantityChange = (index, value) => {
       <footer className="bg-white shadow-md p-4 fixed bottom-0 left-0 right-0 z-10">
         <div className="flex justify-between items-center max-w-6xl mx-auto">
           <h2 className="text-lg font-bold">Total: ₹{Total}/-</h2>
-          <button 
-            className="bg-purple-600 text-white p-2 px-4 rounded-lg shadow-md hover:bg-purple-700 transition"
-            onClick={handleViewPayment}
-          >
-            Pay Now
-          </button>
+            {/* Pay Now button - disabled when cart is empty */}
+    <button
+      className={`p-2 px-4 rounded-lg shadow-md transition 
+        ${sortedData.length === 0
+          ? 'bg-gray-300 cursor-not-allowed' // Faded button when disabled
+          : 'bg-purple-600 text-white hover:bg-purple-700' // Normal button
+      }`}
+      onClick={handleViewPayment}
+      disabled={sortedData.length === 0} // Disable button when cart is empty
+    >
+      Pay Now
+    </button>
         </div>
       </footer>
 
