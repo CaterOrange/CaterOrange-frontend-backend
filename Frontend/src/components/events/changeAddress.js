@@ -56,11 +56,8 @@ const ChangeAddress = () => {
     setIsEditingAddress(true);
     setIsAddAddressFormVisible(true);
   };
-<<<<<<< HEAD
 
 
-=======
->>>>>>> main
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {
       setAddress(

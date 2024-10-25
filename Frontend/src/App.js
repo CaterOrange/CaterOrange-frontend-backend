@@ -16,15 +16,12 @@ import Menu from "./components/events/Menu.js";
 import OrderDashboard from "./components/events/myorders.js";
 import HomePage from "./components/HomePage.js";
 import ChangeAddress from "./components/events/changeAddress.js";
-<<<<<<< HEAD
 import ShowAddress from './components/Address/ShowAddress.js';
 import { AboutUs } from './components/Home/AboutUs.js';
 import { Wallet } from './components/Home/Wallet.js';
 import { Settings } from './components/Home/Settings.js';
 // import { ShowAddress } from './components/Address/ShowAddress.js';
 
-=======
->>>>>>> main
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading,setIsLoading]=useState(true);
