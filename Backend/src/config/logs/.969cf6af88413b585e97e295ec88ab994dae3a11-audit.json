@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/sirisha/Desktop/CaterOrange/Backend/src/config/logs/.969cf6af88413b585e97e295ec88ab994dae3a11-audit.json",
+    "files": [
+        {
+            "date": 1729679218417,
+            "name": "/home/sirisha/Desktop/CaterOrange/Backend/src/config/logs/application-2024-10-23.log",
+            "hash": "7d1f9e3845662168e496d6f9f8e3c7d44306274912f38e165d06072bcdabcff7"
+        },
+        {
+            "date": 1729709880011,
+            "name": "/home/sirisha/Desktop/CaterOrange/Backend/src/config/logs/application-2024-10-24.log",
+            "hash": "f20c470ea743fd461f6b43a4cf3e6b0edf01483787a75d43869cef2d8f307bdc"
+        }
+    ],
+    "hashType": "sha256"
+}

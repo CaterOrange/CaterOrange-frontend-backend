@@ -16,6 +16,12 @@ import Menu from "./components/events/Menu.js";
 import OrderDashboard from "./components/events/myorders.js";
 import HomePage from "./components/HomePage.js";
 import ChangeAddress from "./components/events/changeAddress.js";
+import ShowAddress from './components/Address/ShowAddress.js';
+import { AboutUs } from './components/Home/AboutUs.js';
+import { Wallet } from './components/Home/Wallet.js';
+import { Settings } from './components/Home/Settings.js';
+// import { ShowAddress } from './components/Address/ShowAddress.js';
+
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading,setIsLoading]=useState(true);
@@ -81,6 +87,12 @@ function App() {
               <Route path="/eventorders" element={<OrderDashboard />} />
               <Route path="/failure" element={<FailurePage />} />
               <Route path="/pending" element={<PendingPage />} />
+              <Route path="/address" element={<ShowAddress />} />
+              <Route path="/contact" element={<AboutUs />} />
+              <Route path="/wallet" element={<Wallet />}/>
+              <Route path="/settings" element={<Settings />}/>
+
+            
             </Routes>
           </Router>
         </SignUpProvider>

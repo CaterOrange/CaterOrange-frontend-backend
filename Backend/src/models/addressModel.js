@@ -62,9 +62,28 @@ const updateAddressById = async (address_id, tag, pincode, line1, line2) => {
     }
 };
 
+
+const getAllAddresses = async (customer_id) => {
+    try {
+        const query = 'SELECT tag,pincode,line1,line2,location from address;';
+        const result = await client.query(query);
+
+        logger.info('Addresses retrieved successfully:', result.rows);
+        return result.rows; // Return all addresses
+        
+    } catch (error) {
+        logger.error('Error getting addresses', { error: error.message });
+        throw error; // Propagate the error to be handled by the controller
+    }
+};
+
+
+
+
 module.exports = {
     createaddress,
     select_default_address,
     getUserIdFromToken,
     updateAddressById,
+    getAllAddresses
 }
