@@ -118,7 +118,10 @@ const SignInForm = ({ onSignIn }) => {
     setError('');
     try {
       console.log('handle otp called');
+<<<<<<< HEAD
       console.log('email', email);
+=======
+>>>>>>> main
       await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email });
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
   

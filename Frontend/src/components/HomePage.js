@@ -55,29 +55,6 @@ const HomePage = () => {
     setIsEditingAddress(true);
     setIsAddAddressFormVisible(true);
   };
-
-  // const handleDeleteAddress = async (addressId) => {
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     if (!token) {
-  //       console.error('No token found in localStorage');
-  //       return;
-  //     }
-
-  //     const response = await axios.delete(`http://localhost:4000/address/delete/${addressId}`, {
-  //       headers: { 'token': token },
-  //     });
-
-  //     if (response.status === 200) {
-  //       setAddress(address.filter((addr) => addr.address_id !== addressId));
-  //     } else {
-  //       console.error('Failed to delete address:', response.status);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error deleting address:', error);
-  //   }
-  // };
-
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {
       setAddress(
@@ -112,7 +89,8 @@ const HomePage = () => {
   return (
     <div
       className="bg-green-600 min-h-screen p-4"
-      style={{ fontFamily: process.env.REACT_APP_FONT }} // Use font from .env
+      style={{ fontFamily: process.env.REACT_APP_FONT }} 
+
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
       <h2
@@ -180,10 +158,6 @@ const HomePage = () => {
                           >
                             Edit
                           </span>
-                          {/* <FiTrash
-                            className="text-red-500 cursor-pointer"
-                            onClick={() => handleDeleteAddress(add.address_id)}
-                          /> */}
                         </div>
                       </div>
                     ))
@@ -214,7 +188,9 @@ const HomePage = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholderText="Select a date"
                 required
+
                 minDate={new Date()} // Disable past dates
+
               />
             </div>
         

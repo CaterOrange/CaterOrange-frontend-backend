@@ -56,8 +56,11 @@ const ChangeAddress = () => {
     setIsEditingAddress(true);
     setIsAddAddressFormVisible(true);
   };
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> main
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {
       setAddress(
@@ -74,9 +77,6 @@ const ChangeAddress = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
-    // const plates = form.elements['plates'].value;
-
-
     if (!form.checkValidity()) {
       form.reportValidity();
     } else {
@@ -96,12 +96,6 @@ const ChangeAddress = () => {
       style={{ fontFamily: process.env.REACT_APP_FONT }} // Use font from .env
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
-      {/* <h2
-              className="text-lg font-semibold mb-6 text-center"
-              style={{ color: '#006600', fontFamily: process.env.REACT_APP_FONT }}
-            >
-              Know Order Availability To Your Location
-            </h2> */}
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -160,10 +154,6 @@ const ChangeAddress = () => {
                           >
                             Edit
                           </span>
-                          {/* <FiTrash
-                            className="text-red-500 cursor-pointer"
-                            onClick={() => handleDeleteAddress(add.address_id)}
-                          /> */}
                         </div>
                       </div>
                     ))

@@ -624,8 +624,6 @@ const google_auth = async (req, res) => {
 
             const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
             console.log("email,id",decoded.email,decoded.id)
-
-
             return res.json({
                 success: true,
                 message: 'Customer registered successfully',
