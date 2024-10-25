@@ -13,20 +13,20 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
   const [shipToName, setShipToName] = useState('');
   const [shipToPhoneNumber, setShipToPhoneNumber] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [defaultDetails, setDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
   const [editableDefaultDetails, setEditableDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
 
+  // Fetch default address details
   useEffect(() => {
     const fetchDefaultDetails = async () => {
       const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found, please log in again.');
-      }
+      if (!token) throw new Error('No token found, please log in again.');
+
       try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
-          headers: { 'token': token },
+          headers: { token },
         });
         const { customer_name = '', customer_phonenumber = '' } = response.data.customer || {};
         setDefaultDetails({ customer_name, customer_phonenumber });
@@ -39,6 +39,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
     fetchDefaultDetails();
   }, []);
 
+  // Populate form if an existing address is being edited
   useEffect(() => {
     if (existingAddress) {
       setTag(existingAddress.tag || '');
@@ -49,6 +50,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
       setLandmark(existingAddress.landmark || '');
       setLocation(existingAddress.location || { address: '', lat: null, lng: null });
       setSelectedOption(existingAddress.selectedOption || null);
+
       if (existingAddress.selectedOption === 'shipping') {
         setShipToName(existingAddress.shipToName || '');
         setShipToPhoneNumber(existingAddress.shipToPhoneNumber || '');
@@ -56,99 +58,110 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
     }
   }, [existingAddress]);
 
-  const handleLocationSelect = ({ lat, lng, address }) => {
-    setLocation({ lat, lng, address });
-    setErrors((prevErrors) => {
-      const { location, ...rest } = prevErrors;
-      return rest;
-    });
+  const validateField = (field, value) => {
+    let error = '';
+    const phoneRegex = /^\d{10}$/;
+
+    switch (field) {
+      case 'tag':
+        if (!value) error = 'Tag is required';
+        break;
+      case 'pincode':
+        if (!value || isNaN(value)) error = 'Valid pincode is required';
+        break;
+      case 'city':
+        if (!value) error = 'City is required';
+        break;
+      case 'state':
+        if (!value) error = 'State is required';
+        break;
+      case 'shipToPhoneNumber':
+        if (!phoneRegex.test(value)) error = 'Valid 10-digit phone number is required';
+        break;
+      default:
+        break;
+    }
+
+    setFieldErrors((prev) => ({ ...prev, [field]: error }));
+    return !error;
   };
 
-  const handleDefaultDetailsChange = (e) => {
+  const handleBlur = (e) => {
     const { name, value } = e.target;
-    setEditableDefaultDetails(prev => ({ ...prev, [name]: value }));
+    validateField(name, value);
   };
 
-  const validate = () => {
-    const errors = {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    if (!tag) errors.tag = 'Tag is required';
-    if (!pincode || isNaN(pincode)) errors.pincode = 'Valid pincode is required';
-    if (!city) errors.city = 'City is required';
-    if (!state) errors.state = 'State is required';
-    if (!location.lat || !location.lng) {
-      errors.location = 'Location is required';
-    } else {
-      if (isNaN(location.lat) || isNaN(location.lng)) {
-        errors.location = 'Valid latitude and longitude are required';
-      }
-      if (location.lat < -90 || location.lat > 90) {
-        errors.location = 'Latitude must be between -90 and 90';
-      }
-      if (location.lng < -180 || location.lng > 180) {
-        errors.location = 'Longitude must be between -180 and 180';
-      }
+    switch (name) {
+      case 'tag':
+        setTag(value);
+        break;
+      case 'pincode':
+        setPincode(value);
+        break;
+      case 'city':
+        setCity(value);
+        break;
+      case 'state':
+        setState(value);
+        break;
+      case 'shipToName':
+        setShipToName(value);
+        break;
+      case 'shipToPhoneNumber':
+        setShipToPhoneNumber(value);
+        break;
+      case 'customer_name':
+      case 'customer_phonenumber':
+        setEditableDefaultDetails((prev) => ({ ...prev, [name]: value }));
+        break;
+      default:
+        break;
     }
 
-    if (!selectedOption) {
-      errors.selectedOption = 'You must select either shipping details or set as default';
-    }
-
-    if (selectedOption === 'shipping') {
-      if (!shipToName) errors.shipToName = 'Ship to name is required';
-      if (!shipToPhoneNumber || isNaN(shipToPhoneNumber) || shipToPhoneNumber.length !== 10) {
-        errors.shipToPhoneNumber = 'Valid 10-digit phone number is required';
-      }
-    }
-
-    return errors;
+    validateField(name, value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
+
+    if (Object.values(fieldErrors).some((error) => error)) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token found, please log in again.');
+
     const line1 = `${flatNumber}, ${landmark}`;
     const line2 = `${city}, ${state}`;
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No token found, please log in again.');
-    }
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        const url = existingAddress
-          ? `${process.env.REACT_APP_URL}/api//address/edit/${existingAddress.address_id}`
-          : `${process.env.REACT_APP_URL}/api/address/createAddres`;
-        
-        const response = await axios.post(
-          url,
-          {
-            tag,
-            pincode,
-            line1,
-            line2,
-            location: `{${location.lat},${location.lng}}`,
-            ship_to_name: selectedOption === 'shipping' ? shipToName : editableDefaultDetails.customer_name,
-            ship_to_phone_number: selectedOption === 'shipping' ? shipToPhoneNumber : editableDefaultDetails.customer_phonenumber,
-          },
-          {
-            headers: { 'token': token },
-          }
-        );
 
-        clearForm();
-        if (saveAddress) {
-          saveAddress(response.data.address);
-        }
-        setSuccessMessage(existingAddress ? 'Address updated successfully.' : 'Address saved successfully.');
-      } catch (error) {
-        console.error('Error saving address:', error);
-        setSuccessMessage('Failed to save address.');
-      }
-    } else {
-      setErrors(validationErrors);
+    try {
+      const url = existingAddress
+        ? `${process.env.REACT_APP_URL}/api/address/edit/${existingAddress.address_id}`
+        : `${process.env.REACT_APP_URL}/api/address/createAddress`;
+
+      const response = await axios.post(
+        url,
+        {
+          tag,
+          pincode,
+          line1,
+          line2,
+          location: `{${location.lat},${location.lng}}`,
+          ship_to_name: selectedOption === 'shipping' ? shipToName : editableDefaultDetails.customer_name,
+          ship_to_phone_number: selectedOption === 'shipping' ? shipToPhoneNumber : editableDefaultDetails.customer_phonenumber,
+        },
+        { headers: { token } }
+      );
+
+      setSuccessMessage(existingAddress ? 'Address updated successfully.' : 'Address saved successfully.');
+      clearForm();
+      if (saveAddress) saveAddress(response.data.address);
+    } catch (error) {
+      console.error('Error saving address:', error);
+      setSuccessMessage('Failed to save address.');
     }
   };
-
   const clearForm = () => {
     setTag('');
     setPincode('');
@@ -160,7 +173,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
     setShipToName('');
     setShipToPhoneNumber('');
     setSelectedOption(null);
-    setErrors({});
+    setFieldErrors({});
   };
 
   return (
@@ -176,12 +189,14 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
           <input
             type="text"
             value={tag}
-            onChange={(e) => setTag(e.target.value)}
+            
+            onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="E.g., Home, Office"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             required
           />
-          {errors.tag && <p className="text-red-500 text-xs">{errors.tag}</p>}
+          {errors.tag && <p className="text-red-500 text-xs">{fieldErrors.tag}</p>}
         </div>
 
         <div className="mb-4">
@@ -189,7 +204,8 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
           <input
             type="text"
             value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
+            onChange={handleChange}
+            onBlur={handleBlur}
             placeholder="Enter pincode"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             required
@@ -202,7 +218,8 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
           <input
             type="text"
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={handleChange}
+          onBlur={handleBlur}
             placeholder="Enter city"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             required
@@ -215,7 +232,8 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
           <input
             type="text"
             value={state}
-            onChange={(e) => setState(e.target.value)}
+            onChange={handleChange}
+          onBlur={handleBlur}
             placeholder="Enter state"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             required
@@ -228,7 +246,8 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
           <input
             type="text"
             value={flatNumber}
-            onChange={(e) => setFlatNumber(e.target.value)}
+            onChange={handleChange}
+          onBlur={handleBlur}
             placeholder="Enter flat number"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
@@ -239,7 +258,8 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
           <input
             type="text"
             value={landmark}
-            onChange={(e) => setLandmark(e.target.value)}
+            onChange={handleChange}
+          onBlur={handleBlur}
             placeholder="Enter landmark"
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />

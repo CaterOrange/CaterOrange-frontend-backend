@@ -6,8 +6,17 @@ const customerController = require('../controller/customerController.js');
 
 router.post('/address/createAddres',addressController.createAddress)
 router.get('/address/getDefaultAddress',addressController.getDefaultAddress)
+
+
 router.get('/address/getalladdresses',addressController.getAddressForUser)
+
+
+
 router.get('/customer/corporate/customerAddress',customerController.CustomerAddress)
 router.get('/customer/getAddress', addressController.getSelectedAddress)
+
+router.get('/address/getaddresses',addressController.getalladdresses)
+
+
 
 module.exports = router;

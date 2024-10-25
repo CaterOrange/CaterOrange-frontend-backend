@@ -97,6 +97,9 @@ const getDefaultAddress = async (req, res) => {
 const getAddressForUser = async (req, res) => {
     try {
         const token = req.headers['token'];
+
+        console.log('hey hi ')
+
         if (!token) {
             logger.warn('No token provided for address retrieval');
             return res.status(401).json({ message: 'No token provided' });
@@ -117,8 +120,6 @@ const getAddressForUser = async (req, res) => {
 
         logger.info('All addresses retrieved successfully for user', { userId: customer_id });
         return res.json({
-            success: true,
-            message: 'All addresses retrieved successfully',
             address: result
         });
     } catch (err) {
@@ -146,9 +147,48 @@ const getSelectedAddress = async (req, res) => {
     }
 };
 
+const getalladdresses = async (req, res) => {
+    try {
+        const token = req.headers['token'];
+        if (!token) {
+            logger.warn('No token provided for address retrieval');
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        // Verifying the token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, SECRET_KEY);
+            logger.info('Token verified successfully for address retrieval', { userId: decoded.id });
+        } catch (err) {
+            logger.error('Token verification failed', { error: err });
+            return res.status(401).json({ message: 'Invalid or expired token' });
+        }
+
+        const customer_id = decoded.id;
+        const result = await address_model.getAllAddresses(customer_id);
+
+        logger.info('All addresses retrieved successfully for user', { userId: customer_id });
+        return res.json({
+            success: true,
+            address: result
+        });
+    } catch (err) {
+        logger.error('Error retrieving all addresses', { error: err.message });
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+
+
+
+
+
+
 module.exports = {
     createAddress,
     getDefaultAddress,
     getAddressForUser,
-    getSelectedAddress
+    getSelectedAddress,
+    getalladdresses
 };

@@ -1,5 +1,3 @@
-
-
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
@@ -12,9 +10,6 @@ import SignUpForm from './SignUpForm';
 import { Login_customer, Login_forgotPassword, Login_google_auth } from '../../services/context_state_management/actions/action.js';
 import { SignInContext } from '../../services/contexts/SignInContext.js';
 import axios from 'axios';
-
-
-
 
 const images = [
   "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727161124/Beige_and_Orange_Minimalist_Feminine_Fashion_Designer_Facebook_Cover_1_qnd0uz.png",
@@ -41,6 +36,7 @@ const SignInForm = ({ onSignIn }) => {
   const [fieldErrors, setFieldErrors] = useState({
     email: ''
   });
+  const [isOtpExpired, setIsOtpExpired] = useState(false);
 
   const validateField = (field, value) => {
     let error = '';
@@ -122,16 +118,29 @@ const SignInForm = ({ onSignIn }) => {
     setError('');
     try {
       console.log('handle otp called');
-      console.log('email',email)
+      console.log('email', email);
       await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email });
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
+  
       setError(response.data.message);
       setForgotPasswordStep(2);
+      setIsOtpExpired(false); // Reset OTP expiration status
     } catch (error) {
-      setError(error.response?.data?.error || 'You are not registered ,please register');
+      setError(error.response?.data?.error || 'You are not registered, please register');
     }
   };
-
+  
+  const handleResendOtp = async () => {
+    setError('');
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
+      setError(response.data.message || 'OTP sent again');
+      setIsOtpExpired(false); // Reset OTP expiration status
+    } catch (error) {
+      setError(error.response?.data?.error || 'Failed to resend OTP');
+    }
+  };
+  
   const handleVerifyOtp = async () => {
     setError('');
     try {
@@ -139,7 +148,12 @@ const SignInForm = ({ onSignIn }) => {
       setError(response.data.message);
       setForgotPasswordStep(3);
     } catch (error) {
-      setError(error.response?.data?.error || 'An error occurred while verifying OTP');
+      if (error.response?.data?.error === 'OTP expired or not found') {
+        setError('OTP expired, please resend OTP');
+        setIsOtpExpired(true); // OTP expired, allow resend
+      } else {
+        setError(error.response?.data?.error || 'An error occurred while verifying OTP');
+      }
     }
   };
 
@@ -351,19 +365,28 @@ const SignInForm = ({ onSignIn }) => {
               </div>
                 )}
 
-                {forgotPasswordStep === 2 && (
-                  <div className="mb-4">
-                    <input
-                      type="text"
-                      id="otp"
-                      placeholder="Enter OTP"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      required
-                    />
-                  </div>
+            {forgotPasswordStep === 2 && (
+              <div className="mb-4">
+                <input
+                  type="text"
+                  id="otp"
+                  placeholder="Enter OTP"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
+                />
+                {isOtpExpired && (
+                  <button
+                    onClick={handleResendOtp}
+                    className="text-sm text-indigo-500 hover:underline mt-2"
+                  >
+                    Resend OTP
+                  </button>
                 )}
+              </div>
+            )}
+
 
                 {forgotPasswordStep === 3 && (
                   <>

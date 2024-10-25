@@ -433,6 +433,59 @@ const forgotPassword = [
         }
     }
 ];
+
+
+const updatePassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+        const { customer_email, customer_password, confirm_password } = req.body;
+
+        if (customer_password !== confirm_password) {
+            return res.status(400).json({ success: false, message: 'Passwords do not match' });
+        }
+
+        const existingUser = await customer_model.findCustomerEmail(customer_email);
+        if (!existingUser) {
+            return res.status(400).json({ success: false, message: 'Unauthorized to change password' });
+        }
+        const hashedPassword = await bcrypt.hash(customer_password, 12);
+
+        let token;
+            try {
+                token = jwt.verify(existingUser.access_token, SECRET_KEY);
+                var uat = existingUser.access_token;
+                const gid=existingUser.customer_generated_id;
+                gidStorage.setGid(gid);
+                logger.info('Token verified successfully', { token });
+            } catch (err) {
+                const gid=existingUser.customer_generated_id;
+                gidStorage.setGid(gid);
+                var uat = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
+                logger.info('New token generated', { token: uat });
+            }
+
+        const updatedCustomer = await customer_model.updateCustomerPassword(customer_email, hashedPassword,uat);
+        if (!updatedCustomer) {
+            return res.status(400).json({ message: 'Error updating password' });
+        }
+
+        res.json({ success: true, message: 'Password updated successfully', uat });
+    } catch (err) {
+        console.error('Error updating password:', err.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+
+
+
+
+
 const google_auth = async (req, res) => {
     try {
         const { customer_name, customer_email } = req.body;
@@ -935,7 +988,8 @@ module.exports = {
     customer_info,
     checkCustomerOtp,
     CustomerAddress,
-    getCustomerDetails
+    getCustomerDetails,
+    updatePassword
 };
 
 

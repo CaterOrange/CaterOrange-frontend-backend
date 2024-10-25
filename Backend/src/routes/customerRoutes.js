@@ -34,6 +34,11 @@ router.put('/addresses/:address_id', customerController.updateAddressById)
 router.get('/customer/getCustomerDetails',customerController.getCustomerDetails)
 
 
+//settings
+router.post('/customer/updatePassword', customerController.updatePassword);
+
+
+
 module.exports = router;
 
 
