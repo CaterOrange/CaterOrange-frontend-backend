@@ -35,7 +35,7 @@ app.use(express.json());
 
 const allowedOrigins = [
     'https://dev.caterorange.com',
-    'https://admin.caterorange.com
+    'https://admin.caterorange.com'
 ];
 
 const corsOptions = {
