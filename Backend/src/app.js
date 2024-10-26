@@ -26,12 +26,30 @@ const { fetchAndInsertCSVData } = require('../products.js');
 // const { fetchAndInsertCSVData } = require('../category.js');
 const app = express();
 app.use(express.json());
+// const corsOptions = {
+//   origin: 'https://dev.caterorange.com', // Update with your frontend origin
+//   optionsSuccessStatus: 200,
+// };
+
+// app.use(cors());
+
+const allowedOrigins = [
+    'https://dev.caterorange.com',
+    'https://admin.caterorange.com
+];
+
 const corsOptions = {
-  origin: 'https://dev.caterorange.com', // Update with your frontend origin
-  optionsSuccessStatus: 200,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    optionsSuccessStatus: 200, // For legacy browser support
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 
 app.use('/api',addressRoutes)    
