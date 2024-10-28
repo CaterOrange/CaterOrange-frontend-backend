@@ -166,34 +166,11 @@ const resolvers = {
       const result = await client.query('SELECT * FROM corporate_orders');
       return result.rows;
     },
-    // getAllItems: async () => {
-    //   const result = await client.query('SELECT * FROM event_products');
-    //   return result.rows;
-    // },
-    getAllItems: async (_, __, { pool }) => {
-      try {
-        const query = `
-          SELECT 
-            productid,
-            ProductName as productname,
-            category_name,
-            price_category,
-            isdual,
-            plate_units,
-            priceperunit,
-            minunitsperplate,
-            wtorvol_units,
-            price_per_wtorvol_units,
-            min_wtorvol_per_plate
-          FROM event_products
-        `;
-        const result = await pool.query(query);
-        return result.rows;
-      } catch (error) {
-        console.error('Error fetching items:', error);
-        throw new Error('Failed to fetch items');
-      }
+    getAllItems: async () => {
+      const result = await client.query('SELECT * FROM event_products');
+      return result.rows;
     },
+  
     getAnalytics: async () => {
         
           const totalCustomers = await client.query('SELECT COUNT(*) FROM customer');
