@@ -102,17 +102,17 @@ const typeDefs = gql`
   }
   type ItemList
   {
-    productid: Int,
+    productid: String,
     productname:String,
     category_name:String,
     price_category:String,
     isdual:Boolean,
-    units:String,
+    plate_units:String,
     priceperunit:Float,
     minunitsperplate:Float,
-    units2: String,
-    priceperunits2:Float,
-    minunits2perplate:Float
+    wtorvol_units: String,
+    price_per_wtorvol_units:Float,
+    min_wtorvol_per_plate:Float
   }
 
 
