@@ -100,22 +100,19 @@ const typeDefs = gql`
     event_order_status:String,
     total_amount:Int  
   }
-  type ItemList
-  {
-    productid: String,
-    productname:String,
-    category_name:String,
-    price_category:String,
-    isdual:Boolean,
-    plate_units:String,
-    priceperunit:Float,
-    minunitsperplate:Float,
-    wtorvol_units: String,
-    price_per_wtorvol_units:Float,
-    min_wtorvol_per_plate:Float
-  }
-
-
+  type ItemList {
+    productid: String
+    productname: String
+    category_name: String
+    price_category: String
+    isdual: Boolean
+    plate_units: String        
+    priceperunit: Float
+    minunitsperplate: Float
+    wtorvol_units: String      
+    price_per_wtorvol_units: Float 
+    min_wtorvol_per_plate: Float    
+    }
   type Query {
     getAllCustomers: [Customer!]!
     getAllPayments: [Payment!]!
