@@ -97,7 +97,7 @@ async function startApolloServer() {
   const server = new ApolloServer({ typeDefs, resolvers });
   await server.start();
   
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, path: '/api/graphql' });
   
   return server;
 }
