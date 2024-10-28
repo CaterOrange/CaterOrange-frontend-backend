@@ -78,7 +78,7 @@ const initializeApp = async () => {
 
     app.listen(process.env.PORT, () => {
       logger.info(`Server is running on port ${process.env.PORT}`);
-      logger.info(`GraphQL endpoint: http://localhost:${process.env.PORT}${apolloServer.graphqlPath}`);
+      logger.info(`GraphQL endpoint: http://localhost:${process.env.PORT}/api/graphql`);
     });
   } catch (err) {
     logger.error('Initialization error:', err.message);
