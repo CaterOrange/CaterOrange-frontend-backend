@@ -122,7 +122,7 @@ const typeDefs = gql`
     getAllCategory:[Category!]!
     getAllEvents:[EventOrders!]!
     getAllOrders:[CorporateOrder!]!
-    getAllItems:[ItemList]
+    getAllItems:[ItemList!]!
      getAnalytics: Analytics!
   }
 
