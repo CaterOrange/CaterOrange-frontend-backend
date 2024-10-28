@@ -123,7 +123,7 @@
 //     "merchantTransactionId": merchantTransactionId,
 //     "merchantUserId": 123,
 //     "amount": amountinrupee,
-//     "redirectUrl": `http://localhost:4000/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
+//     "redirectUrl": `https://dev.caterorange.com/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
 //     "redirectMode": "REDIRECT",
 //     "callbackUrl": "https://webhook.site/callback-url",
 //     "mobileNumber": "9999999999",
@@ -208,11 +208,11 @@
 //           try {
 //             if(corporateorder_id[0]==='C')
 //             {
-//             const response=await axios.post('http://localhost:4000/api/insert-payment', paymentPayload);
+//             const response=await axios.post('https://dev.caterorange.com/api/insert-payment', paymentPayload);
 //             }
 //             if(corporateorder_id[0]==='E')
 //               {
-//               const response=await axios.post('http://localhost:4000/api/insertevent-payment', paymentPayload);
+//               const response=await axios.post('https://dev.caterorange.com/api/insertevent-payment', paymentPayload);
 //               }
 //         res.status(200);
 //           } catch (error) {
@@ -220,13 +220,13 @@
 //           }
 //           if(corporateorder_id[0]==='C'){
 //           // Redirect to success page
-//           res.redirect('http://localhost:3000/success');}
+//           res.redirect('https://dev.caterorange.com/success');}
 //           else if(corporateorder_id[0]==='E'){
-//             res.redirect('http://localhost:3000/Esuccess');
+//             res.redirect('https://dev.caterorange.com/Esuccess');
 //           }
 //           // Redirect to the success page
 //         } else {
-//           res.redirect('http://localhost:3000/failure'); // Redirect to a failure page if needed
+//           res.redirect('https://dev.caterorange.com/failure'); // Redirect to a failure page if needed
 //         }
 //       })
 //       .catch(function (error) {
@@ -348,7 +348,7 @@ app.post("/api/pay", async(req, res) => {
     "merchantTransactionId": merchantTransactionId,
     "merchantUserId": 123,
     "amount": amountinrupee,
-    "redirectUrl": `http://localhost:4000/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
+    "redirectUrl": `https://dev.caterorange.com/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
     "redirectMode": "REDIRECT",
     "callbackUrl": "https://webhook.site/callback-url",
     "mobileNumber": "9999999999",
@@ -430,14 +430,14 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
       };
 
       if (corporateorder_id[0] === 'C') {
-        await axios.post('http://localhost:4000/api/insert-payment', paymentPayload);
-        res.redirect('http://localhost:3000/success');
+        await axios.post('https://dev.caterorange.com/api/insert-payment', paymentPayload);
+        res.redirect('https://dev.caterorange.com/success');
       } else if (corporateorder_id[0] === 'E') {
-        await axios.post('http://localhost:4000/api/insertevent-payment', paymentPayload);
-        res.redirect('http://localhost:3000/Esuccess');
+        await axios.post('https://dev.caterorange.com/api/insertevent-payment', paymentPayload);
+        res.redirect('https://dev.caterorange.com/Esuccess');
       }
     } else {
-      res.redirect('http://localhost:3000/failure');
+      res.redirect('https://dev.caterorange.com/failure');
     }
   } catch (error) {
     logger.error('Redirect error:', error);
