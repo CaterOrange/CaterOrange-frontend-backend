@@ -308,7 +308,7 @@ function createEventProductsTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_products (
       product_id SERIAL PRIMARY KEY,
-      productid VARCHAR NOT NULL UNIQUE,
+      productid VARCHAR(255),
       ProductName VARCHAR(255),
       Image TEXT,
       category_name VARCHAR(255),
