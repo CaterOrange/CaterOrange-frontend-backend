@@ -285,7 +285,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ['http://admin.caterorange.com', 'http://dev.caterorange.com'],
+  origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com'],
   credentials: true
 }));
 
@@ -318,7 +318,7 @@ async function startApolloServer() {
   app.use(
     '/api/graphql',
     cors({
-      origin: ['http://admin.caterorange.com', 'http://dev.caterorange.com'],
+      origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com'],
       credentials: true,
     }),
     express.json(),
