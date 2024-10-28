@@ -285,7 +285,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com'],
+  origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com','https://studio.apollographql.com'],
   credentials: true
 }));
 
