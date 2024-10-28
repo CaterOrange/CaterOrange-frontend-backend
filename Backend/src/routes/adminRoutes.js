@@ -101,12 +101,11 @@ const typeDefs = gql`
     total_amount:Int  
   }
   type ItemList {
-    productid: String!
-    productname: String!
-    category_name: String!
+    productid: String
+    productname: String
+    category_name: String
     price_category: String
     isdual: Boolean
-   
     priceperunit: Float
     minunitsperplate: Int
      
