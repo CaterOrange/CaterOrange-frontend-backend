@@ -109,10 +109,10 @@ const typeDefs = gql`
     isdual: Boolean,
     plate_units: String,
     priceperunit: Float,
-    minunitsperplate: Float,
+    minunitsperplate: Intt,
     wtorvol_units: String,
     price_per_wtorvol_units: Float,
-    min_wtorvol_per_plate: Float
+    min_wtorvol_per_plate: Int
   }
 
 
