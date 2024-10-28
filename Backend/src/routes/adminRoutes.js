@@ -106,12 +106,10 @@ const typeDefs = gql`
     category_name: String!
     price_category: String
     isdual: Boolean
-    plate_units: String
+   
     priceperunit: Float
     minunitsperplate: Int
-    wtorvol_units: String
-    price_per_wtorvol_units: Float
-    min_wtorvol_per_plate: Int  # Changed to Int for consistency
+     
 }
   type Query {
     getAllCustomers: [Customer!]!
