@@ -102,7 +102,6 @@ const typeDefs = gql`
   }
   type ItemList
   {
-    productid: String,
     productname: String,
     category_name: String,
     price_category: String,
