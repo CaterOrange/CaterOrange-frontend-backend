@@ -316,7 +316,7 @@ async function startApolloServer() {
 
   // Apply middleware
   app.use(
-    '/api/graphql',
+    '/graphql',
     cors({
       origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com'],
       credentials: true,
@@ -463,7 +463,7 @@ const initializeApp = async () => {
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`);
-      logger.info(`GraphQL endpoint: http://localhost:${PORT}/api/graphql`);
+      logger.info(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
     });
     
     // Initialize data
