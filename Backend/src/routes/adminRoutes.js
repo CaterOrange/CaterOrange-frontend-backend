@@ -106,6 +106,7 @@ const typeDefs = gql`
     category_name: String,
     price_category: String,
     isdual: Boolean,
+    plate_units:String,
     priceperunit: Float,
     minunitsperplate: Int
   }
