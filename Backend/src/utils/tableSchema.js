@@ -314,12 +314,12 @@ function createEventProductsTableQuery() {
       category_name VARCHAR(255),
       price_category VARCHAR(255),
       isdual BOOLEAN,
-      plate_units VARCHAR(255),
-      priceperunit FLOAT,
+      Plate_Units VARCHAR(255),
+      PriceperUnit INTEGER,
       minunitsperplate INTEGER,
-      wtorvol_units VARCHAR(255),
-      price_per_wtorvol_units FLOAT,
-      min_wtorvol_per_plate INTEGER,
+      WtOrVol_Units VARCHAR(255),
+      Price_Per_WtOrVol_Units INTEGER,
+      Min_WtOrVol_Units_per_Plate INTEGER,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
