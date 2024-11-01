@@ -1159,7 +1159,6 @@ const Menu = () => {
 
 
 const navigate=useNavigate();
-const navigate=useNavigate();
 
     const onToggleUnit = (productId) => {
     const newToggleState = {
