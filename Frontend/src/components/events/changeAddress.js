@@ -34,7 +34,7 @@ const ChangeAddress = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:4000/address/getalladdresses', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
           headers: { 'token': token },
         });
 
@@ -55,28 +55,6 @@ const ChangeAddress = () => {
     setIsEditingAddress(true);
     setIsAddAddressFormVisible(true);
   };
-
-  // const handleDeleteAddress = async (addressId) => {
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     if (!token) {
-  //       console.error('No token found in localStorage');
-  //       return;
-  //     }
-
-  //     const response = await axios.delete(`http://localhost:4000/address/delete/${addressId}`, {
-  //       headers: { 'token': token },
-  //     });
-
-  //     if (response.status === 200) {
-  //       setAddress(address.filter((addr) => addr.address_id !== addressId));
-  //     } else {
-  //       console.error('Failed to delete address:', response.status);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error deleting address:', error);
-  //   }
-  // };
 
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {

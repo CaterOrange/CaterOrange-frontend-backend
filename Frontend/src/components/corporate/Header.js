@@ -66,7 +66,7 @@ const Header = ({ user }) => {
   useEffect(() => {
     const fetchCount = async () => {
     try {
-    const response = await axios.get('http://localhost:4000/customer/getCartCount', {
+    const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCartCount`, {
     headers: { token: `${localStorage.getItem('token')}` },
     });
     console.log('usercount', response.data.data);

@@ -43,7 +43,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
 
   const fetchAddress = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/customer/corporate/customerAddress', {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/customerAddress`, {
         headers: { token: localStorage.getItem('token') },
       });
       setAddress(response.data.address);

@@ -122,8 +122,8 @@ const SignInForm = ({ onSignIn }) => {
     setError('');
     try {
       console.log('handle otp called');
-      await axios.post('http://localhost:4000/customer/checkCustomerOtp', { email });
-      const response = await axios.post('http://localhost:4000/customer/send-otp', { email });
+      await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email });
+      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
       setError(response.data.message);
       setForgotPasswordStep(2);
       setIsOtpExpired(false); // Reset OTP expiration status
@@ -146,7 +146,7 @@ const SignInForm = ({ onSignIn }) => {
   const handleVerifyOtp = async () => {
     setError('');
     try {
-      const response = await axios.post('http://localhost:4000/customer/verify-otp', { email, otp });
+      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/verify-otp`, { email, otp });
       setError(response.data.message);
       setForgotPasswordStep(3);
     } catch (error) {
@@ -213,7 +213,7 @@ const SignInForm = ({ onSignIn }) => {
   if(!isGoogleLogin){
     try {
       console.log('in manual',token)
-      const response = await axios.get('http://localhost:4000/customer/info', {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/info`, {
         headers: { token }
       });
       console.log('RESPONSE', response.data)

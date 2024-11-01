@@ -34,7 +34,7 @@ const HomePage = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:4000/address/getalladdresses', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
           headers: { 'token': token },
         });
 

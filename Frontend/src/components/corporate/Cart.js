@@ -47,7 +47,7 @@ const MyCart = () => {
         const fetchCart = async () => {
         setIsLoading(true);
         try {
-        const response = await axios.get('http://localhost:4000/customer/getCorporateCarts', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCorporateCarts`, {
         headers: { token: `${localStorage.getItem('token')}` },
         });
         console.log('in carts', response.data);
@@ -66,7 +66,7 @@ const MyCart = () => {
  const fetchCustomer = async () => {
  try {
   console.log('hiii im in cart')
- const response = await axios.get('http://localhost:4000/customer/getCustomerDetails', {
+ const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCustomerDetails`, {
  headers: { token: `${localStorage.getItem('token')}` },
  });
  console.log('user', response.data);
@@ -247,7 +247,7 @@ const handleDecrement = async (index) => {
     const updateCartItem = async (item) => {
           try {
             await axios.put(
-              `http://localhost:4000/customer/updateCartItem/${item.id}`,
+              `${process.env.REACT_APP_URL}/api/customer/updateCartItem/${item.id}`,
               {
                 date: item.date,
                 quantity: item.quantity
@@ -264,7 +264,7 @@ const handleDecrement = async (index) => {
     const itemToRemove = sortedData[index];
     setSortedData((prevItems) => prevItems.filter((_, i) => i !== index));
     try {
-      await axios.delete(`http://localhost:4000/customer/removeCartItem/${itemToRemove.id}`, {
+      await axios.delete(`${process.env.REACT_APP_URL}/api/customer/removeCartItem/${itemToRemove.id}`, {
         data: { date: itemToRemove.date }
       });
     } catch (error) {
@@ -301,7 +301,7 @@ const handleDecrement = async (index) => {
         }
         const OrderDataJSON = JSON.stringify(OrderData);
     
-        const response = await axios.post('http://localhost:4000/customer/corporate/transfer-cart-to-order', {
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporate/transfer-cart-to-order`, {
           customer_generated_id: decodedToken.id,
           order_details: OrderDataJSON,
           total_amount: Total,
@@ -331,7 +331,7 @@ const handleDecrement = async (index) => {
             console.log('length', details.length);
 
             for (let i = 0; i < details.length; i++) {
-            response = await axios.post('http://localhost:4000/customer/corporateOrderDetails', {
+            response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`, {
                 corporateorder_id: orderDetails.corporateorder_id,
                 processing_date: details[i].processing_date,
                 delivery_status: details[i].delivery_status,
@@ -360,7 +360,7 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
 
         const token=localStorage.getItem('token')
         
-        const response = await axios.post('http://localhost:4000/pay', 
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, 
           {amount: Total,corporateorder_id:corporateorder_generated_id},{headers: { token: `${localStorage.getItem('token')}` },
         });
         setSortedData([]);
@@ -407,7 +407,7 @@ const PaymentDetails= async(corporateorder_generated_id)=>{
 
  const fetchAddress = async () => {
  try {
- const response = await axios.get('http://localhost:4000/customer/corporate/customerAddress', {
+ const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/customerAddress`, {
  headers: { token: localStorage.getItem('token') }
  });
  
