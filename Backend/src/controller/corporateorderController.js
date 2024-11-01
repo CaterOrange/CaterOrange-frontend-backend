@@ -46,15 +46,15 @@ const add_Corporate_Cart = async (req, res) => {
     }
 
     const customer_generated_id = verified_data.id;
-    const customer = await corporate_model.findCustomerByGid(customer_generated_id);
+    // const customer = await corporate_model.findCustomerByGid(customer_generated_id);
 
-    if (!customer) {
-      logger.error('Customer not found', { customerId: customer_generated_id });
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    // if (!customer) {
+    //   logger.error('Customer not found', { customerId: customer_generated_id });
+    //   return res.status(404).json({ success: false, message: 'User not found' });
+    // }
 
-    logger.info('Adding cart for customer', { customerId: customer.customer_id });
-    const newCart = await corporate_model.add_cart(customer.customer_id, cart_order_details, total_amount);
+    // logger.info('Adding cart for customer', { customerId: customer.customer_id });
+    const newCart = await corporate_model.add_cart(customer_generated_id, cart_order_details, total_amount);
 
     if (!newCart) {
       throw new Error('Cart creation failed');
@@ -95,15 +95,15 @@ const getCorporateCart = async (req, res) => {
     }
 
     const customer_generated_id = verified_data.id;
-    const customer = await corporate_model.findCustomerByGid(customer_generated_id);
+    // const customer = await corporate_model.findCustomerByGid(customer_generated_id);
 
-    if (!customer) {
-      logger.error('User not found', { customerId: customer_generated_id });
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    // if (!customer) {
+    //   logger.error('User not found', { customerId: customer_generated_id });
+    //   return res.status(404).json({ success: false, message: 'User not found' });
+    // }
 
-    logger.info('Fetching cart for customer', { customerId: customer.customer_id });
-    const carts = await corporate_model.getCarts(customer.customer_id);
+    // logger.info('Fetching cart for customer', { customerId: customer.customer_id });
+    const carts = await corporate_model.getCarts(customer_generated_id);
     res.json(carts);
   } catch (err) {
     logger.error('Error fetching corporate cart', { error: err.message });
@@ -247,6 +247,43 @@ const getcategorynameById = async (req, res) => {
   }
 };
 
+const getCartCount = async (req, res) => {
+  try {
+    const token = req.headers['token'];
+
+    let verified_data;
+    try {
+      verified_data = jwt.verify(token, SECRET_KEY);
+      logger.info('Token verified successfully for fetching cart count');
+    } catch (err) {
+      logger.error('Token verification failed', { error: err.message });
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+
+    const customer_id = verified_data.id;
+    const customer = await customer_model.getCustomerDetails(customer_id);
+
+   console.log('sneha user id:', customer_id)
+
+    if (!customer) {
+      logger.warn('Customer not found', { customerId: customer_id });
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    console.log('Fetching cart count for customer', { customerId: customer_id });
+    const count = await corporate_model.getCartCountById(customer_id);
+
+    if (!count) {
+      return res.status(404).json({ message: 'Count not found' });
+    }
+
+    res.status(200).json({ data: count });
+  } catch (error) {
+    logger.error('Error retrieving cart count', { error: error.message });
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   addCorporateOrderDetails,
   getOrderDetails,
@@ -256,5 +293,6 @@ module.exports = {
   getCorporateCart,
   GetCorporateCategory,
   updateCartItem,
-  deleteCartItem
+  deleteCartItem,
+  getCartCount
 };

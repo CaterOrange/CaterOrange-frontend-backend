@@ -34,7 +34,7 @@ const HomePage = () => {
           return;
         }
 
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
+        const response = await axios.get('http://localhost:4000/address/getalladdresses', {
           headers: { 'token': token },
         });
 
@@ -145,7 +145,6 @@ const HomePage = () => {
                             checked={selectedAddressId === add.address_id}
                             onChange={() => handleSelect(add.address_id)}
                             className="mr-2"
-                            required
                           />
                           <p>
                             {add.tag}, {add.pincode}, {add.line1}, {add.line2}

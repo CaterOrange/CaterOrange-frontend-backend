@@ -3,13 +3,13 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
-import React, { useContext, useState, useEffect } from 'react';
-import SignInForm from './SignInForm';
+import React, { useContext, useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // carousel styles
-import axios from 'axios';
+import { Login_google_auth, SignUp_customer } from '../../services/context_state_management/actions/action';
 import { SignUpContext } from '../../services/contexts/SignUpContext';
-import { SignUp_customer, Login_google_auth } from '../../services/context_state_management/actions/action';
+import SignInForm from './SignInForm';
+import { useCart } from '../../services/contexts/CartContext';
 
 const images = [
   "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727161124/Beige_and_Orange_Minimalist_Feminine_Fashion_Designer_Facebook_Cover_1_qnd0uz.png",
@@ -18,6 +18,7 @@ const images = [
 ];
 
 const SignUpForm = ({ closeModal, onSignUp }) => {
+  const { cartCount } = useCart();
   const { state, dispatch } = useContext(SignUpContext);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -191,8 +192,9 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
     const userDP = {
       name: name,
       email: email,
-      picture: picture
-    };
+      picture: picture,
+      cartCount: cartCount || 0
+    }
     localStorage.setItem('userDP', JSON.stringify(userDP));
     await Login_google_auth(name, email, tokenId, dispatch);
     onSignUp(tokenId, true);

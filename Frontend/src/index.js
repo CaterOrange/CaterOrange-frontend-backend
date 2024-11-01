@@ -3,14 +3,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { CartProvider } from './services/contexts/CartContext';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-   
-    <GoogleOAuthProvider clientId="239233180210-t0m8gf26n364e7m3ono4ij6lhp9rld9v.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="636281200529-dl48re3g9q9221e7dcruuqls3f46v311.apps.googleusercontent.com">
+    <CartProvider>
       <App/>
-      {/* <AddressForm/> */}
-      
+      </CartProvider>
       </GoogleOAuthProvider>
   </React.StrictMode>
 );

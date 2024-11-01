@@ -1,15 +1,18 @@
+
+
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; // Corrected import for jwt-decode
 import React, { useContext, useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // carousel styles
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode'; // Corrected import for jwt-decode
-import SignUpForm from './SignUpForm';
 import { Login_customer, Login_forgotPassword, Login_google_auth } from '../../services/context_state_management/actions/action.js';
 import { SignInContext } from '../../services/contexts/SignInContext.js';
-import axios from 'axios';
+import SignUpForm from './SignUpForm';
+import { useCart } from '../../services/contexts/CartContext.js';
 
 const images = [
   "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727161124/Beige_and_Orange_Minimalist_Feminine_Fashion_Designer_Facebook_Cover_1_qnd0uz.png",
@@ -19,6 +22,7 @@ const images = [
 
 
 const SignInForm = ({ onSignIn }) => {
+  const { cartCount } = useCart();
   const { state, dispatch } = useContext(SignInContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -118,9 +122,8 @@ const SignInForm = ({ onSignIn }) => {
     setError('');
     try {
       console.log('handle otp called');
-      await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email });
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
-  
+      await axios.post('http://localhost:4000/customer/checkCustomerOtp', { email });
+      const response = await axios.post('http://localhost:4000/customer/send-otp', { email });
       setError(response.data.message);
       setForgotPasswordStep(2);
       setIsOtpExpired(false); // Reset OTP expiration status
@@ -143,7 +146,7 @@ const SignInForm = ({ onSignIn }) => {
   const handleVerifyOtp = async () => {
     setError('');
     try {
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/verify-otp`, { email, otp });
+      const response = await axios.post('http://localhost:4000/customer/verify-otp', { email, otp });
       setError(response.data.message);
       setForgotPasswordStep(3);
     } catch (error) {
@@ -210,7 +213,7 @@ const SignInForm = ({ onSignIn }) => {
   if(!isGoogleLogin){
     try {
       console.log('in manual',token)
-      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/info`, {
+      const response = await axios.get('http://localhost:4000/customer/info', {
         headers: { token }
       });
       console.log('RESPONSE', response.data)
@@ -250,12 +253,14 @@ const SignInForm = ({ onSignIn }) => {
     setUserProfile(decodedToken);
     console.log(name);
     console.log(email);
-    const userDP={
-      name:name,
+    const userDP = {
+      name: name,
       email: email,
-      picture: picture
-    }
+      picture: picture,
+      cartCount: cartCount || 0 // Initialize cart count to 0 or use an existing value
+    };
     localStorage.setItem('userDP', JSON.stringify(userDP));
+    
     const response= await Login_google_auth(name, email, tokenId,dispatch);
     console.log(response)
     setIsGoogleLogin(true);

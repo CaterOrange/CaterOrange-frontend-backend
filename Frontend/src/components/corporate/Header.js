@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from 'react';
 import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/react/outline';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../../services/contexts/CartContext';
+import axios from 'axios';
+
 import Body from './Body';
 import './css/styles.css';
-import { Link, useNavigate } from 'react-router-dom';
+
 
 const Header = ({ user }) => {
+  const { updateCartCount } = useCart();
+  const { cartCount } = useCart();
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('corporate');
-  const [count, setCount] = useState(0);
+  const [count, setCount]= useState(0);
   const navigate = useNavigate();
+
+  // setCount(cartCount)
+  console.log('cart count',cartCount )
 
   const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
 
@@ -28,6 +37,7 @@ const Header = ({ user }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('userDP');
     localStorage.removeItem('address');
+
     setTimeout(() => {
       window.location.href = '/';
     }, 0);
@@ -47,28 +57,26 @@ const Header = ({ user }) => {
   };
 
   useEffect(() => {
-    const updateCountFromStorage = () => {
-      const storedCount = localStorage.getItem('count');
-      setCount(storedCount ? parseInt(storedCount, 10) : 0);
-    };
+    const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+    if (storedUserDP.cartCount !== undefined) {
+      updateCartCount(storedUserDP.cartCount);
+    }
+  }, [user]);
 
-    updateCountFromStorage();
-
-    const handleStorageChange = (event) => {
-      if (event.key === 'count') updateCountFromStorage();
-    };
-
-    const handleCountUpdated = () => updateCountFromStorage();
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('countUpdated', handleCountUpdated);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('countUpdated', handleCountUpdated);
-    };
+  useEffect(() => {
+    const fetchCount = async () => {
+    try {
+    const response = await axios.get('http://localhost:4000/customer/getCartCount', {
+    headers: { token: `${localStorage.getItem('token')}` },
+    });
+    console.log('usercount', response.data.data);
+    // cartCount= response.data.data;
+    setCount(response.data.data);
+    } catch (error) {
+    console.error('Error fetching cart count:', error);
+    }}
+    fetchCount()
   }, []);
-
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-green-600 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
@@ -87,7 +95,7 @@ const Header = ({ user }) => {
             </Link>
             {count > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
-                {count}
+                {cartCount || count}
               </span>
             )}
           </div>

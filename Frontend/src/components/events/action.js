@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 export const getCartFromOrderId = async (orderId) => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_URL}/api/orders/${orderId}/cart`, {
+    // Replace the URL with your actual API endpoint
+    const response = await axios.get(`http://localhost:4000/api/orders/${orderId}/cart`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -31,7 +32,7 @@ export const addtocart = async(payload)=>{
 try {   
     const token = localStorage.getItem('token');
   console.log("payload action",payload);
-    const response = await axios.post(`${process.env.REACT_APP_URL}/api/cart/add`, payload, {
+    const response = await axios.post('http://localhost:4000/api/cart/add', payload, {
       headers: {
         token:token
       
@@ -40,7 +41,7 @@ try {
     console.log("Response from backend:", response.data);  
     if (response.status === 200) {
       console.log('Cart items successfully posted to the backend');
-      return response.data.cart_id;
+      return response.data;
     } else {
       console.error(`Error: Received status code ${response.status}`);
     }
@@ -57,7 +58,7 @@ try {
     try {
         const eventcart_id=cartId
         console.log("eventcart_id in action",eventcart_id)
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/transfer-cart-to-order`, {
+      const response = await axios.post('http://localhost:4000/api/transfer-cart-to-order', {
       eventcart_id
       }, {
         headers: {
@@ -77,7 +78,7 @@ try {
 export const myorders = async()=>{
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get(`${process.env.REACT_APP_URL}/api/myorders`,{
+    const response = await axios.get('http://localhost:4000/api/myorders',{
         headers: {
           token:token
         
@@ -100,7 +101,7 @@ export const myorders = async()=>{
    }
   export const removeFromCart = async (productid, eventcart_id) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_URL}/api/cart/remove`, {
+      const response = await fetch('http://localhost:4000/api/cart/remove', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +122,7 @@ export const myorders = async()=>{
 export const orderbuyagain = async(cartData)=>{
   console.log("in action.js:",cartData);
   try {
-    const response = await axios.post(`${process.env.REACT_APP_URL}/api/orderbuyagain`,cartData,{
+    const response = await axios.post('http://localhost:4000/api/orderbuyagain',cartData,{
       headers: {
         'Content-Type': 'application/json'  
       }

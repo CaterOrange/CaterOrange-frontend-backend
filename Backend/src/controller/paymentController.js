@@ -49,7 +49,7 @@ const payment = async (req, res) => {
 
     // Now update the corporate order with the generated payment_id
     await updateCorporateOrder(order_id, generatedPaymentId, payment_status);
-
+    await deleteCorporateCart(customer_id)
     res.status(200).json({ payment_id: generatedPaymentId });
   } catch (error) {
     logger.error("Error inserting payment data: ", error);
@@ -77,6 +77,24 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
   }
 };
 
+const deleteCorporateCart= async (customer_id) => {
+  try {
+    // Update corporate order details in the database
+    const result = await paymentmodel.deleteCart(customer_id);
+    
+    if (result.rowCount > 0) {
+      logger.info('deleted cart successfully');
+    } else {
+      logger.warn('Corporate carts not found for customer ID:', customer_id);
+      // You can return an error response if needed, uncomment below line
+      // return res.status(404).json({ message: 'Corporate order not found' });
+    }
+  } catch (error) {
+    logger.error('Error updating corporate order:', error);
+    // You can return an error response if needed, uncomment below line
+    // return res.status(500).json({ message: 'Error updating corporate order' });
+  }
+};
 const getOrdergenId = async (req, res) => {
   try {
     const token = req.headers['token'];
@@ -138,4 +156,4 @@ const getEOrdergenId = async (req, res) => {
   }
 };
 
-module.exports = { payment, updateCorporateOrder, getOrdergenId, getEOrdergenId };
+module.exports = { payment, updateCorporateOrder, getOrdergenId, getEOrdergenId ,deleteCorporateCart};

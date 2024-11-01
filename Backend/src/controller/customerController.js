@@ -947,10 +947,11 @@ const getCustomerDetails=async(req, res)=>{
           }
       
           const customer_id = verified_data.id;
-          console.log('gid',customer_id)
           const customer=await customer_model.getCustomerDetails(customer_id);
           const Myaddress=await customer_model.getCustomerAddress(customer_id)
+          console.log('add',Myaddress)
         const useradd=`${Myaddress[0].tag},${Myaddress[0].line1},${Myaddress[0].line2},${Myaddress[0].pincode}`
+        console.log(useradd)
     const data={
         Name:customer.customer_name,
         PhoneNumber: customer.customer_phonenumber,

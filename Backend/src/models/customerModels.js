@@ -166,6 +166,7 @@ const updateAddressById = async (id, fields, values) => {
 
 const getCustomerDetails = async (customer_id) => {
     try {
+        console.log('cus',customer_id)
         const result = await client.query(DB_COMMANDS.CUSTOMER_SELECT_BY_GID, [customer_id]);
         if (result.rows.length === 0) {
             logger.error('Customer not found for ID:', customer_id);
@@ -182,6 +183,7 @@ const getCustomerDetails = async (customer_id) => {
 const getCustomerAddress = async (customer_id) => {
     try {
         const res = await client.query(DB_COMMANDS.GET_ADDRESSES_BY_CUSTOMER_ID, [customer_id]);
+        console.log('res',res)
         logger.info('Customer addresses fetched for ID:', { customer_id, count: res.rowCount });
 
         return res.rows;
@@ -203,6 +205,7 @@ const findAdminByCustomerId = async (customer_generated_id) => {
         throw err;
     }
 };
+
 
 module.exports = {
     createCustomer,
