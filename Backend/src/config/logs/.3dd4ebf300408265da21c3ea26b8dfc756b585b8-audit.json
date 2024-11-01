@@ -9,6 +9,11 @@
             "date": 1730456459832,
             "name": "/home/parash/Desktop/CaterOrange/Backend/src/config/logs/error-2024-11-01.log",
             "hash": "b3c97f86b5763d671b5f8f523c26ced70731ca3911b46fc52ee6b729e0467dd9"
+        },
+        {
+            "date": 1730493102834,
+            "name": "/home/parash/Desktop/CaterOrange/Backend/src/config/logs/error-2024-11-02.log",
+            "hash": "cde9108e1eead3fb6cdbac21366b5a9f947e3c335a4703704539a77a304a3bfb"
         }
     ],
     "hashType": "sha256"
