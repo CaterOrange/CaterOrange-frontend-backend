@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +34,7 @@ const ChangeAddress = () => {
           return;
         }
 
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
+        const response = await axios.get('http://localhost:4000/address/getalladdresses', {
           headers: { 'token': token },
         });
 
@@ -57,6 +56,27 @@ const ChangeAddress = () => {
     setIsAddAddressFormVisible(true);
   };
 
+  // const handleDeleteAddress = async (addressId) => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     if (!token) {
+  //       console.error('No token found in localStorage');
+  //       return;
+  //     }
+
+  //     const response = await axios.delete(`http://localhost:4000/address/delete/${addressId}`, {
+  //       headers: { 'token': token },
+  //     });
+
+  //     if (response.status === 200) {
+  //       setAddress(address.filter((addr) => addr.address_id !== addressId));
+  //     } else {
+  //       console.error('Failed to delete address:', response.status);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting address:', error);
+  //   }
+  // };
 
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {
@@ -74,6 +94,9 @@ const ChangeAddress = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
+    // const plates = form.elements['plates'].value;
+
+
     if (!form.checkValidity()) {
       form.reportValidity();
     } else {
@@ -93,6 +116,12 @@ const ChangeAddress = () => {
       style={{ fontFamily: process.env.REACT_APP_FONT }} // Use font from .env
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
+      {/* <h2
+              className="text-lg font-semibold mb-6 text-center"
+              style={{ color: '#006600', fontFamily: process.env.REACT_APP_FONT }}
+            >
+              Know Order Availability To Your Location
+            </h2> */}
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
@@ -135,7 +164,7 @@ const ChangeAddress = () => {
                           <input
                             type="radio"
                             name="address"
-                            //value={add.address_id}
+                            value={add.address_id}
                             checked={selectedAddressId === add.address_id}
                             onChange={() => handleSelect(add.address_id)}
                             className="mr-2"
@@ -151,6 +180,10 @@ const ChangeAddress = () => {
                           >
                             Edit
                           </span>
+                          {/* <FiTrash
+                            className="text-red-500 cursor-pointer"
+                            onClick={() => handleDeleteAddress(add.address_id)}
+                          /> */}
                         </div>
                       </div>
                     ))
@@ -180,8 +213,3 @@ const ChangeAddress = () => {
 };
 
 export default ChangeAddress;
-
-
-
-
-
