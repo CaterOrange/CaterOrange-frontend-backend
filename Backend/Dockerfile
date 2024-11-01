@@ -2,7 +2,7 @@
 FROM node:18-alpine
 
 # Set the working directory inside the container
-WORKDIR /Backend
+WORKDIR /Backend/src
 
 # Copy package.json and package-lock.json for dependency installation
 COPY src/package*.json ./
@@ -10,13 +10,11 @@ COPY src/package*.json ./
 # Install the dependencies
 RUN npm install
 
-# Install nodemon globally
-RUN npm install -g nodemon
 
 # Install PostgreSQL client utilities
 RUN apk add --no-cache postgresql-client bash
 # Copy the rest of the application code (including the wait-for-it script)
-COPY src/ .
+COPY . .
 
 
 ENV PG_DATABASE_URL=postgres://paras:1224@localhost:5432/postgres
