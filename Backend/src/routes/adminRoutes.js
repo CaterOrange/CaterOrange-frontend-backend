@@ -102,17 +102,16 @@ const typeDefs = gql`
   }
   type ItemList
   {
-    productid: Int,
-    productname:String,
-    category_name:String,
-    price_category:String,
-    isdual:Boolean,
-    units:String,
-    priceperunit:Float,
-    minunitsperplate:Float,
-    units2: String,
-    priceperunits2:Float,
-    minunits2perplate:Float
+    productname: String,
+    category_name: String,
+    price_category: String,
+    isdual: Boolean,
+    Plate_Units:String,
+    priceperunit: Int,
+    minunitsperplate: Int,
+    WtOrVol_Units:String,
+    Price_Per_WtOrVol_Units:Int,
+    Min_WtOrVol_Units_per_Plate:Int
   }
 
 
@@ -122,7 +121,7 @@ const typeDefs = gql`
     getAllCategory:[Category!]!
     getAllEvents:[EventOrders!]!
     getAllOrders:[CorporateOrder!]!
-    getAllItems:[ItemList]
+    getAllItems:[ItemList!]!
      getAnalytics: Analytics!
   }
 
@@ -170,6 +169,7 @@ const resolvers = {
       const result = await client.query('SELECT * FROM event_products');
       return result.rows;
     },
+  
     getAnalytics: async () => {
         
           const totalCustomers = await client.query('SELECT COUNT(*) FROM customer');

@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "C:\\Users\\Karishma\\Videos\\CATER\\CaterOrange\\Backend\\src\\config\\logs\\.a6600c1bf3f70f3b0ff4ca2c91d066b88f80c209-audit.json",
+    "files": [
+        {
+            "date": 1729498152142,
+            "name": "C:\\Users\\Karishma\\Videos\\CATER\\CaterOrange\\Backend\\src\\config\\logs\\error-2024-10-21.log",
+            "hash": "c21f357243caa5516604d6739136edf59eb17bc2ddcf5d5fabfdf0252da7bcb4"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -14,9 +14,6 @@ import { SignInContext } from '../../services/contexts/SignInContext.js';
 import SignUpForm from './SignUpForm';
 import { useCart } from '../../services/contexts/CartContext.js';
 
-
-
-
 const images = [
   "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727161124/Beige_and_Orange_Minimalist_Feminine_Fashion_Designer_Facebook_Cover_1_qnd0uz.png",
   "https://res.cloudinary.com/dmoasmpg4/image/upload/v1727104667/WhatsApp_Image_2024-09-23_at_20.47.25_gu19jf.jpg",
@@ -40,6 +37,86 @@ const SignInForm = ({ onSignIn }) => {
   const [userProfile, setUserProfile] = useState(null); // for storing Google user profile
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const navigate = useNavigate();
+  const [fieldErrors, setFieldErrors] = useState({
+    email: ''
+  });
+  const [isOtpExpired, setIsOtpExpired] = useState(false);
+
+  const validateField = (field, value) => {
+    let error = '';
+    switch (field) {
+      case 'name':
+        if (value.trim() === '') {
+          error = '*Name is required*';
+        } else if (value.length < 3) {
+          error = '*Name must be at least 3 characters long*';
+        }
+        break;
+      case 'phone':
+        const phoneRegex = /^\d{10}$/;  // Assumes a 10-digit phone number
+        if (value.trim() === '') {
+          error = '*Phone number is required*';
+        }
+        else if (value && !phoneRegex.test(value)) {
+          error = '*Invalid phone number format it must be 10-digit format*';
+        }
+        break;
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value.trim() === '') {
+          error = '*Email is required*';
+        }
+        else if (!emailRegex.test(value)) {
+          error = '*Invalid email format*';
+        }
+        break;
+      case 'password':
+        if (value.trim() === '') {
+          error = '*Password is required*';
+        }
+        else if (value.length < 8 ) {
+          error = '*Password must be atleast 8 characters long with uppercase ,lowercase letters and numbers*';
+        }
+        break;
+      case 'confirmPassword':
+        if (value !== password) {
+          error = '*Passwords do not match*';
+        }
+        break;
+      default:
+        break;
+    }
+    setFieldErrors(prev => ({ ...prev, [field]: error }));
+    return error === '';
+  };
+
+  const handleChange = (field, value) => {
+    switch(field) {
+      case 'name':
+        setName(value);
+        break;
+      case 'phone':
+        setPhone(value);
+        break;
+      case 'email':
+        setEmail(value);
+        break;
+      case 'password':
+        setPassword(value);
+        break;
+      case 'confirmPassword':
+        setConfirmPassword(value);
+        break;
+      default:
+        break;
+    }
+    validateField(field, value);
+  };
+
+  const handleBlur = (field) => {
+    validateField(field, field === 'confirmPassword' ? confirmPassword : eval(field));
+  };
+  
 
   const handleSendOtp = async () => {
     setError('');
@@ -49,11 +126,23 @@ const SignInForm = ({ onSignIn }) => {
       const response = await axios.post('http://localhost:4000/customer/send-otp', { email });
       setError(response.data.message);
       setForgotPasswordStep(2);
+      setIsOtpExpired(false); // Reset OTP expiration status
     } catch (error) {
-      setError(error.response?.data?.error || 'An error occurred while sending OTP');
+      setError(error.response?.data?.error || 'You are not registered, please register');
     }
   };
-
+  
+  const handleResendOtp = async () => {
+    setError('');
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email });
+      setError(response.data.message || 'OTP sent again');
+      setIsOtpExpired(false); // Reset OTP expiration status
+    } catch (error) {
+      setError(error.response?.data?.error || 'Failed to resend OTP');
+    }
+  };
+  
   const handleVerifyOtp = async () => {
     setError('');
     try {
@@ -61,13 +150,26 @@ const SignInForm = ({ onSignIn }) => {
       setError(response.data.message);
       setForgotPasswordStep(3);
     } catch (error) {
-      setError(error.response?.data?.error || 'An error occurred while verifying OTP');
+      if (error.response?.data?.error === 'OTP expired or not found') {
+        setError('OTP expired, please resend OTP');
+        setIsOtpExpired(true); // OTP expired, allow resend
+      } else {
+        setError(error.response?.data?.error || 'An error occurred while verifying OTP');
+      }
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    let isValid = true;
+
+    // Validate all fields
+    ['email'].forEach(field => {
+      if (!validateField(field, eval(field))) {
+        isValid = false;
+      }
+    });
     try {
       if (forgotPassword) {
         if (forgotPasswordStep === 1) {
@@ -82,7 +184,11 @@ const SignInForm = ({ onSignIn }) => {
           await Login_forgotPassword(email, password, confirmPassword, dispatch);
         }
       } else {
-        await Login_customer(email, password, dispatch);
+        if (isValid){
+          setFieldErrors({
+            email: ''
+          });
+        await Login_customer(email, password, dispatch);}
       }
     } catch (error) {
       setError(error.response?.data?.message || 'An unexpected error occurred');
@@ -211,27 +317,30 @@ const SignInForm = ({ onSignIn }) => {
           <form onSubmit={handleSubmit}>
             {!forgotPassword && (
               <>
-                <div className="mb-4">
-                  <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
+              <div className="mb-4 mt-4">
+                <input
+                  type="email"
+                  id="email"
+                  className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  onBlur={() => handleBlur('email')}
+                  required
+                  placeholder="Email"
+                />
+                {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
+              </div>
                 <div className="mb-4 relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    placeholder="Enter password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  className={`w-full px-4 py-3 border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={password}
+                  onChange={(e) => handleChange('password', e.target.value)}
+                  onBlur={() => handleBlur('password')}
+                  required
+                  placeholder="Password"
+                />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -246,44 +355,56 @@ const SignInForm = ({ onSignIn }) => {
             {forgotPassword && (
               <>
                 {forgotPasswordStep === 1 && (
-                  <div className="mb-4">
-                    <input
-                      type="email"
-                      id="forgot-email"
-                      placeholder="Enter email for OTP"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <div className="mb-4 mt-4">
+                <input
+                  type="email"
+                  id="email"
+                  className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  onBlur={() => handleBlur('email')}
+                  placeholder="Email"
+                />
+                {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
+              </div>
                 )}
 
-                {forgotPasswordStep === 2 && (
-                  <div className="mb-4">
-                    <input
-                      type="text"
-                      id="otp"
-                      placeholder="Enter OTP"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      required
-                    />
-                  </div>
+            {forgotPasswordStep === 2 && (
+              <div className="mb-4">
+                <input
+                  type="text"
+                  id="otp"
+                  placeholder="Enter OTP"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
+                />
+                {isOtpExpired && (
+                  <button
+                    onClick={handleResendOtp}
+                    className="text-sm text-indigo-500 hover:underline mt-2"
+                  >
+                    Resend OTP
+                  </button>
                 )}
+              </div>
+            )}
+
 
                 {forgotPasswordStep === 3 && (
                   <>
                     <div className="mb-4 relative">
-                      <input
+                     <input
                         type={showPassword ? 'text' : 'password'}
-                        id="new-password"
+                        id="password"
                         placeholder="Enter New Password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className={`w-full px-4 py-3 border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => handleChange('password', e.target.value)}
                         required
+                        
+                        
                       />
                       <button
                         type="button"
@@ -294,15 +415,17 @@ const SignInForm = ({ onSignIn }) => {
                       </button>
                     </div>
                     <div className="mb-4 relative">
-                      <input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        id="confirm-password"
-                        placeholder="Confirm New Password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                      />
+                    <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  id="confirm-password"
+                  className={`w-full px-4 py-3 border ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                  value={confirmPassword}
+                  onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                  onBlur={() => handleBlur('confirmPassword')}
+                  placeholder="Confirm New Password"
+                  required
+                 
+                />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}

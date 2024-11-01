@@ -309,17 +309,17 @@ function createEventProductsTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS event_products (
       product_id SERIAL PRIMARY KEY,
-      productId VARCHAR NOT NULL UNIQUE,
+      productid VARCHAR(255),
       ProductName VARCHAR(255),
       Image TEXT,
-      Category_Name VARCHAR(255),
-      Price_Category VARCHAR(255),
-      isDual BOOLEAN,
+      category_name VARCHAR(255),
+      price_category VARCHAR(255),
+      isdual BOOLEAN,
       Plate_Units VARCHAR(255),
-      PriceperUnit FLOAT,
-      MinUnitsperPlate INTEGER,
+      PriceperUnit INTEGER,
+      minunitsperplate INTEGER,
       WtOrVol_Units VARCHAR(255),
-      Price_Per_WtOrVol_Units FLOAT,
+      Price_Per_WtOrVol_Units INTEGER,
       Min_WtOrVol_Units_per_Plate INTEGER,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

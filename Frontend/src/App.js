@@ -30,29 +30,44 @@ function App() {
       localStorage.setItem('token', token);
       setUser({ token });
     }
-    if(!isGoogleLogin){
+
+    if (!isGoogleLogin) {
       try {
         console.log('in manual',token)
         const response = await axios.get('http://localhost:4000/customer/info', {
           headers: { token }
         });
-        console.log('RESPONSE', response.data)
         const profile = {
           name: response.data.customer_name,
           phone: response.data.customer_phonenumber,
           email: response.data.customer_email,
           cartCount: cartCount || 0
         };
-        const a= localStorage.setItem('userDP', JSON.stringify(profile));
-        console.log('a',a);
+
+        localStorage.setItem('userDP', JSON.stringify(profile));
         setUser({ token, ...profile });
-        console.log('user data', user)
-        setIsGoogleLogin(false);
+        
+
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
     }
+  };
+
+  // Check for existing token on app load
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      handleSignIn(token, false); // Not Google Login, use manual login process
+    }
+    setIsLoading(false); // After token check is complete, stop loading
+  }, []);
+
+  // If loading, show nothing or a loading spinner
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
+
   return (
     <StoreProvider>
     <SignInProvider>
@@ -76,7 +91,7 @@ function App() {
              <Route
             path="/orders" element={<CorporateOrders/>}/>
               <Route path="/success" element={<SuccessPage />} />
-              <Route path="/homepage" element={<HomePage/>} />
+              <Route path="/homepage" element={<HomePage />} />
               <Route path="/Esuccess" element={<ESuccessPage />} />
               <Route path="/eventorders" element={<OrderDashboard/>} />
         <Route path="/failure" element={<FailurePage />} />

@@ -26,13 +26,12 @@ const Header = ({ user }) => {
     setIsSidenavOpen(!isSidenavOpen);
   };
 
-  const handleViewCart = () => {
-    navigate('/cart');
-  };
+  const handleViewCart = () => navigate('/cart');
+  const handleViewOrders = () => navigate('/orders');
+  const handleViewContactPage = () => navigate('/contact'); // Navigate to Contact page
+  const handleViewWalletPage = () => navigate('/wallet'); // Wallet navigation function
+  const handleViewChangePassword=()=>navigate('/settings');
 
-  const handleViewOrders = () => {
-    navigate('/orders');
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -44,21 +43,17 @@ const Header = ({ user }) => {
     }, 0);
   };
 
-  const handleViewLoginPage = () => {
-    setIsLogoutDialogOpen(true);
-  };
+  const handleViewLoginPage = () => setIsLogoutDialogOpen(true);
 
   const handleConfirmLogout = (confirm) => {
     setIsLogoutDialogOpen(false);
-    if (confirm) {
-      handleLogout();
-    }
+    if (confirm) handleLogout();
   };
 
   const getInitials = (name) => {
     if (!name) return '';
     const names = name.split(' ');
-    return names.map(n => n[0]).join('').toUpperCase();
+    return names.map((n) => n[0]).join('').toUpperCase();
   };
 
   useEffect(() => {
@@ -108,12 +103,12 @@ const Header = ({ user }) => {
         {activeTab === 'events' && <div className="w-6"></div>}
       </header>
 
-      {isSidenavOpen && (
-        <div className="fixed inset-0 bg-black opacity-50 z-40 blur-sm"></div>
-      )}
+      {isSidenavOpen && <div className="fixed inset-0 bg-black opacity-50 z-40 blur-sm"></div>}
 
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out ${isSidenavOpen ? 'translate-x-0' : '-translate-x-full'} z-50 overflow-y-auto`}
+        className={`fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out ${
+          isSidenavOpen ? 'translate-x-0' : '-translate-x-full'
+        } z-50 overflow-y-auto`}
       >
         <div className="p-4 bg-green-500 text-white">
           <div className="flex justify-end p-4">
@@ -134,22 +129,42 @@ const Header = ({ user }) => {
               {getInitials(storedUserDP.name)}
             </div>
           )}
-          
+
           <h3 className="text-center mt-2">{storedUserDP.name || 'Hello'}</h3>
           {storedUserDP.phone && <p className="text-center">{storedUserDP.phone}</p>}
           <p className="text-center">{storedUserDP.email || 'Email Address'}</p>
         </div>
 
         <ul className="p-2 space-y-2">
-          <Link to='/orders'>
-            <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>My Orders</li>
+          <Link to="/orders">
+            <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>
+              My Orders
+            </li>
           </Link>
-          <li className="p-2 border-b border-gray-200 cursor-pointer">Order Events</li>
-          <li className="p-2 border-b border-gray-200 cursor-pointer">Address</li>
-          <li className="p-2 border-b border-gray-200 cursor-pointer">Wallet</li>
-          <li className="p-2 border-b border-gray-200 cursor-pointer">Contact Us</li>
-          <li className="p-2 border-b border-gray-200 cursor-pointer">Settings</li>
-          <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewLoginPage}>
+          <Link to="/address">
+            <li className="p-2 border-b border-gray-200 cursor-pointer">Address</li>
+          </Link>
+            <li
+          className="p-2 border-b border-gray-200 cursor-pointer"
+          onClick={handleViewWalletPage} // Navigate to Wallet page
+        >
+          Wallet
+        </li>
+          <li
+            className="p-2 border-b border-gray-200 cursor-pointer"
+            onClick={handleViewContactPage} // Handle Contact Us navigation
+          >
+            Contact Us
+          </li>
+          <li
+            className="p-2 border-b border-gray-200 cursor-pointer"
+            onClick={handleViewChangePassword} // Handle Contact Us navigation
+          >
+            Settings
+          </li>          <li
+            className="p-2 border-b border-gray-200 cursor-pointer"
+            onClick={handleViewLoginPage}
+          >
             LogOut &rarr;
           </li>
         </ul>

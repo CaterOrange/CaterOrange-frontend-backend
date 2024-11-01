@@ -213,7 +213,7 @@ const register = async (req, res) => {
             <div class="email-container">
                 <div class="header">Welcome to CaterOrange!</div>
                 
-                <p class="content">Dear ${username.charAt(0).toUpperCase() + username.slice(1)},</p>
+                <p class="content">Dear ${customer_name},</p>
                 <p class="content">Thank you for registering with <strong>CaterOrange</strong>, the premier food delivery app dedicated to meeting all your corporate and event catering needs. We are thrilled to have you as part of our community and look forward to providing you with exceptional service and delicious food!</p>
 
                 <div class="section">
@@ -433,6 +433,59 @@ const forgotPassword = [
         }
     }
 ];
+
+
+const updatePassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+        const { customer_email, customer_password, confirm_password } = req.body;
+
+        if (customer_password !== confirm_password) {
+            return res.status(400).json({ success: false, message: 'Passwords do not match' });
+        }
+
+        const existingUser = await customer_model.findCustomerEmail(customer_email);
+        if (!existingUser) {
+            return res.status(400).json({ success: false, message: 'Unauthorized to change password' });
+        }
+        const hashedPassword = await bcrypt.hash(customer_password, 12);
+
+        let token;
+            try {
+                token = jwt.verify(existingUser.access_token, SECRET_KEY);
+                var uat = existingUser.access_token;
+                const gid=existingUser.customer_generated_id;
+                gidStorage.setGid(gid);
+                logger.info('Token verified successfully', { token });
+            } catch (err) {
+                const gid=existingUser.customer_generated_id;
+                gidStorage.setGid(gid);
+                var uat = jwt.sign({ email: customer_email ,id:gid }, SECRET_KEY, { expiresIn: '24h' });
+                logger.info('New token generated', { token: uat });
+            }
+
+        const updatedCustomer = await customer_model.updateCustomerPassword(customer_email, hashedPassword,uat);
+        if (!updatedCustomer) {
+            return res.status(400).json({ message: 'Error updating password' });
+        }
+
+        res.json({ success: true, message: 'Password updated successfully', uat });
+    } catch (err) {
+        console.error('Error updating password:', err.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
+
+
+
+
+
+
 const google_auth = async (req, res) => {
     try {
         const { customer_name, customer_email } = req.body;
@@ -452,10 +505,125 @@ const google_auth = async (req, res) => {
                 token
             );
             logger.info('Customer registered successfully through Google', { customer_email });
+
+            // mail has to be sent 
+            const mailOptions = {
+                from: 'sirisha@scaleorange.com',
+                to: customer_email,
+                subject: 'Welcome to CaterOrange!',
+                html: `<html>
+            <head>
+            <style>
+                body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+                }
+                .email-container {
+                background-color: #ffffff;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 600px;
+                margin: 0 auto;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                border: 1px solid #f0f0f0;
+                }
+                .header {
+                color: #ff6600;
+                font-size: 32px;
+                font-weight: bold;
+                text-align: center;
+                padding-bottom: 15px;
+                border-bottom: 3px solid #ff6600;
+                }
+                .section {
+                margin-top: 20px;
+                }
+                .section h2 {
+                color: #ff6600;
+                font-size: 22px;
+                margin-bottom: 10px;
+                }
+                .category {
+                margin-bottom: 15px;
+                color: #555;
+                padding-left: 15px;
+                }
+                .price {
+                font-weight: bold;
+                }
+                .content {
+                font-family: Arial, sans-serif;
+                line-height: 1.8;
+                color: #555;
+                }
+                .footer {
+                margin-top: 40px;
+                text-align: center;
+                font-size: 12px;
+                color: #777;
+                }
+                .footer a {
+                color: #ff6600;
+                text-decoration: none;
+                }
+            </style>
+            </head>
+            <body>
+            <div class="email-container">
+                <div class="header">Welcome to CaterOrange!</div>
+                
+                <p class="content">Dear ${customer_name},</p>
+                <p class="content">Thank you for registering with <strong>CaterOrange</strong>, the premier food delivery app dedicated to meeting all your corporate and event catering needs. We are thrilled to have you as part of our community and look forward to providing you with exceptional service and delicious food!</p>
+
+                <div class="section">
+                <h2>Corporate Orders</h2>
+                <p class="content">At CaterOrange, we offer a diverse range of corporate food options designed to suit any occasion. Here’s a breakdown of what we offer:</p>
+                <ul>
+                    <li class="category"><strong>Breakfast:</strong> Start your day right with our carefully curated breakfast options, perfect for morning meetings and team gatherings.</li>
+                    <li class="category"><strong>Veg Lunch:</strong> Enjoy a satisfying lunch with our vegetarian options at just <span class="price">99/-</span> for 6 items, ensuring your team gets a wholesome and nutritious meal.</li>
+                    <li class="category"><strong>Non-Veg Lunch:</strong> For those who prefer non-vegetarian dishes, our non-veg lunch is available at <span class="price">120/-</span> for 6 items, providing a rich and flavorful meal.</li>
+                    <li class="category"><strong>Snacks:</strong> Keep the energy high with our assortment of snacks, ideal for breaks and light bites throughout the day.</li>
+                    <li class="category"><strong>Veg Dinner:</strong> End the day with our delicious vegetarian dinner options, available at <span class="price">99/-</span> for 6 items, offering a perfect evening meal.</li>
+                    <li class="category"><strong>Non-Veg Dinner:</strong> Our non-veg dinner options, priced at <span class="price">120/-</span> for 6 items, are designed to satisfy hearty appetites and provide a fulfilling end to the day.</li>
+                </ul>
+                </div>
+
+                <div class="section">
+                <h2>Event Orders</h2>
+                <p class="content">Planning an event? CaterOrange has you covered with our flexible event ordering options:</p>
+                <ul class="content">
+                    <li><strong>Wide Selection:</strong> Choose from an extensive menu of food items to suit any type of event, whether it’s a formal gathering, casual get-together, or anything in between.</li>
+                    <li><strong>Customization:</strong> Tailor your plate to your preferences, ensuring every guest gets exactly what they want.</li>
+                    <li><strong>Quantity Selection:</strong> Specify the quantities of each item to perfectly match your event’s size and needs.</li>
+                </ul>
+                </div>
+
+                <p class="content">We are committed to making your food ordering experience seamless and enjoyable. Our team is here to support you every step of the way, from selecting the perfect menu to ensuring timely delivery.</p>
+                <p class="content">We look forward to serving you and making every occasion memorable with our top-notch food and service!</p>
+
+                <p class="content">Best regards,<br>The <strong>CaterOrange</strong> Team</p>
+
+                <div class="footer">
+                <p>For support or inquiries, contact us at <a href="mailto:support@caterorange.com">support@caterorange.com</a></p>
+                </div>
+            </div>
+            </body>
+            </html>
+            ` // HTML content as you have provided
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return console.log(`Error sending email to ${customer_email}:`, error);
+                }
+                console.log('Email sent to:', customer_email, 'Response:', info.response);
+            });
+
             const decoded = jwt.verify(token,SECRET_KEY); // Your JWT secret
             console.log("email,id",decoded.email,decoded.id)
-            // localStorage.setItem('token', token);
-            // gidStorage.setGid(gid);
             return res.json({
                 success: true,
                 message: 'Customer registered successfully',
@@ -463,7 +631,8 @@ const google_auth = async (req, res) => {
                 customer: newCustomerToken
             });
             
-        } else {
+        } 
+        else {
             // Login existing customer
             let token = existingCustomer.access_token;
             try {
@@ -563,7 +732,7 @@ const checkCustomer = async (req, res) => {
 
 const checkCustomerOtp = async (req, res) => {
     try {
-        console.log('called model')
+        console.log('called  controller')
         const { email } = req.body;
         console.log('email',email)
         const existingUserByEmail = await customer_model.findCustomerEmail(email);
@@ -577,7 +746,7 @@ const checkCustomerOtp = async (req, res) => {
         }
         return res.status(200).json({
             success: true,
-            message: ''
+            message: 'You are not registered ,please register !'
         });
     } catch (error) {
         // Log the error
@@ -818,7 +987,8 @@ module.exports = {
     customer_info,
     checkCustomerOtp,
     CustomerAddress,
-    getCustomerDetails
+    getCustomerDetails,
+    updatePassword
 };
 
 

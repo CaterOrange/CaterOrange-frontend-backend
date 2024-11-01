@@ -1,6 +1,3 @@
-// 
-
-
 import axios from 'axios';
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -71,6 +68,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
           return;
         }
 
+        
         const response = await axios.get('http://localhost:4000/address/getalladdresses', {
 
           headers: { token: `${localStorage.getItem('token')}` }
@@ -102,6 +100,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
+          'http://localhost:4000/address/createAddres',
           'http://localhost:4000/address/createAddres',
           {
             tag,
