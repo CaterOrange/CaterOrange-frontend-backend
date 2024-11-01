@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install the dependencies
 RUN npm install
 
+# Install nodemon globally
+RUN npm install -g nodemon
+
 # Install PostgreSQL client utilities
 RUN apk add --no-cache postgresql-client bash
 # Copy the rest of the application code (including the wait-for-it script)
