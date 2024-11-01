@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { myorders, addtocart } from './action';
 import { CheckCircleIcon, ChevronDown, ChevronUp, MinusCircleIcon } from 'lucide-react';
@@ -30,7 +29,7 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
   const formattedOrders = OrdersData.map((order) => {
     const formattedItems = order.event_order_details.map((item) => ({
       name: item.productname,
-      // plates: item.number_of_plates,
+      plates: item.number_of_plates,
       pricePerUnit: item.priceperunit,
       pricePerKg: item.isdual ? item.priceperunit : undefined,
       quantity: item.quantity,
