@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Corporatecart from './components/corporate/Cart';
 import CorporateOrders from "./components/corporate/CorporateOrders.js";
@@ -24,6 +24,7 @@ import { useCart } from './services/contexts/CartContext.js';
 function App() {
   const [user, setUser] = useState(null);
   const { cartCount } = useCart();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn =async (token,isGoogleLogin) => {
     if (token) {
@@ -73,7 +74,7 @@ function App() {
     <SignInProvider>
       <SignUpProvider>
 
-        <Router>
+        <Router>   
           <Routes>
             <Route
               path="/"

@@ -686,8 +686,6 @@
 import React, { useEffect, useState } from 'react';
 import {UserCircle, Trash, ChevronDown, ChevronUp, Plus, Minus, MapPin, ShoppingCart, X } from 'lucide-react';
 import { Navigate, useLocation,Link, useNavigate } from 'react-router-dom';
-import {UserCircle, Trash, ChevronDown, ChevronUp, Plus, Minus, MapPin, ShoppingCart, X } from 'lucide-react';
-import { Navigate, useLocation,Link, useNavigate } from 'react-router-dom';
 import { addtocart, cartToOrder, removeFromCart } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';

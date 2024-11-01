@@ -15,7 +15,7 @@ router.get('/address/getalladdresses',addressController.getAddressForUser)
 router.get('/customer/corporate/customerAddress',customerController.CustomerAddress)
 router.get('/customer/getAddress', addressController.getSelectedAddress)
 
-router.get('/address/getaddresses',addressController.getalladdresses)
+// router.get('/address/getaddresses',addressController.getalladdresses)
 
 
 

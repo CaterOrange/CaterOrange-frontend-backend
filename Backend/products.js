@@ -12,8 +12,7 @@ async function fetchAndInsertCSVData() {
 
         // Parse CSV data   
         const data = await response.text();
-        const records = parseCSV(data);
-        
+        const records = parseCSV(data);        
         for (const record of records) {
             if (record.ProductName) {  // Only insert records with ProductName
                 await client.query(
