@@ -110,7 +110,7 @@ const typeDefs = gql`
     priceperunit: Int,
     minunitsperplate: Int,
     WtOrVol_Units:String,
-    Price_Per_WtOrVol_Units:Int,
+    Price_Per_WtOrVol_Units:Float,
     Min_WtOrVol_Units_per_Plate:Int
   }
 
