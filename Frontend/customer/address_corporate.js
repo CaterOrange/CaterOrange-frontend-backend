@@ -1305,14 +1305,17 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
   });
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [currentLocation, setCurrentLocation] = useState({
-    latitude: 20.5937,
-    longitude: 78.9629,
+    latitude: 17.3850, // Hyderabad's latitude
+    longitude: 78.4867, // Hyderabad's longitude
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+  const [selectedLocationInfo, setSelectedLocationInfo] = useState(null);
+
 
   const webViewRef = useRef(null);
 
+ 
   const mapHtml = `
     <!DOCTYPE html>
     <html>
@@ -1320,6 +1323,8 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
         <style>
           body { padding: 0; margin: 0; }
           html, body, #map {
@@ -1331,40 +1336,60 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
       </head>
       <body>
         <div id="map"></div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
         <script>
           let map;
           let marker;
 
-          function initMap(lat, lng) {
+          async function getLocationInfo(lat, lng) {
+            try {
+              const response = await axios.get(\`https://nominatim.openstreetmap.org/reverse?format=json&lat=\${lat}&lon=\${lng}\`);
+              return response.data.display_name;
+            } catch (error) {
+              console.error('Error fetching location info:', error);
+              return 'Location information unavailable';
+            }
+          }
+
+          async function initMap(lat, lng) {
             map = L.map('map').setView([lat, lng], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
               attribution: '© OpenStreetMap contributors'
             }).addTo(map);
             
+            const locationName = await getLocationInfo(lat, lng);
             marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+            marker.bindPopup(locationName).openPopup();
             
-            map.on('click', function(e) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ 
+              lat, 
+              lng,
+              address: locationName
+            }));
+
+            map.on('click', async function(e) {
               const { lat, lng } = e.latlng;
               marker.setLatLng([lat, lng]);
-              window.ReactNativeWebView.postMessage(JSON.stringify({ lat, lng }));
+              const locationName = await getLocationInfo(lat, lng);
+              marker.bindPopup(locationName).openPopup();
+              window.ReactNativeWebView.postMessage(JSON.stringify({ 
+                lat, 
+                lng,
+                address: locationName
+              }));
             });
 
-            marker.on('dragend', function(e) {
+            marker.on('dragend', async function(e) {
               const { lat, lng } = e.target.getLatLng();
-              window.ReactNativeWebView.postMessage(JSON.stringify({ lat, lng }));
+              const locationName = await getLocationInfo(lat, lng);
+              marker.bindPopup(locationName).openPopup();
+              window.ReactNativeWebView.postMessage(JSON.stringify({ 
+                lat, 
+                lng,
+                address: locationName
+              }));
             });
-
-            // Add location control
-            L.control.locate({
-              position: 'topright',
-              strings: {
-                title: "Show my location"
-              }
-            }).addTo(map);
           }
 
-          // Function to update marker position
           function updateMarker(lat, lng) {
             if (marker) {
               marker.setLatLng([lat, lng]);
@@ -1375,6 +1400,10 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
       </body>
     </html>
   `;
+
+
+
+
 
   useEffect(() => {
     requestLocationPermission();
@@ -1454,13 +1483,19 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
     }
   };
 
+
   const handleLocationSelect = (event) => {
     try {
-      const { lat, lng } = JSON.parse(event.nativeEvent.data);
+      const { lat, lng, address } = JSON.parse(event.nativeEvent.data);
       setLocation({
         lat,
         lng,
-        address: 'Selected Location'
+        address
+      });
+      setSelectedLocationInfo({
+        latitude: lat,
+        longitude: lng,
+        address
       });
       setErrors(prevErrors => {
         const { location, ...rest } = prevErrors;
@@ -1611,11 +1646,11 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
-      <ScrollView>
-        <View style={styles.formContainer}>
+    <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
+      <Text style={styles.buttonText}>Logout</Text>
+    </TouchableOpacity>
+    <ScrollView>
+      <View style={styles.formContainer}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>✕</Text>
           </TouchableOpacity>
@@ -1697,6 +1732,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
             />
           </View>
 
+          
           <View style={styles.mapContainer}>
             <Text style={styles.label}>Location</Text>
             <View style={styles.mapWrapper}>
@@ -1705,7 +1741,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
                 source={{ html: mapHtml }}
                 style={styles.map}
                 onMessage={handleLocationSelect}
-                injectedJavaScript={injectInitialLocation()}
+                injectedJavaScript={`initMap(${currentLocation.latitude}, ${currentLocation.longitude}); true;`}
                 javaScriptEnabled={true}
                 scrollEnabled={false}
                 onError={(syntheticEvent) => {
@@ -1714,6 +1750,16 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
                 }}
               />
             </View>
+            {selectedLocationInfo && (
+              <View style={styles.locationInfo}>
+                <Text style={styles.locationInfoText}>
+                  Selected Location: {selectedLocationInfo.address}
+                </Text>
+                <Text style={styles.locationInfoText}>
+                  Coordinates: {selectedLocationInfo.latitude.toFixed(4)}, {selectedLocationInfo.longitude.toFixed(4)}
+                </Text>
+              </View>
+            )}
             {errors.location && <Text style={styles.errorText}>{errors.location}</Text>}
           </View>
 
@@ -2011,6 +2057,13 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose, onLogout }) => {
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  locationInfo: {
+    backgroundColor: '#f3f4f6',
+    padding: 12,
+    marginTop: 8,
+    borderRadius: 8,
+    borderWidth: 1,
   },
 });
 
