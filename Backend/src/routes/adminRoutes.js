@@ -107,7 +107,7 @@ const typeDefs = gql`
     price_category: String,
     isdual: Boolean,
     Plate_Units:String,
-    priceperunit: Int,
+    priceperunit: Float,
     minunitsperplate: Int,
     WtOrVol_Units:String,
     Price_Per_WtOrVol_Units:Float,
