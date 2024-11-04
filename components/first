@@ -1,0 +1,1623 @@
+
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Animated,
+  Dimensions,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const { width, height } = Dimensions.get('window');
+const Stack = createStackNavigator();
+
+// Static image URLs for food preparation and events
+const IMAGES = {
+  chef: 'https://cdn-icons-png.flaticon.com/512/1669/1669046.png',
+  catering: 'https://cdn-icons-png.flaticon.com/512/2718/2718224.png',
+  buffet: 'https://cdn-icons-png.flaticon.com/512/1147/1147805.png',
+  dining: 'https://cdn-icons-png.flaticon.com/512/1205/1205756.png',
+  pattern: 'https://cdn-icons-png.flaticon.com/512/5390/5390575.png'
+};
+
+const WelcomeScreen = ({ navigation }) => {
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [foodAnims] = useState({
+    chef: new Animated.Value(height),
+    catering: new Animated.Value(-width),
+    buffet: new Animated.Value(width),
+    dining: new Animated.Value(-height),
+  });
+  const [scaleAnims] = useState({
+    chef: new Animated.Value(0.5),
+    catering: new Animated.Value(0.5),
+    buffet: new Animated.Value(0.5),
+    dining: new Animated.Value(0.5),
+  });
+  const [rotateAnim] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.parallel([
+        ...Object.values(foodAnims).map(anim =>
+          Animated.spring(anim, {
+            toValue: 0,
+            tension: 50,
+            friction: 7,
+            useNativeDriver: true,
+          })
+        ),
+        ...Object.values(scaleAnims).map(anim =>
+          Animated.spring(anim, {
+            toValue: 1,
+            tension: 50,
+            friction: 7,
+            useNativeDriver: true,
+          })
+        ),
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(rotateAnim, {
+              toValue: 1,
+              duration: 5000,
+              useNativeDriver: true,
+            }),
+            Animated.timing(rotateAnim, {
+              toValue: 0,
+              duration: 5000,
+              useNativeDriver: true,
+            }),
+          ])
+        ),
+      ]),
+    ]).start();
+  }, []);
+
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Animated.View style={[styles.welcomeContainer, { opacity: fadeAnim }]}>
+        <Text style={styles.welcomeTitle}>Welcome to</Text>
+        <Text style={styles.eventsTitle}>EVENTS PAGE</Text>
+
+        <View style={styles.foodIconsContainer}>
+          {/* Chef Icon - Top */}
+          <Animated.Image
+            source={{ uri: IMAGES.chef }}
+            style={[
+              styles.foodIcon,
+              styles.topIcon,
+              {
+                transform: [
+                  { translateY: foodAnims.chef },
+                  { scale: scaleAnims.chef }
+                ],
+              },
+            ]}
+          />
+          
+          {/* Catering Icon - Left */}
+          <Animated.Image
+            source={{ uri: IMAGES.catering }}
+            style={[
+              styles.foodIcon,
+              styles.leftIcon,
+              {
+                transform: [
+                  { translateX: foodAnims.catering },
+                  { scale: scaleAnims.catering }
+                ],
+              },
+            ]}
+          />
+          
+          {/* Buffet Icon - Right */}
+          <Animated.Image
+            source={{ uri: IMAGES.buffet }}
+            style={[
+              styles.foodIcon,
+              styles.rightIcon,
+              {
+                transform: [
+                  { translateX: foodAnims.buffet },
+                  { scale: scaleAnims.buffet }
+                ],
+              },
+            ]}
+          />
+          
+          {/* Dining Icon - Bottom */}
+          <Animated.Image
+            source={{ uri: IMAGES.dining }}
+            style={[
+              styles.foodIcon,
+              styles.bottomIcon,
+              {
+                transform: [
+                  { translateY: foodAnims.dining },
+                  { scale: scaleAnims.dining }
+                ],
+              },
+            ]}
+          />
+        </View>
+
+        <Animated.Image
+          source={{ uri: IMAGES.pattern }}
+          style={[
+            styles.decorationImage,
+            {
+              transform: [{ rotate: spin }],
+            },
+          ]}
+        />
+
+        <TouchableOpacity
+          style={styles.getStartedButton}
+          onPress={() => navigation.navigate('EventForm')}
+        >
+          <Text style={styles.getStartedText}>Plan Your Event MENU</Text>
+          <Icon name="arrow-forward" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+      </Animated.View>
+    </SafeAreaView>
+  );
+};
+
+const EventFormScreen = () => {
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [address, setAddress] = useState('');
+  const [guests, setGuests] = useState('');
+  const [fadeAnims] = useState({
+    title: new Animated.Value(0),
+    form: new Animated.Value(0),
+  });
+  const [slideAnim] = useState(new Animated.Value(height));
+
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeAnims.title, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.parallel([
+        Animated.timing(fadeAnims.form, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          tension: 30,
+          friction: 7,
+          useNativeDriver: true,
+        }),
+      ]),
+    ]).start();
+  }, []);
+
+  const onDateChange = (event, selectedDate) => {
+    setShowDatePicker(Platform.OS === 'ios');
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
+  };
+
+  const onTimeChange = (event, selectedTime) => {
+    setShowTimePicker(Platform.OS === 'ios');
+    if (selectedTime) {
+      setTime(selectedTime);
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.formContainer}
+      >
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Animated.Text
+            style={[
+              styles.formTitle,
+              { opacity: fadeAnims.title }
+            ]}
+          >
+            Plan Your Event
+          </Animated.Text>
+
+          <Animated.View
+            style={[
+              styles.formContent,
+              {
+                opacity: fadeAnims.form,
+                transform: [{ translateY: slideAnim }]
+              }
+            ]}
+          >
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Event Date</Text>
+              <TouchableOpacity
+                style={styles.dateTimeButton}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Icon name="event" size={24} color="#2E7D32" />
+                <Text style={styles.dateTimeText}>
+                  {date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Event Time</Text>
+              <TouchableOpacity
+                style={styles.dateTimeButton}
+                onPress={() => setShowTimePicker(true)}
+              >
+                <Icon name="access-time" size={24} color="#2E7D32" />
+                <Text style={styles.dateTimeText}>
+                  {time.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                  })}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Number of Guests</Text>
+              <View style={styles.guestInputContainer}>
+                <Icon name="people" size={24} color="#2E7D32" />
+                <TextInput
+                  style={styles.guestInput}
+                  placeholder="Enter number of guests"
+                  value={guests}
+                  onChangeText={setGuests}
+                  keyboardType="number-pad"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Delivery Address</Text>
+              <View style={styles.addressInputContainer}>
+                <Icon name="location-on" size={24} color="#2E7D32" />
+                <TextInput
+                  style={styles.addressInput}
+                  placeholder="Enter delivery address"
+                  value={address}
+                  onChangeText={setAddress}
+                  multiline
+                  numberOfLines={3}
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.submitButton}>
+              <Text style={styles.submitButtonText}>Continue</Text>
+              <Icon name="arrow-forward" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+          </Animated.View>
+        </ScrollView>
+
+        {(showDatePicker || showTimePicker) && (
+          <DateTimePicker
+            value={showDatePicker ? date : time}
+            mode={showDatePicker ? "date" : "time"}
+            is24Hour={false}
+            display="default"
+            onChange={showDatePicker ? onDateChange : onTimeChange}
+            minimumDate={new Date()}
+          />
+        )}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  welcomeContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  welcomeTitle: {
+    fontSize: 28,
+    color: '#2E7D32',
+    fontWeight: '300',
+    marginBottom: 8,
+  },
+  eventsTitle: {
+    fontSize: 40,
+    color: '#1B5E20',
+    fontWeight: 'bold',
+    marginBottom: 40,
+  },
+  foodIconsContainer: {
+    width: width * 0.8,
+    height: width * 0.8,
+    position: 'relative',
+  },
+  foodIcon: {
+    width: width * 0.3,
+    height: width * 0.3,
+    position: 'absolute',
+  },
+  decorationImage: {
+    position: 'absolute',
+    width: width,
+    height: height,
+    opacity: 0.05,
+    zIndex: -1,
+  },
+  getStartedButton: {
+    backgroundColor: '#2E7D32',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 30,
+    marginTop: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  getStartedText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  formContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  formContent: {
+    padding: 20,
+  },
+  formTitle: {
+    fontSize: 32,
+    color: '#1B5E20',
+    fontWeight: 'bold',
+    marginVertical: 30,
+    textAlign: 'center',
+  },
+  inputGroup: {
+    marginBottom: 25,
+  },
+  label: {
+    fontSize: 16,
+    color: '#2E7D32',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  dateTimeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8F5E9',
+    padding: 15,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#81C784',
+  },
+  dateTimeText: {
+    fontSize: 16,
+    marginLeft: 10,
+    color: '#4CAF50',
+    flex: 1,
+  },
+  guestInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8F5E9',
+    padding: 15,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#81C784',
+  },
+  guestInput: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#4CAF50',
+  },
+  addressInputContainer: {
+    backgroundColor: '#E8F5E9',
+    padding: 15,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#81C784',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  addressInput: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#4CAF50',
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  submitButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 15,
+    borderRadius: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  welcomeContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  welcomeTitle: {
+    fontSize: 28,
+    color: '#2E7D32',
+    fontWeight: '300',
+    marginBottom: 8,
+  },
+  eventsTitle: {
+    fontSize: 40,
+    color: '#1B5E20',
+    fontWeight: 'bold',
+    marginBottom: 40,
+  },
+  foodIconsContainer: {
+    width: width * 0.8,
+    height: width * 0.8,
+    position: 'relative',
+  },
+  foodIcon: {
+    width: width * 0.25,
+    height: width * 0.25,
+    position: 'absolute',
+  },
+  topIcon: {
+    top: 0,
+    left: '50%',
+    marginLeft: -(width * 0.125), // Half of the icon width
+  },
+  bottomIcon: {
+    bottom: 0,
+    left: '50%',
+    marginLeft: -(width * 0.125),
+  },
+  leftIcon: {
+    left: 0,
+    top: '50%',
+    marginTop: -(width * 0.125),
+  },
+  rightIcon: {
+    right: 0,
+    top: '50%',
+    marginTop: -(width * 0.125),
+  },
+  decorationImage: {
+    position: 'absolute',
+    width: width,
+    height: height,
+    opacity: 0.05,
+    zIndex: -1,
+  },
+  getStartedButton: {
+    backgroundColor: '#2E7D32',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 30,
+    marginTop: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  getStartedText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+});
+
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen 
+          name="Welcome" 
+          component={WelcomeScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="EventForm" 
+          component={EventFormScreen}
+          options={{ headerShown: false }} 
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Animated,
+  Dimensions,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+const { width, height } = Dimensions.get('window');
+
+// Food images from the internet
+const IMAGES = {
+  // Main plate
+  thaliPlate: 'https://i.ibb.co/K9nwh6f/golden-thali.png',
+  // Food items
+  biryani: 'https://i.ibb.co/GMdqXts/biryani.png',
+  gulabjamun: 'https://i.ibb.co/TwYzK6w/gulab-jamun.png',
+  curry: 'https://i.ibb.co/d4vX8Vq/curry.png',
+  rice: 'https://i.ibb.co/9vxC4L1/rice.png',
+  curd: 'https://i.ibb.co/Wy5pFLz/curd.png',
+  papad: 'https://i.ibb.co/nQLqsZS/papad.png',
+  pattern: 'https://i.ibb.co/xSZD5Vg/indian-pattern.png'
+};
+
+const App = ({ navigation }) => {
+  // Animation values
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [plateAnim] = useState({
+    scale: new Animated.Value(0),
+    rotate: new Animated.Value(0),
+  });
+  
+  const [foodAnims] = useState({
+    biryani: {
+      translate: new Animated.ValueXY({ x: -width, y: -height }),
+      scale: new Animated.Value(0),
+      rotate: new Animated.Value(0),
+    },
+    gulabjamun: {
+      translate: new Animated.ValueXY({ x: width, y: -height }),
+      scale: new Animated.Value(0),
+      rotate: new Animated.Value(0),
+    },
+    curry: {
+      translate: new Animated.ValueXY({ x: -width, y: height }),
+      scale: new Animated.Value(0),
+      rotate: new Animated.Value(0),
+    },
+    rice: {
+      translate: new Animated.ValueXY({ x: width, y: height }),
+      scale: new Animated.Value(0),
+      rotate: new Animated.Value(0),
+    },
+    curd: {
+      translate: new Animated.ValueXY({ x: 0, y: -height * 1.5 }),
+      scale: new Animated.Value(0),
+      rotate: new Animated.Value(0),
+    },
+    papad: {
+      translate: new Animated.ValueXY({ x: 0, y: height * 1.5 }),
+      scale: new Animated.Value(0),
+      rotate: new Animated.Value(0),
+    },
+  });
+
+  const [patternAnim] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    // Initial fade in
+    const fadeIn = Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    });
+
+    // Plate entrance with rotation
+    const plateEntrance = Animated.parallel([
+      Animated.spring(plateAnim.scale, {
+        toValue: 1,
+        tension: 20,
+        friction: 7,
+        useNativeDriver: true,
+      }),
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(plateAnim.rotate, {
+            toValue: 1,
+            duration: 20000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(plateAnim.rotate, {
+            toValue: 0,
+            duration: 20000,
+            useNativeDriver: true,
+          }),
+        ])
+      ),
+    ]);
+
+    // Food items entrance with bounce effect
+    const foodEntranceAnimations = Object.values(foodAnims).map((anim) =>
+      Animated.parallel([
+        Animated.spring(anim.translate, {
+          toValue: { x: 0, y: 0 },
+          tension: 50,
+          friction: 7,
+          useNativeDriver: true,
+        }),
+        Animated.spring(anim.scale, {
+          toValue: 1,
+          tension: 50,
+          friction: 7,
+          useNativeDriver: true,
+        }),
+        Animated.timing(anim.rotate, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    // Background pattern animation
+    const patternRotation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(patternAnim, {
+          toValue: 1,
+          duration: 15000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(patternAnim, {
+          toValue: 0,
+          duration: 15000,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+
+    // Run animations in sequence
+    Animated.sequence([
+      fadeIn,
+      Animated.delay(500),
+      plateEntrance,
+      Animated.stagger(250, foodEntranceAnimations),
+      Animated.parallel([patternRotation]),
+    ]).start();
+  }, []);
+
+  // Animation interpolations
+  const plateRotate = plateAnim.rotate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  const patternRotate = patternAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Animated.View style={[styles.welcomeContainer, { opacity: fadeAnim }]}>
+        <Text style={styles.welcomeTitle}>Welcome to</Text>
+        <Text style={styles.eventsTitle}>INDIAN THALI</Text>
+
+        {/* Background Pattern */}
+        <Animated.Image
+          source={{ uri: IMAGES.pattern }}
+          style={[
+            styles.patternImage,
+            {
+              transform: [{ rotate: patternRotate }],
+            },
+          ]}
+        />
+
+        <View style={styles.thaliContainer}>
+          {/* Main Thali Plate */}
+          <Animated.Image
+            source={{ uri: IMAGES.thaliPlate }}
+            style={[
+              styles.thaliPlate,
+              {
+                transform: [
+                  { scale: plateAnim.scale },
+                  { rotate: plateRotate },
+                ],
+              },
+            ]}
+          />
+
+          {/* Food Items */}
+          {Object.entries(foodAnims).map(([key, anim]) => (
+            <Animated.Image
+              key={key}
+              source={{ uri: IMAGES[key] }}
+              style={[
+                styles.foodItem,
+                styles[`${key}Position`],
+                {
+                  transform: [
+                    { translateX: anim.translate.x },
+                    { translateY: anim.translate.y },
+                    { scale: anim.scale },
+                    {
+                      rotate: anim.rotate.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['45deg', '0deg'],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            />
+          ))}
+        </View>
+
+        <TouchableOpacity
+          style={styles.getStartedButton}
+          onPress={() => navigation.navigate('EventForm')}
+        >
+          <Text style={styles.getStartedText}>Plan Your Feast</Text>
+          <Icon name="arrow-forward" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+      </Animated.View>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#E8F5E9',
+  },
+  welcomeContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  welcomeTitle: {
+    fontSize: 28,
+    color: '#2E7D32',
+    fontWeight: '300',
+    marginBottom: 8,
+  },
+  eventsTitle: {
+    fontSize: 40,
+    color: '#1B5E20',
+    fontWeight: 'bold',
+    marginBottom: 40,
+  },
+  thaliContainer: {
+    width: width * 0.9,
+    height: width * 0.9,
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  thaliPlate: {
+    width: width * 0.8,
+    height: width * 0.8,
+    position: 'absolute',
+    resizeMode: 'contain',
+  },
+  foodItem: {
+    width: width * 0.25,
+    height: width * 0.25,
+    position: 'absolute',
+    resizeMode: 'contain',
+  },
+  biryaniPosition: {
+    top: '25%',
+    left: '25%',
+  },
+  gulabjamunPosition: {
+    top: '25%',
+    right: '25%',
+  },
+  curryPosition: {
+    bottom: '25%',
+    left: '25%',
+  },
+  ricePosition: {
+    bottom: '25%',
+    right: '25%',
+  },
+  curdPosition: {
+    top: '15%',
+    left: '45%',
+  },
+  papadPosition: {
+    bottom: '15%',
+    right: '45%',
+  },
+  patternImage: {
+    position: 'absolute',
+    width: width * 1.5,
+    height: height * 1.5,
+    opacity: 0.05,
+    zIndex: -1,
+  },
+  getStartedButton: {
+    backgroundColor: '#2E7D32',
+    paddingHorizontal: 40,
+    paddingVertical: 15,
+    borderRadius: 30,
+    marginTop: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  getStartedText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+});
+
+export default App;
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import {
+//   StyleSheet,
+//   View,
+//   Text,
+//   Image,
+//   Animated,
+//   Dimensions,
+//   TouchableOpacity,
+//   TextInput,
+//   ScrollView,
+//   Platform,
+//   KeyboardAvoidingView,
+// } from 'react-native';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+// import { SafeAreaView } from 'react-native-safe-area-context';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+
+// const { width, height } = Dimensions.get('window');
+// const Stack = createStackNavigator();
+
+// // Static image URLs for food preparation and events
+// const IMAGES = {
+  // chef: 'https://cdn-icons-png.flaticon.com/512/2921/2921828.png',
+  // catering: 'https://cdn-icons-png.flaticon.com/512/2718/2718224.png',
+  // buffet: 'https://cdn-icons-png.flaticon.com/512/1147/1147805.png',
+  // dining: 'https://cdn-icons-png.flaticon.com/512/1205/1205756.png',
+  // pattern: 'https://cdn-icons-png.flaticon.com/512/5390/5390575.png'
+// };
+
+// const WelcomeScreen = ({ navigation }) => {
+//   const [fadeAnim] = useState(new Animated.Value(0));
+//   const [foodAnims] = useState({
+//     chef: new Animated.Value(height),
+//     catering: new Animated.Value(-width),
+//     buffet: new Animated.Value(width),
+//     dining: new Animated.Value(-height),
+//   });
+//   const [scaleAnims] = useState({
+//     chef: new Animated.Value(0.5),
+//     catering: new Animated.Value(0.5),
+//     buffet: new Animated.Value(0.5),
+//     dining: new Animated.Value(0.5),
+//   });
+//   const [rotateAnim] = useState(new Animated.Value(0));
+
+//   useEffect(() => {
+//     Animated.sequence([
+//       Animated.timing(fadeAnim, {
+//         toValue: 1,
+//         duration: 800,
+//         useNativeDriver: true,
+//       }),
+//       Animated.parallel([
+//         ...Object.values(foodAnims).map(anim =>
+//           Animated.spring(anim, {
+//             toValue: 0,
+//             tension: 50,
+//             friction: 7,
+//             useNativeDriver: true,
+//           })
+//         ),
+//         ...Object.values(scaleAnims).map(anim =>
+//           Animated.spring(anim, {
+//             toValue: 1,
+//             tension: 50,
+//             friction: 7,
+//             useNativeDriver: true,
+//           })
+//         ),
+//         Animated.loop(
+//           Animated.sequence([
+//             Animated.timing(rotateAnim, {
+//               toValue: 1,
+//               duration: 5000,
+//               useNativeDriver: true,
+//             }),
+//             Animated.timing(rotateAnim, {
+//               toValue: 0,
+//               duration: 5000,
+//               useNativeDriver: true,
+//             }),
+//           ])
+//         ),
+//       ]),
+//     ]).start();
+//   }, []);
+
+//   const spin = rotateAnim.interpolate({
+//     inputRange: [0, 1],
+//     outputRange: ['0deg', '360deg'],
+//   });
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <Animated.View style={[styles.welcomeContainer, { opacity: fadeAnim }]}>
+//         <Text style={styles.welcomeTitle}>Welcome to</Text>
+//         <Text style={styles.eventsTitle}>EVENTS PAGE</Text>
+
+//         <View style={styles.foodIconsContainer}>
+//           {/* Chef Icon - Top */}
+//           <Animated.Image
+//             source={{ uri: IMAGES.chef }}
+//             style={[
+//               styles.foodIcon,
+//               styles.topIcon,
+//               {
+//                 transform: [
+//                   { translateY: foodAnims.chef },
+//                   { scale: scaleAnims.chef }
+//                 ],
+//               },
+//             ]}
+//           />
+          
+//           {/* Catering Icon - Left */}
+//           <Animated.Image
+//             source={{ uri: IMAGES.catering }}
+//             style={[
+//               styles.foodIcon,
+//               styles.leftIcon,
+//               {
+//                 transform: [
+//                   { translateX: foodAnims.catering },
+//                   { scale: scaleAnims.catering }
+//                 ],
+//               },
+//             ]}
+//           />
+          
+//           {/* Buffet Icon - Right */}
+//           <Animated.Image
+//             source={{ uri: IMAGES.buffet }}
+//             style={[
+//               styles.foodIcon,
+//               styles.rightIcon,
+//               {
+//                 transform: [
+//                   { translateX: foodAnims.buffet },
+//                   { scale: scaleAnims.buffet }
+//                 ],
+//               },
+//             ]}
+//           />
+          
+//           {/* Dining Icon - Bottom */}
+//           <Animated.Image
+//             source={{ uri: IMAGES.dining }}
+//             style={[
+//               styles.foodIcon,
+//               styles.bottomIcon,
+//               {
+//                 transform: [
+//                   { translateY: foodAnims.dining },
+//                   { scale: scaleAnims.dining }
+//                 ],
+//               },
+//             ]}
+//           />
+//         </View>
+
+//         <Animated.Image
+//           source={{ uri: IMAGES.pattern }}
+//           style={[
+//             styles.decorationImage,
+//             {
+//               transform: [{ rotate: spin }],
+//             },
+//           ]}
+//         />
+
+//         <TouchableOpacity
+//           style={styles.getStartedButton}
+//           onPress={() => navigation.navigate('EventForm')}
+//         >
+//           <Text style={styles.getStartedText}>Plan Your Event MENU</Text>
+//           <Icon name="arrow-forward" size={24} color="#FFFFFF" />
+//         </TouchableOpacity>
+//       </Animated.View>
+//     </SafeAreaView>
+//   );
+// };
+
+
+// const EventFormScreen = () => {
+//   const [date, setDate] = useState(new Date());
+//   const [time, setTime] = useState(new Date());
+//   const [showDatePicker, setShowDatePicker] = useState(false);
+//   const [showTimePicker, setShowTimePicker] = useState(false);
+//   const [address, setAddress] = useState('');
+//   const [guests, setGuests] = useState('');
+//   const [fadeAnims] = useState({
+//     title: new Animated.Value(0),
+//     form: new Animated.Value(0),
+//   });
+//   const [slideAnim] = useState(new Animated.Value(height));
+
+//   useEffect(() => {
+//     Animated.sequence([
+//       Animated.timing(fadeAnims.title, {
+//         toValue: 1,
+//         duration: 600,
+//         useNativeDriver: true,
+//       }),
+//       Animated.parallel([
+//         Animated.timing(fadeAnims.form, {
+//           toValue: 1,
+//           duration: 800,
+//           useNativeDriver: true,
+//         }),
+//         Animated.spring(slideAnim, {
+//           toValue: 0,
+//           tension: 30,
+//           friction: 7,
+//           useNativeDriver: true,
+//         }),
+//       ]),
+//     ]).start();
+//   }, []);
+
+//   const onDateChange = (event, selectedDate) => {
+//     setShowDatePicker(Platform.OS === 'ios');
+//     if (selectedDate) {
+//       setDate(selectedDate);
+//     }
+//   };
+
+//   const onTimeChange = (event, selectedTime) => {
+//     setShowTimePicker(Platform.OS === 'ios');
+//     if (selectedTime) {
+//       setTime(selectedTime);
+//     }
+//   };
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <KeyboardAvoidingView
+//         behavior={Platform.OS === "ios" ? "padding" : "height"}
+//         style={styles.formContainer}
+//       >
+//         <ScrollView showsVerticalScrollIndicator={false}>
+//           <Animated.Text
+//             style={[
+//               styles.formTitle,
+//               { opacity: fadeAnims.title }
+//             ]}
+//           >
+//             Plan Your Event
+//           </Animated.Text>
+
+//           <Animated.View
+//             style={[
+//               styles.formContent,
+//               {
+//                 opacity: fadeAnims.form,
+//                 transform: [{ translateY: slideAnim }]
+//               }
+//             ]}
+//           >
+//             <View style={styles.inputGroup}>
+//               <Text style={styles.label}>Event Date</Text>
+//               <TouchableOpacity
+//                 style={styles.dateTimeButton}
+//                 onPress={() => setShowDatePicker(true)}
+//               >
+//                 <Icon name="event" size={24} color="#2E7D32" />
+//                 <Text style={styles.dateTimeText}>
+//                   {date.toLocaleDateString('en-US', {
+//                     weekday: 'long',
+//                     year: 'numeric',
+//                     month: 'long',
+//                     day: 'numeric'
+//                   })}
+//                 </Text>
+//               </TouchableOpacity>
+//             </View>
+
+//             <View style={styles.inputGroup}>
+//               <Text style={styles.label}>Event Time</Text>
+//               <TouchableOpacity
+//                 style={styles.dateTimeButton}
+//                 onPress={() => setShowTimePicker(true)}
+//               >
+//                 <Icon name="access-time" size={24} color="#2E7D32" />
+//                 <Text style={styles.dateTimeText}>
+//                   {time.toLocaleTimeString('en-US', {
+//                     hour: 'numeric',
+//                     minute: '2-digit',
+//                     hour12: true
+//                   })}
+//                 </Text>
+//               </TouchableOpacity>
+//             </View>
+
+//             <View style={styles.inputGroup}>
+//               <Text style={styles.label}>Number of Plates</Text>
+//               <View style={styles.guestInputContainer}>
+//                 <Icon name="restaurant" size={24} color="#2E7D32" />
+//                 <TextInput
+//                   style={styles.guestInput}
+//                   placeholder="Enter number of plates"
+//                   value={guests}
+//                   onChangeText={setGuests}
+//                   keyboardType="number-pad"
+//                 />
+//               </View>
+//             </View>
+
+//             <View style={styles.inputGroup}>
+//               <Text style={styles.label}>Delivery Address</Text>
+//               <View style={styles.addressInputContainer}>
+//                 <Icon name="location-on" size={24} color="#2E7D32" />
+//                 <TextInput
+//                   style={styles.addressInput}
+//                   placeholder="Enter delivery address"
+//                   value={address}
+//                   onChangeText={setAddress}
+//                   multiline
+//                   numberOfLines={3}
+//                 />
+//               </View>
+//             </View>
+
+//             <TouchableOpacity style={styles.submitButton}>
+//               <Text style={styles.submitButtonText}>Continue</Text>
+//               <Icon name="arrow-forward" size={24} color="#FFFFFF" />
+//             </TouchableOpacity>
+//           </Animated.View>
+//         </ScrollView>
+
+//         {(showDatePicker || showTimePicker) && (
+//           <DateTimePicker
+//             value={showDatePicker ? date : time}
+//             mode={showDatePicker ? "date" : "time"}
+//             is24Hour={false}
+//             display="default"
+//             onChange={showDatePicker ? onDateChange : onTimeChange}
+//             minimumDate={new Date()}
+//           />
+//         )}
+//       </KeyboardAvoidingView>
+//     </SafeAreaView>
+//   );
+// };
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#2E7D32',
+//   },
+//   welcomeContainer: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     padding: 20,
+//   },
+//   welcomeTitle: {
+//     fontSize: 28,
+//     color: '#2E7D32',
+//     fontWeight: '300',
+//     marginBottom: 8,
+//   },
+//   eventsTitle: {
+//     fontSize: 40,
+//     color: '#1B5E20',
+//     fontWeight: 'bold',
+//     marginBottom: 40,
+//   },
+//   foodIconsContainer: {
+//     width: width * 0.8,
+//     height: width * 0.8,
+//     position: 'relative',
+//   },
+//   foodIcon: {
+//     width: width * 0.3,
+//     height: width * 0.3,
+//     position: 'absolute',
+//   },
+//   decorationImage: {
+//     position: 'absolute',
+//     width: width,
+//     height: height,
+//     opacity: 0.05,
+//     zIndex: -1,
+//   },
+//   getStartedButton: {
+//     backgroundColor: '#2E7D32',
+//     paddingHorizontal: 40,
+//     paddingVertical: 15,
+//     borderRadius: 30,
+//     marginTop: 40,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     elevation: 5,
+//     shadowColor: '#000',
+//     shadowOffset: {
+//       width: 0,
+//       height: 2,
+//     },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 3.84,
+//   },
+//   getStartedText: {
+//     color: '#FFFFFF',
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     marginRight: 10,
+//   },
+//   formContainer: {
+//     flex: 1,
+//     backgroundColor: '#FFFFFF',
+//   },
+//   formContent: {
+//     padding: 20,
+//   },
+//   formTitle: {
+//     fontSize: 32,
+//     color: '#1B5E20',
+//     fontWeight: 'bold',
+//     marginVertical: 30,
+//     textAlign: 'center',
+//   },
+//   inputGroup: {
+//     marginBottom: 25,
+//   },
+//   label: {
+//     fontSize: 16,
+//     color: '#2E7D32',
+//     marginBottom: 8,
+//     fontWeight: '500',
+//   },
+//   dateTimeButton: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     backgroundColor: '#E8F5E9',
+//     padding: 15,
+//     borderRadius: 12,
+//     borderWidth: 1,
+//     borderColor: '#81C784',
+//   },
+//   dateTimeText: {
+//     fontSize: 16,
+//     marginLeft: 10,
+//     color: '#4CAF50',
+//     flex: 1,
+//   },
+//   guestInputContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     backgroundColor: '#E8F5E9',
+//     padding: 15,
+//     borderRadius: 12,
+//     borderWidth: 1,
+//     borderColor: '#81C784',
+//   },
+//   guestInput: {
+//     flex: 1,
+//     marginLeft: 10,
+//     fontSize: 16,
+//     color: '#4CAF50',
+//   },
+//   addressInputContainer: {
+//     backgroundColor: '#E8F5E9',
+//     padding: 15,
+//     borderRadius: 12,
+//     borderWidth: 1,
+//     borderColor: '#81C784',
+//     flexDirection: 'row',
+//     alignItems: 'flex-start',
+//   },
+//   addressInput: {
+//     flex: 1,
+//     marginLeft: 10,
+//     fontSize: 16,
+//     color: '#4CAF50',
+//     height: 100,
+//     textAlignVertical: 'top',
+//   },
+//   submitButton: {
+//     backgroundColor: '#4CAF50',
+//     paddingVertical: 15,
+//     borderRadius: 30,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginTop: 20,
+//   },
+//   submitButtonText: {
+//     color: '#FFFFFF',
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     marginRight: 10,
+//   },
+
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FFFFFF',
+//   },
+//   welcomeContainer: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     padding: 20,
+//   },
+//   welcomeTitle: {
+//     fontSize: 28,
+//     color: '#2E7D32',
+//     fontWeight: '300',
+//     marginBottom: 8,
+//   },
+//   eventsTitle: {
+//     fontSize: 40,
+//     color: '#1B5E20',
+//     fontWeight: 'bold',
+//     marginBottom: 40,
+//   },
+//   foodIconsContainer: {
+//     width: width * 0.8,
+//     height: width * 0.8,
+//     position: 'relative',
+//   },
+//   foodIcon: {
+//     width: width * 0.25,
+//     height: width * 0.25,
+//     position: 'absolute',
+//   },
+//   topIcon: {
+//     top: 0,
+//     left: '50%',
+//     marginLeft: -(width * 0.125), // Half of the icon width
+//   },
+//   bottomIcon: {
+//     bottom: 0,
+//     left: '50%',
+//     marginLeft: -(width * 0.125),
+//   },
+//   leftIcon: {
+//     left: 0,
+//     top: '50%',
+//     marginTop: -(width * 0.125),
+//   },
+//   rightIcon: {
+//     right: 0,
+//     top: '50%',
+//     marginTop: -(width * 0.125),
+//   },
+//   decorationImage: {
+//     position: 'absolute',
+//     width: width,
+//     height: height,
+//     opacity: 0.05,
+//     zIndex: -1,
+//   },
+//   getStartedButton: {
+//     backgroundColor: '#2E7D32',
+//     paddingHorizontal: 40,
+//     paddingVertical: 15,
+//     borderRadius: 30,
+//     marginTop: 40,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     elevation: 5,
+//     shadowColor: '#000',
+//     shadowOffset: {
+//       width: 0,
+//       height: 2,
+//     },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 3.84,
+//   },
+//   getStartedText: {
+//     color: '#FFFFFF',
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     marginRight: 10,
+//   },
+// });
+
+
+// const App = () => {
+//   return (
+//     <NavigationContainer>
+//       <Stack.Navigator initialRouteName="Welcome">
+//         <Stack.Screen 
+//           name="Welcome" 
+//           component={WelcomeScreen} 
+//           options={{ headerShown: false }} 
+//         />
+//         <Stack.Screen 
+//           name="EventForm" 
+//           component={EventFormScreen}
+//           options={{ headerShown: false }} 
+//         />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// };
+
+// export default App;
+
+
+
+
+
+  // const SubCategoryItem = ({ item }) => {
+  //   const [isEnabled, setIsEnabled] = useState(false);
+  //   const isInCart = cartItems.some(cartItem => cartItem.product_id === item.product_id);
+  //   const isChecked = checkedItems[item.product_id] || false;
+
+  //   const handleToggleCart = () => {
+  //     toggleCartItem(item);
+  //   };
+
+  //   const handleCheckboxToggle = () => {
+  //     toggleCartItem(item);
+  //   };
+
+  //   return (
+  //     <Animated.View style={styles.subCategoryItem}>
+  //       <View style={styles.subCategoryContent}>
+  //         <View style={styles.itemHeader}>
+  //           <View style={styles.categoryImageContainer}>
+  //             <Image
+  //               source={{ uri: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8' }}
+  //               style={styles.categoryImage}
+  //             />
+  //           </View>
+  //           <View style={styles.headerRight}>
+  //             <Text style={styles.subCategoryName}>{item.productname}</Text>
+  //             {item.isdual && (
+  //               <Switch
+  //                 trackColor={{ false: "#767577", true: "#81b0ff" }}
+  //                 thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+  //                 onValueChange={() => setIsEnabled(!isEnabled)}
+  //                 value={isEnabled}
+  //               />
+  //             )}
+  //           </View>
+  //         </View>
+
+  //         <View style={styles.bottomSection}>
+  //           <View style={styles.actionsContainer}>
+  //             <TouchableOpacity
+  //               style={[
+  //                 styles.addButton,
+  //                 isInCart && styles.removeButton
+  //               ]}
+  //               onPress={handleToggleCart}>
+  //               <Text style={styles.addButtonText}>
+  //                 {isInCart ? 'REMOVE' : 'ADD ITEM'}
+  //               </Text>
+  //             </TouchableOpacity>
+  //           </View>
+  //           <View style={styles.priceContainer}>
+  //             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+  //               <Icon name="ramen-dining" size={16} color="#000" style={{ marginRight: 10 }}/>
+  //               <Text style={styles.price}>
+  //                 {isEnabled ? `${item.wtorvol_units}` : `${item.plate_units}`}
+  //               </Text>
+  //             </View>
+  //           </View>
+  //         </View>
+  //       </View>
+  //     </Animated.View>
+  //   );
+  // };
+  
+

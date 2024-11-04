@@ -1,0 +1,347 @@
+// import React, { useState } from 'react';
+// import {
+//   View,
+//   Text,
+//   TouchableOpacity,
+//   StyleSheet,
+//   ScrollView,
+//   Modal,
+//   SafeAreaView,
+//   FlatList,
+// } from 'react-native';
+// import Icon from 'react-native-vector-icons/Feather';
+
+// const OrderScreen = () => {
+//   const [selectedOrder, setSelectedOrder] = useState(null);
+//   const [modalVisible, setModalVisible] = useState(false);
+
+//   // Sample order data
+//   const orders = [
+//     {
+//       id: 'EORD001',
+      
+//       date: 'Monday, 25 Apr 2024',
+//       time: '15:45',
+//       status: 'Success',
+//       items: [
+//         { name: 'Americano Hot', price: 9000, no_of_plates:100,weight:'2kg'}
+//       ],
+//       totalItems: 1,
+//       totalPrice: 18000
+//     },
+//     {
+//       id: 'EOR123002',
+     
+//       date: 'Monday, 25 Apr 2024',
+//       time: '16:45',
+//       status: 'Success',
+//       items: [
+//         { name: 'Americano Iced', price: 22000 ,no_of_plates:100,weight:'2kg'},
+//         { name: 'Cappuccino', price: 25000,no_of_plates:100,weight:'2kg' },
+//         { name: 'Iced Caramel Macchiato', price: 32000,no_of_plates:100,weight:'2kg' }
+//       ],
+//       totalItems: 4,
+//       totalPrice: 79000
+//     }
+//   ];
+
+//   const handleSeeDetails = (order) => {
+//     setSelectedOrder(order);
+//     setModalVisible(true);
+//   };
+
+//   const OrderDetailsModal = () => (
+//     <Modal
+//       animationType="slide"
+//       transparent={true}
+//       visible={modalVisible}
+//       onRequestClose={() => setModalVisible(false)}
+//     >
+//       <View style={styles.modalOverlay}>
+//         <View style={styles.modalContent}>
+//           <View style={styles.modalHeader}>
+//             <Text style={styles.modalTitle}>Order Details</Text>
+//             <TouchableOpacity 
+//               onPress={() => setModalVisible(false)}
+//               style={styles.closeButton}
+//             >
+//               <Icon name="x" size={24} color="#2E7D32" />
+//             </TouchableOpacity>
+//           </View>
+
+//           <View style={styles.orderInfoSection}>
+//             <Text style={styles.orderIdText}>Order ID: {selectedOrder?.id}</Text>
+//             <Text style={styles.dateText}>{selectedOrder?.date} - {selectedOrder?.time}</Text>
+//             <Text style={styles.dateText}>number of plates:100</Text>
+//             <Text style={styles.storeNameText}>{selectedOrder?.weight}</Text>
+            
+
+//           </View>
+
+//           <View style={styles.itemsContainer}>
+//             <Text style={styles.sectionTitle}>Items Ordered:</Text>
+//             {selectedOrder?.items.map((item, index) => (
+//               <View key={index} style={styles.itemRow}>
+//                 <Text style={styles.itemName}>{item.name}</Text>
+//                 <Text style={styles.itemName}>{item.weight}</Text>  
+//                 <Text style={styles.itemPrice}>2x {item.price.toLocaleString()}</Text>
+//               </View>
+//             ))}
+//           </View>
+
+//           <View style={styles.totalSection}>
+//             <Text style={styles.totalText}>Total Amount:</Text>
+//             <Text style={styles.totalPrice}>₹ {selectedOrder?.totalPrice.toLocaleString()}</Text>
+//           </View>
+
+//           <TouchableOpacity style={styles.reorderButton}>
+//             <Text style={styles.reorderButtonText}>Re-Order</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     </Modal>
+//   );
+
+//   const renderOrderCard = ({ item }) => (
+//     <View style={styles.orderCard}>
+//       <View style={styles.orderHeader}>
+//         <View style={styles.statusContainer}>
+//           <View style={styles.statusIndicator} />
+//           <Text style={styles.statusText}>{item.status}</Text>
+//         </View>
+//         <TouchableOpacity onPress={() => handleSeeDetails(item)}>
+//           <Text style={styles.seeDetailsText}>See Details {'>'}</Text>
+//         </TouchableOpacity>
+//       </View>
+
+//       <Text style={styles.storeName}>Order ID: {item.id}</Text>
+//       <Text style={styles.orderDate}>{item.date} - {item.time}</Text>
+
+
+//       <View style={styles.orderSummary}>
+//         <Text style={styles.itemCount}>{item.totalItems} Item{item.totalItems > 1 ? 's' : ''}</Text>
+//         <View style={styles.priceContainer}>
+//           <Text style={styles.price}>₹ {item.totalPrice.toLocaleString()}</Text>
+//           <TouchableOpacity style={styles.reOrderBtn}>
+//             <Text style={styles.reOrderText}>Re-Order</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </View>
+//     </View>
+//   );
+
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <View style={styles.header}>
+//         <Text style={styles.headerTitle}>Order History</Text>
+//       </View>
+
+//       <FlatList
+//         data={orders}
+//         renderItem={renderOrderCard}
+//         keyExtractor={(item) => item.id}
+//         contentContainerStyle={styles.orderList}
+//         showsVerticalScrollIndicator={false}
+//       />
+
+//       <OrderDetailsModal />
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#CCFFCC',
+//   },
+//   header: {
+//     padding: 20,
+//     backgroundColor: '#fff',
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#eee',
+//   },
+//   headerTitle: {
+//     fontSize: 24,
+//     fontWeight: 'bold',
+//     color: '#2E7D32',
+//   },
+//   orderList: {
+//     padding: 16,
+//   },
+//   orderCard: {
+//     backgroundColor: '#fff',
+//     borderRadius: 12,
+//     padding: 16,
+//     marginBottom: 16,
+//     elevation: 2,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.1,
+//     shadowRadius: 4,
+//   },
+//   orderHeader: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     marginBottom: 12,
+//   },
+//   statusContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   statusIndicator: {
+//     width: 8,
+//     height: 8,
+//     borderRadius: 4,
+//     backgroundColor: '#2E7D32',
+//     marginRight: 6,
+//   },
+//   statusText: {
+//     color: '#2E7D32',
+//     fontWeight: '500',
+//   },
+//   seeDetailsText: {
+//     color: '#2E7D32',
+//     fontWeight: '500',
+//   },
+//   storeName: {
+//     fontSize: 16,
+//     fontWeight: '600',
+//     marginBottom: 4,
+//   },
+//   orderDate: {
+//     color: '#666',
+//     fontSize: 14,
+//     marginBottom: 12,
+//   },
+//   orderSummary: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     marginTop: 8,
+//   },
+//   itemCount: {
+//     color: '#666',
+//   },
+//   priceContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   price: {
+//     fontWeight: '600',
+//     fontSize: 16,
+//     marginRight: 12,
+//   },
+//   reOrderBtn: {
+//     backgroundColor: '#2E7D32',
+//     paddingHorizontal: 12,
+//     paddingVertical: 6,
+//     borderRadius: 6,
+//   },
+//   reOrderText: {
+//     color: '#fff',
+//     fontWeight: '500',
+//   },
+//   modalOverlay: {
+//     flex: 1,
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//     justifyContent: 'flex-end',
+//   },
+//   modalContent: {
+//     backgroundColor: '#fff',
+//     borderTopLeftRadius: 20,
+//     borderTopRightRadius: 20,
+//     padding: 20,
+//     minHeight: '70%',
+//   },
+//   modalHeader: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     marginBottom: 20,
+//   },
+//   modalTitle: {
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     color: '#2E7D32',
+//   },
+//   closeButton: {
+//     padding: 4,
+//   },
+//   orderInfoSection: {
+//     marginBottom: 20,
+//   },
+//   orderIdText: {
+//     fontSize: 16,
+//     fontWeight: '600',
+//     marginBottom: 4,
+//   },
+//   dateText: {
+//     color: '#666',
+//     marginBottom: 4,
+//   },
+//   storeNameText: {
+//     fontSize: 16,
+//     fontWeight: '500',
+//     color: '#2E7D32',
+//   },
+//   itemsContainer: {
+//     marginBottom: 20,
+//   },
+//   sectionTitle: {
+//     fontSize: 16,
+//     fontWeight: '600',
+//     marginBottom: 12,
+//   },
+//   itemRow: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     marginBottom: 8,
+//   },
+//   itemName: {
+//     flex: 1,
+//     color: '#444',
+//   },
+//   itemPrice: {
+//     fontWeight: '500',
+//   },
+//   totalSection: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     paddingTop: 12,
+//     borderTopWidth: 1,
+//     borderTopColor: '#eee',
+//     marginBottom: 20,
+//   },
+//   totalText: {
+//     fontSize: 16,
+//     fontWeight: '600',
+//   },
+//   totalPrice: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     color: '#2E7D32',
+//   },
+//   reorderButton: {
+//     backgroundColor: '#2E7D32',
+//     padding: 16,
+//     borderRadius: 8,
+//     alignItems: 'center',
+//   },
+//   reorderButtonText: {
+//     color: '#fff',
+//     fontSize: 16,
+//     fontWeight: '600',
+//   },
+// });
+
+// export default OrderScreen;
+
+
+
+
+
+
+
+
