@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1025589181172",
+    "project_id": "articulate-case-440110-d2",
+    "storage_bucket": "articulate-case-440110-d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025589181172:android:f347439fb29c456542fca1",
+        "android_client_info": {
+          "package_name": "com.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025589181172-ff5nrnppugboiv90dr90lecv51n73oai.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frontend",
+            "certificate_hash": "b42c0f73a02203738fc0ff4d7fa37e939ee7aa90"
+          }
+        },
+        {
+          "client_id": "1025589181172-nmq5782qi1ksckpjojimjqtff2j6i3mb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7IMTs2Zt5x1Z_Nlii0HzWtZXOaHNhDoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1025589181172-nmq5782qi1ksckpjojimjqtff2j6i3mb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
