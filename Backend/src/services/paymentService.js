@@ -96,7 +96,7 @@ const initializePayment = async (amount, customer_id, order_type, order_id) => {
         merchantTransactionId,
         merchantUserId: customer_id,
         amount: amount * 100,
-        redirectUrl: `$http://localhost:4000/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&order_id=${order_id}`,
+        redirectUrl: `$https://dev.caterorange.com/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&order_id=${order_id}`,
         redirectMode: 'REDIRECT',
         callbackUrl: '(link unavailable)',
         mobileNumber: '9999999999',

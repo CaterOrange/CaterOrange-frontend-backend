@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/parash/Desktop/caterorange/Backend/src/config/logs/.5d6b360440a73ca5b7d13aff4c905247be86391d-audit.json",
+    "files": [
+        {
+            "date": 1730832593100,
+            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-06.log",
+            "hash": "5faaea00d62e423f8c7c412c5421281518be9d1b6133165ad68756cb7500a03d"
+        },
+        {
+            "date": 1730900153134,
+            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-06.log.25",
+            "hash": "f4a225b973eb304b15b93e4407361f100595e267cc5fe51f25fd91c21ae2f189"
+        },
+        {
+            "date": 1730901464868,
+            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-06.log.26",
+            "hash": "d29dc5ce344c553c657c8539145782c61bf74d281e0cef356e57e8f6e2078b20"
+        }
+    ],
+    "hashType": "sha256"
+}

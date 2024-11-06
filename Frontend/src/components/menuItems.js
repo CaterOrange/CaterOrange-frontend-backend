@@ -138,7 +138,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/pay', {
+      const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
         amount: totalAmount
       });
       
