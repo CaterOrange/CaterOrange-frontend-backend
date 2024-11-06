@@ -3,7 +3,7 @@ require('dotenv').config();
 const logger = require('./logger'); 
 
 const Client1 = new Client({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.PG_DATABASE_URL
 });
 
 const createDatabase = async () => {
