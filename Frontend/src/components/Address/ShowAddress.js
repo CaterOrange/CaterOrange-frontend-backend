@@ -29,23 +29,8 @@ const ShowAddress = () => {
       }
     };
 
-    fetchAddresses(); // Fetch addresses on component mount
+    fetchAddresses(); 
   }, [token]);
-
-  const handleSelect = (addressId) => {
-    setSelectedAddressId(addressId);
-    console.log(`Selected Address ID: ${addressId}`);
-  };
-
-  const handleEditAddress = (address) => {
-    console.log("Editing address:", address);
-    // Add your address edit logic here
-  };
-
-  const handleDeleteAddress = (addressId) => {
-    console.log(`Deleting address ID: ${addressId}`);
-    // Add your delete logic here
-  };
 
   const handleBackToHome = () => {
     navigate("/home");
@@ -67,17 +52,10 @@ const ShowAddress = () => {
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-300"
                 }`}
-                style={{ height: "220px", minWidth: "300px" }}
-              >
+                style={{ height: "190px", minWidth: "50px" }}
+              > 
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <input
-                      type="radio"
-                      name="address"
-                      checked={selectedAddressId === address.address_id}
-                      onChange={() => handleSelect(address.address_id)}
-                      className="form-radio h-6 w-6 text-blue-500"
-                    />
                     <div>
                       <h2 className="text-xl font-semibold">{address.tag}</h2>
                       <p className="text-gray-700 mt-2">
@@ -86,29 +64,6 @@ const ShowAddress = () => {
                       <p className="text-gray-500">Pincode: {address.pincode}</p>
                     </div>
                   </div>
-                </div>
-
-                <div className="mt-6 flex justify-between">
-                  <button
-                    onClick={() => handleDeleteAddress(address.address_id)}
-                    className="flex items-center text-red-600 hover:text-red-800 font-medium"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 6h18M9 6v12m6-12v12M4 6h16M8 6v14a1 1 0 001 1h6a1 1 0 001-1V6m-3-3h-6a3 3 0 00-3 3v1h12V6a3 3 0 00-3-3z"
-                      />
-                    </svg>
-                    Delete
-                  </button>
                 </div>
               </div>
             ))
@@ -131,3 +86,4 @@ const ShowAddress = () => {
 };
 
 export default ShowAddress;
+

@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
@@ -85,30 +86,67 @@ const getDefaultAddress = async (req, res) => {
 };
 
 // Get all addresses for the user
+// const getAddressForUser = async (req, res) => {
+//     const token = req.headers['token'];
+//     if (!token) {
+//         logger.warn('No token provided for address retrieval');
+//         return res.status(401).json({ message: 'No token provided' });
+//     }
+
+//     try {
+//         const userId = getUserIdFromToken(token);
+//         logger.info('Retrieving addresses for user', { userId });
+
+//         const query = 'SELECT * FROM address WHERE customer_id = $1';
+//         const values = [userId];
+//         const result = await client.query(query, values);
+
+//         logger.info('Addresses retrieved successfully for user', { userId });
+//         return res.json({
+//             success: true,
+//             message: 'Address fetched successfully',
+//             address: result.rows
+//         });
+//     } catch (error) {
+//         logger.error('Error fetching addresses', { error: error.message });
+//         return res.status(500).json({ message: 'Error fetching addresses', error });
+//     }
+// };
+
+
+
+
+
 const getAddressForUser = async (req, res) => {
-    const token = req.headers['token'];
-    if (!token) {
-        logger.warn('No token provided for address retrieval');
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
     try {
-        const userId = getUserIdFromToken(token);
-        logger.info('Retrieving addresses for user', { userId });
+        const token = req.headers['token'];
+        if (!token) {
+            logger.warn('No token provided for address retrieval');
+            return res.status(401).json({ message: 'No token provided' });
+        }
 
-        const query = 'SELECT * FROM address WHERE customer_id = $1';
-        const values = [userId];
-        const result = await client.query(query, values);
+        // Verifying the token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, SECRET_KEY);
+            logger.info('Token verified successfully for address retrieval', { userId: decoded.id });
+        } catch (err) {
+            logger.error('Token verification failed', { error: err });
+            return res.status(401).json({ message: 'Invalid or expired token' });
+        }
 
-        logger.info('Addresses retrieved successfully for user', { userId });
+        const customer_id = decoded.id;
+        const result = await address_model.getAllAddresses(customer_id);
+
+        logger.info('All addresses retrieved successfully for user', { userId: customer_id });
         return res.json({
             success: true,
-            message: 'Address fetched successfully',
-            address: result.rows
+            message: 'All addresses retrieved successfully',
+            address: result
         });
-    } catch (error) {
-        logger.error('Error fetching addresses', { error: error.message });
-        return res.status(500).json({ message: 'Error fetching addresses', error });
+    } catch (err) {
+        logger.error('Error retrieving all addresses', { error: err.message });
+        return res.status(500).json({ error: err.message });
     }
 };
 

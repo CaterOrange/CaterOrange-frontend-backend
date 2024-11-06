@@ -138,6 +138,9 @@ WHERE corporatecart_id = $1
       )
   WHERE corporatecart_id = $1;
 `,
+GET_ALL_ADDRESSES:`
+  SELECT * FROM address WHERE customer_id=$1
+  `,
 DELETECARTITEM:`
 UPDATE corporate_cart
 SET total_amount=$3,cart_order_details = (
@@ -177,13 +180,10 @@ getCartCountById:`
 SELECT SUM((item->>'quantity')::integer) AS total_quantity
 FROM corporate_cart,
      jsonb_array_elements(cart_order_details::jsonb) AS item
-WHERE customer_generated_id = $1
-
-`
+WHERE customer_generated_id = $1`
 
  };
-
-
+ 
 module.exports = { DB_COMMANDS };
 
 

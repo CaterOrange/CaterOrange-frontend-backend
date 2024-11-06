@@ -29,7 +29,7 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
   const formattedOrders = OrdersData.map((order) => {
     const formattedItems = order.event_order_details.map((item) => ({
       name: item.productname,
-      plates: item.number_of_plates,
+      // plates: item.number_of_plates,
       pricePerUnit: item.priceperunit,
       pricePerKg: item.isdual ? item.priceperunit : undefined,
       quantity: item.quantity,

@@ -8,20 +8,21 @@ const ESuccessPage = () => {
   const [animationState, setAnimationState] = useState('initial');
   const [orderid, setOrderId] = useState('');
   const navigate = useNavigate();
+
   useEffect(() => {
     const getordergenid = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/api/event/getEOrdergenId`, {
           headers: { token: localStorage.getItem('token') },
         });
-        console.log('in success',response)
-        setOrderId(response.data.order_genid.eventorder_generated_id); 
+        console.log('in success', response);
+        setOrderId(response.data.order_genid.eventorder_generated_id);
       } catch (error) {
         console.error('Error in fetching order generated id', error);
       }
     };
 
-    getordergenid(); // Call the function to fetch order ID
+    getordergenid();
 
     const timer = setTimeout(() => {
       setAnimationState('animated');
@@ -29,17 +30,39 @@ const ESuccessPage = () => {
 
     return () => clearTimeout(timer);
   }, []);
-  
-  useEffect(() => {
-    // Timer to navigate to My Orders after 5 seconds
-    const navigateTimer = setTimeout(() => {
-      navigate('/orders'); // Change this to your actual route for My Orders
-    }, 6000); // 5000 milliseconds = 5 seconds
 
-    return () => clearTimeout(navigateTimer); // Clear the timer on component unmount
+  useEffect(() => {
+    // Timer to navigate to My Orders after 6 seconds
+    const navigateTimer = setTimeout(() => {
+      navigate('/orders');
+    }, 6000); 
+
+    return () => clearTimeout(navigateTimer); 
   }, [navigate]);
 
-  console.log('sneha order', orderid);
+  useEffect(() => {
+    const currentUser = clearLocalStorageExceptToken();
+    clearCartData(currentUser);
+  }, []);
+
+  const clearLocalStorageExceptToken = () => {
+    const token = localStorage.getItem('token');
+    const currentUser = JSON.parse(localStorage.getItem('userDP'))?.email;
+    localStorage.clear();
+    localStorage.setItem('token', token);
+    return currentUser;
+  };
+
+  const clearCartData = (currentUser) => {
+    if (currentUser) {
+      localStorage.removeItem(`cartItems_${currentUser}`);
+      localStorage.setItem(`paymentComplete_${currentUser}`, 'true');
+      // Call your state management functions here if necessary
+      // setLocalQuantities({});
+      // onUpdateQuantity({});
+      // onClearCart();
+    }
+  };
 
   return (
     <div className="h-screen w-full bg-white flex flex-col items-center justify-center overflow-hidden">

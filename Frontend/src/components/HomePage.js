@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { FiTrash } from 'react-icons/fi'; 
+import { AiOutlineCalendar } from 'react-icons/ai';
 import AddressForm from '../components/events/AddressForm';
 import axios from 'axios';
 
@@ -55,6 +57,7 @@ const HomePage = () => {
     setIsEditingAddress(true);
     setIsAddAddressFormVisible(true);
   };
+
   const saveAddress = (newAddress) => {
     if (isEditingAddress) {
       setAddress(
@@ -80,6 +83,8 @@ const HomePage = () => {
     }
   };
 
+
+
   const handleSelect = (address_id) => {
     const selectedAddr = address.find(addr => addr.address_id === address_id);
     setSelectedAddressId(address_id);
@@ -90,7 +95,6 @@ const HomePage = () => {
     <div
       className="bg-green-600 min-h-screen p-4"
       style={{ fontFamily: process.env.REACT_APP_FONT }} 
-
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
       <h2
@@ -145,18 +149,19 @@ const HomePage = () => {
                             checked={selectedAddressId === add.address_id}
                             onChange={() => handleSelect(add.address_id)}
                             className="mr-2"
+                            required
                           />
                           <p>
                             {add.tag}, {add.pincode}, {add.line1}, {add.line2}
                           </p>
                         </div>
                         <div className="flex items-center">
-                          <span
+                          {/* <span
                             className="text-blue-500 underline cursor-pointer mr-2"
                             onClick={() => handleEditAddress(add)}
                           >
                             Edit
-                          </span>
+                          </span> */}
                         </div>
                       </div>
                     ))
@@ -187,21 +192,25 @@ const HomePage = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 placeholderText="Select a date"
                 required
+                minDate={new Date()} 
+                onFocus={(e) => e.target.blur()} 
+                onKeyDown={(e) => e.preventDefault()} 
 
-                minDate={new Date()} // Disable past dates
 
               />
+           <AiOutlineCalendar className="absolute right-3 top-2 h-5 w-5 text-gray-400" />     
             </div>
         
             <div>
-              <label className="block text-gray-700 mb-2 font-bold">Time (e.g., 3:30 PM or 3:30 AM)</label>
+              <label className="block text-gray-700 mb-2 font-bold">Note (e.g., 3:30 PM)</label>
               <input
                 type='text'
-                placeholder="Enter time here (e.g., 3:30 PM or 3:30 AM)"
+                placeholder="Enter here..."
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 required
+                min="1"
               />
             </div>
           </div>
@@ -222,5 +231,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-

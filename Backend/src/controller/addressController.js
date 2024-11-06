@@ -2,11 +2,9 @@ require('dotenv').config();
 const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const address_model = require('../models/addressModels'); // Fixed import
-
+const address_model = require('../models/addressModel');
 const SECRET_KEY = process.env.SECRET_KEY;
 
-// Create a new address for the customer
 const createAddress = async (req, res) => {
     try {
         const token = req.headers['token'];
@@ -16,10 +14,7 @@ const createAddress = async (req, res) => {
             logger.warn('No token provided in request headers');
             return res.status(401).json({ message: 'No token provided' });
         }
-
-        // Verifying the token
         let verified_data;
-
         try {
             verified_data = jwt.verify(token, SECRET_KEY);
             logger.info('Token verified successfully', { userId: verified_data.id });

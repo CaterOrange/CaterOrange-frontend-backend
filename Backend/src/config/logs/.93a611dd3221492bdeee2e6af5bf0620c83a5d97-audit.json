@@ -1,0 +1,150 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/.93a611dd3221492bdeee2e6af5bf0620c83a5d97-audit.json",
+    "files": [
+        {
+            "date": 1730811039220,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-05.log",
+            "hash": "007dd305951fabdc79eced5bfe187e925680df9a6ac528a6f446a34492037657"
+        },
+        {
+            "date": 1730829731767,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-05.log.1",
+            "hash": "f92f0d33080815bf1408158e3c8b34de724c192423bd029e39bb574e8d272184"
+        },
+        {
+            "date": 1730831548102,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log",
+            "hash": "6130909e15a960ceeedf9115ef97381418c11be18ba3d198169ea5b3ac80a8c5"
+        },
+        {
+            "date": 1730834799696,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.1",
+            "hash": "d08d05e8de1954c8f962955235f4049dd04ce9827a85e2164ccd853fed8fcc0c"
+        },
+        {
+            "date": 1730838181314,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.2",
+            "hash": "7ded81378961625adcd9ca76e657fe077e34bfbd777fc2ad2020bd2e2bd0dad7"
+        },
+        {
+            "date": 1730873800273,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.3",
+            "hash": "72962e8f7e5c38334bb114916b37e20691b208318f074c68e04ed34bc611d28d"
+        },
+        {
+            "date": 1730881689958,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.4",
+            "hash": "f618b13f150d5b374b4d09f88f6fcf3137358ed214784a389f90cbf7c71b7f0c"
+        },
+        {
+            "date": 1730886203568,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.5",
+            "hash": "c0df5f815b7dad29cd6643a8eecce174a429a4672b06be1804489ba93d2d220a"
+        },
+        {
+            "date": 1730886289224,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.6",
+            "hash": "c5309f27c13827e391f5283cbb959e2e398a56b1aa4799a4e45c2639b6227fc3"
+        },
+        {
+            "date": 1730886421364,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.7",
+            "hash": "de1c828b5e6938781b80834c0c94ff3252ea9948433c6b983de7a27722da4c18"
+        },
+        {
+            "date": 1730886495589,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.8",
+            "hash": "bbc6550b1de452286f6e96f6c9c110c40a9cf99918068946e9caf035e128f28f"
+        },
+        {
+            "date": 1730887519841,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.9",
+            "hash": "3f02ec2fcff35c75175c7254a8b85f5f792ec99e7825512f5805ceca5da51d32"
+        },
+        {
+            "date": 1730887596813,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.10",
+            "hash": "b1ad6232ec95c349e2d5ff09fbbadab04e1cb00402be3f3fed5706c67996779b"
+        },
+        {
+            "date": 1730887673412,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.11",
+            "hash": "9c8080a5117c10241b52d59eb2ab2bfd0af71c5b1bc009dc8b09ea8df1330c3e"
+        },
+        {
+            "date": 1730888534357,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.12",
+            "hash": "2f8e77213dbc892e1e78be2bb755d53032b9238fce87210226c4769500c0a288"
+        },
+        {
+            "date": 1730889546474,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.13",
+            "hash": "2f9485f0b03caea38593ac7de5c21d4a98d755d456709b5e82e27b0a1cd688e5"
+        },
+        {
+            "date": 1730889712280,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.14",
+            "hash": "b3b974d0138a19def3eb32f39f9ad5790080e5c3b14edec00453c624020c2937"
+        },
+        {
+            "date": 1730890251632,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.15",
+            "hash": "02661ae412fcd9a772ff8a32f56840f9228fe980de7809a21b1feb992c33abc3"
+        },
+        {
+            "date": 1730890361694,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.16",
+            "hash": "9966203cf9749c0aaab96500f7e9ef6c60519b303507b3fe18aeeaed476ab746"
+        },
+        {
+            "date": 1730890479371,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.17",
+            "hash": "b83d31f0e6a786f55f98e3506da1f36f893d07284507e73af764746a0e6fe806"
+        },
+        {
+            "date": 1730890599244,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.18",
+            "hash": "44ebe0cf71f000ac1da35f7484b9a9d92a2937d68a1da78a59a81bfe45d413c9"
+        },
+        {
+            "date": 1730890705123,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.19",
+            "hash": "254ee63c63bd586a48e8643b0aa1acc200889312d9633682736e74d7c2f5fb12"
+        },
+        {
+            "date": 1730890897438,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.20",
+            "hash": "e463dc09cc8799c8086027d7ba1299de9d7e04a257964c55d1e852484e318ac8"
+        },
+        {
+            "date": 1730891001980,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.21",
+            "hash": "b582f295d3cddc4db5f1921c037c1f10cf1fd2c67f292d4fd9ea2ce0a8b12da7"
+        },
+        {
+            "date": 1730891117013,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.22",
+            "hash": "d65058458aa52a6610a63b49762c3cea7d58c08a7714d500e10e277484cc7cad"
+        },
+        {
+            "date": 1730891256582,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.23",
+            "hash": "76b4dbaafd1607fd206558505c87403e64a74c4802fe6b67af36719ba04b5ceb"
+        },
+        {
+            "date": 1730891428427,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.24",
+            "hash": "a8fe625d02cd0658cf48a04e00de4e38964ae2f7cfb4137962c6757d4c42e10b"
+        },
+        {
+            "date": 1730891544016,
+            "name": "/home/srivallika/Pictures/CaterOrange/Backend/src/config/logs/application-2024-11-06.log.25",
+            "hash": "ae8e308eee36b5bd1f9e022e100872600960a63ff6ea73755f160f43d896c60f"
+        }
+    ],
+    "hashType": "sha256"
+}
