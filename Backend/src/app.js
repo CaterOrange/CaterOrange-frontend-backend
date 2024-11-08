@@ -12,7 +12,12 @@ const axios = require('axios');
 const uniqid = require('uniqid');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-
+const Redis = require('ioredis');
+const redis = new Redis({
+  host: 'localhost',
+  port: 6379,
+  // Add any other Redis configuration options here
+});
 // Route imports
 const allRoutes = require('./routes/customerRoutes.js');
 const { typeDefs, resolvers } = require('./routes/adminRoutes');
@@ -100,7 +105,7 @@ app.post("/api/pay", async(req, res) => {
     "merchantTransactionId": merchantTransactionId,
     "merchantUserId": 123,
     "amount": amountinrupee,
-    "redirectUrl": `https://dev.caterorage.com/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
+    "redirectUrl": `https://dev.caterorange.com/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
     "redirectMode": "REDIRECT",
     "callbackUrl": "https://webhook.site/callback-url",
     "mobileNumber": "9999999999",
@@ -214,6 +219,84 @@ app.get('/redirect-url/:merchantTransactionId', async(req, res) => {
     res.status(400).send({ error: 'Error' });
   }
 });
+
+
+
+app.get('/api/cart', async (req, res) => {
+  try {
+    const token = req.headers['token']
+
+    let verified_data;
+    
+    try {
+      verified_data = jwt.verify(token, SECRET_KEY);
+      logger.info('Token verified successfully for fetching order details');
+    } catch (err) {
+      logger.error('Token verification failed', { error: err.message });
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+    console.log(verified_data)
+    const userId = verified_data.id;
+    const cartItems = await redis.hgetall(`cart:${userId}`);
+    res.json(cartItems);
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    res.status(500).json({ error: 'Failed to fetch cart items' });
+  }
+});
+
+// Update cart item
+app.post('/api/cart/update', async (req, res) => {
+  try {
+    
+    const {itemId, item } = req.body;
+    const token = req.headers['token']
+
+    let verified_data;
+    
+    try {
+      verified_data = jwt.verify(token, SECRET_KEY);
+      logger.info('Token verified successfully for fetching order details');
+    } catch (err) {
+      logger.error('Token verification failed', { error: err.message });
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+    console.log(verified_data)
+    const userId = verified_data.id;
+    console.log(userId)
+    await redis.hset(`cart:${userId}`, itemId, JSON.stringify(item));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error updating cart item:', error);
+    res.status(500).json({ error: 'Failed to update cart item' });
+  }
+});
+
+// Remove cart item
+app.delete('/api/cart/:itemId', async (req, res) => {
+  try {
+    const {  itemId } = req.params;
+    const token = req.headers['token']
+
+    let verified_data;
+    
+    try {
+      verified_data = jwt.verify(token, SECRET_KEY);
+      logger.info('Token verified successfully for fetching order details');
+    } catch (err) {
+      logger.error('Token verification failed', { error: err.message });
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+    console.log(verified_data)
+    const userId = verified_data.id;
+    await redis.hdel(`cart:${userId}`, itemId);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error removing cart item:', error);
+    res.status(500).json({ error: 'Failed to remove cart item' });
+  }
+});
+
 
 // Initialize application
 const initializeApp = async () => {
