@@ -819,7 +819,7 @@ const getAddressByCustomerId = async (req, res) => {
     }
   };
   const getuserbytoken = async (req, res) => {
-    const { access_token } = req.body; // Access token from body
+    const access_token = req.headers['token']// Access token from body
    
     try {
        
