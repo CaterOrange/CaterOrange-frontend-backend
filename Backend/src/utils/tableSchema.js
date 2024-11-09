@@ -144,12 +144,12 @@ function createEventOrdersTableQuery() {
         today_date := TO_CHAR(NOW(), 'YYYYMMDD');
         
         -- Get the customer's generated id
-        SELECT customer_generated_id INTO customer_gen_id FROM customer WHERE customer_id = NEW.customer_id;
+        SELECT customer_generated_id INTO customer_gen_id FROM customer WHERE customer_generated_id = NEW.customer_generated_id;
         
         -- Count the number of orders placed by the customer today in the event_orders table
         SELECT COUNT(*) + 1 INTO order_count
         FROM event_orders
-        WHERE customer_id = NEW.customer_id
+        WHERE customer_generated_id = NEW.customer_generated_id
         AND TO_CHAR(ordered_at, 'YYYYMMDD') = today_date;
         
         -- Concatenate EO, today's date, the order count, and the customer_generated_id
@@ -166,7 +166,7 @@ function createEventOrdersTableQuery() {
     CREATE TABLE IF NOT EXISTS event_orders (
       eventorder_id SERIAL PRIMARY KEY,
       eventorder_generated_id VARCHAR(255) UNIQUE,
-      customer_id INTEGER,
+      customer_generated_id VARCHAR(255),
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       delivery_status VARCHAR(50),
       total_amount FLOAT NOT NULL,
@@ -180,7 +180,7 @@ function createEventOrdersTableQuery() {
       number_of_plates INTEGER,
       processing_date DATE,
       processing_time VARCHAR,
-      FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+      FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id),
       FOREIGN KEY (PaymentId) REFERENCES payment(PaymentId)
     );
     
@@ -192,6 +192,7 @@ function createEventOrdersTableQuery() {
     EXECUTE FUNCTION generate_eventorder_id();
   `;
 }
+
 
 
 function createCorporateCategoryTableQuery() {
