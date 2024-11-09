@@ -6,7 +6,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
 const redis = new Redis({
-  host: 'localhost',
+  host: '164.52.203.128',
   port: 6379,
   // Add any other Redis configuration options here
 });
