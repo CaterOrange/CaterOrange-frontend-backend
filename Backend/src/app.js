@@ -9,7 +9,7 @@ const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const sha256 = require('sha256');
 const axios = require('axios');
-const uniqid = require('uniqid');
+const uniqid = require('uniqid');  
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
@@ -105,7 +105,7 @@ app.post("/api/pay", async(req, res) => {
     "merchantTransactionId": merchantTransactionId,
     "merchantUserId": 123,
     "amount": amountinrupee,
-    "redirectUrl": `https://dev.caterorange.com/api/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
+    "redirectUrl": `https://dev.caterorange.com/redirect-url/${merchantTransactionId}?customer_id=${customer_id}&corporateorder_id=${corporateorder_id}`,
     "redirectMode": "REDIRECT",
     "callbackUrl": "https://webhook.site/callback-url",
     "mobileNumber": "9999999999",

@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/parash/Desktop/caterorange/Backend/src/config/logs/.ecac88c7feba4bfdf8182a7d08fe98f3ac58c69b-audit.json",
+    "files": [
+        {
+            "date": 1731647602267,
+            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/error-2024-11-15.log",
+            "hash": "85523ebf320dcd0d26627473281daaf502e558b13ae01ec7409a1abc9e6aecd8"
+        }
+    ],
+    "hashType": "sha256"
+}
