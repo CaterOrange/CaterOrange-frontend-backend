@@ -149,7 +149,7 @@ app.post("/api/pay", async(req, res) => {
     });
 });
 
-app.get('/redirect-url/:merchantTransactionId', async(req, res) => {
+app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
   const { merchantTransactionId } = req.params;
   const { customer_id, corporateorder_id  } = req.query;
   console.log(customer_id)
