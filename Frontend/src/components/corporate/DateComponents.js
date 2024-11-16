@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useCart } from '../../services/contexts/CartContext';
 import { StoreContext } from "../../services/contexts/store";
 import './css/date.css';
+//import { set } from "react-datepicker/dist/date_utils";
 
 function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     const [selectedDates, setSelectedDates] = useState([]);
@@ -21,6 +22,8 @@ function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     const { state, dispatch } = useContext(StoreContext);
 const [toDate, setToDate] = useState(null);
 const { updateCartCount } = useCart();
+const [count, setCount]= useState(0)
+var Count;
 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const currentDate = new Date();
@@ -193,74 +196,157 @@ const formatDate = (date) => {
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 };
-const handleSaveDates = async () => {
+// const handleSaveDates = async () => {
    
+//     const dates = selectedDates;
+//     const local = dates.length * quantity;
+  
+//     // Update count dynamically
+//     const newCount = (storedUserDP.cartCount || 0) + local;
+//     updateCartCount(newCount);
+  
+//     // Update `cartCount` in `userDP` in local storage
+//     const updatedUserDP = {
+//       ...storedUserDP,
+//       cartCount: newCount
+//     };
+//     localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+//     const CartDetails = [];
+
+//     // Update local storage for count
+  
+//     if (quantity === 0) {
+//         console.log('Oops! You did not mention the quantity.');
+//         onError('Please select a quantity');
+//         return;
+//     } else if (dates.length === 0) {
+//         console.log('Oops! You did not mention the dates.');
+//         onError('Please select dates');
+//         return;
+//     }
+
+//     console.log('Input dates:', dates);
+
+//     // Initialize amount here
+//     let amount = (foodtype.category_price * quantity) * dates.length;
+
+//     for (let i = 0; i < dates.length; i++) {
+//         const originalDate = dates[i];
+//         const formattedDate = formatDate(originalDate);
+//         console.log(`Original date: ${originalDate}, Formatted date: ${formattedDate}`);
+
+//         const data = {
+//             date: formattedDate,
+//             type: foodtype.category_name,
+//             image: foodtype.category_media,
+//             quantity: quantity,
+//             price: foodtype.category_price,
+//             category_id: foodtype.category_id
+//         };
+
+//         CartDetails.push(data);
+//     }
+
+//     console.log("CartDetails before JSON conversion:", CartDetails);
+
+//     // Convert CartDetails array into JSON format
+//     const cartDetailsJSON = JSON.stringify(CartDetails);
+//     console.log("CartDetails after JSON conversion:", JSON.parse(cartDetailsJSON));
+
+//     try {
+//         const token = localStorage.getItem('token');
+//         console.log('Token being sent:', token);
+//         const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/cart/corporate`, {
+//             cart_order_details: cartDetailsJSON,
+//             total_amount: amount
+//         }, {
+//             headers: { token }
+//         });
+
+//         if (response.status === 200) {
+//             console.log('Cart details saved successfully:', response.data);
+//             onSaveSuccess();
+//         } else {
+//             console.error('Failed to save cart details:', response.data);
+//             onError('Failed to save cart details');
+//         }
+//     } catch (error) {
+//         console.error('Error saving cart details:', error);
+//         onError('Error saving cart details');
+//     }
+// };
+
+const handleSaveDates = async () => {
     const dates = selectedDates;
     const local = dates.length * quantity;
-  
-    // Update count dynamically
-    const newCount = (storedUserDP.cartCount || 0) + local;
-    updateCartCount(newCount);
-  
-    // Update `cartCount` in `userDP` in local storage
-    const updatedUserDP = {
-      ...storedUserDP,
-      cartCount: newCount
-    };
-    localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
-    const CartDetails = [];
 
-    // Update local storage for count
-  
+    // Check for quantity and dates
     if (quantity === 0) {
         console.log('Oops! You did not mention the quantity.');
         onError('Please select a quantity');
         return;
-    } else if (dates.length === 0) {
+    }
+    if (dates.length === 0) {
         console.log('Oops! You did not mention the dates.');
         onError('Please select dates');
         return;
     }
 
-    console.log('Input dates:', dates);
-
-    // Initialize amount here
+    // Calculate amount
     let amount = (foodtype.category_price * quantity) * dates.length;
 
-    for (let i = 0; i < dates.length; i++) {
-        const originalDate = dates[i];
-        const formattedDate = formatDate(originalDate);
-        console.log(`Original date: ${originalDate}, Formatted date: ${formattedDate}`);
-
-        const data = {
-            date: formattedDate,
-            type: foodtype.category_name,
-            image: foodtype.category_media,
-            quantity: quantity,
-            price: foodtype.category_price,
-            category_id: foodtype.category_id
-        };
-
-        CartDetails.push(data);
-    }
-
-    console.log("CartDetails before JSON conversion:", CartDetails);
-
-    // Convert CartDetails array into JSON format
-    const cartDetailsJSON = JSON.stringify(CartDetails);
-    console.log("CartDetails after JSON conversion:", JSON.parse(cartDetailsJSON));
+    // Prepare cart details
+    const CartDetails = dates.map(originalDate => ({
+        date: formatDate(originalDate),
+        type: foodtype.category_name,
+        image: foodtype.category_media,
+        quantity: quantity,
+        price: foodtype.category_price,
+        category_id: foodtype.category_id
+    }));
 
     try {
         const token = localStorage.getItem('token');
-        console.log('Token being sent:', token);
-        const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/cart/corporate`, {
-            cart_order_details: cartDetailsJSON,
-            total_amount: amount
-        }, {
-            headers: { token }
-        });
+        const response = await axios.post(
+            `${process.env.REACT_APP_URL}/api/customer/cart/corporate`,
+            {
+                cart_order_details: JSON.stringify(CartDetails),
+                total_amount: amount
+            },
+            { headers: { token } }
+        );
 
         if (response.status === 200) {
+            // Update local storage and cart count only after successful API call
+            const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+            try{
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `${process.env.REACT_APP_URL}/api/customer/getCartCount`,
+                { headers: { token } }
+            );
+            if(response.status == 200){
+                console.log("count fetched successfully", response.data.data)
+                // setCount(response.data.data)
+                Count= response.data.data;
+            }
+        }catch(error){
+            console.error('Error fetching cart count:', error);
+        }
+        console.log("snehaa", Count)
+            // Ensure cartCount is treated as a number
+            const newCount = Count; // Correctly adding numbers.
+            
+            console.log("cart count:", newCount)
+
+            const updatedUserDP = {
+                ...storedUserDP,
+                cartCount: newCount
+            };
+
+            localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+            updateCartCount(newCount); // Single update call
+       
             console.log('Cart details saved successfully:', response.data);
             onSaveSuccess();
         } else {
@@ -272,8 +358,6 @@ const handleSaveDates = async () => {
         onError('Error saving cart details');
     }
 };
-
-
     const handleclear = () => {
         setSelectedDates([]);
         setIndividualToggles({});

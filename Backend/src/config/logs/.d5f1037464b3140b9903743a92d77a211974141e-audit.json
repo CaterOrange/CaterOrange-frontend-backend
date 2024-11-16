@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/sneha/CaterOrange/Backend/src/config/logs/.d5f1037464b3140b9903743a92d77a211974141e-audit.json",
+    "files": [
+        {
+            "date": 1731751661573,
+            "name": "/home/sneha/CaterOrange/Backend/src/config/logs/error-2024-11-16.log",
+            "hash": "ef6f9b4d56f9013830544b055f44c84b3ef14b0fefbe63ee8a5efc17b21191aa"
+        }
+    ],
+    "hashType": "sha256"
+}

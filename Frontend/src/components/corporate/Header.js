@@ -206,8 +206,9 @@
 
 
 
+
 import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/react/outline';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
 import axios from 'axios';
@@ -215,14 +216,13 @@ import axios from 'axios';
 import Body from './Body';
 import './css/styles.css';
 
-
 const Header = ({ user }) => {
-  const { updateCartCount, cartCount } = useCart();
+  const { cartCount, updateCartCount } = useCart();
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('corporate');
-  const [count, setCount] = useState(0);
   const navigate = useNavigate();
+  const isInitialMount = useRef(true);
 
   const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
 
@@ -235,7 +235,6 @@ const Header = ({ user }) => {
   const handleViewContactPage = () => navigate('/contact');
   const handleViewWalletPage = () => navigate('/wallet');
   const handleViewChangePassword = () => navigate('/settings');
-
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -260,27 +259,39 @@ const Header = ({ user }) => {
     return names.map((n) => n[0]).join('').toUpperCase();
   };
 
-  useEffect(() => {
-    const fetchCount = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCartCount`, {
-          headers: { token: `${localStorage.getItem('token')}` },
-        });
-        setCount(response.data.data);
-        updateCartCount(response.data.data); // Update the cartCount in the context
-      } catch (error) {
-        console.error('Error fetching cart count:', error);
-      }
+  // Memoize the fetchCount function
+  const fetchCount = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCartCount`, {
+        headers: { token }
+      });
+      
+      const newCount = response.data.data;
+      console.log("ii", newCount);
+      updateCartCount(newCount);
+    } catch (error) {
+      console.error('Error fetching cart count:', error);
     }
-    fetchCount();
   }, [updateCartCount]);
 
+  // Effect for fetching cart count and initializing from localStorage
   useEffect(() => {
-    const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
-    if (storedUserDP.cartCount !== undefined) {
-      updateCartCount(storedUserDP.cartCount);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      
+      // Initialize from localStorage only on first mount
+      const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+      if (storedUserDP.cartCount !== undefined) {
+        updateCartCount(storedUserDP.cartCount);
+      }
+      
+      // Initial fetch
+      fetchCount();
     }
-  }, [updateCartCount, user]);
+  }, [fetchCount, updateCartCount]);
 
   return (
     <>
@@ -298,7 +309,7 @@ const Header = ({ user }) => {
             <Link to="/cart">
               <ShoppingCartIcon className="h-8 w-8 cursor-pointer" onClick={handleViewCart} />
             </Link>
-            {count > 0 && (
+            {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
                 {cartCount}
               </span>
