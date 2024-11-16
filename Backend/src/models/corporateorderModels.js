@@ -102,18 +102,17 @@ const deleteCart = async (corporatecart_id, date) => {
 
 const insertCartToOrder = async (customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status) => {
     try {
-        logger.info('Transferring cart to order in model:', {
-            order_details,
-            customer_generated_id,
-            total_amount,
-            paymentid,
-            customer_address,
-            payment_status
-        });
+        logger.info(`Transferring cart to order in model:${order_details},
+            ${customer_generated_id},
+            ${total_amount},
+            ${paymentid},
+           ${customer_address},
+            ${payment_status}`
+        );
         console.log(order_details,customer_generated_id,total_amount,paymentid,customer_address,payment_status);
         const result = await client.query(
             DB_COMMANDS.INSERT_CART_TO_ORDER,
-            [customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status]
+            [customer_generated_id, JSON.stringify(order_details), total_amount, paymentid, customer_address, payment_status]
         );
 
         logger.info('Cart data added to orders table in model:', result);
