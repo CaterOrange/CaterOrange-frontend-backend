@@ -233,7 +233,7 @@ app.get('/api/cart', async (req, res) => {
     let verified_data;
     
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -259,7 +259,7 @@ app.post('/api/cart/update', async (req, res) => {
     let verified_data;
     
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -285,7 +285,7 @@ app.delete('/api/cart/:itemId', async (req, res) => {
     let verified_data;
     
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
