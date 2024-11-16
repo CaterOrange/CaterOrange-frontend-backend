@@ -46,7 +46,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
- origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com', 'https://studio.apollographql.com','http://localhost:3000'],
+ origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com', 'https://studio.apollographql.com','http://localhost:3000','http://localhost:8081'],
  credentials: true
 }));
 
