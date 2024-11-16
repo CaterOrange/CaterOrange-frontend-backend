@@ -4,8 +4,6 @@ const customer_model = require('../models/customerModels');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
-const SECRET_KEY = process.env.SECRET_KEY;
-
 // Fetch corporate categories
 const GetCorporateCategory = async (req, res) => {
   try {
@@ -34,7 +32,7 @@ const add_Corporate_Cart = async (req, res) => {
 
     let verified_data;
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -83,7 +81,7 @@ const getCorporateCart = async (req, res) => {
 
     let verified_data;
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -181,7 +179,7 @@ const getOrderDetails = async (req, res) => {
 
     let verified_data;
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -253,7 +251,7 @@ const getcategorynameById = async (req, res) => {
 
 //     let verified_data;
 //     try {
-//       verified_data = jwt.verify(token, SECRET_KEY);
+//       verified_data = jwt.verify(token, process.env.SECRET_KEY);
 //       logger.info('Token verified successfully for fetching cart count');
 //     } catch (err) {
 //       logger.error('Token verification failed', { error: err.message });
@@ -291,7 +289,7 @@ const getCartCount = async (req, res) => {
 
     let verified_data;
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching cart count');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });

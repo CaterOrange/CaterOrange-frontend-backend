@@ -13,8 +13,9 @@ const uniqid = require('uniqid');
 const crypto = require('crypto');      
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
+
 const redis = new Redis({
-  host: 'localhost',
+  host: 'localhost',  
   port: 6379,   
 });
 redis.ping().then(() => {
@@ -31,7 +32,7 @@ const eventRoutes = require('./routes/eventorderRoutes.js');
 const corporateorderRoutes = require('./routes/corporateorderRoutes.js');
 const categoryRoutes = require('./routes/categoryRoutes.js');
 const customerRoutes = require('./routes/customerRoutes.js');
-     
+
 const { fetchAndInsertCSVData } = require('../products.js');
  
 // Constants for PhonePe
@@ -56,7 +57,7 @@ app.use('/api', paymentRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', customerRoutes);
 app.use('/api', corporateorderRoutes);
-app.use('/api', allRoutes);
+app.use('/api', allRoutes);        
 app.use('/api', eventRoutes);
 
 async function startApolloServer() {
@@ -233,7 +234,7 @@ app.get('/api/cart', async (req, res) => {
     let verified_data;
     
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -259,7 +260,7 @@ app.post('/api/cart/update', async (req, res) => {
     let verified_data;
     
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -285,7 +286,7 @@ app.delete('/api/cart/:itemId', async (req, res) => {
     let verified_data;
     
     try {
-      verified_data = jwt.verify(token, SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });

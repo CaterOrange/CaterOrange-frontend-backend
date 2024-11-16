@@ -3,7 +3,7 @@ const logger = require('../config/logger');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const address_model = require('../models/addressModel');
-const SECRET_KEY = process.env.SECRET_KEY;
+
 
 const createAddress = async (req, res) => {
     try {
@@ -16,7 +16,7 @@ const createAddress = async (req, res) => {
         }
         let verified_data;
         try {
-            verified_data = jwt.verify(token, SECRET_KEY);
+            verified_data = jwt.verify(token, process.env.SECRET_KEY);
             logger.info('Token verified successfully', { userId: verified_data.id });
         } catch (err) {
             logger.error('Token verification failed', { error: err });
@@ -66,7 +66,7 @@ const getDefaultAddress = async (req, res) => {
         // Verifying the token
         let decoded;
         try {
-            decoded = jwt.verify(token, SECRET_KEY);
+            decoded = jwt.verify(token, process.env.SECRET_KEY);
             logger.info('Token verified successfully for default address retrieval', { userEmail: decoded.email });
         } catch (err) {
             logger.error('Token verification failed', { error: err });
@@ -100,7 +100,7 @@ const getAddressForUser = async (req, res) => {
         // Verifying the token
         let decoded;
         try {
-            decoded = jwt.verify(token, SECRET_KEY);
+            decoded = jwt.verify(token, process.env.SECRET_KEY);
             logger.info('Token verified successfully for address retrieval', { userId: decoded.id });
         } catch (err) {
             logger.error('Token verification failed', { error: err });
