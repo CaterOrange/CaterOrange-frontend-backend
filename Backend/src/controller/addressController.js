@@ -54,6 +54,7 @@ const createAddress = async (req, res) => {
     }
 };
 
+
 // Get the default address for the customer
 const getDefaultAddress = async (req, res) => {
     try {
@@ -126,8 +127,9 @@ const getAddressForUser = async (req, res) => {
 const getSelectedAddress = async (req, res) => {
     try {
         const { address_id } = req.query; // Access the address_id from query parameters
+        console.log(address_id);
         logger.info('Fetching address by ID', { addressId: address_id });
-
+         
         const result = await address_model.SelectAddress(address_id);
 
         logger.info('Address retrieved successfully', { addressId: address_id });

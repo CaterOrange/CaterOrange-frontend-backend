@@ -216,15 +216,15 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
           res.redirect('https://dev.caterorange.com/failure'); // Redirect to a failure page if needed
         }
       })
-      .catch(function (error) {
+      .catch(function (error) {  
         console.error(error);
         res.status(500).send(error.message);
       });
   } else {
-    res.status(400).send({ error: 'Error' });
+    res.status(400).send({ error: 'Error' });     
   }
 });
-
+    
 
 
 app.get('/api/cart', async (req, res) => {
@@ -243,7 +243,7 @@ app.get('/api/cart', async (req, res) => {
     console.log(verified_data)
     const userId = verified_data.id;
     const cartItems = await redis.hgetall(`cart:${userId}`);
-    res.json(cartItems);
+    res.json(cartItems);  
   } catch (error) {
     console.error('Error fetching cart items:', error);
     res.status(500).json({ error: 'Failed to fetch cart items' });

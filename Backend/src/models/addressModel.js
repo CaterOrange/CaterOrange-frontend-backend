@@ -76,6 +76,20 @@ const getAllAddresses = async (customer_id) => {
         throw err;
     }
 }
+const SelectAddress = async (address_id) => {
+    try {
+        const result = await client.query(
+            DB_COMMANDS.SELECT_ADDRESS,
+            [address_id]
+        );
+        
+        logger.info('Address retrieved successfully for address ID:', address_id);
+        return result.rows[0];  
+    } catch (err) {
+        logger.error('Error retrieving address data:', { error: err.message });
+        throw err;
+    }
+}
 
 
 module.exports = {
@@ -83,5 +97,6 @@ module.exports = {
     select_default_address,
     getUserIdFromToken,
     updateAddressById,
-    getAllAddresses
+    getAllAddresses,
+    SelectAddress
 }
