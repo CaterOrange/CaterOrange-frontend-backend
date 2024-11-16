@@ -128,7 +128,7 @@ const getAddressForUser = async (req, res) => {
         // Verifying the token
         let decoded;
         try {
-            decoded = jwt.verify(token, SECRET_KEY);
+            decoded = jwt.verify(token, process.env.SECRET_KEY);
             logger.info('Token verified successfully for address retrieval', { userId: decoded.id });
         } catch (err) {
             logger.error('Token verification failed', { error: err });

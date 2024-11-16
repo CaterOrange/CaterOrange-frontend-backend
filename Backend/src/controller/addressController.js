@@ -67,6 +67,7 @@ const getDefaultAddress = async (req, res) => {
         let decoded;
         try {
             decoded = jwt.verify(token, process.env.SECRET_KEY);
+            console.log(token,"key:",process.env.SECRET_KEY);
             logger.info('Token verified successfully for default address retrieval', { userEmail: decoded.email });
         } catch (err) {
             logger.error('Token verification failed', { error: err });
