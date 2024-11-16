@@ -4,7 +4,14 @@ const client = require("../config/dbConfig.js")
 const corporate_model = require('../models/corporateorderModels.js')
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const redis = require('../app.js');
+//const redis = require('../app.js');
+const Redis = require('ioredis');
+
+const redis = new Redis({
+  host: 'localhost',  
+  port: 6379, 
+  connectTimeout: 20000
+});
 
 // Function to handle adding items to the cart
 const addToCart = async (req, res) => {
@@ -333,5 +340,6 @@ module.exports = {
   getCartItemCount,
   fetchCartItems,
   removeFromCart,
-  getFromCart
+  getFromCart,
+  redis
 };
