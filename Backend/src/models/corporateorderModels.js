@@ -135,7 +135,7 @@ const getcategoryname = async (categoryId) => {
 }
 
 const getOrderDetailsById = async (customer_id) => {
-    logger.info('Fetching order details for customer ID:', customer_id);
+    logger.info(`Fetching order details for customer ID:${customer_id}`);
 
     try {
         const result = await client.query(DB_COMMANDS.FETCH_ORDERS, [customer_id]);

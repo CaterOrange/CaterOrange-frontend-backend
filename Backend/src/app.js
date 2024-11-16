@@ -361,4 +361,5 @@ process.on('uncaughtException', (err) => {
 
 initializeApp();
 
-module.exports={app};
+module.exports={redis};
+

@@ -64,7 +64,7 @@ function createCorporateOrdersTableQuery() {
             
             -- Get the customer's generated id
             SELECT customer_generated_id INTO customer_gen_id 
-            FROM customer 
+            FROM customer     
             WHERE customer_generated_id = NEW.customer_generated_id;
             
             -- Count the number of orders placed by the customer today
@@ -77,9 +77,9 @@ function createCorporateOrdersTableQuery() {
             NEW.corporateorder_generated_id := 'CO' || today_date || order_count || customer_gen_id;
         END IF;
 
-        RETURN NEW;
+        RETURN NEW;    
     END;
-    $$ LANGUAGE plpgsql;
+    $$ LANGUAGE plpgsql;    
 
     -- Drop the trigger if it already exists
     DROP TRIGGER IF EXISTS corporateorder_id_trigger ON corporate_orders;
