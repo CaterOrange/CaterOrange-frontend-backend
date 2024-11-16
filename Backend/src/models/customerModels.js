@@ -144,7 +144,7 @@ const getAddressesByCustomerId = async (customer_id) => {
 const userbytoken = async (access_token) => {
     try {
         const result = await client.query(DB_COMMANDS.GET_USER_BY_TOKEN, [access_token]);
-        logger.info('User retrieved by token:', { access_token });
+        logger.info(`User retrieved by token: ${access_token}`);
         return result;
     } catch (err) {
         logger.error('Error retrieving user by token:', { error: err.message });

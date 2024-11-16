@@ -110,7 +110,7 @@ const insertCartToOrder = async (customer_generated_id, order_details, total_amo
             customer_address,
             payment_status
         });
-
+        console.log(order_details,customer_generated_id,total_amount,paymentid,customer_address,payment_status);
         const result = await client.query(
             DB_COMMANDS.INSERT_CART_TO_ORDER,
             [customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status]
