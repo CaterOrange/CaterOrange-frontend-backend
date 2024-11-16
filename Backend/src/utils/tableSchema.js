@@ -35,7 +35,7 @@ function createPaymentTableQuery() {
       TransactionDate DATE,
       SettlementDate DATE,
       BankReferenceNo VARCHAR(255),
-      Amount INTEGER NOT NULL,
+      Amount NUMERIC NOT NULL,
       Fee FLOAT,
       IGST FLOAT,
       CGST FLOAT,
