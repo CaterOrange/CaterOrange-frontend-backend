@@ -4,19 +4,7 @@ const client = require("../config/dbConfig.js")
 const corporate_model = require('../models/corporateorderModels.js')
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const Redis = require('ioredis');
-const redis = new Redis({
-  host: '164.52.203.128',
-  port: 6379,
-  // Add any other Redis configuration options here
-});
-
-// const redis = require('redis');
-// const client = redis.createClient(); // Initialize Redis client
-// client.connect(); // Connect to Redis
-
-// Function to handle adding items to the cart
-
+const redis = require('../app.js');
 
 // Function to handle adding items to the cart
 const addToCart = async (req, res) => {
@@ -131,103 +119,6 @@ const fetchCartItems = async (req, res) => {
   }
 };
 
-
-
-
-// const getFromCart = async (req, res) => {
-//   console.log('he;')
-//   try {
-//     const token = req.headers['token'];
-//     console.log('token',token)
-//     if (!token) {
-//       return res.status(401).json({ success: false, message: 'Access token is missing or not provided' });
-//     }
-
-//     let verified_data;
-//     try {
-//       verified_data = jwt.verify(token, process.env.SECRET_KEY);
-//     } catch (err) {
-//       if (err instanceof jwt.TokenExpiredError) {
-//         return res.status(401).json({ success: false, message: 'Token has expired' });
-//       } else if (err instanceof jwt.JsonWebTokenError) {
-//         return res.status(401).json({ success: false, message: 'Invalid token' });
-//       } else {
-//         return res.status(401).json({ success: false, message: 'Token verification failed' });
-//       }
-//     }
-
-//     const customer_generated_id = verified_data.id;
-//     const customer = await corporate_model.findCustomerByGid(customer_generated_id);
-
-//     if (!customer) {
-//       console.log('User not found for ID:', customer_generated_id);
-//       return res.status(404).json({ success: false, message: 'User not found' });
-//     }
-
-//     const customer_id = customer.customer_id;
-//     const query = 'SELECT * FROM event_cart WHERE customer_id = $1';
-//     const result = await client.query(query, [customer_id]);
-// console.log('result ',result)
-//     if (result.rows.length > 0) {
-//       const cart = result.rows[0];
-    
-//       return res.status(200).json({ cartitem: cart });
-//     } else {
-//       console.log('No items found in cart for customer ID:');
-//       return res.status(200).json({ count: 0 }); 
-//     }
-//   } catch (error) {
-//   console.log('Error fetching cart item count:', error);
-//     return res.status(500).json({ error: 'An error occurred while fetching the cart item count' });
-//   }
-// };
-
-
-
-// const addToCart = async (req, res) => {
-//   const { totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime } = req.body;
-//   console.log("backend add",totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime)
-  
-//   try { 
-//     const token = req.headers['token'];
-  
-//     console.log(token)
-//     if (!token) {
-//       return res.status(401).json({ success: false, message: 'Access token is missing or not provided' });
-//     }
-
-//     let verified_data;
-//     try {
-//       verified_data = jwt.verify(token, process.env.SECRET_KEY);
-//     } catch (err) {
-//       logger.error('Token verification failed:', err);
-//       if (err instanceof jwt.TokenExpiredError) {
-//         return res.status(401).json({ success: false, message: 'Token has expired' });
-//       } else if (err instanceof jwt.JsonWebTokenError) {
-//         return res.status(401).json({ success: false, message: 'Invalid token' });
-//       } else {
-//         return res.status(401).json({ success: false, message: 'Token verification failed' });
-//       }
-//     }
-
-//     const customer_generated_id = verified_data.id;
-//     console.log(customer_generated_id)
-//     const customer = await corporate_model.findCustomerByGid(customer_generated_id);
-
-//     if (!customer) {
-//       logger.warn('User not found for ID:', customer_generated_id);
-//       return res.status(404).json({ success: false, message: 'User not found' });
-//     }
-
-//     const customer_id = customer.customer_id;
-//     const result = await cartModel.addCart(customer_id, totalAmount, cartData, address, numberOfPlates, selectedDate, selectedTime);
-//     logger.info("Item added to cart successfully:", result);
-//     res.status(200).json(result);
-//   } catch (error) {
-//     logger.error('Error adding product to cart:', error);
-//     res.status(500).json({ message: 'Server error', error });
-//   }
-// };
 
 const getOrderDetails = async (req, res) => {
   try { 

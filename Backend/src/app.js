@@ -9,14 +9,18 @@ const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const sha256 = require('sha256');
 const axios = require('axios');
-const uniqid = require('uniqid');  
-const crypto = require('crypto');
+const uniqid = require('uniqid');     
+const crypto = require('crypto');      
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
 const redis = new Redis({
-  host: '164.52.203.128',
-  port: 6379,
-  // Add any other Redis configuration options here
+  host: 'localhost',
+  port: 6379,   
+});
+redis.ping().then(() => {
+  logger.info('Successfully connected to Redis');
+}).catch(err => {
+  logger.error('Redis connection failed:', err);
 });
 // Route imports
 const allRoutes = require('./routes/customerRoutes.js');
@@ -27,7 +31,7 @@ const eventRoutes = require('./routes/eventorderRoutes.js');
 const corporateorderRoutes = require('./routes/corporateorderRoutes.js');
 const categoryRoutes = require('./routes/categoryRoutes.js');
 const customerRoutes = require('./routes/customerRoutes.js');
-
+     
 const { fetchAndInsertCSVData } = require('../products.js');
  
 // Constants for PhonePe
@@ -35,7 +39,7 @@ const PHONEPE_HOST_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox";
 const MERCHANT_ID = "PGTESTPAYUAT86";
 const SALT_KEY = "96434309-7796-489d-8924-ab56988a6076";
 const SALT_INDEX = 1;
-
+  
 
 const app = express();
 
@@ -355,3 +359,5 @@ process.on('uncaughtException', (err) => {
 });
 
 initializeApp();
+
+module.exports={app};
