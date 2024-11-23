@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
+import { VerifyToken } from "../../MiddleWare/verifyToken";
 
 const ShowAddress = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const token = localStorage.getItem("token");
   const navigate = useNavigate(); // Initialize useNavigate
-
+  VerifyToken();
   useEffect(() => {
     const fetchAddresses = async () => {
       try {

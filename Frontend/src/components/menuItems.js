@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Plus, Minus, ShoppingCart, X } from 'lucide-rea
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Papa from 'papaparse'; // Import PapaParse for CSV parsing
+import { VerifyToken } from '../MiddleWare/verifyToken';
 
 // ToggleSwitch Component
 const ToggleSwitch = ({ isOn, onToggle }) => (
@@ -253,7 +254,7 @@ const Menu = () => {
   const [cartItems, setCartItems] = useState([]);
   const [numberOfPlates, setNumberOfPlates] = useState(1);
   const [mainToggleOn, setMainToggleOn] = useState(false);
-
+  VerifyToken();
   useEffect(() => {
     // Fetch CSV Data
     Papa.parse('/path/to/your/file.csv', {

@@ -8,6 +8,7 @@ import { FiTrash } from 'react-icons/fi';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import AddressForm from '../components/events/AddressForm';
 import axios from 'axios';
+import { VerifyToken } from '../MiddleWare/verifyToken';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const HomePage = () => {
   const [addressToEdit, setAddressToEdit] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(); 
   const [selectedTime, setSelectedTime] = useState('');
-
+  VerifyToken();
   const handleAddAddress = () => {
     setIsAddAddressFormVisible(!isAddAddressFormVisible);
     setIsEditingAddress(false);

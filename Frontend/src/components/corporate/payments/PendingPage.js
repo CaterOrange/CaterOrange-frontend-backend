@@ -1,7 +1,9 @@
 import React from 'react';
 import { ClockIcon } from '@heroicons/react/outline'; // Import an icon to represent pending state
+import { VerifyToken } from '../../../MiddleWare/verifyToken';
 
 const PendingPage = () => {
+  VerifyToken();
   return (
     <div className="flex items-center justify-center min-h-screen bg-yellow-500">
       <div className="text-center">

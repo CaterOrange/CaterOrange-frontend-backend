@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const Settings = () => {
   const navigate = useNavigate();
-
+  VerifyToken();
   const [formData, setFormData] = useState({
     name: "",
     email: "",

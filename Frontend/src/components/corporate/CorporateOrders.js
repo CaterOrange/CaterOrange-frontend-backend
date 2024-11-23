@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OrderDashboard from '../events/myorders';
+import { VerifyToken } from '../../MiddleWare/verifyToken';
 
 const CorporateOrders = () => {
   const [showCorporate, setShowCorporate] = useState(true);
@@ -11,6 +12,8 @@ const CorporateOrders = () => {
   const [orderData, setOrderData] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  
+  VerifyToken();
 
   useEffect(() => {
     const fetchOrders = async () => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GoogleMapComponent from '../Maps/GMaps';
+import { VerifyToken } from '../../MiddleWare/verifyToken';
 
 const AddressForm = ({ saveAddress, existingAddress }) => {
   const [tag, setTag] = useState('');
@@ -17,7 +18,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
   const [successMessage, setSuccessMessage] = useState('');
   const [defaultDetails, setDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
   const [editableDefaultDetails, setEditableDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
-
+  VerifyToken();
   // Regular expressions for validation
   const letterRegex = /^[A-Za-z\s]*$/;
   const flatNumberRegex = /^[A-Za-z0-9\s]*$/;

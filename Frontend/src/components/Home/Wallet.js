@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { VerifyToken } from "../../MiddleWare/verifyToken";
 
 export const Wallet = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -11,7 +12,7 @@ export const Wallet = () => {
     { id: 2, date: "2024-10-18", description: "Wallet Top-up", amount: 100 },
     { id: 3, date: "2024-10-15", description: "Order #1234", amount: -30 },
   ]);
-
+  VerifyToken();
   const goToHomePage = () => {
     navigate("/"); // Navigate to the homepage
   };

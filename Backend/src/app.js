@@ -133,7 +133,7 @@ app.post("/api/pay", async(req, res) => {
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
-      "X-VERIFY": xVerify
+      "X-VERIFY": xVerify 
     },
     data: {
       request: base64EncodedPayload

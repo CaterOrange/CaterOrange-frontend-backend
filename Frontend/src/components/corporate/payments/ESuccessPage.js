@@ -3,6 +3,7 @@ import { Check } from 'lucide-react';
 import { FaPhone, FaUtensils, FaCheckSquare } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { VerifyToken } from '../../../MiddleWare/verifyToken';
 
 const ESuccessPage = () => {
   const [animationState, setAnimationState] = useState('initial');
@@ -21,7 +22,7 @@ const ESuccessPage = () => {
         console.error('Error in fetching order generated id', error);
       }
     };
-
+    VerifyToken();
     getordergenid();
 
     const timer = setTimeout(() => {

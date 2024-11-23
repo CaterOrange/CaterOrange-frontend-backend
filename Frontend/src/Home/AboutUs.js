@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export const AboutUs = () => {
   const navigate = useNavigate(); // Initialize useNavigate
-
+  VerifyToken();
   const goToHomePage = () => {
     navigate("/"); // Navigate to the homepage
   };

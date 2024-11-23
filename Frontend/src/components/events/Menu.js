@@ -6,6 +6,7 @@ import { Navigate, useLocation, Link, useNavigate } from 'react-router-dom';
 import { addtocart, cartToOrder, removeFromCart } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { VerifyToken } from '../../MiddleWare/verifyToken';
 
 
 const ToggleSwitch = ({ isOn, onToggle }) => (
@@ -540,7 +541,7 @@ const Menu = () => {
  const selectedDate = location.state?.selectedDate;
  const selectedTime = location.state?.selectedTime;
  const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
- 
+ VerifyToken();
  const address = location.state?.address || {
  line1: '',
  line2: '',

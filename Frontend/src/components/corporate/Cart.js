@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
 import { jwtDecode } from 'jwt-decode';
 import AddressForm from '../Address/AddressForm';
+import { VerifyToken } from '../../MiddleWare/verifyToken';
 // import AddressForm from '../Address/AddressForm';
 
 const MyCart = () => {
@@ -22,7 +23,8 @@ const MyCart = () => {
   const tokens = localStorage.getItem('token')
   const decodedToken = jwtDecode(tokens);
   const emails = decodedToken.email;
-
+  
+  VerifyToken();
   var parsedAddress;
   const [userAddressDetails, setUserAddressDetails] = useState({
     Name: '',
@@ -112,52 +114,6 @@ const MyCart = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  // const totalAmount = sortedData.reduce(
-  // (sum, item) => sum + (Number(item.price) * Number(item.quantity)), // Ensure both price and quantity are numbers
-  // 0
-  // );
-  // setTotal(totalAmount);
-
-  // const count = sortedData.reduce(
-  // (sum, item) => sum + (Number(item.quantity) || 0), // Convert quantity to number and handle undefined values
-  // 0
-  // );
-
-  // // updateCartCount(count);
-  // // const updatedUserDP = {
-  // // ...storedUserDP,
-  // // cartCount: count
-  // // };
-  // // localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
-  // useEffect(() => {
-  // // Function to handle changes in local storage
-  // const handleStorageChange = () => {
-  // const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
-  // if (storedUserDP.cartCount !== undefined) {
-  // updateCartCount(storedUserDP.cartCount);
-  // }
-  // };
-
-  // // Add event listener for changes in local storage
-  // window.addEventListener('storage', handleStorageChange);
-
-  // // Clean up event listener on component unmount
-  // return () => window.removeEventListener('storage', handleStorageChange);
-  // }, []);
-
-  // // Optionally, add another useEffect to update local storage when the cartCount changes
-  // useEffect(() => {
-  // localStorage.setItem(
-  // 'userDP',
-  // JSON.stringify({
-  // ...JSON.parse(localStorage.getItem('userDP') || '{}'),
-  // cartCount,
-  // })
-  // );
-  // }, [cartCount]);
-
-  // }, [sortedData]);
 
   useEffect(() => {
     const totalAmount = sortedData.reduce(

@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { FiTrash } from 'react-icons/fi'; 
 import AddressForm from './AddressForm';
 import axios from 'axios';
+import { VerifyToken } from '../../MiddleWare/verifyToken';
 
 const ChangeAddress = () => {
  const navigate = useNavigate();
@@ -19,6 +20,8 @@ const ChangeAddress = () => {
  const [selectedAddress, setSelectedAddress] = useState(); 
  const [selectedTime, setSelectedTime] = useState('');
 
+ VerifyToken();
+ 
  const handleAddAddress = () => {
  setIsAddAddressFormVisible(!isAddAddressFormVisible);
  setIsEditingAddress(false);

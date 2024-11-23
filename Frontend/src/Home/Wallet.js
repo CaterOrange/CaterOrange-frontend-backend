@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export const Wallet = () => {
   const navigate = useNavigate(); // Initialize useNavigate
-
+  VerifyToken();
   const [balance, setBalance] = useState(250); // Example wallet balance
   const [transactions, setTransactions] = useState([
     { id: 1, date: "2024-10-20", description: "Order #1243", amount: -50 },

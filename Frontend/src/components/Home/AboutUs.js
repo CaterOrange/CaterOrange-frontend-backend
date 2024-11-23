@@ -2,10 +2,11 @@ import React from "react";
 import { FaInstagram, FaLinkedin, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail, MdLocationOn } from "react-icons/md";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { VerifyToken } from "../../MiddleWare/verifyToken";
 
 export const AboutUs = () => {
   const navigate = useNavigate(); // Initialize useNavigate
-
+  VerifyToken();
   const goToHomePage = () => {
     navigate("/"); // Navigate to the homepage
   };

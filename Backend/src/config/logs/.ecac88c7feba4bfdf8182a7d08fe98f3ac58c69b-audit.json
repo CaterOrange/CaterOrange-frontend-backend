@@ -6,9 +6,9 @@
     "auditLog": "/home/parash/Desktop/caterorange/Backend/src/config/logs/.ecac88c7feba4bfdf8182a7d08fe98f3ac58c69b-audit.json",
     "files": [
         {
-            "date": 1731741168498,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/error-2024-11-16.log",
-            "hash": "d81f14f6b0d76781e868324f99c04016b87ea1232e06fc721878e76a7356c6c5"
+            "date": 1732339726776,
+            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/error-2024-11-23.log",
+            "hash": "1582e86302c06ab39fd56320896939c81baa16ec8feff8654b1545b78acbf83b"
         }
     ],
     "hashType": "sha256"

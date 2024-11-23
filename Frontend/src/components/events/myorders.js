@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { myorders, addtocart } from './action';
 import { CheckCircleIcon, ChevronDown, ChevronUp, MinusCircleIcon } from 'lucide-react';
+import { VerifyToken } from '../../MiddleWare/verifyToken';
 
 const OrderDashboard = ({selectedDate,numberOfPlates}) => {
   const [openOrderId, setOpenOrderId] = useState(null);
@@ -16,7 +17,7 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
     console.log("date:",date);
     return date;
   };
-
+  VerifyToken();
   useEffect(() => {
     const fetchOrders = async () => {
       const orderData = await myorders();

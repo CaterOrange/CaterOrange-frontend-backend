@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useCart } from '../../services/contexts/CartContext';
 import { StoreContext } from "../../services/contexts/store";
 import './css/date.css';
+import { VerifyToken } from "../../MiddleWare/verifyToken";
 //import { set } from "react-datepicker/dist/date_utils";
 
 function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
@@ -27,6 +28,8 @@ var Count;
 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const currentDate = new Date();
+    
+    VerifyToken();
 
     useEffect(() => {
         updateSelectedDates();

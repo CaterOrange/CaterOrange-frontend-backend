@@ -2,6 +2,7 @@ import axios from 'axios';
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import GoogleMapComponent from './GMaps';
+import { VerifyToken } from '../MiddleWare/verifyToken';
 
 const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
   const [tag, setTag] = useState('');
@@ -23,6 +24,8 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
   const [editableDefaultDetails, setEditableDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
   const [selectedAddressId, setSelectedAddressId] = useState(null);
 
+  VerifyToken();
+  
   useEffect(() => {
     const fetchDefaultDetails = async () => {
       const token = localStorage.getItem('accessToken');

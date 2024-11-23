@@ -3,12 +3,13 @@ import { Check } from 'lucide-react';
 import { FaPhone, FaUtensils, FaCheckSquare } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { VerifyToken } from '../../../MiddleWare/verifyToken';
 
 const SuccessPage = () => {
   const [animationState, setAnimationState] = useState('initial');
   const [orderid, setOrderId] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate
-
+  VerifyToken();
   useEffect(() => {
     const getordergenid = async () => {
       try {

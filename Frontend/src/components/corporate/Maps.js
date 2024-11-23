@@ -2,6 +2,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import React, { useCallback, useEffect, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
+import { VerifyToken } from '../../MiddleWare/verifyToken';
 
 // Fix for default marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -18,7 +19,7 @@ const MapAddressSelector = ({ onAddressSelect }) => {
   const [mapCenter, setMapCenter] = useState([17.441660, 78.386940]); // Default to London
   const [markerPosition, setMarkerPosition] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
-
+  VerifyToken();
   const MapEvents = () => {
     useMapEvents({
       click(e) {

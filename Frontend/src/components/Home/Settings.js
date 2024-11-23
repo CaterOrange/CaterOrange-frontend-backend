@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline"; 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { VerifyToken } from "../../MiddleWare/verifyToken";
 
 export const Settings = () => {
   const navigate = useNavigate();
-
+  VerifyToken();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
