@@ -263,7 +263,7 @@ const register = async (req, res) => {
 
         const gid=newCustomer.customer_generated_id ;
         gidStorage.setGid(gid);
-        const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
+        const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
 
         const newCustomerToken = await customer_model.createCustomerToken(
             customer_email,
@@ -356,7 +356,7 @@ const login = [
             } catch (err) {
                 const gid=customer.customer_generated_id;
                 gidStorage.setGid(gid);
-                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin,id:gid}, process.env.SECRET_KEY, { expiresIn: '24h' });
+                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin,id:gid}, process.env.SECRET_KEY, { expiresIn: '365d' });
                 await customer_model.updateAccessToken(customer_email, uat);
                 logger.info('New token generated', { token: uat });
             }
@@ -411,7 +411,7 @@ const forgotPassword = [
             } catch (err) {
                 const gid=existingUserByEmail.customer_generated_id;
                 gidStorage.setGid(gid);
-                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
+                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
                 logger.info('New token generated', { token: uat });
             }
             const customer = await customer_model.updateCustomerPassword(customer_email, hashedPassword,uat);
@@ -462,7 +462,7 @@ const updatePassword = async (req, res) => {
             } catch (err) {
                 const gid=existingUser.customer_generated_id;
                 gidStorage.setGid(gid);
-                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
+                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
                 logger.info('New token generated', { token: uat });
             }
 
@@ -498,7 +498,7 @@ const google_auth = async (req, res) => {
             );
             const gid=newCustomer.customer_generated_id ;
             gidStorage.setGid(gid);
-            const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
+            const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
             const newCustomerToken = await customer_model.createCustomerToken(
                 customer_email,
                 token
@@ -643,8 +643,8 @@ const google_auth = async (req, res) => {
                 // If token is invalid or expired, create a new one
                 const gid=existingCustomer.customer_generated_id ;
                 gidStorage.setGid(gid);
-                const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
-                // token = jwt.sign({ email: customer_email }, process.env.SECRET_KEY, { expiresIn: '24h' });
+                const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+                // token = jwt.sign({ email: customer_email }, process.env.SECRET_KEY, { expiresIn: '365d' });
                 // gidStorage.setGid(gid);
                 await customer_model.updateAccessToken(customer_email, token);
                 logger.info('Login successful through Google and token updated', { token });
