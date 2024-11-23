@@ -99,7 +99,7 @@ SELECT * FROM address WHERE address_id=$1`,
     FROM corporate_orders 
     WHERE customer_id = $1;
   `,
-  GET_EVENTORDER_DETAILS_BY_ID: `SELECT * FROM event_orders WHERE customer_id=$1;`,
+  GET_EVENTORDER_DETAILS_BY_ID: `SELECT * FROM event_orders WHERE customer_generated_id=$1;`,
   GETCORPORATECATEGORY:`
   select * from corporate_category
   `,
