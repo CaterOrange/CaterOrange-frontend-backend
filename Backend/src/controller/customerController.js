@@ -896,7 +896,7 @@ const updateAddressById = async (req, res) => {
     }
     let verified_data;
     try {
-      verified_data = jwt.verify(token, process.env.process.env.SECRET_KEY);
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
     } catch (err) {
       logger.error('Token verification failed:', err);
       if (err instanceof jwt.TokenExpiredError) {
@@ -932,7 +932,7 @@ const getCustomerDetails=async(req, res)=>{
       
           let verified_data;
           try {
-            verified_data = jwt.verify(token, process.env.process.env.SECRET_KEY);
+            verified_data = jwt.verify(token, process.env.SECRET_KEY);
            
           } catch (err) {
             logger.error('Token verification failed:', err);

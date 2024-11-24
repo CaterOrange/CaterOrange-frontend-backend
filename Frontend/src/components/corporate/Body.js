@@ -31,11 +31,6 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
   const navigate = useNavigate(); 
 
   VerifyToken();
-
-
-
-
-
   useEffect(() => {
     // VerifyToken();
     fetchFoodData();
@@ -72,7 +67,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
       const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/customerAddress`, {
         headers: { token },
       });
-      
+      console.log("hii sneha")
       setAddress(response.data.address);
       if (response.data.address && response.data.address.length > 0) {
         const addressData = response.data.address[response.data.address.length - 1];
