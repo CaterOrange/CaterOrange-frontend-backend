@@ -8,12 +8,13 @@ const updateeventOrder = async (order_id, payment_id, payment_status) => {
         WHERE eventorder_generated_id = $3
         RETURNING *;
     `;
-
+  console.log(order_id,payment_id,payment_status)
     const values = [payment_id, payment_status, order_id];
 
     try {
         const result = await client.query(query, values);
         logger.info('Event order updated successfully:', { order_id, payment_id, payment_status });
+        console.log("result in model",result)
         return result.rows[0]; // Return the updated order details
     } catch (error) {
         logger.error('Error updating event order:', error);
