@@ -3,67 +3,61 @@ import { Check } from 'lucide-react';
 import { FaPhone, FaUtensils, FaCheckSquare } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { VerifyToken } from '../../../MiddleWare/verifyToken';
 
 const ESuccessPage = () => {
+  console.log("Esuccess page ")
   const [animationState, setAnimationState] = useState('initial');
   const [orderid, setOrderId] = useState('');
   const navigate = useNavigate();
+  // useEffect(() => {
+  //   const getordergenid = async () => {
+  //     try {
+  //       const response = await axios.get(`${process.env.REACT_APP_URL}/api/event/getEOrdergenId`, {
+  //         headers: { token: localStorage.getItem('token') },
+  //       });
+  //       console.log('in success',response)
+  //       setOrderId(response.data.order_genid.eventorder_generated_id); 
+  //     } catch (error) {
+  //       console.error('Error in fetching order generated id', error);
+  //     }
+  //   };
 
+  //   getordergenid(); // Call the function to fetch order ID
+
+  //   const timer = setTimeout(() => {
+  //     setAnimationState('animated');
+  //   }, 3000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
+  
   useEffect(() => {
-    const getordergenid = async () => {
+    const fetchOrderId = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_URL}/api/event/getEOrdergenId`, {
           headers: { token: localStorage.getItem('token') },
         });
-        console.log('in success', response);
-        setOrderId(response.data.order_genid.eventorder_generated_id);
+        setOrderId(response.data?.order_genid?.eventorder_generated_id || 'N/A');
       } catch (error) {
-        console.error('Error in fetching order generated id', error);
+        console.error('Error fetching order ID:', error);
       }
     };
-    VerifyToken();
-    getordergenid();
 
-    const timer = setTimeout(() => {
-      setAnimationState('animated');
-    }, 3000);
+    fetchOrderId();
+    const timer = setTimeout(() => setAnimationState('animated'), 3000);
 
     return () => clearTimeout(timer);
   }, []);
-
   useEffect(() => {
-    // Timer to navigate to My Orders after 6 seconds
+    // Timer to navigate to My Orders after 5 seconds
     const navigateTimer = setTimeout(() => {
-      navigate('/orders');
-    }, 6000); 
+      navigate('/orders'); // Change this to your actual route for My Orders
+    }, 6000); // 5000 milliseconds = 5 seconds
 
-    return () => clearTimeout(navigateTimer); 
+    return () => clearTimeout(navigateTimer); // Clear the timer on component unmount
   }, [navigate]);
 
-  useEffect(() => {
-    const currentUser = clearLocalStorageExceptToken();
-    clearCartData(currentUser);
-  }, []);
-
-  const clearLocalStorageExceptToken = () => {
-    const token = localStorage.getItem('token');
-    const currentUser = JSON.parse(localStorage.getItem('userDP'))?.email;
-    localStorage.clear();
-    localStorage.setItem('token', token);
-    return currentUser;
-  };
-
-  const clearCartData = (currentUser) => {
-    if (currentUser) {
-      localStorage.removeItem(`cartItems_${currentUser}`);
-      localStorage.setItem(`paymentComplete_${currentUser}`, 'true');
-      // Call your state management functions here if necessary
-      // setLocalQuantities({});
-      // onUpdateQuantity({});
-      // onClearCart();
-    }
-  };
+  console.log('sneha order', orderid);
 
   return (
     <div className="h-screen w-full bg-white flex flex-col items-center justify-center overflow-hidden">
@@ -139,4 +133,4 @@ const ESuccessPage = () => {
   );
 };
 
-export default ESuccessPage;
+export default ESuccessPage

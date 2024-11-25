@@ -431,3 +431,252 @@
 {"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:26:41.017Z","userId":"No userId"}
 {"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:26:41.105Z","userId":"No userId"}
 {"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:26:41.106Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:32:24.899Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:32:24.919Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:32:24.945Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:32:24.951Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:32:24.955Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:32:24.958Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:32:24.961Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:32:24.963Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:32:24.974Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:32:24.982Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:32:24.986Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:32:24.992Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:32:24.995Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:32:24.997Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:32:25.001Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:32:25.003Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:32:25.005Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:32:25.086Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:32:25.176Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:32:25.177Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:32:35.429Z","userId":"No userId"}
+{"filename":"corporateorderController.js","level":"info","message":"Token verified successfully for fetching cart count","timestamp":"2024-11-25T10:32:35.454Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:32:35.459Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:32:35.463Z","userId":"No userId"}
+{"customer_id":"C000004","filename":"corporateorderModels.js","level":"info","message":"Retrieved cart count :","result":{"total_quantity":"3"},"timestamp":"2024-11-25T10:32:35.478Z","userId":"No userId"}
+{"filename":"layer.js","level":"info","message":"Token verified successfully for fetching order details","timestamp":"2024-11-25T10:32:39.053Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:32:39.065Z","userId":"No userId"}
+{"filename":"layer.js","level":"info","message":"Token verified successfully for fetching order details","timestamp":"2024-11-25T10:32:39.070Z","userId":"No userId"}
+{"count":2,"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer addresses fetched for ID:","timestamp":"2024-11-25T10:32:39.081Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:32:39.103Z","userId":"No userId"}
+{"count":2,"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer addresses fetched for ID:","timestamp":"2024-11-25T10:32:39.108Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:33:13.407Z","userId":"No userId"}
+{"filename":"layer.js","level":"info","message":"Token verified successfully for fetching order details","timestamp":"2024-11-25T10:33:21.411Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:33:21.420Z","userId":"No userId"}
+{"count":2,"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer addresses fetched for ID:","timestamp":"2024-11-25T10:33:21.425Z","userId":"No userId"}
+{"filename":"layer.js","level":"info","message":"Token verified successfully for fetching order details","timestamp":"2024-11-25T10:33:21.433Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:33:21.442Z","userId":"No userId"}
+{"count":2,"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer addresses fetched for ID:","timestamp":"2024-11-25T10:33:21.445Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:34:11.825Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:34:11.856Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:34:11.875Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:34:11.878Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:34:11.880Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:34:11.882Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:34:11.884Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:34:11.885Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:34:11.897Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:34:11.901Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:34:11.903Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:34:11.907Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:34:11.909Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:34:11.911Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:34:11.913Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:34:11.915Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:34:11.915Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:34:11.994Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:34:12.050Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:34:12.051Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:34:44.931Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:34:44.957Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:34:44.970Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:34:44.972Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:34:44.974Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:34:44.975Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:34:44.977Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:34:44.979Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:34:44.988Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:34:44.991Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:34:44.993Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:34:44.999Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:34:45.000Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:34:45.002Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:34:45.007Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:34:45.008Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:34:45.008Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:34:45.123Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:34:45.224Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:34:45.225Z","userId":"No userId"}
+{"filename":"layer.js","level":"info","message":"Token verified successfully for fetching order details","timestamp":"2024-11-25T10:34:55.545Z","userId":"No userId"}
+{"filename":"layer.js","level":"info","message":"Token verified successfully for fetching order details","timestamp":"2024-11-25T10:34:55.580Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:34:55.583Z","userId":"No userId"}
+{"count":2,"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer addresses fetched for ID:","timestamp":"2024-11-25T10:34:55.609Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:34:55.630Z","userId":"No userId"}
+{"count":2,"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer addresses fetched for ID:","timestamp":"2024-11-25T10:34:55.643Z","userId":"No userId"}
+{"filename":"corporateorderController.js","level":"info","message":"Token verified successfully for fetching cart count","timestamp":"2024-11-25T10:34:57.252Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:34:57.255Z","userId":"No userId"}
+{"customer_id":"C000004","filename":"corporateorderModels.js","level":"info","message":"Retrieved cart count :","result":{"total_quantity":"3"},"timestamp":"2024-11-25T10:34:57.258Z","userId":"No userId"}
+{"filename":"corporateorderController.js","level":"info","message":"Token verified successfully for fetching cart count","timestamp":"2024-11-25T10:34:59.346Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:34:59.355Z","userId":"No userId"}
+{"customer_id":"C000004","filename":"corporateorderModels.js","level":"info","message":"Retrieved cart count :","result":{"total_quantity":"3"},"timestamp":"2024-11-25T10:34:59.357Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:36:13.780Z","userId":"No userId"}
+{"filename":"corporateorderController.js","level":"info","message":"Token verified successfully for fetching cart count","timestamp":"2024-11-25T10:36:20.463Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:36:20.466Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:36:20.477Z","userId":"No userId"}
+{"customer_id":"C000004","filename":"corporateorderModels.js","level":"info","message":"Retrieved cart count :","result":{"total_quantity":"3"},"timestamp":"2024-11-25T10:36:20.499Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:36:20.503Z","userId":"No userId"}
+{"filename":"corporateorderController.js","level":"info","message":"Token verified successfully for fetching cart count","timestamp":"2024-11-25T10:36:38.698Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:36:38.701Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:36:38.703Z","userId":"No userId"}
+{"customer_id":"C000004","filename":"corporateorderModels.js","level":"info","message":"Retrieved cart count :","result":{"total_quantity":"3"},"timestamp":"2024-11-25T10:36:38.704Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:36:38.714Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:37:09.734Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:37:09.757Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:37:09.770Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:37:09.773Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:37:09.776Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:37:09.778Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:37:09.780Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:37:09.781Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:37:09.792Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:37:09.794Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:37:09.795Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:37:09.801Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:37:09.803Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:37:09.804Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:37:09.806Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:37:09.807Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:37:09.807Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:37:09.880Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:37:09.956Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:37:09.957Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:37:11.251Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:37:11.280Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:37:11.297Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:37:11.300Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:37:11.302Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:37:11.304Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:37:11.306Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:37:11.308Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:37:11.321Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:37:11.325Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:37:11.326Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:37:11.337Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:37:11.339Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:37:11.341Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:37:11.344Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:37:11.346Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:37:11.348Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:37:11.411Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:37:11.487Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:37:11.488Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:37:16.075Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:37:16.097Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:37:16.111Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:37:16.114Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:37:16.115Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:37:16.117Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:37:16.120Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:37:16.122Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:37:16.131Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:37:16.133Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:37:16.135Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:37:16.139Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:37:16.141Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:37:16.142Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:37:16.144Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:37:16.145Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:37:16.146Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:37:16.206Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:37:16.257Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:37:16.258Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:37:18.969Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:37:19.000Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:37:19.021Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:37:19.024Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:37:19.026Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:37:19.028Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:37:19.030Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:37:19.031Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:37:19.044Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:37:19.054Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:37:19.058Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:37:20.052Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:37:20.082Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:37:20.094Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:37:20.097Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:37:20.098Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:37:20.099Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:37:20.101Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:37:20.103Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:37:20.112Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:37:20.115Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:37:20.116Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:37:20.121Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:37:20.123Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:37:20.125Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:37:20.126Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:37:20.127Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:37:20.127Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:37:20.181Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:37:20.230Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:37:20.230Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:37:22.988Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:37:23.012Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:37:23.029Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:37:23.033Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:37:23.035Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:37:23.036Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:37:23.038Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:37:23.040Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:37:23.049Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:37:23.052Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:37:23.054Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:37:23.058Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:37:23.060Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:37:23.062Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:37:23.064Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:37:23.066Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:37:23.067Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:37:23.124Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:37:23.211Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:37:23.211Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2024-11-25T10:37:25.837Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2024-11-25T10:37:25.881Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2024-11-25T10:37:25.902Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2024-11-25T10:37:25.905Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2024-11-25T10:37:25.907Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2024-11-25T10:37:25.908Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2024-11-25T10:37:25.910Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2024-11-25T10:37:25.912Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2024-11-25T10:37:25.922Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2024-11-25T10:37:25.925Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2024-11-25T10:37:25.927Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2024-11-25T10:37:25.930Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2024-11-25T10:37:25.938Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2024-11-25T10:37:25.941Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2024-11-25T10:37:25.953Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2024-11-25T10:37:25.954Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2024-11-25T10:37:25.959Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2024-11-25T10:37:26.105Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2024-11-25T10:37:26.189Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2024-11-25T10:37:26.190Z","userId":"No userId"}
+{"filename":"corporateorderController.js","level":"info","message":"Token verified successfully for fetching cart count","timestamp":"2024-11-25T10:37:33.723Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:37:33.728Z","userId":"No userId"}
+{"customer":{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","createdat":"2024-11-23T05:49:10.278Z","customer_email":"test@gmail.com","customer_generated_id":"C000004","customer_id":4,"customer_name":"test","customer_password":"$2a$10$pmrol2td8tzSew86qaLnI./omlmXNvdOh/LYKuDSwkI.rVuoS67zy","customer_phonenumber":"9867543210","group_id":null,"isdeactivated":false,"lastloginat":null,"wallet_amount":null},"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Customer details retrieved:","timestamp":"2024-11-25T10:37:33.730Z","userId":"No userId"}
+{"customer_id":"C000004","filename":"corporateorderModels.js","level":"info","message":"Retrieved cart count :","result":{"total_quantity":"3"},"timestamp":"2024-11-25T10:37:33.738Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2024-11-25T10:37:33.744Z","userId":"No userId"}
+{"filename":"addressController.js","level":"info","message":"Token verified successfully for default address retrieval","timestamp":"2024-11-25T10:37:35.590Z","userEmail":"test@gmail.com","userId":"No userId"}
+{"0":"t","1":"e","10":".","11":"c","12":"o","13":"m","2":"s","3":"t","4":"@","5":"g","6":"m","7":"a","8":"i","9":"l","filename":"addressModel.js","level":"info","message":"Fetched default address for customer email:","timestamp":"2024-11-25T10:37:35.594Z","userId":"No userId"}
+{"filename":"addressController.js","level":"info","message":"Default address retrieved successfully for user","timestamp":"2024-11-25T10:37:35.595Z","userEmail":"test@gmail.com","userId":"No userId"}
+{"filename":"addressController.js","level":"info","message":"Token verified successfully for default address retrieval","timestamp":"2024-11-25T10:37:35.607Z","userEmail":"test@gmail.com","userId":"No userId"}
+{"0":"t","1":"e","10":".","11":"c","12":"o","13":"m","2":"s","3":"t","4":"@","5":"g","6":"m","7":"a","8":"i","9":"l","filename":"addressModel.js","level":"info","message":"Fetched default address for customer email:","timestamp":"2024-11-25T10:37:35.611Z","userId":"No userId"}
+{"filename":"addressController.js","level":"info","message":"Default address retrieved successfully for user","timestamp":"2024-11-25T10:37:35.611Z","userEmail":"test@gmail.com","userId":"No userId"}
+{"filename":"addressController.js","level":"info","message":"Received token for address creation: ","timestamp":"2024-11-25T10:37:55.060Z","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaXNBZG1pbiI6ZmFsc2UsImlkIjoiQzAwMDAwNCIsImlhdCI6MTczMjM2ODc2NCwiZXhwIjoxNzYzOTA0NzY0fQ.yzMEKnIV0lkqujnVCdUOQdgKC8H0095pfdkjw1Lc4z0","userId":"No userId"}
+{"filename":"addressController.js","level":"info","message":"Token verified successfully","timestamp":"2024-11-25T10:37:55.064Z","userId":"C000004"}
+{"0":"C","1":"0","2":"0","3":"0","4":"0","5":"0","6":"4","filename":"addressModel.js","level":"info","message":"Creating address for customer ID:","timestamp":"2024-11-25T10:37:55.065Z","userId":"No userId"}
+{"filename":"addressModel.js","level":"info","message":"Address added successfully","timestamp":"2024-11-25T10:37:55.074Z","userId":"No userId"}
+{"filename":"addressController.js","level":"info","message":"Address stored successfully for user","timestamp":"2024-11-25T10:37:55.074Z","userId":"C000004"}
+{"count":3,"customer_id":"C000004","filename":"customerModels.js","level":"info","message":"Addresses retrieved for customer ID:","timestamp":"2024-11-25T10:37:55.095Z","userId":"No userId"}

@@ -120,8 +120,13 @@ export const Login_google_auth= async(customer_name,customer_email, access_token
 export const corporate_category = async (dispatch) => {
     dispatch(Request());
     try {
+        const token = localStorage.getItem('token');
         console.log('Fetching categories...');
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/categories`);
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/categories`,{
+            headers: {
+                'token': `${token} `// Pass the token in the Authorization header
+            }
+        });
         console.log('API response:', response.data);
         
         if (response.data.success) {
