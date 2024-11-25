@@ -185,18 +185,24 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const tokenId = credentialResponse.credential;
+    // Decode the Google token to get user info
     const decodedToken = jwtDecode(tokenId);
-    const { name, email, picture } = decodedToken;
-
+    console.log(decodedToken);
+    const { name , email, picture } = decodedToken;
     setEmail(email);
+    setUserProfile(decodedToken);
+    console.log(name);
+    console.log(email);
     const userDP = {
       name: name,
       email: email,
       picture: picture,
-      cartCount: cartCount || 0
-    }
+      cartCount: cartCount || 0 // Initialize cart count to 0 or use an existing value
+    };
     localStorage.setItem('userDP', JSON.stringify(userDP));
-    await Login_google_auth(name, email, tokenId, dispatch);
+    
+    const response= await Login_google_auth(name, email, tokenId,dispatch);
+    console.log(response)
     onSignUp(tokenId, true);
   };
 

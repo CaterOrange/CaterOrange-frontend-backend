@@ -61,33 +61,49 @@ app.use('/api', allRoutes);
 app.use('/api', eventRoutes);
 
 async function startApolloServer() {
- const server = new ApolloServer({
- typeDefs,
- resolvers,
- formatError: (error) => {
- logger.error('GraphQL Error:', error);
- return {
- message: error.message,
- code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
- path: error.path,
- };
- },
- });
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    formatError: (error) => {
+      logger.error('GraphQL Error:', error);
+      return {
+        message: error.message,
+        code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
+        path: error.path,
+      };
+    },
+  });
 
- await server.start();
+  await server.start();
 
- // Apply middleware
- app.use(
- '/graphql',
- express.json(),
- expressMiddleware(server, {
- context: async ({ req }) => ({
- token: req.headers.authorization,
- }),
- })
- );
+  // Apply middleware with authentication
+  app.use(
+    '/graphql',
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const token = req.headers['token'];
 
- return server;
+        if (!token) {
+          throw new Error('Authentication token is missing.');
+        }
+
+        let verifiedUser;
+        try {
+          verifiedUser = jwt.verify(token, SECRET_KEY);
+          logger.info('Token verified successfully for GraphQL request');
+        } catch (err) {
+          logger.error('Token verification failed for GraphQL request', { error: err.message });
+          throw new Error('Invalid or expired token');
+        }
+
+        // Pass user information to resolvers via context
+        return { user: verifiedUser };
+      },
+    })
+  );
+
+  return server;
 }
 app.post("/api/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
