@@ -9,6 +9,11 @@
             "date": 1732463313336,
             "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-24.log",
             "hash": "5004f35ba2ebb5f0c32ec094f61bebb20eb386bfde2c7943c08748f94751253c"
+        },
+        {
+            "date": 1732511384744,
+            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-25.log",
+            "hash": "ff63353ac4dc28b863fdaeb2dcfc9698eefb198dc3a7204875a5caa3e988c4d8"
         }
     ],
     "hashType": "sha256"
