@@ -82,7 +82,7 @@ const addCart = async (customer_id, total_amount, cart_order_details, address, n
     }
 };
 const getOrderDetailsById = async (customer_id) => {
-    const query = DB_COMMANDS.GET_ORDER_DETAILS_BY_ID;
+    const query = DB_COMMANDS.GET_EVENTORDER_DETAILS_BY_ID;
     const values = [customer_id];
     try {
         const result = await client.query(query, values);
