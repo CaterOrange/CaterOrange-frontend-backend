@@ -81,18 +81,7 @@ const addCart = async (customer_id, total_amount, cart_order_details, address, n
         throw error;
     }
 };
-const getOrderDetailsById = async (customer_id) => {
-    const query = DB_COMMANDS.GET_EVENTORDER_DETAILS_BY_ID;
-    const values = [customer_id];
-    try {
-        const result = await client.query(query, values);
-        logger.info('Retrieved order details for customer:', { customer_id });
-        return result.rows;
-    } catch (error) {
-        logger.error('Error retrieving event order details:', error);
-        throw new Error('Error retrieving event order details:' + error.message);
-    }
-};
+
 
 const getEventOrderDetailsById = async (customer_id) => {
     const query = DB_COMMANDS.GET_EVENTORDER_DETAILS_BY_ID;
@@ -164,7 +153,7 @@ const deleteCart = async (eventcart_id) => {
 module.exports = {
     getAllProductCategories,
     addCart,
-    getOrderDetailsById,
+    // getOrderDetailsById,
     insertEventOrder,
     getCartById,
     deleteCart,
