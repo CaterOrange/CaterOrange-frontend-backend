@@ -13,7 +13,7 @@ const uniqid = require('uniqid');
 const crypto = require('crypto');      
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
-
+const SECRET_KEY = process.env.SECRET_KEY || 'CaterOrange';
 const redis = new Redis({
   host: 'localhost',  
   port: 6379,   
@@ -90,7 +90,7 @@ async function startApolloServer() {
 
         let verifiedUser;
         try {
-          verifiedUser = jwt.verify(token, process.env.SECRET_KEY);
+          verifiedUser = jwt.verify(token,SECRET_KEY);
           logger.info('Token verified successfully for GraphQL request');
         } catch (err) {
           logger.error('Token verification failed for GraphQL request', { error: err.message });
