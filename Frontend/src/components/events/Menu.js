@@ -1217,7 +1217,7 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
    
     console.log("respond",respond.eventorder_generated_id)
    
-    const response = await axios.post(`http://localhost:4000/api/pay`, {
+    const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
     
     amount: totalAmount,
     corporateorder_id : respond.eventorder_generated_id,
@@ -1233,6 +1233,7 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
    
     setRedirectUrl(response.data.redirectUrl);
     window.location.href = response.data.redirectUrl;
+    onClearCart();
     // const currentUser = JSON.parse(localStorage.getItem('userDP'))?.email;
     // if (currentUser) {
     // localStorage.removeItem(`cartItems_${currentUser}`);
@@ -1241,7 +1242,7 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     setLocalQuantities({});
     onUpdateQuantity({});
    
-    onClearCart();
+   
     // localStorage.setItem(`paymentComplete_${currentUser}`, 'true');
     } else {
     console.log('Unexpected response format.');

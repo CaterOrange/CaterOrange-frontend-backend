@@ -34,7 +34,7 @@ const SuccessPage = () => {
   useEffect(() => {
     // Timer to navigate to My Orders after 5 seconds
     const navigateTimer = setTimeout(() => {
-      navigate('/orders'); // Change this to your actual route for My Orders
+      navigate('/orders'); // Change this to your actual ro/successute for My Orders
     }, 6000); // 5000 milliseconds = 5 seconds
 
     return () => clearTimeout(navigateTimer); // Clear the timer on component unmount

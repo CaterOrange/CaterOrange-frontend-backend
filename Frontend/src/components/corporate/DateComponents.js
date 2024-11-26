@@ -695,73 +695,7 @@ const formatCartItem = (cartDetails, amount) => {
     };
   };
   
-  const handleSaveDates = async () => {
-    const dates = selectedDates;
-    const local = dates.length * quantity;
-  
-    // Update count dynamically
-    const newCount = (storedUserDP.cartCount || 0) + local;
-    updateCartCount(newCount);
-  
-    // Update `cartCount` in `userDP` in local storage
-    const updatedUserDP = {
-      ...storedUserDP,
-      cartCount: newCount
-    };
-    localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
-    const CartDetails = [];
-  
-    if (quantity === 0) {
-      onError('Please select a quantity');
-      return;
-    } else if (dates.length === 0) {
-      onError('Please select dates');
-      return;
-    }
-  
-    let amount = (foodtype.category_price * quantity) * dates.length;
-  
-    for (let i = 0; i < dates.length; i++) {
-      const originalDate = dates[i];
-      const formattedDate = formatDate(originalDate);
-  
-      const data = {
-        date: formattedDate,
-        type: foodtype.category_name,
-        image: foodtype.category_media,
-        quantity: quantity,
-        price: foodtype.category_price,
-        category_id: foodtype.category_id
-      };
-  
-      CartDetails.push(data);
-    }
-  
-    const itemId = `${foodtype.category_name}_${Date.now()}`;
-    const item = formatCartItem(CartDetails, amount);
-  
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/cart/update`, {
-        item: JSON.stringify(item), // Ensure consistent stringification
-        itemId: itemId
-      }, {
-        headers: { token }
-      });
-  
-      if (response.status === 200) {
-        onSaveSuccess();
-      } else {
-        onError('Failed to save cart details');
-      }
-    } catch (error) {
-      console.error('Error saving cart details:', error);
-      onError('Error saving cart details');
-    }
-  };
-    
-
-// const handleSaveDates = async () => {
+//   const handleSaveDates = async () => {
 //     const dates = selectedDates;
 //     const local = dates.length * quantity;
   
@@ -775,6 +709,7 @@ const formatCartItem = (cartDetails, amount) => {
 //       cartCount: newCount
 //     };
 //     localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+//     const CartDetails = [];
   
 //     if (quantity === 0) {
 //       onError('Please select a quantity');
@@ -784,48 +719,143 @@ const formatCartItem = (cartDetails, amount) => {
 //       return;
 //     }
   
+//     let amount = (foodtype.category_price * quantity) * dates.length;
+  
+//     for (let i = 0; i < dates.length; i++) {
+//       const originalDate = dates[i];
+//       const formattedDate = formatDate(originalDate);
+  
+//       const data = {
+//         date: formattedDate,
+//         type: foodtype.category_name,
+//         image: foodtype.category_media,
+//         quantity: quantity,
+//         price: foodtype.category_price,
+//         category_id: foodtype.category_id
+//       };
+  
+//       CartDetails.push(data);
+//     }
+  
+//     const itemId = `${foodtype.category_name}_${Date.now()}`;
+//     const item = formatCartItem(CartDetails, amount);
+  
 //     try {
 //       const token = localStorage.getItem('token');
-//       const cartDetailsPromises = dates.map(async (originalDate) => {
-//         const formattedDate = formatDate(originalDate);
-  
-//         const data = {
-//           date: formattedDate,
-//           type: foodtype.category_name,
-//           image: foodtype.category_media,
-//           quantity: quantity,
-//           price: foodtype.category_price,
-//           category_id: foodtype.category_id
-//         };
-  
-//         const amount = foodtype.category_price * quantity;
-//         const item = formatCartItem([data], amount); // Each date as a single item
-//         const itemId = `${foodtype.category_name}_${formattedDate}_${Date.now()}`; // Unique itemId for each date
-  
-//         // Save each item to the backend
-//         const response = await axios.post(`${process.env.REACT_APP_URL}/api/cart/update`, {
-//           item: JSON.stringify(item),
-//           itemId: itemId
-//         }, {
-//           headers: { token }
-//         });
-  
-//         return response.status === 200;
+//       const response = await axios.post(`${process.env.REACT_APP_URL}/api/cart/update`, {
+//         item: JSON.stringify(item), // Ensure consistent stringification
+//         itemId: itemId
+//       }, {
+//         headers: { token }
 //       });
   
-//       const results = await Promise.all(cartDetailsPromises);
-  
-//       if (results.every((status) => status)) {
+//       if (response.status === 200) {
 //         onSaveSuccess();
 //       } else {
-//         onError('Failed to save one or more cart details');
+//         onError('Failed to save cart details');
 //       }
 //     } catch (error) {
 //       console.error('Error saving cart details:', error);
 //       onError('Error saving cart details');
 //     }
 //   };
+    
+
+const handleSaveDates = async () => {
+    const dates = selectedDates;
+    const local = dates.length * quantity;
   
+  
+    if (quantity === 0) {
+      onError('Please select a quantity');
+      return;
+    } else if (dates.length === 0) {
+      onError('Please select dates');
+      return;
+    }
+  
+    try {
+      const token = localStorage.getItem('token');
+      const cartDetailsPromises = dates.map(async (originalDate) => {
+        const formattedDate = formatDate(originalDate);
+  let Count;
+        const data = {
+          date: formattedDate,
+          type: foodtype.category_name,
+          image: foodtype.category_media,
+          quantity: quantity,
+          price: foodtype.category_price,
+          category_id: foodtype.category_id
+        };
+  
+        const amount = foodtype.category_price * quantity;
+        const item = formatCartItem([data], amount); // Each date as a single item
+        const itemId = `${foodtype.category_name}_${formattedDate}_${Date.now()}`; // Unique itemId for each date
+  
+        // Save each item to the backend
+        const response = await axios.post(`${process.env.REACT_APP_URL}/api/cart/update`, {
+          item: JSON.stringify(item),
+          itemId: itemId
+        }, {
+          headers: { token }
+        });
+        if (response.status === 200) {
+            // Update local storage and cart count only after successful API call
+            const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+            try{
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `${process.env.REACT_APP_URL}/api/customer/getCartCount`,
+                { headers: { token } }
+            );
+            console.log('res',response)
+
+            if(response.status === 200){
+                console.log("count fetched successfully", response.data.totalCartCount)
+                // setCount(response.data.data)
+                 Count= response.data.totalCartCount;
+            }
+        }catch(error){
+            console.error('Error fetching cart count:', error);
+        }
+        console.log("snehaa", Count)
+            // Ensure cartCount is treated as a number
+            const newCount = Count; // Correctly adding numbers.
+            
+            console.log("cart count:", newCount)
+
+            const updatedUserDP = {
+                ...storedUserDP,
+                cartCount: newCount
+            };
+
+            localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+            updateCartCount(newCount); // Single update call
+       
+            console.log('Cart details saved successfully:', response.data);
+            onSaveSuccess();
+        } else {
+            console.error('Failed to save cart details:', response.data);
+            onError('Failed to save cart details');
+        }
+        return response.status === 200;
+      });
+  
+      const results = await Promise.all(cartDetailsPromises);
+  
+      if (results.every((status) => status)) {
+        onSaveSuccess();
+      } else {
+        onError('Failed to save one or more cart details');
+      }
+    } catch (error) {
+      console.error('Error saving cart details:', error);
+      onError('Error saving cart details');
+    }
+  };
+  
+
+
 
 const handleclear = () => {
         setSelectedDates([]);

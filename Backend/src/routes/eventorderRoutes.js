@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const eventController = require('../controller/eventorderController');
+const auth = require('../middlewares/authMiddleware.js');
 
 
 router.get('/products', eventController.fetchProducts);

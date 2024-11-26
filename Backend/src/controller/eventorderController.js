@@ -218,6 +218,19 @@ const transferCartToOrder = async (req, res) => {
     processing_date,
     processing_time,
   } = req.body;
+
+  console.log('data',delivery_status,
+    total_amount,
+    PaymentId,
+    delivery_details,
+    event_order_details,
+    event_media,
+    customer_address,
+    payment_status,
+    event_order_status,
+    number_of_plates,
+    processing_date,
+    processing_time)
   const token =req.headers['token']
   let verified_data;
     try {

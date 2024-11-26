@@ -1095,6 +1095,9 @@ const MyCart = () => {
 
  for (let i = 0; i < details.length; i++) {
  response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`, {
+    headers: { token: `${localStorage.getItem('token')}` }
+    },
+    {
  corporateorder_id: orderDetails.corporateorder_id,
  processing_date: details[i].processing_date,
  delivery_status: details[i].delivery_status,

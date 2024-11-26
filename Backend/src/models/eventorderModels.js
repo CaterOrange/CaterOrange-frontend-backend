@@ -85,10 +85,16 @@ const addCart = async (customer_id, total_amount, cart_order_details, address, n
 
 const getEventOrderDetailsById = async (customer_id) => {
     const query = DB_COMMANDS.GET_EVENTORDER_DETAILS_BY_ID;
+    // const payment_status= 'Success';
     const values = [customer_id];
+    const customer_generated_id= values;
+    console.log('new id',customer_generated_id)
+   
+    console.log('id', customer_id)
     try {
         const result = await client.query(query, values);
-        logger.info('Retrieved event order details for customer:', { customer_id });
+        logger.info('Retrieved event order details for customer:', { customer_generated_id });
+        console.log("order details",result.rows)
         return result.rows;
     } catch (error) {
         logger.error('Error retrieving event order details:', error);

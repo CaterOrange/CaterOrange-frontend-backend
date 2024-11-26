@@ -76,6 +76,8 @@ const ChangeAddress = () => {
  const handleSubmit = (event) => {
  event.preventDefault();
  const form = event.target;
+ console.log("form",form)
+
  // const plates = form.elements['plates'].value;
 
 
@@ -181,9 +183,9 @@ const ChangeAddress = () => {
 
  <div className="mt-6 flex justify-center">
  <button
- type="submit"
+ type="submit" onSubmit={handleSubmit}
  className="bg-blue-600 text-white px-8 py-2 rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
- style={{ backgroundColor: process.env.REACT_APP_COLORCODE }} // Use color from .env
+ style={{ backgroundColor: process.env.REACT_APP_COLORCODE } } // Use color from .env
  >
  Submit
  </button>

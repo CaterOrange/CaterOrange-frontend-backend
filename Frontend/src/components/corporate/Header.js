@@ -61,7 +61,7 @@ const Header = ({ user }) => {
         headers: { token }
       });
       
-      const newCount = response.data.data;
+      const newCount = response.data.totalCartCount;
       console.log("ii", newCount);
       updateCartCount(newCount);
     } catch (error) {

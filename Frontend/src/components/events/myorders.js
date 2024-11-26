@@ -170,6 +170,7 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
   const [success, setSuccess] = useState(null);
   console.log("selected date",selectedDate)
   console.log("number of plates",numberOfPlates);
+  const [progress, setProgress]= useState(null)
   
   const formatOrderDate = (selectedDate) => {
     const date = selectedDate;
@@ -182,6 +183,7 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
       const orderData = await myorders();
       console.log("Order data here:",orderData)
       setOrderData(orderData);
+      console.log('status',orderData)
     };
     fetchOrders();
   }, []);
@@ -242,6 +244,7 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
   };
 
   const renderProgressIcons = (progress) => {
+    console.log("progress", progress)
     const stages = ['processing', 'shipped', 'delivered'];
     const activeIndex = stages.indexOf(progress);
     

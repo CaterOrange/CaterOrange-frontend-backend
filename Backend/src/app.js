@@ -211,11 +211,11 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
           try {
             if(corporateorder_id[0]==='C')
             {
-            const response=await axios.post('https://dev.caterorange.com/api/insert-payment', paymentPayload);
+            const response=await axios.post('https://localhost:4000/api/insert-payment', paymentPayload);
             }
             if(corporateorder_id[0]==='E')
               {
-              const response=await axios.post('https://dev.caterorange.com/api/insertevent-payment', paymentPayload);
+              const response=await axios.post('https://localhost:4000/api/insertevent-payment', paymentPayload);
               }
         res.status(200);
           } catch (error) {
@@ -223,13 +223,13 @@ app.get('/api/redirect-url/:merchantTransactionId', async(req, res) => {
           }
           if(corporateorder_id[0]==='C'){
           // Redirect to success page
-          res.redirect('https://dev.caterorange.com/success');}
+          res.redirect('http://localhost:4000/success');}
           else if(corporateorder_id[0]==='E'){
-            res.redirect('https://dev.caterorange.com/Esuccess');
+            res.redirect('https://localhost:4000/Esuccess');
           }
           // Redirect to the success page
         } else {
-          res.redirect('https://dev.caterorange.com/failure'); // Redirect to a failure page if needed
+          res.redirect('https://localhost:4000/failure'); // Redirect to a failure page if needed
         }
       })
       .catch(function (error) {  

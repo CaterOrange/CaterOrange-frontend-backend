@@ -14,48 +14,137 @@ const CorporateOrders = () => {
   const navigate = useNavigate();
   
   VerifyToken();
+// Utility function to recursively parse nested JSON
+// function parseNestedJSON(input) {
+//   if (typeof input !== 'string') return input;
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        console.log('hiiiiii')
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
-          headers: { token: `${token}` },
-        });
-        if (response.data && response.data.data) {
-          const ordersWithCategoryNames = await Promise.all(
-            response.data.data.map(async (order) => {
-              const updatedOrderDetails = await Promise.all(
-                order.order_details.map(async (detail) => {
-                  const categoryName = await fetchCategoryName(detail.category_id);
-                  return { ...detail, category_name: categoryName };
-                })
-              );
-              return { ...order, order_details: updatedOrderDetails };
-            })
-          );
-          setOrderData(ordersWithCategoryNames);
-        } else {
-          setError('No data received from the server.');
-          setOrderData(null);
-        }
-      } catch (error) {
-        console.error('Error fetching corporate order data:', error);
-        setError('Failed to fetch orders. Please try again later.');
-        setOrderData(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+//   try {
+//     const parsed = JSON.parse(input);
+    
+//     // If the parsed result is a string, try parsing again
+//     if (typeof parsed === 'string') {
+//       return parseNestedJSON(parsed);
+//     }
+    
+//     return parsed;
+//   } catch (error) {
+//     console.error('Failed to parse JSON', input);
+//     return input; // Return original input if parsing fails
+//   }
+// }
+
+//   useEffect(() => {
+//     const fetchOrders = async () => {
+//       setIsLoading(true);
+//       setError(null);
+//       try {
+//         console.log('hiiiiii')
+//         const token = localStorage.getItem('token');
+//         const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
+//           headers: { token: `${token}` },
+//         });
+//         console.log('orders', response.data.data);
+//         const parsedOrder = parseNestedJSON(response.data.data);
+//         console.log('parsed',parsedOrder)
+//         if (response.data && response.data.data) {
+//           const ordersWithCategoryNames = await Promise.all(
+//             parsedOrder.map(async (order) => {
+//               console.log('orserdetail',order.order_details)
+//               const updatedOrderDetails = await Promise.all(
+                
+//                 order.order_details.map(async (detail) => {
+//                   console.log('detail',detail)
+//                   const categoryName = await fetchCategoryName(detail.category_id);
+//                   return { ...detail, category_name: categoryName };
+//                 })
+//               );
+//               return { ...order, order_details: updatedOrderDetails };
+//             })
+//           );
+//           setOrderData(ordersWithCategoryNames);
+//         } else {
+//           setError('No data received from the server.');
+//           setOrderData(null);
+//         }
+//       } catch (error) {
+//         console.error('Error fetching corporate order data:', error);
+//         setError('Failed to fetch orders. Please try again later.');
+//         setOrderData(null);
+//       } finally {
+//         setIsLoading(false);
+//       }
+//     };
    
-    fetchOrders();
-  }, []);
+//     fetchOrders();
+//   }, []);
+function parseNestedJSON(input) {
+  if (typeof input !== 'string') return input;
 
-  const fetchCategoryName = async (categoryId) => {
+  try {
+    const parsed = JSON.parse(input);
+    
+    // If the parsed result is a string, try parsing again
+    if (typeof parsed === 'string') {
+      return parseNestedJSON(parsed);
+    }
+    
+    return parsed;
+  } catch (error) {
+    console.error('Failed to parse JSON', input);
+    return input; // Return original input if parsing fails
+  }
+}
+
+useEffect(() => {
+  const fetchOrders = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
+        headers: { token: `${token}` },
+      });
+
+      const parsedOrders = parseNestedJSON(response.data.data);
+
+      if (parsedOrders && parsedOrders.length > 0) {
+        const ordersWithCategoryNames = await Promise.all(
+          parsedOrders.map(async (order) => {
+            // Parse order_details string into an array if it's a string
+            const orderDetails = typeof order.order_details === 'string' 
+              ? JSON.parse(order.order_details) 
+              : order.order_details;
+
+            const updatedOrderDetails = await Promise.all(
+              orderDetails.map(async (detail) => {
+                const categoryName = await fetchCategoryName(detail.category_id);
+                return { ...detail, category_name: categoryName };
+              })
+            );
+
+            return { ...order, order_details: updatedOrderDetails };
+          })
+        );
+
+        setOrderData(ordersWithCategoryNames);
+      } else {
+        setError('No data received from the server.');
+        setOrderData(null);
+      }
+    } catch (error) {
+      console.error('Error fetching corporate order data:', error);
+      setError('Failed to fetch orders. Please try again later.');
+      setOrderData(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+   
+  fetchOrders();
+}, []);
+  const fetchCategoryName = async (categoryId) => {
+    try {object
+      console.log('category',categoryId)
       const response = await axios.post(
         `${process.env.REACT_APP_URL}/api/customer/getcategorynameById`,
         { categoryId }

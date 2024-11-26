@@ -1,0 +1,42 @@
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:37:57.194Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:37:57.198Z","userId":"No userId"}
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:37:57.221Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:37:57.222Z","userId":"No userId"}
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:48:31.869Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:48:31.878Z","userId":"No userId"}
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:48:31.915Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:48:31.917Z","userId":"No userId"}
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:50:03.504Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:50:03.506Z","userId":"No userId"}
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:50:03.533Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:50:03.534Z","userId":"No userId"}
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:58:51.305Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:58:51.306Z","userId":"No userId"}
+{"code":"42703","file":"parse_relation.c","filename":"eventorderModels.js","length":121,"level":"error","line":"3716","message":"Error retrieving event order details:","name":"error","position":"34","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2024-11-26T06:58:51.329Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T06:58:51.330Z","userId":"No userId"}
+{"code":"EIO","errno":-5,"filename":"app.js","level":"error","message":"Uncaught Exception:","syscall":"write","timestamp":"2024-11-26T07:18:50.026Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:08:42.980Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:08:42.983Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:08:43.024Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:08:43.026Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:08:52.615Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:08:52.617Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:08:52.644Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:08:52.648Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:09:51.734Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:09:51.736Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:09:51.757Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:09:51.761Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:11:21.506Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:11:21.508Z","userId":"No userId"}
+{"filename":"eventorderModels.js","level":"error","message":"Error retrieving event order details:","timestamp":"2024-11-26T10:11:21.533Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:11:21.544Z","userId":"No userId"}
+{"code":"08P01","file":"postgres.c","filename":"eventorderModels.js","length":137,"level":"error","line":"1733","message":"Error retrieving event order details:","name":"error","routine":"exec_bind_message","severity":"ERROR","timestamp":"2024-11-26T10:15:32.065Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:15:32.068Z","userId":"No userId"}
+{"code":"08P01","file":"postgres.c","filename":"eventorderModels.js","length":137,"level":"error","line":"1733","message":"Error retrieving event order details:","name":"error","routine":"exec_bind_message","severity":"ERROR","timestamp":"2024-11-26T10:15:32.115Z","userId":"No userId"}
+{"filename":"eventorderController.js","level":"error","message":"Error retrieving order details:","timestamp":"2024-11-26T10:15:32.124Z","userId":"No userId"}
+{"error":"select_default_address is not defined","filename":"addressController.js","level":"error","message":"Error retrieving default address","timestamp":"2024-11-26T11:09:04.617Z","userId":"No userId"}
+{"error":"select_default_address is not defined","filename":"addressController.js","level":"error","message":"Error retrieving default address","timestamp":"2024-11-26T11:09:09.748Z","userId":"No userId"}
+{"error":"select_default_address is not defined","filename":"addressController.js","level":"error","message":"Error retrieving default address","timestamp":"2024-11-26T11:09:09.763Z","userId":"No userId"}
+{"error":"select_default_address is not defined","filename":"addressController.js","level":"error","message":"Error retrieving default address","timestamp":"2024-11-26T11:10:10.734Z","userId":"No userId"}
+{"error":"select_default_address is not defined","filename":"addressController.js","level":"error","message":"Error retrieving default address","timestamp":"2024-11-26T11:10:10.748Z","userId":"No userId"}

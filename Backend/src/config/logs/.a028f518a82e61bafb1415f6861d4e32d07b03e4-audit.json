@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/sneha/Videos/newly_clone/CaterOrange/Backend/src/config/logs/.a028f518a82e61bafb1415f6861d4e32d07b03e4-audit.json",
+    "files": [
+        {
+            "date": 1732552111289,
+            "name": "/home/sneha/Videos/newly_clone/CaterOrange/Backend/src/config/logs/application-2024-11-25.log",
+            "hash": "1482758bba27fb269217ae46b9c59c0aaf9653c2787cc3e13064abf7d2ffb366"
+        },
+        {
+            "date": 1732602078745,
+            "name": "/home/sneha/Videos/newly_clone/CaterOrange/Backend/src/config/logs/application-2024-11-26.log",
+            "hash": "1b4edef578db3674db30e6ff8a5e44985908159c4dcec7e48b592ebdfd358ae5"
+        },
+        {
+            "date": 1732616682706,
+            "name": "/home/sneha/Videos/newly_clone/CaterOrange/Backend/src/config/logs/application-2024-11-26.log.1",
+            "hash": "3a59f5f508ba725496953f40eedc0900a994554ad64deac8845bf1a80fafa71a"
+        }
+    ],
+    "hashType": "sha256"
+}
