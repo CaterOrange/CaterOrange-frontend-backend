@@ -63,6 +63,61 @@ app.use('/api', eventRoutes);
 
 
 
+// async function startApolloServer() {
+//   const server = new ApolloServer({
+//     typeDefs,
+//     resolvers,
+//     formatError: (error) => {
+//       logger.error('GraphQL Error:', error);
+//       return {
+//         message: error.message,
+//         code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
+//         path: error.path,
+//       };
+//     },
+//   });
+
+//   await server.start();
+
+//   app.use(
+//     '/graphql',
+//     express.json(),
+//     expressMiddleware(server, {
+//       context: async ({ req }) => {
+//         // 1. Retrieve the token from the request headers
+//         const token = req.headers['token'];
+//         if (!token) {
+//           logger.error("Authentication token is missing.");
+//           throw new Error('Authentication token is missing.');
+//         }
+
+//         try {
+//           // 2. Decode token to inspect it (optional, for debugging)
+//           const decoded = jwt.decode(token);
+//           logger.info("Decoded token:", decoded);
+
+//           // 3. Verify the token
+//           const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, { clockTolerance: 60 });
+//           logger.info("Token verified successfully:", verifiedUser);
+
+//           // 4. Return the verified user in the context
+//           return { user: verifiedUser };
+//         } catch (err) {
+//           if (err.name === 'TokenExpiredError') {
+//             logger.error("Error: Token has expired.");
+//             throw new Error('Token has expired. Please log in again.');
+//           }
+//           logger.error("JWT Verification Error:", err.message);
+//           throw new Error('Invalid or expired token');
+//         }
+//       },
+//     })
+//   );
+
+  
+//   return server;
+// }
+
 async function startApolloServer() {
   const server = new ApolloServer({
     typeDefs,
@@ -84,39 +139,61 @@ async function startApolloServer() {
     express.json(),
     expressMiddleware(server, {
       context: async ({ req }) => {
-        // 1. Retrieve the token from the request headers
-        const token = req.headers['token'];
-        if (!token) {
-          logger.error("Authentication token is missing.");
-          throw new Error('Authentication token is missing.');
-        }
-
         try {
-          // 2. Decode token to inspect it (optional, for debugging)
+          // 1. Retrieve the token from the request headers
+          const token = req.headers['token'];
+          if (!token) {
+            logger.error("Authentication token is missing.");
+            throw new Error('Authentication token is missing.');
+          }
+
+          // 2. Query the database for customer information
+          const query = 'select customer_generated_id from customer where access_token=$1';
+          const result = await client.query(query, [token]);
+
+          if (!result.rows.length) {
+            logger.error("Invalid token: No matching customer found.");
+            throw new Error('Invalid token.');
+          }
+
+          const customerGeneratedId = result.rows[0].customer_generated_id;
+
+          // 3. Check if the customer is an admin
+          const query2 = 'select isadmin from admin where customer_generated_id=$1';
+          const adminResult = await client.query(query2, [customerGeneratedId]);
+
+          const isAdmin = adminResult.rows[0]?.isadmin;
+          if (!isAdmin) {
+            logger.error("Access denied: User is not an admin.");
+            throw new Error('Access denied: Admin privileges required.');
+          }
+
+          // 4. Decode and verify the token
           const decoded = jwt.decode(token);
           logger.info("Decoded token:", decoded);
 
-          // 3. Verify the token
           const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, { clockTolerance: 60 });
           logger.info("Token verified successfully:", verifiedUser);
 
-          // 4. Return the verified user in the context
+          // 5. Return the verified user in the context
           return { user: verifiedUser };
         } catch (err) {
           if (err.name === 'TokenExpiredError') {
             logger.error("Error: Token has expired.");
             throw new Error('Token has expired. Please log in again.');
           }
-          logger.error("JWT Verification Error:", err.message);
-          throw new Error('Invalid or expired token');
+
+          logger.error("Authentication error:", err.message);
+          throw new Error(err.message || 'Authentication error');
         }
       },
     })
   );
 
-  
   return server;
 }
+
+
 
 app.post("/api/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
