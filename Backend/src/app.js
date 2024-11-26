@@ -62,62 +62,6 @@ app.use('/api', eventRoutes);
 
 
 
-
-// async function startApolloServer() {
-//   const server = new ApolloServer({
-//     typeDefs,
-//     resolvers,
-//     formatError: (error) => {
-//       logger.error('GraphQL Error:', error);
-//       return {
-//         message: error.message,
-//         code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
-//         path: error.path,
-//       };
-//     },
-//   });
-
-//   await server.start();
-
-//   app.use(
-//     '/graphql',
-//     express.json(),
-//     expressMiddleware(server, {
-//       context: async ({ req }) => {
-//         // 1. Retrieve the token from the request headers
-//         const token = req.headers['token'];
-//         if (!token) {
-//           logger.error("Authentication token is missing.");
-//           throw new Error('Authentication token is missing.');
-//         }
-
-//         try {
-//           // 2. Decode token to inspect it (optional, for debugging)
-//           const decoded = jwt.decode(token);
-//           logger.info("Decoded token:", decoded);
-
-//           // 3. Verify the token
-//           const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, { clockTolerance: 60 });
-//           logger.info("Token verified successfully:", verifiedUser);
-
-//           // 4. Return the verified user in the context
-//           return { user: verifiedUser };
-//         } catch (err) {
-//           if (err.name === 'TokenExpiredError') {
-//             logger.error("Error: Token has expired.");
-//             throw new Error('Token has expired. Please log in again.');
-//           }
-//           logger.error("JWT Verification Error:", err.message);
-//           throw new Error('Invalid or expired token');
-//         }
-//       },
-//     })
-//   );
-
-  
-//   return server;
-// }
-
 async function startApolloServer() {
   const server = new ApolloServer({
     typeDefs,
@@ -192,8 +136,6 @@ async function startApolloServer() {
 
   return server;
 }
-
-
 
 app.post("/api/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
