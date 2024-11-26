@@ -90,7 +90,7 @@ async function startApolloServer() {
 
         let verifiedUser;
         try {
-          verifiedUser = jwt.verify(token, SECRET_KEY);
+          verifiedUser = jwt.verify(token, process.env.SECRET_KEY);
           logger.info('Token verified successfully for GraphQL request');
         } catch (err) {
           logger.error('Token verification failed for GraphQL request', { error: err.message });
