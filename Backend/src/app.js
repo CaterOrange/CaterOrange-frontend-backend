@@ -13,7 +13,7 @@ const uniqid = require('uniqid');
 const crypto = require('crypto');      
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
-
+const SECRET_KEY = process.env.SECRET_KEY || 'CaterOrange';
 const redis = new Redis({
   host: 'localhost',  
   port: 6379,   
@@ -58,6 +58,8 @@ app.use('/api', customerRoutes);
 app.use('/api', corporateorderRoutes);    
 app.use('/api', eventRoutes);
 
+
+
 async function startApolloServer() {
   const server = new ApolloServer({
     typeDefs,
@@ -74,35 +76,65 @@ async function startApolloServer() {
 
   await server.start();
 
-  // Apply middleware with authentication
   app.use(
     '/graphql',
     express.json(),
     expressMiddleware(server, {
       context: async ({ req }) => {
-        const token = req.headers['token'];
-
-        if (!token) {
-          throw new Error('Authentication token is missing.');
-        }
-
-        let verifiedUser;
         try {
-          verifiedUser = jwt.verify(token, SECRET_KEY);
-          logger.info('Token verified successfully for GraphQL request');
-        } catch (err) {
-          logger.error('Token verification failed for GraphQL request', { error: err.message });
-          throw new Error('Invalid or expired token');
-        }
+          // 1. Retrieve the token from the request headers
+          const token = req.headers['token'];
+          if (!token) {
+            logger.error("Authentication token is missing.");
+            throw new Error('Authentication token is missing.');
+          }
 
-        // Pass user information to resolvers via context
-        return { user: verifiedUser };
+          // 2. Query the database for customer information
+          const query = 'select customer_generated_id from customer where access_token=$1';
+          const result = await client.query(query, [token]);
+
+          if (!result.rows.length) {
+            logger.error("Invalid token: No matching customer found.");
+            throw new Error('Invalid token.');
+          }
+
+          const customerGeneratedId = result.rows[0].customer_generated_id;
+
+          // 3. Check if the customer is an admin
+          const query2 = 'select isadmin from admin where customer_generated_id=$1';
+          const adminResult = await client.query(query2, [customerGeneratedId]);
+
+          const isAdmin = adminResult.rows[0]?.isadmin;
+          if (!isAdmin) {
+            logger.error("Access denied: User is not an admin.");
+            throw new Error('Access denied: Admin privileges required.');
+          }
+
+          // 4. Decode and verify the token
+          const decoded = jwt.decode(token);
+          logger.info("Decoded token:", decoded);
+
+          const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, { clockTolerance: 60 });
+          logger.info("Token verified successfully:", verifiedUser);
+
+          // 5. Return the verified user in the context
+          return { user: verifiedUser };
+        } catch (err) {
+          if (err.name === 'TokenExpiredError') {
+            logger.error("Error: Token has expired.");
+            throw new Error('Token has expired. Please log in again.');
+          }
+
+          logger.error("Authentication error:", err.message);
+          throw new Error(err.message || 'Authentication error');
+        }
       },
     })
   );
 
   return server;
 }
+
 app.post("/api/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
   const merchantTransactionId = uniqid();

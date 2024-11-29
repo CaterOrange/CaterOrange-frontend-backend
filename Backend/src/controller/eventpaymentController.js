@@ -3,7 +3,7 @@ const paymentmodel = require('../models/eventpaymentnodel.js');
 const logger = require('../config/logger'); // Ensure you have the logger configured
 
 const event_payment = async (req, res) => {
-  const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id, corporateorder_id } = req.body;
+  const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id, eventorder_id } = req.body;
 
   const insertPaymentQuery = `
     INSERT INTO payment (
@@ -40,13 +40,13 @@ const event_payment = async (req, res) => {
     const response = await client.query(insertPaymentQuery, values);
     const generatedPaymentId = response.rows[0].paymentid;
 
-    const order_id = corporateorder_id; // or however you get it
+    const order_id = eventorder_id; // or however you get it
     const payment_status = 'Success'; // or however you determine the status
     logger.info('Generated payment ID:', generatedPaymentId);
-
+    console.log("Payment id",generatedPaymentId)
     // Now update the corporate order with the generated payment_id
     await updateCorporateOrder(order_id, generatedPaymentId, payment_status);
-
+    console.log("After successful updation")
     res.status(200).json({ payment_id: generatedPaymentId });
   } catch (error) {
     logger.error("Error inserting payment data: ", error);
@@ -57,9 +57,10 @@ const event_payment = async (req, res) => {
 const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
   try {
     // Update corporate order details in the database
+    console.log("Before REsult")
     const result = await paymentmodel.updateeventOrder(order_id, paymentid, payment_status);
     logger.info('Result in payment update:', result);
-    
+    console.log("result",result)
     if (result.rowCount > 0) {
       logger.info('Corporate order updated successfully');
     } else {
