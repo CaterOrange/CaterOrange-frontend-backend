@@ -174,7 +174,7 @@ GET_ORDER_GENID: `
   SELECT corporateorder_generated_id FROM corporate_orders WHERE customer_generated_id=$1
 `,
 GET_ORDER_EVENTGENID: `
-  SELECT eventorder_generated_id FROM event_orders WHERE customer_id=$1
+  SELECT eventorder_generated_id FROM event_orders WHERE customer_generated_id=$1
 `,
 getCartCountById:`
 SELECT SUM((item->>'quantity')::integer) AS total_quantity

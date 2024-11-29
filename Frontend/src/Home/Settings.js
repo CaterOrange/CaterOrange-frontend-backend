@@ -78,7 +78,9 @@ export const Settings = () => {
         customer_email: formData.email,
         customer_password: formData.password,
         confirm_password: formData.confirmPassword,
-      });
+    },{
+      headers:{'token':localStorage.getItem('token')}
+    });
       setSuccessMessage("Password updated successfully!");
       setTimeout(() => navigate("/"), 1000);
     } catch (error) {

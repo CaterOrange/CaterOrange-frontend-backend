@@ -33,8 +33,8 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
         throw new Error('No token found, please log in again.');
       }
       try {
-        const response = await axios.get('http://localhost:7000/address/getDefaultAddress', {
-          headers: { token: `${localStorage.getItem('accessToken')}` }
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
+          headers: { token: `${localStorage.getItem('token')}` }
         });
         const { customer_name, customer_phonenumber } = response.data.customer;
 
@@ -65,15 +65,15 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
   const handleViewAddresses = async () => {
     if (!isViewAddresses) {
       try {
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('token');
         if (!token) {
           console.error('No token found in localStorage');
           return;
         }
 
-        const response = await axios.get('http://localhost:7000/address/getalladdresses', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
 
-          headers: { token: `${localStorage.getItem('accessToken')}` }
+          headers: { token }
 
         });
 
@@ -102,7 +102,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const response = await axios.post(
-          'http://localhost:7000/address/createAddres',
+          `${process.env.REACT_APP_URL}/api/address/createAddres`,
           {
             tag,
             pincode,
@@ -113,7 +113,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
             ship_to_phone_number: selectedOption === 'shipping' ? shipToPhoneNumber : editableDefaultDetails.customer_phonenumber,
           },
           {
-            headers: { token: `${localStorage.getItem('accessToken')}` }
+            headers: { token: `${localStorage.getItem('token')}` }
           }
         );
         onAddressAdd();
@@ -183,8 +183,9 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
   const handleSelect = async (address_id) => {
     console.log('id', address_id);
     try {
-      const response = await axios.get('http://localhost:7000/customer/getAddress', {
-        params: { address_id } // Use params to send the address_id as a query parameter
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getAddress`, {
+        params: { address_id } ,// Use params to send the address_id as a query parameter
+       headers:{'token':localStorage.getItem('token')}
       });
       setSelectedAddressId(response.data.result)
       console.log('select', response.data.result);

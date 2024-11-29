@@ -24,7 +24,6 @@ redis.ping().then(() => {
   logger.error('Redis connection failed:', err);
 });
 // Route imports
-const allRoutes = require('./routes/customerRoutes.js');
 const { typeDefs, resolvers } = require('./routes/adminRoutes');
 const paymentRoutes = require('./routes/paymentRoutes.js');
 const addressRoutes = require('./routes/addressRoutes');
@@ -47,7 +46,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
- origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com', 'https://studio.apollographql.com','http://localhost:3000','http://localhost:8081'],
+ origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com', 'https://studio.apollographql.com','http://localhost:3000'],
  credentials: true
 }));
 
@@ -56,8 +55,7 @@ app.use('/api', addressRoutes);
 app.use('/api', paymentRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', customerRoutes);
-app.use('/api', corporateorderRoutes);
-app.use('/api', allRoutes);        
+app.use('/api', corporateorderRoutes);    
 app.use('/api', eventRoutes);
 
 async function startApolloServer() {
@@ -115,11 +113,6 @@ app.post("/api/pay", async(req, res) => {
   console.log(decode);
   console.log(amount)
   const customer_id = decode.id;
-  // console.log(token)
-  // const response = await customerController.getuserbytoken({ body: { access_token: token } })
-  // console.log(response)
-  // const customer_id = response.customer_id
-  // console.log(customer_id)
   const amountinrupee = amount * 100
   const payload = {
     "merchantId": MERCHANT_ID,

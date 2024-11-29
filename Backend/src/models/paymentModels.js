@@ -49,7 +49,7 @@ const getOrdergenId = async (customer_id) => {
         logger.info('Order generated ID retrieved successfully:', { customer_id });
         return result.rows[0];
     } catch (err) {
-        logger.error('Error querying database for order generated ID:', { error: err.message });
+        logger.error(`Error querying database for order generated ID:${ err.message }`);
         throw err;
     }
 };

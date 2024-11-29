@@ -17,6 +17,8 @@ export const Login_customer = async (customer_email, customer_password, dispatch
         const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/login`,{
             customer_email,
             customer_password
+        },{
+            headers:{'token':localStorage.getItem('token')}
         });
 
         if (response.data.success) {
@@ -47,6 +49,8 @@ export const SignUp_customer = async (
             customer_password,
             customer_phonenumber,    
             confirm_password, 
+        },{
+            headers:{'token':localStorage.getItem('token')}
         });
         console.log("Response received", response.data);
         if (response.data.success) {
@@ -72,6 +76,8 @@ export const Login_forgotPassword = async (customer_email, customer_password,con
             customer_email,
             customer_password,
             confirm_password
+        },{
+            headers:{'token':localStorage.getItem('token')}
         });
         
         if (response.data.success) {
@@ -94,6 +100,8 @@ export const Login_google_auth= async(customer_name,customer_email, access_token
             customer_name,
             customer_email,
             access_token
+        },{
+            headers:{'token':localStorage.getItem('token')}
         }).catch((error) => {
             if (error.response) {
                 console.error('Backend responded with an error:', error.response.data);
@@ -124,7 +132,7 @@ export const corporate_category = async (dispatch) => {
         console.log('Fetching categories...');
         const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/categories`,{
             headers: {
-                'token': `${token} `// Pass the token in the Authorization header
+                'token': token // Pass the token in the Authorization header
             }
         });
         console.log('API response:', response.data);
@@ -145,14 +153,13 @@ export const corporate_category = async (dispatch) => {
 export const add_address = async  ( address , dispatch ) =>{
     dispatch(Request());
     try {
-        console.log('in action',address)
+       
         const token = localStorage.getItem('token'); // Or wherever you store the token
-        console.log(token)
         const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporate/addAddress`, {
             address
         }, {
             headers: {
-                'token': `${token} `// Pass the token in the Authorization header
+                'token': token// Pass the token in the Authorization header
             }
         });
         if (response.data.success) {

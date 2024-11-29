@@ -1,16 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const eventController = require('../controller/eventorderController');
+const auth = require('../middlewares/authMiddleware');
 
 
-router.get('/products', eventController.fetchProducts);
-router.post('/cart/add', eventController.addToCart);   
-router.get('/myorders',eventController.getOrderDetails);
-router.post('/transfer-cart-to-order', eventController.transferCartToOrder);
-router.post('/orderbuyagain',eventController.orderbuyagain);
-// router.get('/getcartitems',eventController.fetchCartItems);
-// router.get('/cart/:customer_id', eventController.fetchCartItems);
-// router.delete('/cart/remove', eventController.removeFromCart);
-router.get('/cart/getcart',eventController.getFromCart)
+router.get('/products',auth, eventController.fetchProducts);
+router.post('/cart/add',auth, eventController.addToCart);   
+router.get('/myorders',auth,eventController.getOrderDetails);
+router.post('/transfer-cart-to-order',auth, eventController.transferCartToOrder);
+router.post('/orderbuyagain',auth,eventController.orderbuyagain);
+router.get('/cart/getcart',auth,eventController.getFromCart)
 
 module.exports = router;

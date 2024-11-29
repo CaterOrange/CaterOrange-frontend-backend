@@ -3,7 +3,6 @@ const logger = require('../config/logger.js');
 
 const GetCorporateCategory = async (req, res) => {
     try {
-        console.log('hii')
         const categories = await category_model.getCorporateCategories();
         return res.json({
             success: true,

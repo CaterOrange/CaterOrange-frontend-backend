@@ -65,7 +65,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
 
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/customerAddress`, {
-        headers: { token },
+        headers: { 'token':token },
       });
       console.log("hii sneha")
       setAddress(response.data.address);

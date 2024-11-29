@@ -113,7 +113,6 @@ const getOrdergenId = async (req, res) => {
         return res.status(401).json({ success: false, message: 'Token verification failed' });
       }
     }
-
     const customer_id = verified_data.id;
     const order_generated_id = await paymentmodel.getOrdergenId(customer_id);
 
@@ -145,13 +144,13 @@ const getEOrdergenId = async (req, res) => {
 
     const customer_id = verified_data.id;
     const customer = await customer_model.getCustomerDetails(customer_id);
-    logger.info('Customer details retrieved:', customer);
+    logger.info(`Customer details retrieved:${JSON.stringify(customer)}`);
     
-    const order_generated_id = await paymentmodel.getEOrdergenId(customer.customer_id);
+    const order_generated_id = await paymentmodel.getEOrdergenId(customer.customer_generated_id);
 
     res.status(200).json({ order_genid: order_generated_id });
   } catch (error) {
-    logger.error("Error fetching order generated id: ", error);
+    logger.error(`Error fetching order generated id:${error}`);
     res.status(500).json({ message: "Error fetching order generated id", error });
   }
 };

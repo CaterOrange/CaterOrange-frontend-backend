@@ -235,8 +235,8 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
     if (Object.keys(validationErrors).length === 0) {
       try {
         const url = existingAddress
-          ? `https://dev.caterorange.com/api/address/edit/${existingAddress.address_id}`
-          : 'https://dev.caterorange.com/api/address/createAddres';
+          ? `${process.env.REACT_APP_URL}/api/address/edit/${existingAddress.address_id}`
+          : `${process.env.REACT_APP_URL}/api/address/createAddres`;
 
         const response = await axios.post(
           url,

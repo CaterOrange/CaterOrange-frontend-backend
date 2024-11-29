@@ -3,6 +3,16 @@ const logger = require('../config/logger.js');
 const customer_model = require('../models/customerModels');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const Redis = require('ioredis');
+const redis = new Redis({
+  host: 'localhost',  
+  port: 6379,   
+});
+redis.ping().then(() => {
+  logger.info('Successfully connected to Redis');
+}).catch(err => {
+  logger.error('Redis connection failed:', err);
+});
 
 // Fetch corporate categories
 const GetCorporateCategory = async (req, res) => {
@@ -44,14 +54,6 @@ const add_Corporate_Cart = async (req, res) => {
     }
 
     const customer_generated_id = verified_data.id;
-    // const customer = await corporate_model.findCustomerByGid(customer_generated_id);
-
-    // if (!customer) {
-    //   logger.error('Customer not found', { customerId: customer_generated_id });
-    //   return res.status(404).json({ success: false, message: 'User not found' });
-    // }
-
-    // logger.info('Adding cart for customer', { customerId: customer.customer_id });
     const newCart = await corporate_model.add_cart(customer_generated_id, cart_order_details, total_amount);
 
     if (!newCart) {
@@ -230,11 +232,9 @@ const transferCartToOrder = async (req, res) => {
 // Get category name by ID
 const getcategorynameById = async (req, res) => {
   const { categoryId } = req.body;
-
   try {
     const categoryname = await corporate_model.getcategoryname(categoryId);
-    logger.info('Fetched category name', { categoryId });
-
+    logger.info(`Fetched category name { ${categoryId} `);
     return res.json({
       success: true,
       categoryname
@@ -244,6 +244,7 @@ const getcategorynameById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // const getCartCount = async (req, res) => {
 //   try {
@@ -261,18 +262,15 @@ const getcategorynameById = async (req, res) => {
 //     const customer_id = verified_data.id;
 //     const customer = await customer_model.getCustomerDetails(customer_id);
 
-//    console.log('sneha user id:', customer_id)
-
 //     if (!customer) {
 //       logger.warn('Customer not found', { customerId: customer_id });
 //       return res.status(404).json({ success: false, message: 'User not found' });
 //     }
 
-//     console.log('Fetching cart count for customer', { customerId: customer_id });
 //     const count = await corporate_model.getCartCountById(customer_id);
 
-//     if (!count) {
-//       return res.status(404).json({ message: 'Count not found' });
+//     if (!count) {  
+//       return res.status(200).json({ message: 'Count is Empty' });
 //     }
 
 //     res.status(200).json({ data: count });
@@ -286,39 +284,65 @@ const getcategorynameById = async (req, res) => {
 const getCartCount = async (req, res) => {
   try {
     const token = req.headers['token'];
-
+    
     let verified_data;
     try {
       verified_data = jwt.verify(token, process.env.SECRET_KEY);
-      logger.info('Token verified successfully for fetching cart count');
     } catch (err) {
-      logger.error('Token verification failed', { error: err.message });
       return res.status(401).json({ success: false, message: 'Invalid or expired token' });
     }
-
-    const customer_id = verified_data.id;
-    const customer = await customer_model.getCustomerDetails(customer_id);
-
-   console.log('sneha user id:', customer_id)
-
-    if (!customer) {
-      logger.warn('Customer not found', { customerId: customer_id });
-      return res.status(404).json({ success: false, message: 'User not found' });
+    
+    const userId = verified_data.id;
+    const CartData = await redis.hgetall(`cart:${userId}`);
+    
+    if (!CartData || Object.keys(CartData).length === 0) {
+      return res.json({ success: true, totalCartCount: 0 });
     }
-
-    console.log('Fetching cart count for customer', { customerId: customer_id });
-    const count = await corporate_model.getCartCountById(customer_id);
-
-    if (!count) {
-      return res.status(404).json({ message: 'Count not found' });
-    }
-
-    res.status(200).json({ data: count });
+    let totalCartCount = 0;
+    
+    Object.entries(CartData).forEach(([key, value]) => {
+      const parsedCart = parseNestedJSON(value);
+      
+      if (!parsedCart || typeof parsedCart !== 'object') {
+        console.error('Invalid cart data format', key);
+        return;
+      }
+      
+      const orderDetails = parseNestedJSON(parsedCart.cart_order_details);
+      
+      if (Array.isArray(orderDetails)) {
+        totalCartCount += orderDetails.reduce((sum, detail) => sum + detail.quantity, 0);
+      }
+    });
+ console.log('total',totalCartCount)
+    res.json({
+      success: true,
+      totalCartCount
+    });
   } catch (error) {
     logger.error('Error retrieving cart count', { error: error.message });
     res.status(500).json({ message: 'Server error' });
   }
 };
+// Utility function to recursively parse nested JSON
+function parseNestedJSON(input) {
+  if (typeof input !== 'string') return input;
+
+  try {
+    const parsed = JSON.parse(input);
+    
+    // If the parsed result is a string, try parsing again
+    if (typeof parsed === 'string') {
+      return parseNestedJSON(parsed);
+    }
+    
+    return parsed;
+  } catch (error) {
+    console.error('Failed to parse JSON', input);
+    return null;
+  }
+}
+
 
 module.exports = {
   addCorporateOrderDetails,

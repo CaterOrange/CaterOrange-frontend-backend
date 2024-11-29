@@ -7,7 +7,6 @@ export function isTokenExpired(token) {
 
     if (decoded.exp) {
       const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-      console.log(currentTime,decoded.exp);
       return decoded.exp < currentTime; // Token is expired if `exp` is less than the current time
     }
     
@@ -29,8 +28,8 @@ export function VerifyToken(){
   else if(!token){
     window.location.href = '/';
   }
-  else {
-    console.log('Token is valid.');
+  else{
+    
   }
 }, []);
 return ;

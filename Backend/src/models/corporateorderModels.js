@@ -169,18 +169,6 @@ const insertCorporateOrderDetails = async (corporateorder_id, processing_date, d
     }
 };
 
-// const getCartCountById = async (customer_id) => {
-//     try {
-//         const result = await client.query(DB_COMMANDS.getCartCountById, [customer_id]);
-//         logger.info('Retrieved cart count :', { customer_id, result: result.rows[0] });
-//         console.log(result.rows[0].total_quantity)
-//         return result.rows[0].total_quantity;
-//     } catch (error) {
-//         logger.error('Error retrieving cart count:', { error: error.message });
-//         throw new Error('Error retrieving cart count: ' + error.message);
-//     }
-// };
-
 
 const getCartCountById = async (customer_id) => {
     try {

@@ -51,7 +51,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
  }
  try {
  const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
- headers: { token: `${localStorage.getItem('token')}` }
+ headers: { token }
  });
  const { customer_name, customer_phonenumber } = response.data.customer;
 
@@ -170,7 +170,7 @@ case 'city':
  }
 
  const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
- headers: { token: `${localStorage.getItem('token')}` }
+ headers: { token }
  });
 
  if (response.data.address) {
@@ -218,7 +218,7 @@ case 'city':
  },
  {
  headers: { 
- token: localStorage.getItem('token') 
+ 'token': localStorage.getItem('token') 
  }
  }
  );
@@ -252,7 +252,8 @@ case 'city':
  const handleSelect = async (address_id) => {
  try {
  const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getAddress`, {
- params: { address_id }
+ params: { address_id },
+ headers:{'token':localStorage.getItem('token')}
  });
  setSelectedAddressId(address_id);
  onAddressSelect(response.data.result);

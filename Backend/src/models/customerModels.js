@@ -172,7 +172,7 @@ const getCustomerDetails = async (customer_id) => {
             logger.error('Customer not found for ID:', customer_id);
             return null;
         }
-        logger.info('Customer details retrieved:', { customer_id, customer: result.rows[0] });
+        logger.info(`Customer details retrieved:, ${ customer_id},${ JSON.stringify(result.rows[0])}`);
         return result.rows[0];
     } catch (err) {
         logger.error('Error querying database for customer details', { error: err.message });
