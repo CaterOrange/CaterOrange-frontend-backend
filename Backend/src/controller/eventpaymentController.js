@@ -3,8 +3,8 @@ const paymentmodel = require('../models/eventpaymentnodel.js');
 const logger = require('../config/logger'); // Ensure you have the logger configured
 
 const event_payment = async (req, res) => {
-  const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id, eventorder_id } = req.body;
-
+  const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id, corporateorder_id } = req.body;
+  console.log("eventorder_id",req.body);
   const insertPaymentQuery = `
     INSERT INTO payment (
       PaymentType, 
@@ -40,7 +40,7 @@ const event_payment = async (req, res) => {
     const response = await client.query(insertPaymentQuery, values);
     const generatedPaymentId = response.rows[0].paymentid;
 
-    const order_id = eventorder_id; // or however you get it
+    const order_id = corporateorder_id; // or however you get it
     const payment_status = 'Success'; // or however you determine the status
     logger.info('Generated payment ID:', generatedPaymentId);
     console.log("Payment id",generatedPaymentId)
@@ -58,6 +58,7 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
   try {
     // Update corporate order details in the database
     console.log("Before REsult")
+    console.log(order_id, paymentid, payment_status);
     const result = await paymentmodel.updateeventOrder(order_id, paymentid, payment_status);
     logger.info('Result in payment update:', result);
     console.log("result",result)
@@ -69,7 +70,7 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
       // return res.status(404).json({ message: 'Corporate order not found' });
     }
   } catch (error) {
-    logger.error('Error updating corporate order:', error);
+    logger.error(`Error updating corporate order:${ error}`);
     // You can return an error response if needed, uncomment below line
     // return res.status(500).json({ message: 'Error updating corporate order' });
   }

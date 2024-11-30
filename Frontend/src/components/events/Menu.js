@@ -367,7 +367,7 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     // Update cart in backend
     await axios.post(
     console.log("item added to the cart")
-    `${process.env.REACT_APP_API_URL}/api/cart/add`,
+    `${process.env.REACT_APP_URL}/api/cart/add`,
     {
     totalAmount: newTotalAmount,
     cartData: updatedCartItems,
