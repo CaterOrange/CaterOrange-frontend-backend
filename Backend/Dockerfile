@@ -18,7 +18,7 @@ COPY . .
 
 
 ENV PG_DATABASE_URL=postgres://paras:1224@localhost:5432/postgres
-ENV DATABASE = CaterOrangeDB
+ENV DATABASE=CaterOrangeDB
 ENV DATABASE_URL=postgres://paras:1224@localhost:5432/CaterOrangeDB
 ENV PORT=4000
 ENV SECRET_KEY=CaterOrange
