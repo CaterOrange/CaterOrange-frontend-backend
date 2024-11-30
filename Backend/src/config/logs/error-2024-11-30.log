@@ -38,3 +38,6 @@
 {"filename":"eventpaymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2024-11-30T11:42:02.125Z","userId":"C000001"}
 {"filename":"eventpaymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2024-11-30T11:48:21.696Z","userId":"C000001"}
 {"filename":"eventpaymentController.js","level":"error","message":"Error updating corporate order:TypeError: Cannot read properties of undefined (reading 'rowCount')","timestamp":"2024-11-30T12:18:07.347Z","userId":"No userId"}
+{"filename":"eventpaymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2024-11-30T13:06:53.581Z","userId":"No userId"}
+{"filename":"eventpaymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2024-11-30T13:21:59.388Z","userId":"No userId"}
+{"filename":"eventpaymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2024-11-30T13:23:09.375Z","userId":"No userId"}

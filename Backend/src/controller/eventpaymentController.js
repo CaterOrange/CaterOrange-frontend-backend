@@ -4,7 +4,7 @@ const logger = require('../config/logger'); // Ensure you have the logger config
 
 const event_payment = async (req, res) => {
   const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id,corporateorder_id } = req.body;
-
+  console.log("event order data:",corporateorder_id);
   const insertPaymentQuery = `
     INSERT INTO payment (
       PaymentType, 
@@ -62,7 +62,7 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
     logger.info('Result in payment update:', result);
     console.log("result",result)
     if (result.rowCount > 0) {
-      logger.info('Corporate order updated successfully');
+      logger.info('Corporate order updated successfully');  
     } else {
       logger.warn('Corporate order not found for order ID:', order_id);
       // You can return an error response if needed, uncomment below line

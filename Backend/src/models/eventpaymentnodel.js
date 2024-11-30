@@ -21,3 +21,7 @@ const updateeventOrder = async (order_id, payment_id, payment_status) => {
         throw error;
     }
 };
+
+module.exports={
+    updateeventOrder
+};
