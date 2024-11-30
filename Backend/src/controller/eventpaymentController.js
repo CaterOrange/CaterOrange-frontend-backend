@@ -3,7 +3,7 @@ const paymentmodel = require('../models/eventpaymentnodel.js');
 const logger = require('../config/logger'); // Ensure you have the logger configured
 
 const event_payment = async (req, res) => {
-  const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id, eventorder_id } = req.body;
+  const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id,corporateorder_id } = req.body;
 
   const insertPaymentQuery = `
     INSERT INTO payment (
@@ -40,7 +40,7 @@ const event_payment = async (req, res) => {
     const response = await client.query(insertPaymentQuery, values);
     const generatedPaymentId = response.rows[0].paymentid;
 
-    const order_id = eventorder_id; // or however you get it
+    const order_id = corporateorder_id; // or however you get it
     const payment_status = 'Success'; // or however you determine the status
     logger.info('Generated payment ID:', generatedPaymentId);
     console.log("Payment id",generatedPaymentId)
