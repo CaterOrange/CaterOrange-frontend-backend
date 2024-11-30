@@ -221,20 +221,81 @@ const MyCart = () => {
  }
  }, [cartIndividualData]);
 
- const handleDecrement = async (index) => {
- setSortedData((prevItems) => {
- const updatedItems = [...prevItems];
- if (updatedItems[index].quantity > 1) {
- updatedItems[index] = {
- ...updatedItems[index],
- quantity: updatedItems[index].quantity - 1, // Decrement the quantity
- };
+const handleDecrement = async (index) => {
+  setSortedData((prevItems) => {
+    const updatedItems = [...prevItems];
+    if (updatedItems[index].quantity > 1) {
+      const updatedItem = {
+        ...updatedItems[index],
+        quantity: updatedItems[index].quantity - 1,
+      };
+      updatedItems[index] = updatedItem;
 
- updateCartItem(updatedItems[index]); // Update cart on server
- }
- return updatedItems;
- });
- };
+      try {
+        // Find the matching cart item
+        const matchingCartItem = Object.entries(CartData).find(([key, value]) => {
+          const parsedValue = parseNestedJSON(value);
+          if (!parsedValue || !parsedValue.cart_order_details) return false;
+
+          const orderDetails = parseNestedJSON(parsedValue.cart_order_details);
+          if (!Array.isArray(orderDetails)) return false;
+
+          return orderDetails.some(detail => 
+            detail.date === updatedItem.date && 
+            key === updatedItem.id
+          );
+        });
+
+        if (matchingCartItem) {
+          const [itemKey, itemValue] = matchingCartItem;
+          const parsedItemValue = parseNestedJSON(itemValue);
+          const cartDetails = parseNestedJSON(parsedItemValue.cart_order_details);
+
+          if (Array.isArray(cartDetails)) {
+            const updatedCartDetails = cartDetails.map(detail => {
+              if (detail.date === updatedItem.date) {
+                return {
+                  ...detail,
+                  quantity: updatedItem.quantity
+                };
+              }
+              return detail;
+            });
+
+            // Calculate new total amount
+            const newTotalAmount = updatedCartDetails.reduce(
+              (sum, detail) => sum + (detail.price * detail.quantity),
+              0
+            );
+
+            // Format and update cart item
+            const updatedCartItem = {
+              cart_order_details: updatedCartDetails,
+              total_amount: newTotalAmount
+            };
+
+            // Update in Redis
+            updateCartItem(itemKey, updatedCartItem);
+
+            // Update local storage to persist cart count
+            const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+            const updatedUserDP = {
+              ...storedUserDP,
+              cartCount: sortedData.reduce((sum, item) => sum + item.quantity, 0)
+            };
+            localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+            updateCartCount(updatedUserDP.cartCount);
+          }
+        }
+      } catch (error) {
+        console.error('Error updating cart:', error);
+      }
+
+      return updatedItems;
+    }
+    return prevItems;
+  });
+};
 
  const formatCartItem = (cartOrderDetails, totalAmount) => {
  return {
