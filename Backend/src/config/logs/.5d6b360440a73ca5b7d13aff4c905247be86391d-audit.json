@@ -6,101 +6,6 @@
     "auditLog": "/home/parash/Desktop/caterorange/Backend/src/config/logs/.5d6b360440a73ca5b7d13aff4c905247be86391d-audit.json",
     "files": [
         {
-            "date": 1732870762167,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log",
-            "hash": "3149cf4e7bd5a31fdbb742d78c576ef11dd86d9df143eeefcbe7e54dd92fcb94"
-        },
-        {
-            "date": 1732872168246,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.1",
-            "hash": "43525e03f7d1c106d33fc6f8c23738e112de20389154a0a9fdb7d5ae9355ff98"
-        },
-        {
-            "date": 1732872171167,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.2",
-            "hash": "969850cbc6532578ecc18b03295ee18e015dc33e2edfe31487d392b7245d8e93"
-        },
-        {
-            "date": 1732872174132,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.3",
-            "hash": "93f49d7d325798fa6d43e89e618f94c314574f03a58036412e4491aed68da140"
-        },
-        {
-            "date": 1732872177082,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.4",
-            "hash": "977c4e3206a4751a82ab2a81e9bb550e0f97d65533abdaef0a528d66d76040e2"
-        },
-        {
-            "date": 1732872179923,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.5",
-            "hash": "f9494f842756456c135d5a068384b94c500a5729e69e49772efccb86f0067ddf"
-        },
-        {
-            "date": 1732872182856,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.6",
-            "hash": "45e603593cde3308032e0749a240718acfe70f5f9894ad45bc4a67756c34351b"
-        },
-        {
-            "date": 1732872185625,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.7",
-            "hash": "fe68d77c84a54105caac9f19b8fe3fcd5dda853bae326d788f5394dbedaba789"
-        },
-        {
-            "date": 1732872188293,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.8",
-            "hash": "e6051c48f258074595b4dcf6391df595565f16026b54befbe3edec2158963326"
-        },
-        {
-            "date": 1732872191285,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.9",
-            "hash": "d3d2fe8f5539c80b3fadf47ce2166640a7544f639a3f2928034a83c89ded4e46"
-        },
-        {
-            "date": 1732872194107,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.10",
-            "hash": "03380c3880bd487b0d8a9b6417a18f591e77940ddb5fca1fa41cd1f8cb46feb8"
-        },
-        {
-            "date": 1732872196768,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.11",
-            "hash": "d57071b64f63b359c1e7b184a01852b0e225fd6d84de5cde513ca3b89521a46a"
-        },
-        {
-            "date": 1732872199321,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.12",
-            "hash": "12f73370f634fd6c97da87da2fb3bdebd76a896925f5d1b95ac930e1db623642"
-        },
-        {
-            "date": 1732872201849,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.13",
-            "hash": "d10c1398b69eb92c550cad9b3c659d6c7824747a36bfe1588803987e86f9265d"
-        },
-        {
-            "date": 1732872204570,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.14",
-            "hash": "da6debce46c85789d6966fa1c14a0e0675d5045bebcb7652ae18e12c9805683c"
-        },
-        {
-            "date": 1732872207932,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.15",
-            "hash": "4321095b1406581606eebbf68d7da2a7501933c34e64722be45d9170ee7526af"
-        },
-        {
-            "date": 1732872211368,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.16",
-            "hash": "b1e4932380ed8675b168dc9dbd257c8c0e2d3e73a4c5e76405db89d18e100d94"
-        },
-        {
-            "date": 1732872214790,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.17",
-            "hash": "a4fee2897bd94f10b45ff660bf48a7d98350b418fa8da88858b3e20313d270bd"
-        },
-        {
-            "date": 1732872661308,
-            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.18",
-            "hash": "47dd2df65d0d3fc565aec39006a0117127bcd1104e69d03f857412604130c2f8"
-        },
-        {
             "date": 1732879633823,
             "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.19",
             "hash": "035d495ac3d3b5146c1fb5691987d92e3102a6b0645e2a37ac8bb724eab41a56"
@@ -114,6 +19,11 @@
             "date": 1732896317823,
             "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-29.log.21",
             "hash": "e2c8c5c833f49a87838e3c5728ea566839c52f7fb280e75fc0a5403e85ae498e"
+        },
+        {
+            "date": 1732960999797,
+            "name": "/home/parash/Desktop/caterorange/Backend/src/config/logs/application-2024-11-30.log",
+            "hash": "03416cf8c52b5be6c684c8c209638ae6641f9d744bd666cfb0646e9e659922d5"
         }
     ],
     "hashType": "sha256"

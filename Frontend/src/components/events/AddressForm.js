@@ -131,7 +131,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
         throw new Error('No token found, please log in again.');
       }
       try {
-        const response = await axios.get('https://dev.caterorange.com/api/address/getDefaultAddress', {
+        const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
           headers: { 'token': token },
         });
         const { customer_name = '', customer_phonenumber = '' } = response.data.customer || {};

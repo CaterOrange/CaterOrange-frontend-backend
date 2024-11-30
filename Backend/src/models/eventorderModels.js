@@ -88,7 +88,7 @@ const getEventOrderDetailsById = async (customer_id) => {
     const values = [customer_id];
     try {
         const result = await client.query(query, values);
-        logger.info('Retrieved event order details for customer:', { customer_id });
+        logger.info(`Retrieved event order details for customer:${ customer_id }`);
         return result.rows;
     } catch (error) {
         logger.error('Error retrieving event order details:', error);

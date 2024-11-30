@@ -38,6 +38,7 @@ useEffect(() => {
     setIsLoading(true);
     setError(null);
     try {
+      
       const token = localStorage.getItem('token');
       const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
         headers: { token: token },

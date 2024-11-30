@@ -4,7 +4,7 @@ const addressController = require('../controller/addressControllers');
 const { add } = require('winston');
 const auth = require('../middlewares/authMiddleware');
 
-
+   
 
 router.post('/address/createAddres',auth,addressController.createAddress)
 router.get('/address/getDefaultAddress',auth,addressController.getDefaultAddress)

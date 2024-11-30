@@ -154,7 +154,7 @@ const getOrderDetails = async (req, res) => {
    
     const customer_id = customer_generated_id
     const order = await cartModel.getEventOrderDetailsById(customer_id); 
-    logger.info("Order details fetched:", order);
+    logger.info(`Order details fetched:${order}`);
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });

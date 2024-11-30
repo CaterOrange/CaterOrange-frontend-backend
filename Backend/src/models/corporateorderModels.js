@@ -139,7 +139,7 @@ const getOrderDetailsById = async (customer_id) => {
 
     try {
         const result = await client.query(DB_COMMANDS.FETCH_ORDERS, [customer_id]);
-        logger.info("All orders fetched:", result.rows);
+        logger.info(`All orders fetched:${result.rows} we got nothing`);
         return result.rows; // Return the first matching row
     } catch (error) {
         logger.error('Error retrieving corporate order details:', { error: error.message });
