@@ -183,8 +183,8 @@ const getCustomerDetails = async (customer_id) => {
 const getCustomerAddress = async (customer_id) => {
     try {
         const res = await client.query(DB_COMMANDS.GET_ADDRESSES_BY_CUSTOMER_ID, [customer_id]);
-        console.log('res',res)
-        logger.info('Customer addresses fetched for ID:', { customer_id, count: res.rowCount });
+        console.log('res',res.rows);
+        logger.info(`Customer addresses fetched for ID:${ customer_id} ${res.rowCount }`);
 
         return res.rows;
     } catch (err) {

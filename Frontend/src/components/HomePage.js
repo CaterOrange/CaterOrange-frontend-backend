@@ -8,8 +8,7 @@ import { FiTrash } from 'react-icons/fi';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import AddressForm from '../components/events/AddressForm';
 import axios from 'axios';
-import { VerifyToken } from '../MiddleWare/verifyToken';
-
+import { isTokenExpired, VerifyToken } from '../MiddleWare/verifyToken';
 const HomePage = () => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
@@ -21,6 +20,7 @@ const HomePage = () => {
   const [addressToEdit, setAddressToEdit] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(); 
   const [selectedTime, setSelectedTime] = useState('');
+  const token = localStorage.getItem('token');
   VerifyToken();
   const handleAddAddress = () => {
     setIsAddAddressFormVisible(!isAddAddressFormVisible);
@@ -31,10 +31,13 @@ const HomePage = () => {
   const handleViewAddresses = async () => {
     if (!isViewAddresses) {
       try {
-        const token = localStorage.getItem('token');
+        
         if (!token) {
           console.error('No token found in localStorage');
           return;
+        }
+        if(isTokenExpired(token)){
+             navigate('/');
         }
 
         const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
@@ -73,6 +76,10 @@ const HomePage = () => {
   };
 
   const handleSubmit = (event) => {
+
+    if(isTokenExpired(token)){
+      navigate('/');
+     }
     event.preventDefault();
     const form = event.target;
     const plates = form.elements['plates'].value;
@@ -99,7 +106,7 @@ const HomePage = () => {
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
       <h2
-              className="text-lg font-semibold mb-6 text-center"
+              className="text-lg font-semibold mb-6 text-center"  
               style={{ color: '#006600', fontFamily: process.env.REACT_APP_FONT }}
             >
               Know Order Availability To Your Location

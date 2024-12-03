@@ -171,40 +171,40 @@ const MyCart = () => {
  };
 
  useEffect(() => {
- if (!CartData || Object.keys(CartData).length === 0) return;
- 
- let tempCartData = [];
- 
- try {
- Object.entries(CartData).forEach(([key, value]) => {
- // Parse the entire cart value which might be multiple times stringified
- const parsedCart = parseNestedJSON(value);
- 
- if (!parsedCart || typeof parsedCart !== 'object') {
- console.error('Invalid cart data format');
- return;
- }
+  if (!CartData || Object.keys(CartData).length === 0) return;
+  
+  let tempCartData = [];
+  
+  try {
+  Object.entries(CartData).forEach( async([key, value]) => {
+  // Parse the entire cart value which might be multiple times stringified
+   const parsedCart = await parseNestedJSON(value);
+    console.log(" parsedCart", parsedCart);
+  if (!parsedCart || typeof parsedCart !== 'object') {
+  console.error('Invalid cart data format');
+  return;
+  }
 
- // Parse cart_order_details
- const orderDetails = parseNestedJSON(parsedCart.cart_order_details);
+  // Parse cart_order_details
+  const orderDetails = parseNestedJSON(parsedCart.cart_order_details);
 
- if (Array.isArray(orderDetails)) {
- orderDetails.forEach(detail => {
- tempCartData.push({
- id: key,
- content: detail,
- });
- });
- }
- });
+    if (Array.isArray(orderDetails)) {
+    orderDetails.forEach(detail => {
+    tempCartData.push({
+    id: key,
+    content: detail,
+    });
+    });
+    }
+  });
 
- console.log('Processed cart data:', tempCartData);
- setCartIndividualData(tempCartData);
- } catch (error) {
- console.error('Error processing cart data:', error);
- setCartIndividualData([]);
- }
- }, [CartData]);
+  console.log('Processed cart data:', tempCartData);
+  setCartIndividualData(tempCartData);
+  } catch (error) {
+  console.error('Error processing cart data:', error);
+  setCartIndividualData([]);
+  }
+ }, [CartData],[]);
  
  
 

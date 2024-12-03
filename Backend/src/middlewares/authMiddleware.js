@@ -22,7 +22,7 @@ const auth = (req, res, next) => {
     // Verify the token using the SECRET_KEY
     jwt.verify(token, SECRET_KEY, (err, user) => {
         if (err) {
-            console.error('Token verification failed:', err.message);
+            console.error('Token verification ---failed:', err.message);
             return res.status(403).send('Unauthorized access');
         }
 

@@ -258,16 +258,16 @@ const register = async (req, res) => {
                 }
                 console.log('Email sent to:', customer_email, 'Response:', info.response);
             });
-        }
+        }  
         // logger.info('Customer registered successfully', { newCustomer});
 
         const gid=newCustomer.customer_generated_id ;
         gidStorage.setGid(gid);
-        const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+        const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
 
         const newCustomerToken = await customer_model.createCustomerToken(
             customer_email,
-            token
+            token  
         );
         return res.json({
             success: true,
@@ -282,9 +282,7 @@ const register = async (req, res) => {
     }
 };
 
-const login = [
-    // Validate and sanitize input fields
-    async (req, res) => {
+const login = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -356,7 +354,7 @@ const login = [
             } catch (err) {
                 const gid=customer.customer_generated_id;
                 gidStorage.setGid(gid);
-                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin,id:gid}, process.env.SECRET_KEY, { expiresIn: '365d' });
+                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin,id:gid}, process.env.SECRET_KEY, { expiresIn: '24h' });
                 await customer_model.updateAccessToken(customer_email, uat);
                 logger.info('New token generated', { token: uat });
             }
@@ -371,10 +369,9 @@ const login = [
             res.status(500).json({ error: err.message });
         }
     }
-];
+;
 
-const forgotPassword = [
-    async (req, res) => {
+const forgotPassword = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -411,7 +408,7 @@ const forgotPassword = [
             } catch (err) {
                 const gid=existingUserByEmail.customer_generated_id;
                 gidStorage.setGid(gid);
-                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
                 logger.info('New token generated', { token: uat });
             }
             const customer = await customer_model.updateCustomerPassword(customer_email, hashedPassword,uat);
@@ -430,8 +427,7 @@ const forgotPassword = [
             logger.error('Error during password update', { error: err.message });
             res.status(500).json({ error: err.message });
         }
-    }
-];
+    };
 
 
 const updatePassword = async (req, res) => {
@@ -462,7 +458,7 @@ const updatePassword = async (req, res) => {
             } catch (err) {
                 const gid=existingUser.customer_generated_id;
                 gidStorage.setGid(gid);
-                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+                var uat = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
                 logger.info('New token generated', { token: uat });
             }
 
@@ -478,13 +474,6 @@ const updatePassword = async (req, res) => {
     }
 };
 
-
-
-
-
-
-
-
 const google_auth = async (req, res) => {
     try {
         const { customer_name, customer_email } = req.body;
@@ -498,7 +487,7 @@ const google_auth = async (req, res) => {
             );
             const gid=newCustomer.customer_generated_id ;
             gidStorage.setGid(gid);
-            const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+            const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
             const newCustomerToken = await customer_model.createCustomerToken(
                 customer_email,
                 token
@@ -634,23 +623,23 @@ const google_auth = async (req, res) => {
         else {
             // Login existing customer
             let token = existingCustomer.access_token;
+            console.log("existingCustomer:", existingCustomer);
+            console.log("user existing token:",token);
             try {
-                token = jwt.verify(customer.access_token, process.env.SECRET_KEY);
-                var uat = customer.access_token;
-                const id=customer.customer_generated_id;
+                decoded_token = jwt.verify(existingCustomer.access_token, process.env.SECRET_KEY);
+                console.log("verified:", decoded_token );
+                const id= existingCustomer.customer_generated_id;
                 gidStorage.setGid(id);
-            } catch (err) {
+            } catch (err) {     
                 // If token is invalid or expired, create a new one
                 const gid=existingCustomer.customer_generated_id ;
                 gidStorage.setGid(gid);
-                const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
-                // token = jwt.sign({ email: customer_email }, process.env.SECRET_KEY, { expiresIn: '365d' });
-                // gidStorage.setGid(gid);
+                token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '24h' });
                 await customer_model.updateAccessToken(customer_email, token);
-                logger.info('Login successful through Google and token updated', { token });
+                logger.info(`Login successful through Google and token updated ${ customer_email} ${token }`);
             }
 
-            return res.json({
+            return res.json({      
                 success: true,
                 message: 'Login successful through Google',
                 token,
@@ -816,8 +805,9 @@ const getAddressByCustomerId = async (req, res) => {
       logger.error('Error fetching address details: ', error);
       res.status(500).json({ error: 'Error fetching address details', details: error.message });
     }
-  };
-  const getuserbytoken = async (req, res) => {
+};
+ 
+const getuserbytoken = async (req, res) => {
     const access_token = req.headers['token']// Access token from body
    
     try {
@@ -888,7 +878,7 @@ const updateAddressById = async (req, res) => {
     }
 };
 
-  const CustomerAddress =async (req, res) => {
+const CustomerAddress =async (req, res) => {
     try {
         const token = req.headers['token'];
     if (!token) {
@@ -949,9 +939,16 @@ const getCustomerDetails=async(req, res)=>{
           const customer=await customer_model.getCustomerDetails(customer_id);
           const Myaddress=await customer_model.getCustomerAddress(customer_id)
           console.log('add',Myaddress)
-        const useradd=`${Myaddress[0].tag},${Myaddress[0].line1},${Myaddress[0].line2},${Myaddress[0].pincode}`
-        console.log(useradd)
-    const data={
+         
+          if(Myaddress==[]){
+            res.status(404).json({message: "No address found"});
+            return;
+          }
+          const  useradd=`${Myaddress[0].tag},${Myaddress[0].line1},${Myaddress[0].line2},${Myaddress[0].pincode}`;
+          console.log(useradd)
+            
+        
+      const data={
         Name:customer.customer_name,
         PhoneNumber: customer.customer_phonenumber,
         email:customer.customer_email,
@@ -993,3 +990,7 @@ module.exports = {
 
 
 
+
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhcmFzaDEyMjRAZ21haWwuY29tIiwiaWQiOiJDMDAwMDMwIiwiaWF0IjoxNzMzMjIzODc5LCJleHAiOjE3NjQ3NTk4Nzl9.y0znnTs_wHeoO4iX3qfoGr9BTFmUkc_-cgBDUL2JjCM
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Img3MjU4OTM3MEBnbWFpbC5jb20iLCJpZCI6IkMwMDAwMDUiLCJpYXQiOjE3MzMyMTk3NjIsImV4cCI6MTc2NDc1NTc2Mn0.QG656eQjjswQnh4ypEfax70WdWsPZ8WuzlNSHdjLm0E

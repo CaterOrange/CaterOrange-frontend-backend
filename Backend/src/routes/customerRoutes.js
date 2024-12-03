@@ -6,7 +6,7 @@ const auth = require('../middlewares/authMiddleware.js');
 //customer routes
 
 router.post('/customer/google_auth',customerController.google_auth);
-router.get('/customer/info',customerController.customer_info);
+router.get('/customer/info',auth,customerController.customer_info);
 router.post('/customer/send-otp',customerController.send_otp)
 router.post('/customer/checkcustomer',customerController.checkCustomer)
 router.post('/customer/verify-otp',customerController.verify_otp)

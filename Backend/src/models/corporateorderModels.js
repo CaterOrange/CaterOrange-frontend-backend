@@ -133,7 +133,7 @@ const getcategoryname = async (categoryId) => {
         throw err;
     }
 }
-
+   
 const getOrderDetailsById = async (customer_id) => {
     logger.info(`Fetching order details for customer ID:${customer_id}`);
 

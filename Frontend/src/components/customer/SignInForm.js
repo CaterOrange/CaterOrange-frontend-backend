@@ -206,7 +206,6 @@ const SignInForm = ({ onSignIn }) => {
 
 
   const handleSignUp = async(token, isGoogleLogin ) =>{
-    localStorage.setItem('token',token);
     
     console.log("in signup isgooglelogin: ",isGoogleLogin)
   setIsGoogleLogin(isGoogleLogin);

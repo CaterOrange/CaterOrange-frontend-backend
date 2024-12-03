@@ -26,7 +26,7 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showSignInModal, setShowSignInModal] = useState(false);
-  
+  const [userProfile, setUserProfile]= useState('')
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({

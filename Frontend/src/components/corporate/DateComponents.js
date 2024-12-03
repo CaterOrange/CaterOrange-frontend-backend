@@ -4,10 +4,11 @@ import React, { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useCart } from '../../services/contexts/CartContext';
-import { VerifyToken } from "../../MiddleWare/verifyToken";
+import { isTokenExpired, VerifyToken } from "../../MiddleWare/verifyToken";
 
 import { StoreContext } from "../../services/contexts/store";
 import './css/date.css';
+import { useNavigate } from "react-router-dom";
 
 function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     const [selectedDates, setSelectedDates] = useState([]);
@@ -21,9 +22,9 @@ function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     const [fromDate, setFromDate] = useState(null);
     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
     const { state, dispatch } = useContext(StoreContext);
-const [toDate, setToDate] = useState(null);
-const { updateCartCount } = useCart();
-
+    const [toDate, setToDate] = useState(null);
+    const { updateCartCount } = useCart();
+    const navigate = useNavigate(); 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const currentDate = new Date();
     VerifyToken();
@@ -223,6 +224,10 @@ const handleSaveDates = async () => {
   
     try {
       const token = localStorage.getItem('token');
+      if(isTokenExpired(token))
+        {
+            navigate('/');
+        }
       const cartDetailsPromises = dates.map(async (originalDate) => {
         const formattedDate = formatDate(originalDate);
   let Count;

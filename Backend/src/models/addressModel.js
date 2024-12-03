@@ -14,7 +14,7 @@ const createaddress = async (customer_id, tag, pincode, line1, line2, location, 
         logger.info('Address added successfully');
         return result.rows[0];  
     } catch (err) {
-        logger.error('Error adding address data', { error: err.message });
+        logger.error(`Error adding address data $ {err.message }`);
         throw err;
     }
 };
@@ -22,10 +22,10 @@ const createaddress = async (customer_id, tag, pincode, line1, line2, location, 
 const select_default_address = async (customer_email) => {
     try {
         const result = await client.query(DB_COMMANDS.CUSTOMER_EMAIL_SELECT, [customer_email]);
-        logger.info('Fetched default address for customer email:', customer_email);
+        logger.info(`Fetched default address for customer email:${ customer_email}`);
         return result.rows[0];  // Return the customer details, or undefined if not found
     } catch (err) {
-        logger.error('Error querying the database for customer_email', { error: err.message });
+        logger.error(`Error querying the database for customer_email ${ err.message }`);
         throw err;
     }
 }

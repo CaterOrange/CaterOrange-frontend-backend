@@ -142,10 +142,39 @@ const getSelectedAddress = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+const editAddress = async (req, res) => {
+    const { address_id } = req.params;
+    const { tag, pincode, line1, line2 } = req.body;
+
+    if (!tag || !pincode || !line1 || !line2) {
+        logger.warn('Missing required fields in edit address request');
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    try {
+        logger.info('Updating address', { addressId: address_id });
+        const updatedAddress = await updateAddressById(address_id, tag, pincode, line1, line2);
+
+        if (!updatedAddress) {
+            logger.warn('Address not found for updating', { addressId: address_id });
+            return res.status(404).json({ error: 'Address not found' });
+        }
+
+        logger.info('Address updated successfully', { addressId: address_id });
+        return res.status(200).json({
+            message: 'Address updated successfully',
+            updatedAddress,
+        });
+    } catch (error) {
+        logger.error('Error updating address', { error: error.message });
+        return res.status(500).json({ error: 'Server error' });
+    }
+};
 
 module.exports = {
     createAddress,
     getDefaultAddress,
     getAddressForUser,
-    getSelectedAddress
+    getSelectedAddress,
+    editAddress
 };

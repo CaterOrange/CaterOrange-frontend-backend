@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import GoogleMapComponent from '../Maps/GMaps';
 import { useNavigate } from 'react-router-dom';
-import { VerifyToken } from '../../MiddleWare/verifyToken';
+import { isTokenExpired, VerifyToken } from '../../MiddleWare/verifyToken';
 
 const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
  const [formData, setFormData] = useState({
@@ -42,10 +42,11 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
  const navigate = useNavigate();
  VerifyToken();
  useEffect(() => {
+   
  const fetchDefaultDetails = async () => {
  const token = localStorage.getItem('token');
  if (!token) {
- console.warn('No token found, redirecting to login.');
+ console.warn('No token found, redirecting to login.');  
  navigate('/');
  return;
  }
@@ -168,6 +169,10 @@ case 'city':
  console.error('No token found in localStorage');
  return;
  }
+ if(isTokenExpired(localStorage.getItem('token') ))
+    {
+        navigate('/');
+    }
 
  const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
  headers: { token }
@@ -187,7 +192,6 @@ case 'city':
 
  const handleSubmit = async (e) => {
  e.preventDefault();
- 
  const validationErrors = {};
  
  // Validate all required fields
@@ -201,6 +205,10 @@ case 'city':
  
  if (Object.keys(validationErrors).length === 0) {
  try {
+    if(isTokenExpired(localStorage.getItem('token') ))
+    {
+        navigate('/');
+    }
  const response = await axios.post(
  `${process.env.REACT_APP_URL}/api/address/createAddres`,
  {
@@ -283,7 +291,7 @@ case 'city':
  {fieldErrors.general && (
  <p className="text-red-500 text-sm mb-4 text-center">{fieldErrors.general}</p>
  )}
-
+  <VerifyToken/>
  <form onSubmit={handleSubmit} className="space-y-4">
  
  <div>

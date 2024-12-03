@@ -100,8 +100,6 @@ export const Login_google_auth= async(customer_name,customer_email, access_token
             customer_name,
             customer_email,
             access_token
-        },{
-            headers:{'token':localStorage.getItem('token')}
         }).catch((error) => {
             if (error.response) {
                 console.error('Backend responded with an error:', error.response.data);
@@ -112,7 +110,8 @@ export const Login_google_auth= async(customer_name,customer_email, access_token
             }
         });;
 
-        console.log(response.data)
+        console.log("Login_google_auth",response.data);
+        localStorage.setItem('token',response.data.token);
         if (response.data.success) {
             dispatch(Success(response.data.token));
             console.log("google ouath login successful")
@@ -172,3 +171,6 @@ export const add_address = async  ( address , dispatch ) =>{
         dispatch(Failed(errorMessage));
     }
 }
+
+
+

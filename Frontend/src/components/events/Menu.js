@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { UserCircle, Trash, ChevronDown, ChevronUp, Plus, Minus, MapPin, ShoppingCart, X } from 'lucide-react';
-import { Navigate, useLocation, Link, useNavigate } from 'react-router-dom';
-import { addtocart, cartToOrder, removeFromCart } from './action';
+import {  useLocation, Link, useNavigate } from 'react-router-dom';
+import { cartToOrder } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
-import { VerifyToken } from '../../MiddleWare/verifyToken';
+import { isTokenExpired, VerifyToken } from '../../MiddleWare/verifyToken';
 
 
 const ToggleSwitch = ({ isOn, onToggle }) => (
+
     <div
     className={`w-8 h-4 flex items-center rounded-full p-1 cursor-pointer ${isOn ? `bg-red-500` : `bg-gray-300`}`}
     onClick={onToggle}
@@ -24,7 +25,8 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     const [isOpen, setIsOpen] = useState(false);
     const handleToggle = () => {
     setIsOpen(!isOpen);
-    };
+    };  
+    VerifyToken();
    
     return (
     <div className="mt-4 flex flex-col border-b-2 border-green-700">
@@ -74,7 +76,7 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
    // MenuCategory Component
    const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit, onCheck, mainToggleOn }) => {
     const [isOpen, setIsOpen] = useState(false);
-   
+    VerifyToken();
     return (
     <div className="mb-4 bg-white rounded-lg shadow ">
     <button
@@ -120,10 +122,14 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     const [cartDetails, setCartDetails] = useState([]);
     const navigate = useNavigate();
     console.log("huhuuu")
-   
+    VerifyToken();
+    const token = localStorage.getItem('token');
     console.log('hii');
     const fetchCart = async () => {
     try {
+        if(!token || isTokenExpired(token)){
+            navigate("/");
+        }
     const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart/getcart`, {
     headers: { token: `${localStorage.getItem('token')}` },
     });
@@ -244,7 +250,9 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     };
    
     useEffect(() => {
-   
+        if(!token || isTokenExpired(token)){
+            navigate("/");
+        }
    
     console.log('hic',cart)
     const delay = setTimeout(async () => {
@@ -286,24 +294,20 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     setCartId(result);
     }, 1000);
     return () => clearTimeout(delay);
-    }, [cartItems]);
+    }, [cartItems],[]);
    
-   // const clearLocalStorageExceptToken = () => {
-   // const token = localStorage.getItem('token');
-   // localStorage.clear();
-   // if (token) {
-   // localStorage.setItem('token', token);
-   // }
-   // };
-   
+    
     const handleSubmit = async () => {
     setLoading(true);
+    if(!token || isTokenExpired(token)){
+        navigate("/");
+    }
     try {
     console.log("in menu ",totalAmount,cartDetails,numberOfPlates,selectedDate,selectedTime,address)
     const respond = await cartToOrder(totalAmount,cartDetails,numberOfPlates,selectedDate,selectedTime,address);
    
     console.log("respond",respond.eventorder_generated_id)
-   
+    
     const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
     
     amount: totalAmount,
@@ -365,6 +369,10 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     }, 0).toFixed(2);
    
     // Update cart in backend
+    if(!token || isTokenExpired(token)){
+        navigate("/");
+        return;
+    }
     await axios.post(
     console.log("item added to the cart")
     `${process.env.REACT_APP_URL}/api/cart/add`,
@@ -564,10 +572,6 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
    };
    
    
-   
-   
-   
-   
    const Menu = () => {
     const [menuData, setMenuData] = useState([]);
     const [checkedItems, setCheckedItems] = useState({});
@@ -602,16 +606,6 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     setCurrentUser(decodedEmail);
     }
    
-    // if (location.state?.numberOfPlates) {
-    // const newNumberOfPlates = location.state.numberOfPlates;
-    // setNumberOfPlates(newNumberOfPlates);
-    // // localStorage.setItem('numberOfPlates', newNumberOfPlates.toString());
-    // } else {
-    // const storedNumberOfPlates = localStorage.getItem('numberOfPlates');
-    // if (storedNumberOfPlates) {
-    // setNumberOfPlates(parseInt(storedNumberOfPlates, 10));
-    // }
-    // }
     if (decodedEmail) {
     const paymentComplete = localStorage.getItem(`paymentComplete_${decodedEmail}`);
     if (paymentComplete === 'true') {
@@ -710,8 +704,12 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     
     const fetchProducts = async () => {
     try {
+        const token = localStorage.getItem('token');
+        if(!token || isTokenExpired(token)){
+            navigate("/");
+        }
     const response = await fetch(`${process.env.REACT_APP_URL}/api/products`,{
-        headers:{'token':localStorage.getItem('token')}
+        headers:{'token':token}
     });
     if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -789,39 +787,6 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     localStorage.setItem(`cartItems_${currentUser}`, JSON.stringify({ checkedItems, quantities }));
     }
     };
-    
-    // const removeItem = (productId) => {
-    // // Update checkedItems
-    // console.log('hi remove sdfghjklmnbvxcjhgdf;lnbvzxcvbmnsdglkjb')
-    // const newCheckedItems = { ...checkedItems };
-    // delete newCheckedItems[productId];
-    // setCheckedItems(newCheckedItems);
-    
-   
-    // const newQuantities = { ...quantities };
-    // delete newQuantities[productId];
-    // setQuantities(newQuantities);
-    // const updatedCartItems = cartItems.filter(
-    // (item) => item.productid !== productId
-    // );
-    // cartItems=updatedCartItems
-    // console.log('removecart',cartItems)
-    // };
-    
-   
-    // const updateCheckedItems = (productId, isChecked) => {
-    // setCheckedItems(prev => {
-    // const newCheckedItems = { ...prev };
-    // if (!isChecked) {
-    // delete newCheckedItems[productId];
-    // } else {
-    // newCheckedItems[productId] = true;
-    // }
-    // return newCheckedItems;
-    // });
-    // };
-   
-   
    
     const updateCheckedItems = (productId, isChecked) => {
     setCheckedItems(prev => {
@@ -877,15 +842,6 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     };
     console.log('menudata',menuData)
    
-    // const cartItems = menuData.flatMap(category =>
-    // category.items
-    // .filter(item => quantities[item['productid']] > 0)
-    // .map(item => ({
-    // ...item,
-    // quantity: quantities[item['productid']],
-    // unit: toggleState[item['productid']] || item['plate_units']
-    // }))
-    // );
     
     const cartItems = menuData.flatMap(category =>
     category.items

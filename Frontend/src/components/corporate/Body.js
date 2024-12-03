@@ -12,7 +12,6 @@ import AddressForm from '../Address/AddressForm';
 import HomePage from '../HomePage';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { isTokenExpired, VerifyToken} from '../../MiddleWare/verifyToken';
-import  {jwtDecode}  from 'jwt-decode';
 
 
 const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
@@ -57,10 +56,6 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
       navigate('/'); // Redirect to login if token is not found
       return;
     }
-    // if(!token && isTokenExpired(token)){
-    //   navigate('/'); // Redirect to login if token is not found
-    //   return;
-    // }
     
 
     try {
@@ -109,8 +104,11 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
     setShowMap(false);
   };
 
-
   const handleFlip = (index) => {
+    if(isTokenExpired(localStorage.getItem('token')))
+    {
+      navigate('/');
+    }
     const newFlipped = [...flipped];
     newFlipped[index] = !newFlipped[index];
     setFlipped(newFlipped);
