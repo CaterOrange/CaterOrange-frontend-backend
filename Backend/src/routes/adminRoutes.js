@@ -50,7 +50,7 @@ const typeDefs = gql`
   
   type CorporateOrder {
     corporateorder_generated_id: String!
-    customer_id: Int
+    customer_generated_id: String
     order_details: JSON!
     total_amount:Int
     paymentid:Int
@@ -73,9 +73,9 @@ const typeDefs = gql`
     amount: Int
     fee: Float
     igst: Float
-    cgst: Float
+    cgst: Float  
     sgst: Float
-    customer_id: Int
+    customer_generated_id: String
     paymentdate: String
   }
   type Category
@@ -90,7 +90,7 @@ const typeDefs = gql`
   type EventOrders
   {
     eventorder_generated_id:String,
-    customer_id:Int,
+    customer_generated_id:String,
     order_at: String,
     delivery_status:String,
     payment_id:Int,
@@ -98,7 +98,7 @@ const typeDefs = gql`
     event_order_details:JSON,
     payment_status:String,
     event_order_status:String,
-    total_amount:Int  
+    total_amount:Float 
   }
   type ItemList
   {
@@ -109,11 +109,10 @@ const typeDefs = gql`
     Plate_Units:String,
     priceperunit: Float,
     minunitsperplate: Int,
-    WtOrVol_Units:String,
-    Price_Per_WtOrVol_Units:Float,
-    Min_WtOrVol_Units_per_Plate:Int
-  }
-
+    wtorvol_units:String,
+    price_per_wtorvol_units:Float,
+    min_wtorvol_units_per_plate:Int  
+  }  
 
   type Query {
     getAllCustomers: [Customer!]!
@@ -146,7 +145,6 @@ const resolvers = {
     getAllPayments: async () => {
       try {
         const result = await client.query('SELECT * FROM payment');
-        console.log('Fetched payments:', result.rows); // Add this line for debugging
         return result.rows;
       } catch (err) {
         console.error('Error retrieving payments:', err); // Add this line for debugging
@@ -155,6 +153,7 @@ const resolvers = {
     },
     getAllCategory: async () => {
       const result = await client.query('SELECT * FROM corporate_category');
+      console.log("Coporate_Category:",result.rows);
       return result.rows;
     },
     getAllEvents: async () => {

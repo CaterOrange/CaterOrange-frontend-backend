@@ -46,7 +46,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
- origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com', 'https://studio.apollographql.com','http://localhost:3000'],
+ origin: ['https://admin.caterorange.com', 'https://dev.caterorange.com', 'https://studio.apollographql.com','http://localhost:3000','http://localhost:3001'],
  credentials: true
 }));
 
@@ -388,7 +388,7 @@ const initializeApp = async () => {
  process.exit(1);
  }
 };
-
+  
 // Error handling
 process.on('unhandledRejection', (err) => {
  logger.error('Unhandled Promise Rejection:', err);
