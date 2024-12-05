@@ -35,7 +35,7 @@ function createPaymentTableQuery() {
       TransactionDate DATE,
       SettlementDate DATE,
       BankReferenceNo VARCHAR(255),
-      Amount NUMERIC NOT NULL,
+      Amount FLOAT NOT NULL,
       Fee FLOAT,
       IGST FLOAT,
       CGST FLOAT,
@@ -87,7 +87,7 @@ function createCorporateOrdersTableQuery() {
     -- Create the corporate_orders table
     CREATE TABLE IF NOT EXISTS corporate_orders (
       corporateorder_id SERIAL PRIMARY KEY,
-      corporateorder_generated_id VARCHAR(255) UNIQUE,
+      corporateorder_generated_id VARCHAR(255) UNIQUE NOT NULL,
       customer_generated_id VARCHAR(100),
       order_details JSON,  
       total_amount FLOAT NOT NULL,
