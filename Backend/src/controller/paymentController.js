@@ -3,7 +3,13 @@ const paymentmodel = require('../models/paymentModels.js');
 const logger = require('../config/logger.js');
 const jwt = require('jsonwebtoken');
 const customer_model = require('../models/customerModels');
+const Redis = require('ioredis');
 
+const redis = new Redis({
+  host: 'localhost',  
+  port: 6379, 
+ connectTimeout: 20000
+});
 const payment = async (req, res) => {
   const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id, corporateorder_id } = req.body;
 
@@ -80,14 +86,11 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
 const deleteCorporateCart= async (customer_id) => {
   try {
     // Update corporate order details in the database
-    const result = await paymentmodel.deleteCart(customer_id);
-    
-    if (result.rowCount > 0) {
-      logger.info('deleted cart successfully');
+    const result = await redis.del(`cart:${customer_id}`);
+    if (result === 1) {
+      console.log(`Cart for user ${customer_id} deleted successfully.`);
     } else {
-      logger.warn('Corporate carts not found for customer ID:', customer_id);
-      // You can return an error response if needed, uncomment below line
-      // return res.status(404).json({ message: 'Corporate order not found' });
+      console.log(`Cart for user ${customer_id} does not exist or was not deleted.`);
     }
   } catch (error) {
     logger.error('Error updating corporate order:', error);
