@@ -1,7 +1,13 @@
 const client = require('../config/dbConfig.js');
 const paymentmodel = require('../models/eventpaymentnodel.js');
 const logger = require('../config/logger'); // Ensure you have the logger configured
+const Redis = require('ioredis');
 
+const redis = new Redis({
+  host: 'localhost',  
+  port: 6379, 
+ connectTimeout: 20000
+});
 const event_payment = async (req, res) => {
   const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id,corporateorder_id } = req.body;
   console.log("event order data:",corporateorder_id);
@@ -46,6 +52,7 @@ const event_payment = async (req, res) => {
     console.log("Payment id",generatedPaymentId)
     // Now update the corporate order with the generated payment_id
     await updateCorporateOrder(order_id, generatedPaymentId, payment_status);
+    await deleteEventCart(customer_id)
     console.log("After successful updation")
     res.status(200).json({ payment_id: generatedPaymentId });
   } catch (error) {
@@ -59,6 +66,7 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
     // Update corporate order details in the database
     console.log("Before REsult")
     const result = await paymentmodel.updateeventOrder(order_id, paymentid, payment_status);
+
     logger.info('Result in payment update:', result);
     console.log("result",result)
     if (result.rowCount > 0) {
@@ -74,7 +82,19 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
     // return res.status(500).json({ message: 'Error updating corporate order' });
   }
 };
-
-module.exports = { event_payment, updateCorporateOrder };
-
-
+const deleteEventCart= async (customer_id) => {
+  try {
+    // Update corporate order details in the database
+    const result = await redis.del(`E${customer_id}`);
+    if (result === 1) {
+      console.log(`Cart for user ${customer_id} deleted successfully.`);
+    } else {
+      console.log(`Cart for user ${customer_id} does not exist or was not deleted.`);
+    }
+  } catch (error) {
+    logger.error('Error updating corporate order:', error);
+    // You can return an error response if needed, uncomment below line
+    // return res.status(500).json({ message: 'Error updating corporate order' });
+  }
+};
+module.exports = { event_payment, updateCorporateOrder,deleteEventCart };
