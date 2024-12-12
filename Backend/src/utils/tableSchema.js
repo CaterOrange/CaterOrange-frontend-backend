@@ -322,7 +322,9 @@ function createEventProductsTableQuery() {
       WtOrVol_Units VARCHAR(255),
       Price_Per_WtOrVol_Units NUMERIC,
       Min_WtOrVol_Units_per_Plate INTEGER,
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      isDeactivated BOOLEAN,   
+      description TEXT
     );
   `;  
   }
