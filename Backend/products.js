@@ -17,8 +17,8 @@ async function fetchAndInsertCSVData() {
             if (record.ProductName) {  // Only insert records with ProductName
                 await client.query(
                     `INSERT INTO event_products 
-                    (productId, ProductName, Image, category_name, price_category, isDual, Plate_Units, PriceperUnit, MinUnitsperPlate, WtOrVol_Units, Price_Per_WtOrVol_Units,  Min_WtOrVol_Units_per_Plate)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                    (productId, ProductName, Image, category_name, price_category, isDual, Plate_Units, PriceperUnit, MinUnitsperPlate, WtOrVol_Units, Price_Per_WtOrVol_Units,  Min_WtOrVol_Units_per_Plate,isDeactivated,description)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,$14)
                     ON CONFLICT (productId) DO UPDATE 
                     SET ProductName = EXCLUDED.ProductName,
                         Image = EXCLUDED.Image,
@@ -30,7 +30,9 @@ async function fetchAndInsertCSVData() {
                         MinUnitsperPlate = EXCLUDED.MinUnitsperPlate,
                         WtOrVol_Units = EXCLUDED.WtOrVol_Units,
                         Price_Per_WtOrVol_Units = EXCLUDED.Price_Per_WtOrVol_Units,
-                        Min_WtOrVol_Units_per_Plate = EXCLUDED.Min_WtOrVol_Units_per_Plate`,
+                        Min_WtOrVol_Units_per_Plate = EXCLUDED.Min_WtOrVol_Units_per_Plate,
+                        isDeactivated=EXCLUDED.isDeactivated,
+                        description=EXCLUDED.description`,
                     [
                         record.productId,
                         record.ProductName,
@@ -43,7 +45,9 @@ async function fetchAndInsertCSVData() {
                         parseInt(record.MinUnitsperPlate, 10) || null,
                         record.WtOrVol_Units,
                         parseFloat(record.Price_Per_WtOrVol_Units) || null,
-                        parseInt(record.Min_WtOrVol_Units_per_Plate, 10) || null
+                        parseInt(record.Min_WtOrVol_Units_per_Plate, 10) || null,
+                        record.isDeactivated,
+                        record.description || 'hiii'
                     ]
                 );
             }
@@ -55,33 +59,33 @@ async function fetchAndInsertCSVData() {
     }
 }
 
-// Helper function to parse CSV data
+
 function parseCSV(data) {
     const rows = data.split('\n').slice(1); // Skip header row
-
+    
     return rows.map(row => {
-
         const [
             productId, ProductName, Image, category_name,
             price_category, isDual, Plate_Units, PriceperUnit, MinUnitsperPlate,
-            WtOrVol_Units,Price_Per_WtOrVol_Units,Min_WtOrVol_Units_per_Plate
+            WtOrVol_Units, Price_Per_WtOrVol_Units, Min_WtOrVol_Units_per_Plate, isDeactivated, Description,
         ] = row.split(',');
 
         return {
-            productId: productId.trim() || null,  
-            ProductName: ProductName.trim() || null,
-            Image: Image.trim() || null,
-            category_name: category_name.trim() || null,
-            price_category: price_category.trim() || null,
-            isDual: isDual.trim() === 'TRUE',  // Convert 'TRUE'/'FALSE' to boolean
-            Plate_Units: Plate_Units.trim() || null,
-            PriceperUnit: parseFloat(PriceperUnit.trim()) || null,  // Handle empty or non-numeric values as null
-            MinUnitsperPlate: parseInt(MinUnitsperPlate.trim(), 10) || null,  // Handle NaN as null
+            productId: productId ? productId.trim() : null,  
+            ProductName: ProductName ? ProductName.trim() : null,
+            Image: Image ? Image.trim() : null,
+            category_name: category_name ? category_name.trim() : null,
+            price_category: price_category ? price_category.trim() : null,
+            isDual: isDual ? isDual.trim() === 'TRUE' : false,  // Default to false if missing
+            Plate_Units: Plate_Units ? Plate_Units.trim() : null,
+            PriceperUnit: PriceperUnit ? parseFloat(PriceperUnit.trim()) || null : null,
+            MinUnitsperPlate: MinUnitsperPlate ? parseInt(MinUnitsperPlate.trim(), 10) || null : null,
             WtOrVol_Units: WtOrVol_Units ? WtOrVol_Units.trim() : null,
-            Price_Per_WtOrVol_Units: Price_Per_WtOrVol_Units? parseFloat(Price_Per_WtOrVol_Units.trim()) || null : null,
-            Min_WtOrVol_Units_per_Plate: Min_WtOrVol_Units_per_Plate ? parseInt(Min_WtOrVol_Units_per_Plate.trim(), 10) || null : null
+            Price_Per_WtOrVol_Units: Price_Per_WtOrVol_Units ? parseFloat(Price_Per_WtOrVol_Units.trim()) || null : null,
+            Min_WtOrVol_Units_per_Plate: Min_WtOrVol_Units_per_Plate ? parseInt(Min_WtOrVol_Units_per_Plate.trim(), 10) || null : null,
+            isDeactivated: isDeactivated ? isDeactivated.trim() === 'TRUE' : false,
+            description: Description ? Description.trim() : null,
         };
-
     });
 }
 
