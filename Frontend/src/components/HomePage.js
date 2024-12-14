@@ -76,13 +76,15 @@ const HomePage = () => {
   };
 
   const handleSubmit = (event) => {
-
+    event.preventDefault();
     if(isTokenExpired(token)){
       navigate('/');
+      return;
      }
     event.preventDefault();
     const form = event.target;
     const plates = form.elements['plates'].value;
+    localStorage.setItem('plates',plates);
     console.log("selectedtime:",selectedTime);
     if (!form.checkValidity()) {
       form.reportValidity();
@@ -97,6 +99,9 @@ const HomePage = () => {
     const selectedAddr = address.find(addr => addr.address_id === address_id);
     setSelectedAddressId(address_id);
     setSelectedAddress(selectedAddr);
+    if (selectedAddr) {
+      localStorage.setItem('addedaddress', JSON.stringify(selectedAddr));
+    }
   };
 
   return (
