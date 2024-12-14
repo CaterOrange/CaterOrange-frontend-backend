@@ -449,9 +449,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
         return () => clearTimeout(delay);
     }, [cartItems,localToggleState]);
 
-    const handleButton = async () =>{
-        console.log("hello",cartDetails);
-    }
+
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -689,10 +687,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
 
                 {cartDetails.length > 0 && (
                     <div className="p-4 bg-white border-t">
-                        <button
-                            onClick={handleButton}>
-                            hi
-                        </button>
                         <div className="text-xl font-bold text-gray-800 mb-2">
                             Total Amount: ₹{totalAmount}
                         </div>
