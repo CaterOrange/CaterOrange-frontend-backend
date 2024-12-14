@@ -255,6 +255,9 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
         );
 
         clearForm();
+        console.log("helloo",response.data.customer)
+        const addressData = response.data.customer;
+        localStorage.setItem('addedaddress', JSON.stringify(addressData));
         if (saveAddress) {
           saveAddress(response.data.address);
         }
