@@ -106,13 +106,13 @@ const HomePage = () => {
 
   return (
     <div
-      className="bg-green-600 min-h-screen p-4"
+      className="bg-teal-100 min-h-screen p-4"
       style={{ fontFamily: process.env.REACT_APP_FONT }} 
     >
       <div className="bg-white rounded-lg shadow-lg p-6">
       <h2
               className="text-lg font-semibold mb-6 text-center"  
-              style={{ color: '#006600', fontFamily: process.env.REACT_APP_FONT }}
+              style={{ color: '#2C6E63', fontFamily: process.env.REACT_APP_FONT }}
             >
               Know Order Availability To Your Location
             </h2>
@@ -124,7 +124,7 @@ const HomePage = () => {
                 <button
                   type="button"
                   onClick={handleAddAddress}
-                  className="hover:bg-blue-100 text-blue-500 font-bold py-2 px-4 rounded mb-2"
+                  className="hover:bg-teal-100 text-teal-800 font-bold py-2 px-4 rounded mb-2"
                 >
                   + Add Address
                 </button>
@@ -191,7 +191,7 @@ const HomePage = () => {
                 type="number"
                 name="plates"
                 placeholder="e.g., 300"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-700 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
                 required
                 min="1"
               />
@@ -202,7 +202,7 @@ const HomePage = () => {
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
                 dateFormat="dd/MM/yyyy"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
                 placeholderText="Select a date"
                 required
                 minDate={new Date()} 
@@ -221,7 +221,7 @@ const HomePage = () => {
                 placeholder="Enter here..."
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-lg placeholder-gray-200 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
                 required
                 min="1"
               />
@@ -231,7 +231,7 @@ const HomePage = () => {
           <div className="mt-6 flex justify-center">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-8 py-2 rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              className="bg-teal-800 text-white px-8 py-2 rounded-md shadow-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-opacity-50"
               style={{ backgroundColor: process.env.REACT_APP_COLORCODE }} // Use color from .env
             >
               Submit

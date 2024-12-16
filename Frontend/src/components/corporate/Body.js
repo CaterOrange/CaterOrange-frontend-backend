@@ -211,7 +211,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
                  )}
                </div>
                <button
-                 className="ml-auto text-white bg-green-700 w-24 h-10 text-sm"
+                 className="ml-auto text-white bg-teal-800 w-24 h-10 text-sm"
                  onClick={() => setShowMap(true)}
                >
                  {displayAddress ? 'Change' : 'Add Address'}
@@ -223,7 +223,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
                   <ReactCardFlip key={index} isFlipped={flipped[index]} flipDirection="horizontal">
 <div className="relative w-full h-full sm:h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between mt-4 mx-2">
                       {quantityNotifications[index] && (
-                        <div className="absolute top-0 left-0 right-0 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-t-lg text-center text-sm">
+                        <div className="absolute top-0 left-0 right-0 bg-teal-100 border border-teal-200 text-teal-800 px-4 py-3 rounded-t-lg text-center text-sm">
                           Click the flip icon to select dates
                         </div>
                       )}
@@ -250,7 +250,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
                         <div className="mt-4 w-full sm:w-auto ml-5">
                           <p className="text-sm sm:text-base text-gray-600 mt-2">{food.category_description}</p>
                           <p className="mt-2">
-                            Price Per Plate: <span className="text-green-500">{food.category_price}/-</span>
+                            Price Per Plate: <span className="text-teal-800">{food.category_price}/-</span>
                           </p>
                           <div className="mt-2 flex items-center">
                             Quantity:
@@ -263,7 +263,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
                                 const parsedValue = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
                                 handleQuantityChange(index, parsedValue >= 0 ? parsedValue : 0);
                               }}
-                              className="mx-4 text-lg bg-red-200 h-7 w-10 text-center rounded-lg"
+                              className="mx-4 text-lg bg-teal-100 h-7 w-10 text-center rounded-lg"
                               min="0"
                             />
                             <button className="text-red-500 text-3xl ml-1" onClick={() => incrementQuantity(index)}>+</button>
@@ -314,13 +314,13 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-md flex justify-around p-2 z-40">
         <button 
           onClick={() => setActiveTab('corporate')} 
-          className={`flex-1 text-center py-2 px-4 font-semibold rounded-full border-2 ${activeTab === 'corporate' ? 'bg-green-500 text-white' : 'bg-green-100 text-green-500'}`}
+          className={`flex-1 text-center py-2 px-4 font-semibold rounded-full border-2 ${activeTab === 'corporate' ? 'bg-teal-800 text-white' : 'bg-teal-100 text-green-500'}`}
         >
           <FaCalendarAlt className="inline mr-1" /> Corporate
         </button>
         <button 
           onClick={() => setActiveTab('events')} 
-          className={`flex-1 text-center py-2 px-4 font-semibold rounded-full border-2 ${activeTab === 'events' ? 'bg-green-500 text-white' : 'bg-green-100 text-green-500'}`}
+          className={`flex-1 text-center py-2 px-4 font-semibold rounded-full border-2 ${activeTab === 'events' ? 'bg-teal-800 text-white' : 'bg-teal-100 text-green-500'}`}
         >
           <FaUtensils className="inline mr-1" /> Events
         </button>

@@ -87,7 +87,7 @@ const Header = ({ user }) => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full bg-green-600 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
+      <header className="fixed top-0 left-0 w-full bg-teal-800 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
         <div className="flex items-center">
           <UserCircleIcon className="h-9 w-9 cursor-pointer" onClick={toggleSidenav} />
         </div>
@@ -118,7 +118,7 @@ const Header = ({ user }) => {
           isSidenavOpen ? 'translate-x-0' : '-translate-x-full'
         } z-50 overflow-y-auto`}
       >
-        <div className="p-4 bg-green-500 text-white">
+        <div className="p-4 bg-teal-800 text-white">
           <div className="flex justify-end p-4">
             <button className="text-black" onClick={toggleSidenav}>
               ✕
@@ -185,7 +185,7 @@ const Header = ({ user }) => {
             <h2 className="text-lg font-bold mb-4">Do you really want to Logout?</h2>
             <div className="flex justify-center space-x-4">
               <button
-                className="bg-green-500 text-white py-2 px-4 rounded"
+                className="bg-teal-800 text-white py-2 px-4 rounded"
                 onClick={() => handleConfirmLogout(true)}
               >
                 Yes

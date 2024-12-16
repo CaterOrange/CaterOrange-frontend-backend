@@ -69,10 +69,10 @@ const ESuccessPage = () => {
       {/* Green Oval Background */}
       <div
         className={`w-full h-full flex flex-col items-center justify-center transition-all duration-1000 ease-in-out
-          ${animationState === 'animated' ? 'rounded-full w-45 h-70 -translate-y-24 bg-green-300' : 'bg-green-500'}`}
+          ${animationState === 'animated' ? 'rounded-full w-45 h-70 -translate-y-24 bg-teal-800' : 'bg-teal-600'}`}
       >
         {/* Light yellow circle surrounding the small white square */}
-        <div className="flex items-center justify-center bg-yellow-200 bg-opacity-50 rounded-full w-24 h-24">
+        <div className="flex items-center justify-center bg-teal-100 bg-opacity-50 rounded-full w-24 h-24">
           {/* Small white square with green check icon inside */}
           <div className="flex items-center justify-center bg-white w-13 h-13 rounded-md">
             <Check className="text-green-500 w-8 h-8" />
@@ -82,7 +82,7 @@ const ESuccessPage = () => {
         {/* Order Successful Text */}
         <p className="text-white text-lg mt-2">Order Successful</p>
         <p className="text-white text-sm">11 September 2024 at 12:22pm</p>
-        <p className="text-red-400 text-sm">Order Id: {orderid}</p>
+        <p className="text-white text-sm">Order Id: {orderid}</p>
       </div>
 
       {/* Booking Status Section */}

@@ -289,7 +289,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
   return (
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       {successMessage && (
-        <p className={`text-center ${successMessage.includes('success') ? 'text-green-500' : 'text-red-500'}`}>
+        <p className={`text-center ${successMessage.includes('success') ? 'text-teal-800' : 'text-red-500'}`}>
           {successMessage}
         </p>
       )}
@@ -301,7 +301,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
             value={tag}
             onChange={handleTagChange}
             placeholder="E.g., Home, Office"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
             required
           />
           {errors.tag && <p className="text-red-500 text-xs">{errors.tag}</p>}
@@ -314,7 +314,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
             value={pincode}
             onChange={handlePincodeChange}
             placeholder="Enter pincode"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
             required
           />
           {errors.pincode && <p className="text-red-500 text-xs">{errors.pincode}</p>}
@@ -327,7 +327,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
             value={city}
             onChange={handleCityChange}
             placeholder="Enter city"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
             required
           />
           {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
@@ -340,7 +340,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
             value={state}
             onChange={handleStateChange}
             placeholder="Enter state"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
             required
           />
           {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
@@ -353,7 +353,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
             value={flatNumber}
             onChange={handleFlatNumberChange}
             placeholder="Enter flat number"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
           />
           {errors.flatNumber && <p className="text-red-500 text-xs">{errors.flatNumber}</p>}
         </div>
@@ -365,7 +365,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
             value={landmark}
             onChange={handleLandmarkChange}
             placeholder="Enter landmark"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
           />
           {errors.landmark && <p className="text-red-500 text-xs">{errors.landmark}</p>}
         </div>
@@ -385,7 +385,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
                 });
               }
             }}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
             required
           >
             <option value="">Select an option</option>
@@ -416,7 +416,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
                 value={shipToPhoneNumber}
                 onChange={handleShipToPhoneNumberChange}
                 placeholder="Enter phone number"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
               />
               {errors.shipToPhoneNumber && <p className="text-red-500 text-xs">{errors.shipToPhoneNumber}</p>}
             </div>
@@ -444,7 +444,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
                 name="customer_phonenumber"
                 value={editableDefaultDetails.customer_phonenumber}
                 onChange={handleDefaultDetailsChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
               />
               {errors.customerPhoneNumber && <p className="text-red-500 text-xs">{errors.customerPhoneNumber}</p>}
             </div>
@@ -454,7 +454,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
         <button
           onClick={handleSubmit}
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          className="w-full bg-teal-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-800 focus:ring-opacity-50"
         >
           {existingAddress ? 'Update Address' : 'Save Address'}
         </button>

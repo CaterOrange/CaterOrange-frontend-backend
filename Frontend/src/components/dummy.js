@@ -299,7 +299,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
         <button
           type="button"
           onClick={handleViewAddresses}
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="w-full bg-teal-800 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded"
         >
           View Saved Addresses
         </button>
@@ -401,7 +401,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
 
         {errors.selectedOption && <p className="text-red-500 text-xs mt-1">{errors.selectedOption}</p>}
 
-        <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button type="submit" className="w-full bg-teal-800 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded">
           Submit
         </button>
       </form>

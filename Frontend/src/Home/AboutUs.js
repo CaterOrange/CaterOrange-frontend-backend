@@ -43,7 +43,7 @@ export const AboutUs = () => {
         {/* Home Button */}
         <div className="flex justify-center mt-8">
           <button
-            className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-500 transition duration-300"
+            className="bg-teal-800 text-white px-6 py-3 rounded-md hover:bg-teal-600 transition duration-300"
             onClick={goToHomePage}
           >
             Go to Home

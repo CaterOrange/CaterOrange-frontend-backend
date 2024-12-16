@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/chandana/Music/CaterOrange-main/Backend/src/config/logs/.fdd761f6017f8adaeb8b36361432534f88f0846f-audit.json",
+    "files": [
+        {
+            "date": 1734331951207,
+            "name": "/home/chandana/Music/CaterOrange-main/Backend/src/config/logs/error-2024-12-16.log",
+            "hash": "9e3efa440cb69ad5668ce42c0351887b2ebb0f9fa12ad70eb9f238f03bda19fc"
+        }
+    ],
+    "hashType": "sha256"
+}

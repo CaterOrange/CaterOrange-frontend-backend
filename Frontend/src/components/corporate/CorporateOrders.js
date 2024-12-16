@@ -149,7 +149,7 @@ useEffect(() => {
           onClick={() => toggleOrderDetails(order.corporateorder_generated_id)}
         >
           <div className="w-full">
-            <p className="text-lg sm:text-xl font-bold text-blue-700">Order ID: {order.corporateorder_generated_id}</p>
+            <p className="text-lg sm:text-xl font-bold text-teal-800">Order ID: {order.corporateorder_generated_id}</p>
             <p className="text-xs sm:text-sm text-gray-600 mt-1">
               Date: {new Date(order.ordered_at).toLocaleDateString('en-GB', {
                 year: 'numeric',
@@ -215,7 +215,7 @@ useEffect(() => {
       {/* Main content - full width on mobile, 70% on desktop */}
       <div className="w-full lg:w-[70%] relative">
         {/* Header */}
-        <header className="fixed top-0 w-full lg:w-[70%] lg:left-[15%] bg-green-500 h-16 flex items-center pl-4 z-50">
+        <header className="fixed top-0 w-full lg:w-[70%] lg:left-[15%] bg-teal-800 h-16 flex items-center pl-4 z-50">
           <HomeIcon 
             className="h-6 w-6 sm:h-8 sm:w-8 text-white mr-2 cursor-pointer" 
             onClick={handleViewHome}
@@ -230,7 +230,7 @@ useEffect(() => {
           <div className="flex justify-center gap-4 sm:gap-6 py-4">
             <button
               className={`py-2 px-4 sm:py-3 sm:px-8 w-full max-w-[200px] rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
-                showCorporate ? 'bg-yellow-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+                showCorporate ? 'bg-teal-800 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
               }`}
               onClick={() => setShowCorporate(true)}
             >
@@ -239,7 +239,7 @@ useEffect(() => {
             </button>
             <button
               className={`py-2 px-4 sm:py-3 sm:px-8 w-full max-w-[200px] rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
-                !showCorporate ? 'bg-green-500 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
+                !showCorporate ? 'bg-teal-800 text-white shadow-lg hover:scale-105' : 'bg-gray-300 text-gray-700 hover:scale-105'
               }`}
               onClick={() => setShowCorporate(false)}
             >

@@ -283,7 +283,7 @@ case 'city':
  <h2 className="text-xl font-bold mb-4">Address Form</h2>
 
  {successMessage && (
- <p className={`text-center ${successMessage.includes('success') ? 'text-green-500' : 'text-red-500'} mb-4`}>
+ <p className={`text-center ${successMessage.includes('success') ? 'text-teal-800' : 'text-red-500'} mb-4`}>
  {successMessage}
  </p>
  )}
@@ -395,7 +395,7 @@ case 'city':
  <button
  type="button"
  onClick={handleViewAddresses}
- className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+ className="w-full bg-teal-800 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded"
  >
  View Saved Addresses
  </button>
@@ -497,7 +497,7 @@ case 'city':
  )}
  </div>
 
- <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+ <button type="submit" className="w-full bg-teal-800 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded">
  Submit
  </button>
  </form>

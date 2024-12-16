@@ -26,34 +26,76 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
     };
     fetchOrders();
   }, []);
-  
   const formattedOrders = OrdersData.map((order) => {
-    const formattedItems = order.event_order_details.map((item) => ({
-      name: item.productname,
-      // plates: item.number_of_plates,
-      pricePerUnit: item.priceperunit,
-      pricePerKg: item.isdual ? item.priceperunit : undefined,
-      quantity: item.quantity,
-      amount: item.quantity * item.priceperunit,
-      delivery_status: item.delivery_status
-      
-    }));
+    const formattedItems = order.event_order_details.map((item) => {
 
-   
+      console.log("hii n frmatordes")
+      let itemAmount;
+      console.log("this is mine", item.selected_unit_type)
+      if (item.selected_unit_type === 'plate_units') {
+        itemAmount = item.quantity * item.priceperunit * order.number_of_plates;
+        console.log("i am bowl", itemAmount);
+      } else if (item.selected_unit_type === 'wtorvol_units') { // wtorvol_units
+        itemAmount = (((item.priceperunit / item.min_wtorvol_units_per_plate) * 1000) * item.quantity);
+        console.log("i am grams", itemAmount);
+      }
+      else {
+        itemAmount = item.quantity * item.priceperunit * order.number_of_plates;
+      }
+
+      return {
+        name: item.productname,
+        pricePerUnit: item.priceperunit,
+        pricePerKg: item.isdual ? item.priceperunit : undefined,
+        quantity: item.quantity,
+        amount: itemAmount,
+        delivery_status: item.delivery_status
+      };
+    });
+
+    
+
+
     const date = new Date(order.processing_date);
-
-  const formattedDate = date.toLocaleDateString('en-GB');
+    const formattedDate = date.toLocaleDateString('en-GB');
     return {
       id: order.eventorder_generated_id,
       date: formattedDate,
-      plates:order.number_of_plates,
+      plates: order.number_of_plates,
       amount: order.total_amount,
       items: formattedItems,
       status: order.delivery_status,
     };
-
   });
-  console.log("Formatted Orders",OrdersData)
+  console.log("Formatted Orders", OrdersData)
+  
+  // const formattedOrders = OrdersData.map((order) => {
+  //   const formattedItems = order.event_order_details.map((item) => ({
+  //     name: item.productname,
+  //     // plates: item.number_of_plates,
+  //     pricePerUnit: item.priceperunit,
+  //     pricePerKg: item.isdual ? item.priceperunit : undefined,
+  //     quantity: item.quantity,
+  //     amount: item.quantity * item.priceperunit,
+  //     delivery_status: item.delivery_status
+      
+  //   }));
+
+   
+  //   const date = new Date(order.processing_date);
+
+  // const formattedDate = date.toLocaleDateString('en-GB');
+  //   return {
+  //     id: order.eventorder_generated_id,
+  //     date: formattedDate,
+  //     plates:order.number_of_plates,
+  //     amount: order.total_amount,
+  //     items: formattedItems,
+  //     status: order.delivery_status,
+  //   };
+
+  // });
+  // console.log("Formatted Orders",OrdersData)
 
   const handleOrderClick = (order) => {
     if (openOrderId === order.id) {
@@ -107,16 +149,17 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
   return (
     <div>
       {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
-      {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{success}</div>}
+      {success && <div className="bg-teal-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{success}</div>}
       <div className='p-4'>
         {formattedOrders.length > 0 && formattedOrders.map((order) => (
-          <div key={order.id} className=" rounded-lg border border-green-500 shadow-md overflow-hidden mb-4">
+          <div key={order.id} className=" rounded-lg border border-teal-800 shadow-md overflow-hidden mb-4">
             <div className="p-4 cursor-pointer" onClick={() => handleOrderClick(order)}>
               <div className="flex flex-col sm:flex-row justify-between items-center mb-2 p-4 border border-gray-400 rounded-lg shadow-sm">
                   <div className="mb-2 sm:mb-0">
-                    <p className="font-semibold text-lg">Order ID: {order.id}</p>
+                    <p className="font-semibold text-lg text-teal-800">Order ID: {order.id}</p>
                     <p className="text-sm text-gray-600">Date of Order: {order.date}</p>
-                    <p className="font-semibold text-xl">Amount: ₹{order.amount}</p>
+                    <p className="text-sm text-gray-600">No of plates: {order.plates}</p>
+                    <p className="font-semibold text-lg text-teal-800">Amount: ₹{order.amount}</p>
                   </div>
                 </div>
 
@@ -129,13 +172,11 @@ const OrderDashboard = ({selectedDate,numberOfPlates}) => {
                 <h2 className="text-xl font-bold mb-4">Order Details</h2>
                 <ul className="space-y-4">
                   {order.items.map((item, index) => (
-                    <li key={index} className="flex items-center bg-green-50 space-x-4">
-                      <img src="/api/placeholder/80/80" alt={item.name} className="w-20 h-20 rounded-full object-cover" />
+                    <li key={index} className="flex items-center bg-teal-50 space-x-4">
+                      {/* <img src="/api/placeholder/80/80" alt={item.name} className="w-20 h-20 rounded-full object-cover" /> */}
                       <div className="flex-grow">
                         <p className="font-semibold">{item.name}</p>
-                        <p className="text-sm text-gray-600">No of plates: {order.plates}</p>
-                        <p className="text-sm text-gray-600">Price per {item.pricePerUnit ? 'unit' : 'kg'}: ₹{item.pricePerUnit || item.pricePerKg}</p>
-                        <p className="text-sm text-gray-600">Quantity: {item.quantity} {item.pricePerUnit ? 'units' : 'kgs'}</p>
+                        <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                         <p className="text-sm font-semibold">Amount: ₹{item.amount}</p>
                       </div>
                     </li>

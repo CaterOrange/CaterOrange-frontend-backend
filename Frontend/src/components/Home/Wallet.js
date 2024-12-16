@@ -68,7 +68,7 @@ export const Wallet = () => {
 
         {/* Home Button */}
         <button
-          className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-500 transition duration-300"
+          className="w-full bg-teal-800 text-white py-3 rounded-md hover:bg-teal-600 transition duration-300"
           onClick={goToHomePage}
         >
           Go to Home

@@ -115,7 +115,7 @@ const MapAddressSelector = ({ onAddressSelect }) => {
         />
         <button
           onClick={handleSearch}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+          className="mt-2 px-4 py-2 bg-teal-600 text-white rounded"
         >
           Search
         </button>
@@ -161,7 +161,7 @@ const MapAddressSelector = ({ onAddressSelect }) => {
       )}
         <button
         onClick={handleSaveClick}
-        className="mt-2 bg-green-500 text-white p-2 rounded"
+        className="mt-2 bg-teal-800 text-white p-2 rounded"
       >
         Save
       </button>

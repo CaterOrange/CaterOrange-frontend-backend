@@ -8,7 +8,7 @@ import { VerifyToken } from '../MiddleWare/verifyToken';
 // ToggleSwitch Component
 const ToggleSwitch = ({ isOn, onToggle }) => (
   <div
-    className={`w-8 h-4 flex items-center rounded-full p-1 cursor-pointer ${isOn ? 'bg-green-500' : 'bg-gray-300'}`}
+    className={`w-8 h-4 flex items-center rounded-full p-1 cursor-pointer ${isOn ? 'bg-teal-800' : 'bg-gray-300'}`}
     onClick={onToggle}
   >
     <div
@@ -35,6 +35,7 @@ const MenuItem = ({ item, checked, unit, onToggleUnit, onCheck, mainToggleOn }) 
           />
         </div>
       </div>
+
       <div className={`flex items-center ${mainToggleOn ? 'justify-end' : 'justify-start'}`}>
         {/* Display the corresponding unit text above the toggle */}
         <div className="text-sm text-gray-600 mr-2">
@@ -94,24 +95,24 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
 
   // Handle input value change
   const handleInputChange = (itemId, value) => {
-    const newQuantity = value === '' ? '' : Number(value); 
-    onUpdateQuantity(itemId, newQuantity); 
+    const newQuantity = value === '' ? '' : Number(value);
+    onUpdateQuantity(itemId, newQuantity);
   };
 
   // Reset to minimum if the input is invalid or empty on blur
   const handleBlur = (itemId, quantity, minUnitsPerPlate) => {
     const newQuantity = quantity < minUnitsPerPlate ? minUnitsPerPlate : quantity;
-    onUpdateQuantity(itemId, newQuantity); 
+    onUpdateQuantity(itemId, newQuantity);
   };
 
   // Calculate the total item cost
   function calculateTotalItemCost(item, numberOfPlates, selectedUnit, enteredValue) {
     let totalItemCost = 0;
-    
+
     if (selectedUnit === item['unit_1']) {
       const pricePerUnit = item['price_per_unit1'];
       totalItemCost = numberOfPlates * pricePerUnit * item.quantity;
-    } 
+    }
     if (item['price_category'] === 'kg' || item['price_category'] === 'lt') {
       totalItemCost = enteredValue * item['price_per_unit_1'];
     } else if (selectedUnit === item['unit__2']) {
@@ -120,14 +121,14 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
     } else if (selectedUnit === item['unit_1']) {
       const pricePerUnit = item['price_per_unit1'];
       totalItemCost = numberOfPlates * pricePerUnit * item.quantity;
-    } 
+    }
 
     return totalItemCost.toFixed(2);
   }
 
   // Calculate total amount
   const totalAmount = cartItems.reduce((sum, item) => {
-    const selectedUnit = item.unit; 
+    const selectedUnit = item.unit;
     const totalItemCost = calculateTotalItemCost(item, numberOfPlates, selectedUnit, item.quantity);
     return sum + parseFloat(totalItemCost);
   }, 0).toFixed(2);
@@ -141,10 +142,10 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
         amount: totalAmount
-      },{
-         headers:{'token':localStorage.getItem('token')}
+      }, {
+        headers: { 'token': localStorage.getItem('token') }
       });
-      
+
       if (response.data && response.data.redirectUrl) {
         setRedirectUrl(response.data.redirectUrl);
         window.location.href = response.data.redirectUrl;
@@ -176,11 +177,11 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
           ) : (
             cartItems.map(item => {
               const minUnitsPerPlate = item['min_unit2_per_plate'] || 1;
-              const displayPricePerUnit = item.unit === item['unit_1'] 
-               ? item['price_per_unit1'] 
-               : (item.unit === item['unit_2'] 
-               ? item['price_per_unit2'] / item['min_unit2_per_plate'] 
-               : item['price_per_unit2']);
+              const displayPricePerUnit = item.unit === item['unit_1']
+                ? item['price_per_unit1']
+                : (item.unit === item['unit_2']
+                  ? item['price_per_unit2'] / item['min_unit2_per_plate']
+                  : item['price_per_unit2']);
               const totalItemCost = calculateTotalItemCost(item, numberOfPlates, item.unit, item.quantity);
               const isPcs = item['unit_1'] === 'pcs';
               const isKgOrLt = item['price_category'] === 'kg' || item['price_category'] === 'lt';
@@ -215,7 +216,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
                     <div className="text-gray-600 text-sm">Total Cost: ${totalItemCost}</div>
                     <button
                       onClick={() => onToggleUnit(item['product_id'])}
-                      className={`ml-4 px-4 py-2 rounded text-white ${item.unit === item['unit_1'] ? 'bg-green-500' : 'bg-gray-500'}`}
+                      className={`ml-4 px-4 py-2 rounded text-white ${item.unit === item['unit_1'] ? 'bg-teal-800' : 'bg-gray-500'}`}
                     >
                       {item.unit === item['unit_1'] ? 'Toggle to ' + item['unit_2'] : 'Toggle to ' + item['unit_1']}
                     </button>
@@ -235,7 +236,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, onUpdateQuant
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className={`w-full py-2 px-4 rounded text-white ${loading ? 'bg-gray-400' : 'bg-green-500 hover:bg-green-600'}`}
+            className={`w-full py-2 px-4 rounded text-white ${loading ? 'bg-gray-400' : 'bg-teal-600 hover:bg-teal-800'}`}
           >
             {loading ? 'Processing...' : 'Proceed to Checkout'}
           </button>
@@ -302,11 +303,11 @@ const Menu = () => {
     <div className="relative">
       <button
         onClick={() => setIsSidebarOpen(true)}
-        className="fixed bottom-4 right-4 bg-green-500 text-white p-2 rounded-full shadow-lg"
+        className="fixed bottom-4 right-4 bg-teal-800 text-white p-2 rounded-full shadow-lg"
       >
         <ShoppingCart size={24} />
       </button>
-      
+
       <div className="p-4">
         {categories.map(category => (
           <MenuCategory

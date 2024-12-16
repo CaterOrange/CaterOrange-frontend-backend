@@ -101,7 +101,7 @@ const ChangeAddress = () => {
 
     return (
         <div
-            className="bg-gradient-to-b from-[#008000] to-[#70c656] min-h-screen p-4"
+            className="bg-gradient-to-b from-[#2C6E63] to-[#80CBC4] min-h-screen p-4"
             style={{ fontFamily: process.env.REACT_APP_FONT }} // Use font from .env
         >
             <div className="bg-white rounded-lg shadow-lg p-6">
@@ -119,7 +119,7 @@ const ChangeAddress = () => {
                                 <button
                                     type="button"
                                     onClick={handleAddAddress}
-                                    className="hover:bg-blue-100 text-blue-500 font-bold py-2 px-4 rounded mb-2"
+                                    className="hover:bg-teal-100 text-teal-800 font-bold py-2 px-4 rounded mb-2"
                                 >
                                     + Add Address
                                 </button>
@@ -189,7 +189,7 @@ const ChangeAddress = () => {
                     <div className="mt-6 flex justify-center">
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white px-8 py-2 rounded-md shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            className="bg-teal-800 text-white px-8 py-2 rounded-md shadow-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                             style={{ backgroundColor: process.env.REACT_APP_COLORCODE }} // Use color from .env
                         >
                             Submit

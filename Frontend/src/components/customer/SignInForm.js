@@ -295,7 +295,7 @@ const SignInForm = ({ onSignIn }) => {
         />
       ) : (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-md p-8">
-          <div className="h-50 bg-blue-300 border-back-200 mb-4 overflow-hidden">
+          <div className="h-50 bg-teal-600 border-back-200 mb-4 overflow-hidden">
             <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={3000}>
             {images.map((src, index) => (
               <div key={index}>
