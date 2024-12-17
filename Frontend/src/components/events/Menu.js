@@ -148,6 +148,11 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
     useEffect(() => {
         fetchCart();
     }, [isOpen]);
+    useEffect(()=>{
+        if(numberOfPlates){
+            localStorage.setItem('numberOfPlates',numberOfPlates.toString())
+        }
+    },[numberOfPlates]);
 
 
     const calculateTotalItemCost = (item, numberOfPlates, selectedUnit, quantity) => {
@@ -585,18 +590,30 @@ const Menu = () => {
     const [currentUser, setCurrentUser] = useState(null);
     // const [numberofplates, setNumberOfPlates] = useState(1);
     const location = useLocation();
-    const numberOfPlates = location.state?.numberOfPlates || 1;
+   // const numberOfPlates = location.state?.numberOfPlates || 1;
+   const numberOfPlates = localStorage.getItem('plates');
     const selectedDate = location.state?.selectedDate;
     const selectedTime = location.state?.selectedTime;
     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
     VerifyToken();
-    const address = location.state?.address || {
-        line1: '',
-        line2: '',
-        pincode: '',
-    };
-    console.log("address", address);
+    // const address = location.state?.address || {
+    //     line1: '',
+    //     line2: '',
+    //     pincode: '',
+    // };
+    const [address,setAddress]=useState({
+        line1:'',
+        line2:'',
+        pincode:''
 
+    })
+    console.log("address", address);
+    useEffect(()=>{
+        const savedAddress = JSON.parse(localStorage.getItem('addedaddress'));
+        if(savedAddress){
+            setAddress(savedAddress);
+        }
+    },[]);
     useEffect(() => {
 
         const token = localStorage.getItem('token');
