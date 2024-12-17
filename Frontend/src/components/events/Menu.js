@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { UserCircle, Trash, ChevronDown, ChevronUp, Plus, Minus, MapPin, ShoppingCart, X,Trash2 } from 'lucide-react';
+import { UserCircle, Trash2, ChevronDown, ChevronUp, Plus, Minus, MapPin, ShoppingCart, X } from 'lucide-react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { cartToOrder } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { isTokenExpired, VerifyToken } from '../../MiddleWare/verifyToken';
+
+
 const ToggleSwitch = ({ isOn, onToggle }) => (
+
     <div
         className={`w-8 h-4 flex items-center rounded-full p-1 cursor-pointer ${isOn ? `bg-teal-800` : `bg-gray-300`}`}
         onClick={onToggle}
@@ -15,6 +18,8 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
         ></div>
     </div>
 );
+
+// MenuItem Component
 const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggleOn }) => {
     const shouldDisplayToggle = item['plate_units'] !== null && item['wtorvol_units'] !== null;
     const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +35,7 @@ const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggl
                 onClick={handleToggle}
             >
                 <div className="flex items-center flex-grow">
-                    <img src={item.image} alt={item['productname']} className="w-16 h-16 object-cover rounded mr-4" />
+                    <img src={item.Image} alt={item['productname']} className="w-16 h-16 object-cover rounded mr-4" />
                     <div className="flex items-center">
                         <h3 className="font-semibold text-gray-800">{item['productname']}</h3>
                         <input
@@ -38,16 +43,8 @@ const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggl
                             checked={checked}
                             onChange={onCheck}
                             className="ml-2"
-                            style={{
-                                margin: '0 0 1px 0',
-                                width: '15px',
-                                height: '15px',
-                                margin: '7px',
-                                accentColor: 'black',
-                                backgroundColor: 'transparent',
-                            }}
+                            style={{ margin: '0 0 1px 0', width: '15px', height: '15px', margin: '7px',accentColor:'black',backgroundColor:'transparent' }}
                         />
-
                     </div>
                 </div>
                 {shouldDisplayToggle && (
@@ -62,9 +59,9 @@ const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggl
                     {toggleState[item['productid']] === 'wtorvol_units' ? item['wtorvol_units'] : item['plate_units']}
                 </p>
                 {isOpen ? (
-                    <ChevronUp size={20} className="text-teal-800 ml-2" />
+                    <ChevronUp size={20} className="text-gray-600 ml-2" />
                 ) : (
-                    <ChevronDown size={20} className="text-teal-800 ml-2" />
+                    <ChevronDown size={20} className="text-gray-600 ml-2" />
                 )}
             </div>
             {isOpen && (
@@ -75,6 +72,8 @@ const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggl
         </div>
     );
 };
+
+// MenuCategory Component
 const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit, onCheck, mainToggleOn }) => {
     const [isOpen, setIsOpen] = useState(false);
     VerifyToken();
@@ -112,204 +111,77 @@ const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit
         </div>
     );
 };
+
 const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address, selectedTime, onRemoveItem, onChangeAddress, onClearCart }) => {
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [cartId, setCartId] = useState(0);
-    const [cartDetails, setCartDetails] = useState([]);
     const [redirectUrl, setRedirectUrl] = useState('');
     const [localQuantities, setLocalQuantities] = useState({});
-    const [localToggleState, setLocalToggleState] = useState(() => {
-        try {
-            const storedToggleState = localStorage.getItem('cartToggleState');
-            return storedToggleState ? JSON.parse(storedToggleState) : {};
-        } catch (error) {
-            console.error('Error parsing stored toggle state:', error);
-            return {};
-        }
-    });
+    const [cartDetails, setCartDetails] = useState([]);
     const navigate = useNavigate();
+    console.log("huhuuu")
     VerifyToken();
-
-    // Persist toggle state to localStorage whenever it changes
-    useEffect(() => {
-        try {
-            localStorage.setItem('cartToggleState', JSON.stringify(localToggleState));
-        } catch (error) {
-            console.error('Error saving toggle state:', error);
-        }
-    }, [localToggleState]);
-
-    // Helper function to get the default unit for an item
-    const getDefaultUnit = (item) => {
-        if (!item) return 'plate_units';
-        return item.plate_units || item.wtorvol_units || 'plate_units';
-    };
-
-    // Modified toggle unit handler to update local state
-    const handleToggleUnit = (productId) => {
-        if (!productId) {
-            console.error('Invalid productId provided to handleToggleUnit');
-            return;
-        }
-        setLocalToggleState(prev => {
-            // Find the item in cartDetails
-            const item = cartDetails.find(i => i.productid === productId);
-            if (!item) {
-                console.error('Item not found in cartDetails');
-                return prev;
-            }
-
-            const currentUnit = prev[productId] || getDefaultUnit(item);
-            const newUnit = currentUnit === 'wtorvol_units' ? 'plate_units' : 'wtorvol_units';
-            const newToggleState = {
-                ...prev,
-                [productId]: prev[productId] === 'wtorvol_units' ? 'plate_units' : 'wtorvol_units'
-            };
-            // // Call the original onToggleUnit prop if needed
-            setCartDetails(prevDetails =>
-                prevDetails.map(item => {
-                    if (item.productid === productId) {
-                        return {
-                            ...item,
-                            selected_unit_type: newToggleState[productId]
-                        };
-                    }
-                    return item;
-                })
-            );
-
-            // Call the original onToggleUnit prop if needed
-            // Call the original onToggleUnit prop if it exists
-            if (onToggleUnit) {
-                onToggleUnit(productId);
-            } return newToggleState;
-        });
-    };
-    useEffect(() => {
-        // Fetch cart data or perform actions when component opens
-        fetchCart();
-    }, [isOpen]);
-
-    // Store numberOfPlates in sessionStorage whenever it changes
-    useEffect(() => {
-        if (numberOfPlates) {
-            localStorage.setItem('numberOfPlates', numberOfPlates.toString());
-        }
-    }, [numberOfPlates]);
-
     const token = localStorage.getItem('token');
+    console.log('hii');
     const fetchCart = async () => {
-        if (!token || isTokenExpired(token)) {
-            navigate("/");
-            return;
-        }
         try {
+            if (!token || isTokenExpired(token)) {
+                navigate("/");
+            }
             const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart/getcart`, {
                 headers: { token: `${localStorage.getItem('token')}` },
             });
+            console.log('in carts', response.data);
+
+            // Extracting cartData from response
             const cartDataArray = response.data?.cartitem?.cartData || [];
+            console.log('Extracted Cart Data:', cartDataArray);
 
-            // Apply local toggle state with safety checks
-            const updatedCartData = cartDataArray.map(item => {
-                if (!item) return null;
-
-                const defaultUnit = getDefaultUnit(item);
-                const selectedUnit = localToggleState[item.productid] ||
-                    toggleState[item.productid] ||
-                    defaultUnit;
-
-                return {
-                    ...item,
-                    selected_unit_type: selectedUnit
-                };
-            }).filter(Boolean); // Remove any null items
-
-            setCartDetails(updatedCartData);
+            // Store cartData in a state variable
+            setCartDetails(cartDataArray);
         } catch (error) {
             console.error('Error fetching cart data:', error);
         }
     };
-
     useEffect(() => {
-        if (isOpen) {
-            fetchCart();
-        }
+        fetchCart();
     }, [isOpen]);
-
-
-    // const calculateTotalItemCost = (item, numberOfPlates, selectedUnit, quantity) => {
-    //     let totalCost;
-
-    //     if (selectedUnit === 'plate_units') {
-    //         const priceperunit = item['priceperunit'];
-    //         console.log("priceperunit", priceperunit);
-    //         // const minunitsperplate = item['minunitsperplate'];
-    //         totalCost = (priceperunit * numberOfPlates * quantity).toFixed(2);
-
-    //     }
-    //     else if (selectedUnit === 'wtorvol_units') {
-    //         const price_per_wtorvol_units = item['price_per_wtorvol_units'];
-    //         const min_wtorvol_units_per_plate = item['min_wtorvol_units_per_plate'];
-
-    //         const costperkg = price_per_wtorvol_units * 1000;
-    //         console.log("huhu", costperkg)
-    //         // totalCost = costperkg;
-    //         if (quantity < 1) {
-    //             totalCost = quantity * costperkg * numberOfPlates
-    //             console.log("quantity:", quantity);
-    //             console.log("costperkg:", costperkg);
-    //             console.log("numberofplates:", numberOfPlates);
-    //             console.log("TOTALcOST:", totalCost);
-
-    //         }
-    //         else {
-    //             totalCost = costperkg * quantity
-    //         }
-
-    //         console.log("total", totalCost);
-    //     } else {
-    //         throw new Error('Invalid selected unit');
-    //     }
-
-    //     return totalCost;
-    // };
 
 
     const calculateTotalItemCost = (item, numberOfPlates, selectedUnit, quantity) => {
         let totalCost;
-        // Fallback mechanism to determine the unit
-        const determineUnit = () => {
-            if (item.plate_units && item.wtorvol_units) {
-                // If both units exist, default to plate_units
-                return 'plate_units';
-            }
-            return item.plate_units ? 'plate_units' : 'wtorvol_units';
-        };
 
-        // If selectedUnit is not provided or is invalid, determine the unit
-        const safeSelectedUnit =
-            ['plate_units', 'wtorvol_units'].includes(selectedUnit)
-                ? selectedUnit
-                : determineUnit();
-
-        if (safeSelectedUnit === 'plate_units') {
+        if (selectedUnit === 'plate_units') {
             const priceperunit = item['priceperunit'];
+            console.log("priceperunit", priceperunit);
+            // const minunitsperplate = item['minunitsperplate'];
             totalCost = (priceperunit * numberOfPlates * quantity).toFixed(2);
-        }
-        else if (safeSelectedUnit === 'wtorvol_units') {
-            const price_per_wtorvol_units = item['price_per_wtorvol_units'];
-            const costperkg = price_per_wtorvol_units * 1000;
 
+        }
+        else if (selectedUnit === 'wtorvol_units') {
+            const price_per_wtorvol_units = item['price_per_wtorvol_units'];
+            const min_wtorvol_units_per_plate = item['min_wtorvol_units_per_plate'];
+
+            const costperkg = price_per_wtorvol_units * 1000;
+            console.log("huhu", costperkg)
+            // totalCost = costperkg;
             if (quantity < 1) {
-                totalCost = (quantity * costperkg * numberOfPlates).toFixed(2);
+                totalCost = quantity * costperkg * numberOfPlates
+                console.log("quantity:", quantity);
+                console.log("costperkg:", costperkg);
+                console.log("numberofplates:", numberOfPlates);
+                console.log("TOTALcOST:", totalCost);
+
             }
             else {
-                totalCost = (costperkg * quantity).toFixed(2);
+                totalCost = costperkg * quantity
             }
-        }
-        else {
-            throw new Error(`Unexpected unit type: ${safeSelectedUnit}`);
+
+            console.log("total", totalCost);
+        } else {
+            throw new Error('Invalid selected unit');
         }
 
         return totalCost;
@@ -317,36 +189,12 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
 
 
     const totalAmount = cartItems.reduce((sum, item) => {
-        const selectedUnit = localToggleState[item['productid']] || item['plate_units'] || item['wtorvol_units'];
+        const selectedUnit = toggleState[item['productid']] || item['plate_units'] || item['wtorvol_units'];
         const totalItemCost = calculateTotalItemCost(item, numberOfPlates, selectedUnit, localQuantities[item.productid] || item.quantity);
         return sum + parseFloat(totalItemCost);
     }, 0).toFixed(2);
 
-    const getSelectedUnit = (item) => {
-        // First check local toggle state, then fallback to original toggle state or default units
-        if (item.plate_units && item.wtorvol_units) {
-            return localToggleState[item.productid] === 'wtorvol_units' ? 'wtorvol_units' : 'plate_units';
-        }
-        return item.plate_units || item.wtorvol_units;
-    };
-    // const cartData = cartItems.map(item => ({
-    //     addedat: item.addedat,
-    //     category_name: item.category_name,
-    //     image: item.image,
-    //     isdual: item.isdual,
-    //     price_category: item.price_category,
-    //     minunitsperplate: item.minunitsperplate || 1,
-    //     priceperunit: item.priceperunit,
-    //     min_wtorvol_units_per_plate: item.min_wtorvol_units_per_plate,
-    //     price_per_wtorvol_units: item.price_per_wtorvol_units,
-    //     productid: item.productid,
-    //     product_id: item.product_id,
-    //     productname: item.productname,
-    //     quantity: item.quantity,
-    //     unit: toggleState[item['productid']] || item['plate_units'] || item['wtorvol_units']
-    // }));
     const cartData = cartItems.map(item => ({
-        ...item,
         addedat: item.addedat,
         category_name: item.category_name,
         image: item.image,
@@ -360,17 +208,13 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
         product_id: item.product_id,
         productname: item.productname,
         quantity: item.quantity,
-        // Use the selected unit based on toggle state
-        // unit: getSelectedUnit(item),
-        // Store both unit types if available
-        plate_units: item.plate_units,
-        wtorvol_units: item.wtorvol_units,
-        // Store the current toggle state
-        selected_unit_type: getSelectedUnit(item)
+        unit: toggleState[item['productid']] || item['plate_units'] || item['wtorvol_units']
     }));
 
-
     const cart = { totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime };
+
+    console.log("cartdata:", cartData);
+
 
     const handleInputChange = (itemId, value) => {
         const newQuantity = value === '' ? '' : Number(value);
@@ -410,84 +254,86 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
             navigate("/");
         }
 
+        console.log('hic', cart)
         const delay = setTimeout(async () => {
             // const cart_id = await addtocart(cart);
-            try {
-                const token = localStorage.getItem('token');
-                if (!cartItems || !Array.isArray(cartItems)) {
-                    console.error('Invalid cartItems:', cartItems);
-                    return;
+
+            const token = localStorage.getItem('token');
+
+            const result = await axios.post(
+                `${process.env.REACT_APP_URL}/api/cart/add`,
+                {
+                    totalAmount,
+                    cartData: cartItems,
+                    address,
+                    selectedDate,
+                    numberOfPlates,
+                    selectedTime
+                },
+                {
+                    headers: {
+                        token: token // Use 'token' key as expected by backend
+                    }
                 }
 
-                const updatedCartData = cartItems.map(item => {
-                    if (!item || !item.productid) {
-                        console.error('Invalid item in cartItems:', item);
-                        return null;
-                    }
+            );
+            console.log("no of plates", totalAmount,
+                cartData,
+                address,
+                selectedDate,
+                numberOfPlates,
+                selectedTime)
 
-                    const defaultUnit = getDefaultUnit(item);
-                    const selectedUnit = localToggleState[item.productid] ||
-                        toggleState[item.productid] ||
-                        defaultUnit;
 
-                    return {
-                        ...item,
-                        selected_unit_type: selectedUnit
-                    };
-                }).filter(Boolean);
-                const result = await axios.post(
-                    `${process.env.REACT_APP_URL}/api/cart/add`,
-                    {
-                        totalAmount,
-                        cartData: updatedCartData,
-                        address,
-                        selectedDate,
-                        numberOfPlates,
-                        selectedTime,
-                        toggleState: localToggleState
-                    },
-                    {
-                        headers: {
-                            token: token // Use 'token' key as expected by backend
-                        }
-                    }
-                );
-                setCartId(result);
-            } catch (error) {
-                console.error('Error updating cart:', error);
-            }
+
+
+
+
+            console.log('res', result)
+
+            setCartId(result);
         }, 1000);
         return () => clearTimeout(delay);
-    }, [cartItems, localToggleState]);
-
+    }, [cartItems], []);
 
 
     const handleSubmit = async () => {
         setLoading(true);
-
         if (!token || isTokenExpired(token)) {
             navigate("/");
-            return;
         }
-
         try {
+            console.log("in menu ", totalAmount, cartDetails, numberOfPlates, selectedDate, selectedTime, address)
             const respond = await cartToOrder(totalAmount, cartDetails, numberOfPlates, selectedDate, selectedTime, address);
 
+            console.log("respond", respond.eventorder_generated_id)
+
             const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
+
                 amount: totalAmount,
                 corporateorder_id: respond.eventorder_generated_id,
+
+
+                // You might want to include other necessary fields here
             }, { headers: { token: `${localStorage.getItem('token')}` } });
 
             if (response.data && response.data.redirectUrl) {
-                // Check payment status before clearing cart
-                if (response.data.paymentStatus === 'success') {
-                    setLocalQuantities({});
-                    onUpdateQuantity({});
-                    onClearCart();
-                }
+                // Move cartToOrder here to execute after successful payment
+
+
 
                 setRedirectUrl(response.data.redirectUrl);
                 window.location.href = response.data.redirectUrl;
+                // const currentUser = JSON.parse(localStorage.getItem('userDP'))?.email;
+                // if (currentUser) {
+                // localStorage.removeItem(`cartItems_${currentUser}`);
+                // }
+                // clearLocalStorageExceptToken();
+                setLocalQuantities({});
+                onUpdateQuantity({});
+
+                onClearCart();
+                // localStorage.setItem(`paymentComplete_${currentUser}`, 'true');
             } else {
                 console.log('Unexpected response format.');
             }
@@ -500,6 +346,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
 
 
     const handleDelete = async (productId) => {
+        console.log("id", productId)
         setLoading(true);
         setError('');
         setCartDetails(prev => prev.filter(item => item.productid !== productId));
@@ -507,6 +354,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
         try {
 
             onRemoveItem(productId);
+
+
             const updatedCartItems = cartItems.filter(item => item.productid !== productId);
             const newTotalAmount = updatedCartItems.reduce((sum, item) => {
                 const selectedUnit = toggleState[item.productid] || item.plate_units || item.wtorvol_units;
@@ -549,6 +398,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
     };
 
 
+
     const isAddressValid = address && address.line1 && address.line2 && address.pincode;
 
     return (
@@ -562,7 +412,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                             </button>
                             <button
                                 onClick={onChangeAddress}
-                                className="bg-teal-100 text-teal-800  px-2 py-2 rounded-full mt-14 border-teal-800"
+                                className="bg-teal-100 text-teal-800 px-1 py-1 rounded-full mt-14"
                             >
                                 Change Address
                             </button>
@@ -590,33 +440,33 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                             </div>
                         ) : (
                             cartDetails.map(item => {
+                                console.log('item', item)
                                 const minunitsperplate = item['minunitsperplate'] || 1;
                                 const selectedUnit = toggleState[item['productid']] || item['plate_units'] || item['wtorvol_units'];
+
                                 return (
                                     <div key={item['productid']} className="flex flex-col border border-teal-800 rounded-lg shadow-sm p-2">
-                                        <div className="relative">
-                                            <div className="absolute top right-2">
+                                    <div className='relative'>
+                                       <div className='absolute top right-2'>
                                                 <button
                                                     onClick={() => handleDelete(item['productid'])}
-                                                    className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                                                    className="bg-red-500 text-white p-2  rounded-full hover:bg-red-600"
                                                     title="Remove from cart"
                                                 >
-                                                    <Trash2 size={16} />
+                                                    <Trash2 size={18} />
                                                 </button>
-                                            </div>
                                         </div>
-                                        <div className="flex flex-col items-center">
-
-
+                                    </div>
+                                    <div className='flex flex-col items-center'>
                                             <h3 className="font-semibold text-gray-800 mb-1">{item['productname']}</h3>
                                             {item['plate_units'] && item['wtorvol_units'] && (
                                                 <div className="flex items-center mb-2">
                                                     <ToggleSwitch
-                                                        isOn={localToggleState[item['productid']] === 'wtorvol_units'}
-                                                        onToggle={() => handleToggleUnit(item['productid'])}
+                                                        isOn={toggleState[item['productid']] === 'wtorvol_units'}
+                                                        onToggle={() => onToggleUnit(item['productid'])}
                                                     />
                                                     <p className="ml-2">
-                                                        {localToggleState[item['productid']] === 'wtorvol_units' ? (
+                                                        {toggleState[item['productid']] === 'wtorvol_units' ? (
                                                             item['wtorvol_units'] && item['wtorvol_units'].toLowerCase().includes('grams') ? (
                                                                 item['wtorvol_units'].replace('grams', 'kg')
                                                             ) : item['wtorvol_units'].toLowerCase().includes('ml') ? (
@@ -629,7 +479,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                                                         )}
                                                     </p>
                                                 </div>
-
                                             )}
                                             {!item['wtorvol_units'] && <p>{item['plate_units']}</p>}
                                             <p className="text-sm text-gray-600 mb-1 flex flex-col items-center">
@@ -651,11 +500,11 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                                                                 totalCost = localQuantities[item.productid] || item.quantity * costperkg * numberOfPlates
 
                                                                 // calculationString = `${quantity} * ${numberOfPlates} * ${costPerKg} =`
-                                                                calculationString = `${localQuantities[item.productid] || item.quantity} * ${costperkg}=`
+                                                                //calculationString = `${localQuantities[item.productid] || item.quantity} * ${costperkg}=`
                                                             }
                                                             else {
                                                                 totalCost = costperkg * localQuantities[item.productid] || item.quantity
-                                                                calculationString = `${costperkg} * ${localQuantities[item.productid] || item.quantity} =`
+                                                                //calculationString = `${costperkg} * ${localQuantities[item.productid] || item.quantity} =`
                                                             }
 
                                                         }
@@ -669,9 +518,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                                                     })()}
                                                 </span>
                                             </p>
-                                        </div>
-
-
+                                            </div>
+            
                                         <div className="flex items-center justify-center mb-2">
                                             <button
                                                 onClick={() => handleDecrease(item['productid'])}
@@ -693,8 +541,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                                             >
                                                 <Plus size={14} />
                                             </button>
-
-
                                         </div>
                                     </div>
                                 );
@@ -710,7 +556,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                         </div>
                         <button
                             onClick={handleSubmit}
-                            className={`w-full py-2 px-4 ${isAddressValid ? 'bg-teal-800 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} font-bold rounded`}
+                            className={`w-full py-2 px-4 ${isAddressValid ? 'bg-teal-800 text-white' : 'bg-teal-800 text-white cursor-not-allowed'} font-bold rounded`}
                             disabled={loading || !isAddressValid}
                         >
                             {loading ? 'Processing...' : 'Pay Now'}
@@ -725,6 +571,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
         </div>
     );
 };
+
+
 const Menu = () => {
     const [menuData, setMenuData] = useState([]);
     const [checkedItems, setCheckedItems] = useState({});
@@ -737,31 +585,16 @@ const Menu = () => {
     const [currentUser, setCurrentUser] = useState(null);
     // const [numberofplates, setNumberOfPlates] = useState(1);
     const location = useLocation();
-    // const numberOfPlates = location.state?.numberOfPlates || 1;
-    const numberOfPlates = localStorage.getItem('plates');
+    const numberOfPlates = location.state?.numberOfPlates || 1;
     const selectedDate = location.state?.selectedDate;
     const selectedTime = location.state?.selectedTime;
     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
     VerifyToken();
-    // const address = location.state?.address || {
-    //     line1: '',
-    //     line2: '',
-    //     pincode: '',
-    // };
-    const [address, setAddress] = useState({
+    const address = location.state?.address || {
         line1: '',
         line2: '',
-        pincode: ''
-    });
-
-    useEffect(() => {
-        // Get address from localStorage and set it to state
-        const savedAddress = JSON.parse(localStorage.getItem('addedaddress'));
-
-        if (savedAddress) {
-            setAddress(savedAddress);
-        }
-    }, []);
+        pincode: '',
+    };
     console.log("address", address);
 
     useEffect(() => {
@@ -804,7 +637,7 @@ const Menu = () => {
 
 
     const handleChangeAddress = () => {
-        localStorage.setItem('numberOfPlates', numberOfPlates.toString());
+        // localStorage.setItem('numberOfPlates', numberofplates.toString());
         navigate('/changeaddress');
     };
 
@@ -1163,5 +996,7 @@ const Menu = () => {
         </div>
     );
 };
+
+
 
 export default Menu;
