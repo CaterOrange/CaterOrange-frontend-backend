@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from 'react';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -101,7 +104,7 @@ const ChangeAddress = () => {
 
     return (
         <div
-            className="bg-gradient-to-b from-[#2C6E63] to-[#80CBC4] min-h-screen p-4"
+            className="bg-gradient-to-b from-[#2c6E63] to-[#80CBC4] min-h-screen p-4"
             style={{ fontFamily: process.env.REACT_APP_FONT }} // Use font from .env
         >
             <div className="bg-white rounded-lg shadow-lg p-6">
@@ -119,7 +122,7 @@ const ChangeAddress = () => {
                                 <button
                                     type="button"
                                     onClick={handleAddAddress}
-                                    className="hover:bg-teal-100 text-teal-800 font-bold py-2 px-4 rounded mb-2"
+                                    className="bg-teal-800 hover:bg-teal-600 text-white hover:text-black font-bold py-2 px-4 rounded mb-2"
                                 >
                                     + Add Address
                                 </button>
@@ -136,7 +139,7 @@ const ChangeAddress = () => {
                                 <button
                                     type="button"
                                     onClick={handleViewAddresses}
-                                    className="hover:bg-blue-100 text-black-500 font-bold py-2 ml-2 px-4 rounded"
+                                    className="text-black font-bold py-2 ml-2 px-4 rounded"
                                 >
                                     View Addresses
                                 </button>
@@ -189,7 +192,7 @@ const ChangeAddress = () => {
                     <div className="mt-6 flex justify-center">
                         <button
                             type="submit"
-                            className="bg-teal-800 text-white px-8 py-2 rounded-md shadow-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            className="bg-teal-800 text-white px-8 py-2 rounded-md shadow-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-800 focus:ring-opacity-50"
                             style={{ backgroundColor: process.env.REACT_APP_COLORCODE }} // Use color from .env
                         >
                             Submit
@@ -202,3 +205,4 @@ const ChangeAddress = () => {
 };
 
 export default ChangeAddress;
+
