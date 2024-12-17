@@ -353,7 +353,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
             value={flatNumber}
             onChange={handleFlatNumberChange}
             placeholder="Enter flat number"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 ffocus:ring-teal-800 focus:border-teal-600"
           />
           {errors.flatNumber && <p className="text-red-500 text-xs">{errors.flatNumber}</p>}
         </div>
@@ -404,7 +404,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
                 value={shipToName}
                 onChange={handleShipToNameChange}
                 placeholder="Enter name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
               />
               {errors.shipToName && <p className="text-red-500 text-xs">{errors.shipToName}</p>}
             </div>
@@ -432,7 +432,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
                 name="customer_name"
                 value={editableDefaultDetails.customer_name}
                 onChange={handleDefaultDetailsChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
               />
               {errors.customerName && <p className="text-red-500 text-xs">{errors.customerName}</p>}
             </div>
@@ -454,7 +454,7 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
         <button
           onClick={handleSubmit}
           type="submit"
-          className="w-full bg-teal-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-800 focus:ring-opacity-50"
+          className="w-full bg-teal-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-opacity-50"
         >
           {existingAddress ? 'Update Address' : 'Save Address'}
         </button>
@@ -464,3 +464,4 @@ const AddressForm = ({ saveAddress, existingAddress }) => {
 };
 
 export default AddressForm;
+
