@@ -253,7 +253,7 @@ function createGroupsTableQuery() {
             pincode BIGINT,
             line1 VARCHAR(255),
             line2 VARCHAR(255),
-            location TEXT[],  -- Array of text
+            location TEXT,  
             ship_to_name VARCHAR(255),
             ship_to_phone_number BIGINT,
             added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
