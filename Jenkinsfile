@@ -7,7 +7,7 @@ pipeline {
         FRONTEND_IMAGE = 'parash0007/caterorange'
         BACKEND_IMAGE = 'parash0007/caterorange'
         IMAGE_TAG = sh(script: 'date +%d-%m-%Y', returnStdout: true).trim()
-        DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1321862528942215189/T9Z26bAFPsiD1xe26xXzQfxzXXVywzWPp-7csfAWvNcSg7WXy4QRZ5bMmGgp7_HEPOJc'
+        DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1322529282957770752/Rm6o7tuWGxEHeWtKBOM6ITKDRh8Eq4zsYvTrjlxczEwCC73-s68yw-tKcaX84b9f7dek'
     }
 
     stages {
