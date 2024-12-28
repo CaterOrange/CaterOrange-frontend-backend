@@ -28,43 +28,43 @@ pipeline {
             }
         }
         
-        stage('Get Commit Details') {
-            steps {
-                script {
-                    def commitId = sh(script: 'cd CaterOrange && git log -1 --format=%H', returnStdout: true).trim()
-                    def author = sh(script: 'cd CaterOrange && git log -1 --format=%an', returnStdout: true).trim()
-                    def commitMessage = sh(script: 'cd CaterOrange && git log -1 --format=%s', returnStdout: true).trim()
-                    def commitTime = sh(script: 'cd CaterOrange && git log -1 --format=%cr', returnStdout: true).trim()
+        // stage('Get Commit Details') {
+        //     steps {
+        //         script {
+        //             def commitId = sh(script: 'cd CaterOrange && git log -1 --format=%H', returnStdout: true).trim()
+        //             def author = sh(script: 'cd CaterOrange && git log -1 --format=%an', returnStdout: true).trim()
+        //             def commitMessage = sh(script: 'cd CaterOrange && git log -1 --format=%s', returnStdout: true).trim()
+        //             def commitTime = sh(script: 'cd CaterOrange && git log -1 --format=%cr', returnStdout: true).trim()
 
-                    echo "Commit ID: ${commitId}"
-                    echo "Author: ${author}"
-                    echo "Commit Message: ${commitMessage}"
-                    echo "Commit Time: ${commitTime}"
+        //             echo "Commit ID: ${commitId}"
+        //             echo "Author: ${author}"
+        //             echo "Commit Message: ${commitMessage}"
+        //             echo "Commit Time: ${commitTime}"
 
-                    def message = """{
-                        "content": "Deployment Report",
-                        "embeds": [
-                            {
-                                "title": "Build Status",
-                                "fields": [
-                                    { "name": "Result", "value": "Success", "inline": true },
-                                    { "name": "Commit", "value": "${commitId}", "inline": true },
-                                    { "name": "Author", "value": "${author}", "inline": true },
-                                    { "name": "Message", "value": "${commitMessage}", "inline": false },
-                                    { "name": "Relative Time", "value": "${commitTime}", "inline": false },
-                                    { "name": "Report", "value": "The build completed successfully and the images were pushed to Docker Hub.", "inline": false }
-                                ]
-                            }
-                        ]
-                    }"""
+        //             def message = """{
+        //                 "content": "Deployment Report",
+        //                 "embeds": [
+        //                     {
+        //                         "title": "Build Status",
+        //                         "fields": [
+        //                             { "name": "Result", "value": "Success", "inline": true },
+        //                             { "name": "Commit", "value": "${commitId}", "inline": true },
+        //                             { "name": "Author", "value": "${author}", "inline": true },
+        //                             { "name": "Message", "value": "${commitMessage}", "inline": false },
+        //                             { "name": "Relative Time", "value": "${commitTime}", "inline": false },
+        //                             { "name": "Report", "value": "The build completed successfully and the images were pushed to Docker Hub.", "inline": false }
+        //                         ]
+        //                     }
+        //                 ]
+        //             }"""
 
-                    echo "Sending message to Discord..."
-                    sh """
-                        curl -X POST -H "Content-Type: application/json" -d '${message}' ${DISCORD_WEBHOOK_URL}
-                    """
-                }
-            }
-        }
+        //             echo "Sending message to Discord..."
+        //             sh """
+        //                 curl -X POST -H "Content-Type: application/json" -d '${message}' ${DISCORD_WEBHOOK_URL}
+        //             """
+        //         }
+        //     }
+        // }
 
         stage('Docker Login') {
             steps {
@@ -237,7 +237,7 @@ def sendDiscordNotification(buildStatus) {
             "embeds": [
                 {
                     "color": ${buildStatus == "success" ? 3066993 : 15158332},
-                    "title": "Build Result: ${buildStatus}",
+                    "title": "CaterOrange-Jenkins Result: ${buildStatus}",
                     "fields": [
                         {
                             "name": "Commit",
