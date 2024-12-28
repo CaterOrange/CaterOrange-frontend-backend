@@ -230,6 +230,10 @@ def sendDiscordNotification(buildStatus) {
         def author = sh(script: 'git log -1 --format=%an', returnStdout: true).trim()
         def commitMessage = sh(script: 'git log -1 --format=%s', returnStdout: true).trim()
         def relativeTime = sh(script: 'git log -1 --format=%ar', returnStdout: true).trim()
+        
+         // Extract organization name from Git URL
+        def gitUrl = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
+        def organizationName = gitUrl.split('/')[3]
 
         // Construct the payload
         def payload = """{
@@ -239,6 +243,10 @@ def sendDiscordNotification(buildStatus) {
                     "color": ${buildStatus == "success" ? 3066993 : 15158332},
                     "title": "CaterOrange-Jenkins Result: ${buildStatus}",
                     "fields": [
+                         {
+                            "name": "Organization",
+                            "value": "${organizationName}"
+                        },
                         {
                             "name": "Commit",
                             "value": "$commitID"
