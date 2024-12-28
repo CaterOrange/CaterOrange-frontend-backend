@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+ 
     environment {
         DOCKER_USERNAME = 'parash0007'
         DOCKER_ACCESS_TOKEN = 'dckr_pat_2yGRuHttLQT3oDLfgtIUIssBVH8'
