@@ -41,7 +41,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange/Backend
                                     echo "Building Backend Docker Image..."
-                                    docker build -t backendCaterorange:${IMAGE_TAG} .
+                                    docker build -t backendcaterorange:${IMAGE_TAG} .
                                 '''
                                 echo "Backend Docker image built successfully."
                             } catch (Exception e) {
@@ -59,7 +59,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange/Frontend
                                     echo "Building Frontend Docker Image..."
-                                    docker build -t frontendCaterorange:${IMAGE_TAG} .
+                                    docker build -t frontendcaterorange:${IMAGE_TAG} .
                                 '''
                                 echo "Frontend Docker image built successfully."
                             } catch (Exception e) {
@@ -98,8 +98,8 @@ pipeline {
                     try {
                         sh '''
                             echo "Remove Existing Images..."
-                            docker rmi backendCaterorange:${Previous_IMAGE_TAG} || true
-                            docker rmi frontendCaterorange:${Previous_IMAGE_TAG} || true
+                            docker rmi backendcaterorange:${Previous_IMAGE_TAG} || true
+                            docker rmi frontendcaterorange:${Previous_IMAGE_TAG} || true
                         '''
                     } catch (Exception e) {
                         sendDiscordNotification("failure", [stageName: "Remove Existing Images...", reason: e.getMessage()])
@@ -118,14 +118,14 @@ pipeline {
                                 --name backend-container \
                                 --network host \
                                 -d -p 4000:4000\
-                                backendCaterorange:${IMAGE_TAG}
+                                backendcaterorange:${IMAGE_TAG}
             
                             echo "Starting Frontend container..."
                             docker run -it \
                                 --name frontend-container \
                                 --network host \
                                 -d -p 3000:3000\
-                                frontendCaterorange:${IMAGE_TAG}
+                                frontendcaterorange:${IMAGE_TAG}
                         '''
                     } catch (Exception e) {
                         sendDiscordNotification("failure", [stageName: "Run Containers", reason: e.getMessage()])
