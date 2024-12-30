@@ -1,6 +1,6 @@
 pipeline {
     agent any
- 
+
     environment {
         DOCKER_USERNAME = 'parash0007'
         DOCKER_ACCESS_TOKEN = 'dckr_pat_2yGRuHttLQT3oDLfgtIUIssBVH8'
@@ -13,116 +13,116 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                timeout(time: 20, unit: 'MINUTES') {
-                    sh '''
-                        #!/bin/bash
-                        if [ -d "CaterOrange" ]; then
-                            echo "Removing existing CaterOrange directory..."
-                            rm -rf CaterOrange
-                        fi
-                        
-                        echo "Cloning repository..."
-                        git clone -v --depth 1 https://ParashDeveloper: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@github.com/CaterOrange/CaterOrange.git
-                    '''
+                script {
+                    try {
+                        timeout(time: 20, unit: 'MINUTES') {
+                            sh '''
+                                #!/bin/bash
+                                if [ -d "CaterOrange" ]; then
+                                    echo "Removing existing CaterOrange directory..."
+                                    rm -rf CaterOrange
+                                fi
+                                echo "Cloning repository..."
+                                git clone -v --depth 1 https://ParashDeveloper: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@github.com/CaterOrange/CaterOrange.git
+                            '''
+                        }
+                    } catch (Exception e) {
+                        sendDiscordNotification("failure", [stageName: "Clone Repository", reason: e.getMessage()])
+                        echo "Error during repository cloning: ${e.getMessage()}"
+                        error("Failed to clone repository. Aborting pipeline.")
+                    }
                 }
             }
         }
-        
-        // stage('Get Commit Details') {
-        //     steps {
-        //         script {
-        //             def commitId = sh(script: 'cd CaterOrange && git log -1 --format=%H', returnStdout: true).trim()
-        //             def author = sh(script: 'cd CaterOrange && git log -1 --format=%an', returnStdout: true).trim()
-        //             def commitMessage = sh(script: 'cd CaterOrange && git log -1 --format=%s', returnStdout: true).trim()
-        //             def commitTime = sh(script: 'cd CaterOrange && git log -1 --format=%cr', returnStdout: true).trim()
-
-        //             echo "Commit ID: ${commitId}"
-        //             echo "Author: ${author}"
-        //             echo "Commit Message: ${commitMessage}"
-        //             echo "Commit Time: ${commitTime}"
-
-        //             def message = """{
-        //                 "content": "Deployment Report",
-        //                 "embeds": [
-        //                     {
-        //                         "title": "Build Status",
-        //                         "fields": [
-        //                             { "name": "Result", "value": "Success", "inline": true },
-        //                             { "name": "Commit", "value": "${commitId}", "inline": true },
-        //                             { "name": "Author", "value": "${author}", "inline": true },
-        //                             { "name": "Message", "value": "${commitMessage}", "inline": false },
-        //                             { "name": "Relative Time", "value": "${commitTime}", "inline": false },
-        //                             { "name": "Report", "value": "The build completed successfully and the images were pushed to Docker Hub.", "inline": false }
-        //                         ]
-        //                     }
-        //                 ]
-        //             }"""
-
-        //             echo "Sending message to Discord..."
-        //             sh """
-        //                 curl -X POST -H "Content-Type: application/json" -d '${message}' ${DISCORD_WEBHOOK_URL}
-        //             """
-        //         }
-        //     }
-        // }
 
         stage('Docker Login') {
             steps {
                 script {
-                    sh """
-                        echo $DOCKER_ACCESS_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
-                    """
+                    try {
+                        sh "echo $DOCKER_ACCESS_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin"
+                        echo "Docker login successful."
+                    } catch (Exception e) {
+                        sendDiscordNotification("failure", [stageName: "Docker Login", reason: e.getMessage()])
+                        echo "Error during Docker login: ${e.getMessage()}"
+                        error("Docker login failed. Aborting pipeline.")
+                    }
                 }
             }
         }
 
-        stage('Build Backend Docker Image') {
-            steps {
-                script {
-                    sh '''
-                        cd CaterOrange/Backend
-                        ls -la
-                        echo "Building Backend Docker Image..."
-                        docker build -t backend-temp-image .
-                        
-                        docker tag backend-temp-image $BACKEND_IMAGE:Backend-${IMAGE_TAG}
-                    '''
+        stage('Build Docker Images') {
+            parallel {
+                stage('Build Backend Docker Image') {
+                    steps {
+                        script {
+                            try {
+                                sh '''
+                                    cd CaterOrange/Backend
+                                    echo "Building Backend Docker Image..."
+                                    docker build -t backend-temp-image .
+                                    docker tag backend-temp-image $BACKEND_IMAGE:Backend-${IMAGE_TAG}
+                                '''
+                                echo "Backend Docker image built successfully."
+                            } catch (Exception e) {
+                                sendDiscordNotification("failure", [stageName: "Build Docker Backend Images", reason: e.getMessage()])
+                                echo "Error during backend Docker image build: ${e.getMessage()}"
+                                error("Backend Docker image build failed. Aborting pipeline.")
+                            }
+                        }
+                    }
+                }
+                stage('Build Frontend Docker Image') {
+                    steps {
+                        script {
+                            try {
+                                sh '''
+                                    cd CaterOrange/Frontend
+                                    echo "Building Frontend Docker Image..."
+                                    docker build -t frontend-temp-image .
+                                    docker tag frontend-temp-image $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
+                                '''
+                                echo "Frontend Docker image built successfully."
+                            } catch (Exception e) {
+                                sendDiscordNotification("failure", [stageName: "Build Docker Frontend Images", reason: e.getMessage()])
+                                echo "Error during frontend Docker image build: ${e.getMessage()}"
+                                error("Frontend Docker image build failed. Aborting pipeline.")
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        stage('Build Frontend Docker Image') {
-            steps {
-                script {
-                    sh '''
-                        cd CaterOrange/Frontend
-                        echo "Building Frontend Docker Image..."
-                        docker build -t frontend-temp-image .
-                        
-                        docker tag frontend-temp-image $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
-                    '''
+        stage('Push Docker Images') {
+            parallel {
+                stage('Push Backend Image') {
+                    steps {
+                        script {
+                            try {
+                                echo "Pushing Backend Docker Image to Docker Hub..."
+                                sh "docker push $BACKEND_IMAGE:Backend-${IMAGE_TAG}"
+                            } catch (Exception e) {
+                                sendDiscordNotification("failure", [stageName: "Push Backend Image", reason: e.getMessage()])
+                                echo "Error during backend Docker image push: ${e.getMessage()}"
+                                error("Backend Docker image push failed. Aborting pipeline.")
+                            }
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Push Backend Docker Image') {
-            steps {
-                script {
-                    sh '''
-                        echo "Pushing Backend Docker Image to Docker Hub..."
-                        docker push $BACKEND_IMAGE:Backend-${IMAGE_TAG}
-                    '''
-                }
-            }
-        }
-
-        stage('Push Frontend Docker Image') {
-            steps {
-                script {
-                    sh '''
-                        echo "Pushing Frontend Docker Image to Docker Hub..."
-                        docker push $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
-                    '''
+                stage('Push Frontend Image') {
+                    steps {
+                        script {
+                            try {
+                                echo "Pushing Frontend Docker Image to Docker Hub..."
+                                sh "docker push $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}"
+                            } catch (Exception e) {
+                                sendDiscordNotification("failure", [stageName: "Push Frontend Image", reason: e.getMessage()])
+                                echo "Error during frontend Docker image push: ${e.getMessage()}"
+                                error("Frontend Docker image push failed. Aborting pipeline.")
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -130,13 +130,18 @@ pipeline {
         stage('Stop Existing Containers') {
             steps {
                 script {
-                    sh '''
-                        echo "Stopping existing containers..."
-                        docker stop frontend-container || true
-                        docker stop backend-container || true
-                        docker rm frontend-container || true
-                        docker rm backend-container || true
-                    '''
+                    try {
+                        sh '''
+                            echo "Stopping existing containers..."
+                            docker stop frontend-container || true
+                            docker stop backend-container || true
+                            docker rm frontend-container || true
+                            docker rm backend-container || true
+                        '''
+                    } catch (Exception e) {
+                        sendDiscordNotification("failure", [stageName: "Stop Existing Containers", reason: e.getMessage()])
+                        error("Stage 'Stop Existing Containers' failed: ${e.getMessage()}")
+                    }
                 }
             }
         }
@@ -144,11 +149,16 @@ pipeline {
         stage('Pull Docker Images') {
             steps {
                 script {
-                    sh '''
-                        echo "Pulling latest Docker images..."
-                        docker pull $BACKEND_IMAGE:Backend-${IMAGE_TAG}
-                        docker pull $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
-                    '''
+                    try {
+                        sh '''
+                            echo "Pulling latest Docker images..."
+                            docker pull $BACKEND_IMAGE:Backend-${IMAGE_TAG}
+                            docker pull $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
+                        '''
+                    } catch (Exception e) {
+                        sendDiscordNotification("failure", [stageName: "Pull Docker Images", reason: e.getMessage()])
+                        error("Stage 'Pull Docker Images' failed: ${e.getMessage()}")
+                    }
                 }
             }
         }
@@ -156,21 +166,26 @@ pipeline {
         stage('Run Containers') {
             steps {
                 script {
-                    sh '''
-                        echo "Starting Backend container..."
-                        docker run -it \
-                            --name backend-container \
-                            --network host \
-                            -d -p 4000:4000\
-                            $BACKEND_IMAGE:Backend-${IMAGE_TAG}
-        
-                        echo "Starting Frontend container..."
-                        docker run -it \
-                            --name frontend-container \
-                            --network host \
-                            -d -p 3000:3000\
-                            $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
-                    '''
+                    try {
+                        sh '''
+                            echo "Starting Backend container..."
+                            docker run -it \
+                                --name backend-container \
+                                --network host \
+                                -d -p 4000:4000\
+                                $BACKEND_IMAGE:Backend-${IMAGE_TAG}
+            
+                            echo "Starting Frontend container..."
+                            docker run -it \
+                                --name frontend-container \
+                                --network host \
+                                -d -p 3000:3000\
+                                $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
+                        '''
+                    } catch (Exception e) {
+                        sendDiscordNotification("failure", [stageName: "Run Containers", reason: e.getMessage()])
+                        error("Stage 'Run Containers' failed: ${e.getMessage()}")
+                    }
                 }
             }
         }
@@ -178,22 +193,27 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    sh '''
-                        echo "Performing health check..."
-                        sleep 30
-                        
-                        if ! docker ps | grep -q backend-container; then
-                            echo "Backend container is not running!"
-                            exit 1
-                        fi
-                        
-                        if ! docker ps | grep -q frontend-container; then
-                            echo "Frontend container is not running!"
-                            exit 1
-                        fi
-                        
-                        echo "All containers are running successfully!"
-                    '''
+                    try {
+                        sh '''
+                            echo "Performing health check..."
+                            sleep 30
+                            
+                            if ! docker ps | grep -q backend-container; then
+                                echo "Backend container is not running!"
+                                exit 1
+                            fi
+                            
+                            if ! docker ps | grep -q frontend-container; then
+                                echo "Frontend container is not running!"
+                                exit 1
+                            fi
+                            
+                            echo "All containers are running successfully!"
+                        '''
+                    } catch (Exception e) {
+                        sendDiscordNotification("failure", [stageName: "Health Check", reason: e.getMessage()])
+                        error("Health check failed: ${e.getMessage()}")
+                    }
                 }
             }
         }
@@ -208,40 +228,41 @@ pipeline {
         failure {
             script {
                 echo 'Pipeline failed! Check the logs for details.'
-                // Send failure details to Discord
                 sendDiscordNotification("failure")
             }
         }
         success {
             script {
                 echo 'Pipeline completed successfully!'
-                // Send success details to Discord
                 sendDiscordNotification("success")
             }
         }
     }
 }
 
-// Send commit details to Discord
-def sendDiscordNotification(buildStatus) {
+def sendDiscordNotification(buildStatus, errorDetails = null) {
     // Fetch commit details
     dir('CaterOrange') {
         def commitID = sh(script: 'git log -1 --format=%H', returnStdout: true).trim()
         def author = sh(script: 'git log -1 --format=%an', returnStdout: true).trim()
         def commitMessage = sh(script: 'git log -1 --format=%s', returnStdout: true).trim()
         def relativeTime = sh(script: 'git log -1 --format=%ar', returnStdout: true).trim()
-        
-         // Extract organization name from Git URL
-        def gitUrl = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
-        def organizationName = gitUrl.split('/')[3]
+        def organizationName = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim().split('/')[3]
+        def description = buildStatus == "success" 
+            ? "Pipeline completed successfully!" 
+            : "Pipeline failed!\nStage: ${errorDetails?.stageName}\nReason: ${errorDetails?.reason}"
 
+        def colorCode = buildStatus == "success" ? 3066993 : 15158332
+        def reportMessage = buildStatus == "success" ? "Build completed successfully." : "Build failed. Please check the description."
+        
         // Construct the payload
         def payload = """{
             "username": "Jenkins",
             "embeds": [
                 {
-                    "color": ${buildStatus == "success" ? 3066993 : 15158332},
-                    "title": "CaterOrange-Jenkins Result: ${buildStatus}",
+                    "color":  ${colorCode},
+                    "title": "CaterOrange-Jenkins Result: ${buildStatus.toUpperCase()}",
+                    "description": "${description}",
                     "fields": [
                          {
                             "name": "Organization",
@@ -265,14 +286,20 @@ def sendDiscordNotification(buildStatus) {
                         },
                         {
                             "name": "Report",
-                            "value": "${buildStatus == "success" ? "Build completed successfully." : "Build failed. Please check the logs."}"
+                            "value": "${reportMessage}"
                         }
                     ]
                 }
             ]
         }"""
-
-        // Send the payload to Discord
-        sh "curl -X POST --data-urlencode 'payload_json=${payload}' ${DISCORD_WEBHOOK_URL}"
+        
+        try {
+            sh """
+                curl -X POST -H "Content-Type: application/json" -d '${payload}' ${DISCORD_WEBHOOK_URL}
+            """
+            echo "Notification sent to Discord."
+        } catch (Exception e) {
+            echo "Failed to send Discord notification: ${e.getMessage()}"
+        }
     }
 }
