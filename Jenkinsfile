@@ -2,11 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USERNAME = 'parash0007'
-        DOCKER_ACCESS_TOKEN = 'dckr_pat_2yGRuHttLQT3oDLfgtIUIssBVH8'
-        FRONTEND_IMAGE = 'parash0007/caterorange'
-        BACKEND_IMAGE = 'parash0007/caterorange'
         IMAGE_TAG = sh(script: 'date +%d-%m-%Y', returnStdout: true).trim()
+        Previous_IMAGE_TAG = sh(script: 'date --date="yesterday" +%d-%m-%Y', returnStdout: true).trim()
         DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1322529282957770752/Rm6o7tuWGxEHeWtKBOM6ITKDRh8Eq4zsYvTrjlxczEwCC73-s68yw-tKcaX84b9f7dek'
     }
 
@@ -35,21 +32,6 @@ pipeline {
             }
         }
 
-        stage('Docker Login') {
-            steps {
-                script {
-                    try {
-                        sh "echo $DOCKER_ACCESS_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin"
-                        echo "Docker login successful."
-                    } catch (Exception e) {
-                        sendDiscordNotification("failure", [stageName: "Docker Login", reason: e.getMessage()])
-                        echo "Error during Docker login: ${e.getMessage()}"
-                        error("Docker login failed. Aborting pipeline.")
-                    }
-                }
-            }
-        }
-
         stage('Build Docker Images') {
             parallel {
                 stage('Build Backend Docker Image') {
@@ -59,8 +41,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange/Backend
                                     echo "Building Backend Docker Image..."
-                                    docker build -t backend-temp-image .
-                                    docker tag backend-temp-image $BACKEND_IMAGE:Backend-${IMAGE_TAG}
+                                    docker build -t backendCaterorange:IMAGE_TAG .
                                 '''
                                 echo "Backend Docker image built successfully."
                             } catch (Exception e) {
@@ -78,7 +59,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange/Frontend
                                     echo "Building Frontend Docker Image..."
-                                    docker build -t frontend-temp-image .
+                                    docker build -t frontendCaterorange:IMAGE_TAG .
                                     docker tag frontend-temp-image $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
                                 '''
                                 echo "Frontend Docker image built successfully."
@@ -86,40 +67,6 @@ pipeline {
                                 sendDiscordNotification("failure", [stageName: "Build Docker Frontend Images", reason: e.getMessage()])
                                 echo "Error during frontend Docker image build: ${e.getMessage()}"
                                 error("Frontend Docker image build failed. Aborting pipeline.")
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Push Docker Images') {
-            parallel {
-                stage('Push Backend Image') {
-                    steps {
-                        script {
-                            try {
-                                echo "Pushing Backend Docker Image to Docker Hub..."
-                                sh "docker push $BACKEND_IMAGE:Backend-${IMAGE_TAG}"
-                            } catch (Exception e) {
-                                sendDiscordNotification("failure", [stageName: "Push Backend Image", reason: e.getMessage()])
-                                echo "Error during backend Docker image push: ${e.getMessage()}"
-                                error("Backend Docker image push failed. Aborting pipeline.")
-                            }
-                        }
-                    }
-                }
-
-                stage('Push Frontend Image') {
-                    steps {
-                        script {
-                            try {
-                                echo "Pushing Frontend Docker Image to Docker Hub..."
-                                sh "docker push $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}"
-                            } catch (Exception e) {
-                                sendDiscordNotification("failure", [stageName: "Push Frontend Image", reason: e.getMessage()])
-                                echo "Error during frontend Docker image push: ${e.getMessage()}"
-                                error("Frontend Docker image push failed. Aborting pipeline.")
                             }
                         }
                     }
@@ -146,23 +93,22 @@ pipeline {
             }
         }
 
-        stage('Pull Docker Images') {
+       stage('Remove Existing Images') {
             steps {
                 script {
                     try {
                         sh '''
-                            echo "Pulling latest Docker images..."
-                            docker pull $BACKEND_IMAGE:Backend-${IMAGE_TAG}
-                            docker pull $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
+                            echo "Remove Existing Images..."
+                            docker rmi backendCaterorange:${Previous_IMAGE_TAG} || true
+                            docker rmi frontendCaterorange:${Previous_IMAGE_TAG} || true
                         '''
                     } catch (Exception e) {
-                        sendDiscordNotification("failure", [stageName: "Pull Docker Images", reason: e.getMessage()])
-                        error("Stage 'Pull Docker Images' failed: ${e.getMessage()}")
+                        sendDiscordNotification("failure", [stageName: "Remove Existing Images...", reason: e.getMessage()])
+                        error("Stage 'Stop Existing Containers' failed: ${e.getMessage()}")
                     }
                 }
             }
         }
-
         stage('Run Containers') {
             steps {
                 script {
@@ -173,14 +119,14 @@ pipeline {
                                 --name backend-container \
                                 --network host \
                                 -d -p 4000:4000\
-                                $BACKEND_IMAGE:Backend-${IMAGE_TAG}
+                                backendCaterorange:${IMAGE_TAG}
             
                             echo "Starting Frontend container..."
                             docker run -it \
                                 --name frontend-container \
                                 --network host \
                                 -d -p 3000:3000\
-                                $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
+                                frontendCaterorange:${IMAGE_TAG}
                         '''
                     } catch (Exception e) {
                         sendDiscordNotification("failure", [stageName: "Run Containers", reason: e.getMessage()])
