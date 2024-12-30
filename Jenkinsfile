@@ -41,7 +41,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange/Backend
                                     echo "Building Backend Docker Image..."
-                                    docker build -t backendCaterorange:IMAGE_TAG .
+                                    docker build -t backendCaterorange:${IMAGE_TAG} .
                                 '''
                                 echo "Backend Docker image built successfully."
                             } catch (Exception e) {
@@ -59,8 +59,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange/Frontend
                                     echo "Building Frontend Docker Image..."
-                                    docker build -t frontendCaterorange:IMAGE_TAG .
-                                    docker tag frontend-temp-image $FRONTEND_IMAGE:Frontend-${IMAGE_TAG}
+                                    docker build -t frontendCaterorange:${IMAGE_TAG} .
                                 '''
                                 echo "Frontend Docker image built successfully."
                             } catch (Exception e) {
