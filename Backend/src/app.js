@@ -42,11 +42,11 @@ const SALT_INDEX = 1;
   
 
 const app = express();
-
+//'https://admin.caterorange.com','http://dev.caterorange.com','https://dev.caterorange.com',
 // Middleware
 app.use(express.json());
 app.use(cors({
- origin: ['https://admin.caterorange.com','http://dev.caterorange.com','https://dev.caterorange.com', 'https://studio.apollographql.com','http://localhost:3000','http://localhost:3001'],
+ origin: [ 'https://studio.apollographql.com','http://localhost:3000','http://localhost:3001'],
  credentials: true,
  allowedHeaders: ['Authorization', 'Content-Type', 'token']
 }));
