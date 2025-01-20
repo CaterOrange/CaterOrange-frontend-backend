@@ -1,0 +1,15 @@
+{
+  "name": "checking-location",
+  "version": "1.0.0",
+  "main": "hi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@turf/turf": "^7.2.0",
+    "turf": "^3.0.14"
+  }
+}

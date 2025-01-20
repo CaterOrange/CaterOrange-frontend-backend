@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Location Map</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        body {
+            padding: 20px;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        // Initialize the map with the new center
+        const map = L.map('map').setView([17.445662676975623, 78.38758879696064], 13);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Define the new center point
+        const center = [17.445662676975623, 78.38758879696064];
+
+        // Add center point (blue)
+        L.circleMarker(center, {
+            color: 'blue',
+            fillColor: 'blue',
+            fillOpacity: 0.8,
+            radius: 10
+        }).addTo(map);
+
+        // Add 5km radius circle (red)
+        const radiusCircle = L.circle(center, {
+            color: 'red',
+            fillColor: 'red',
+            fillOpacity: 0.1,
+            radius: 5000
+        }).addTo(map);
+
+        // Define and add test points (green)
+        const points = [
+            { coords: [17.4520, 78.3920], name: "Point 1" },
+            { coords: [17.4450, 78.3800], name: "Point 2" },
+            { coords: [17.4400, 78.3850], name: "Point 3" },
+            { coords: [17.4470, 78.4000], name: "Point 4" },
+            { coords: [17.4600, 78.4100], name: "Point 5" },
+            { coords: [17.4800, 78.4050], name: "Point 6" },
+            { coords: [17.4700, 78.3900], name: "Point 7" },
+            { coords: [17.4600, 78.3800], name: "Point 8" },
+            { coords: [17.4455, 78.3805], name: "Point 9" },
+            
+            { coords: [17.5050, 78.4500], name: "Point  16" },
+            { coords: [17.4000, 78.3300], name: "Point  18" },
+            { coords: [17.4900, 78.3000], name: "Point  19" },
+            { coords: [17.5100, 78.5000], name: "Point  20" }
+        ];
+
+        points.forEach(point => {
+            const marker = L.circleMarker(point.coords, {
+                color: 'green',
+                fillColor: 'green',
+                fillOpacity: 0.8,
+                radius: 6
+            }).addTo(map);
+
+            // Check if the point lies within the circle
+            const isInside = radiusCircle.getBounds().contains(marker.getLatLng());
+            console.log(`${point.name}: ${isInside ? 'Inside' : 'Outside'}`);
+        });
+    </script>
+
+</body>
+
+</html>
