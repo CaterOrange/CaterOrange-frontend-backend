@@ -286,6 +286,7 @@ function createEventCartTableQuery() {
       adminid SERIAL PRIMARY KEY,
       customer_generated_id VARCHAR,
       isadmin boolean,
+      isvendor boolean,
       FOREIGN KEY (customer_generated_id) REFERENCES customer(customer_generated_id)
     );
   `;
