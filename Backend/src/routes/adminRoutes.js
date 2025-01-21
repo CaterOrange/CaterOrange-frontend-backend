@@ -79,7 +79,7 @@ const typeDefs = gql`
   }
   
   type CorporateOrder {
-    corporateorder_generated_id: String!
+    corporateorder_generated_id: String
     customer_generated_id: String
     order_details: JSON!
     total_amount: Int
