@@ -473,11 +473,12 @@ const MyCart = () => {
         const Data = {
           category_id: sortedData[i].category_id,
           processing_date: sortedData[i].date,
-          delivery_status: 'shipped',
+          delivery_status: 'processing',
           quantity: sortedData[i].quantity,
           active_quantity: sortedData[i].quantity,
           media: null,
-          delivery_details: null
+          delivery_details: null,
+          accept_status:'pending'
         };
         OrderData.push(Data);
       }

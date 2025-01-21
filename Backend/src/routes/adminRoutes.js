@@ -159,6 +159,9 @@ const typeDefs = gql`
     toggleDeactivation(id: ID!, isdeactivated: Boolean!): Customer!
     updateEventOrderStatus(id: ID!, status: String!): EventOrders!
     updateCorporateOrderStatus(id: ID!, status: String!): CorporateOrder!
+     updateOrderAcceptStatus(orderId: ID!, orderIndex: Int!, status: String!): CorporateOrder!
+      updateDeliveryStatus(orderId: ID!, orderIndex: Int!, status: String!): CorporateOrder!
+
     createCategory(
       category_name: String!, 
       category_description: String!,
@@ -314,6 +317,179 @@ const resolvers = {
       const result = await client.query('DELETE FROM corporate_category WHERE category_id = $1', [category_id]);
       return result.rowCount > 0;
     },
+ 
+
+  
+
+
+     updateOrderAcceptStatus : async (_, { orderId, orderIndex, status }) => {
+      console.log("orderId:", orderId);
+      try {
+        const currentOrderQuery = await client.query(
+          'SELECT order_details FROM corporate_orders WHERE corporateorder_generated_id = $1',
+          [orderId]
+        );
+        
+        if (currentOrderQuery.rows.length === 0) {
+          throw new Error('Order not found');
+        }
+        
+        // Parse the order details as JSON if it's a string
+        const orderDetails = Array.isArray(currentOrderQuery.rows[0].order_details)
+          ? currentOrderQuery.rows[0].order_details
+          : JSON.parse(currentOrderQuery.rows[0].order_details);
+        
+        console.log("orderDetails:", orderDetails);
+        
+        // Validate orderIndex
+        if (orderIndex < 0 || orderIndex >= orderDetails.length) {
+          throw new Error('Invalid order index');
+        }
+        
+        // Validate status
+        const validStatuses = ['accepted', 'rejected', 'pending'];
+        if (!validStatuses.includes(status)) {
+          throw new Error('Invalid status. Must be accepted, rejected, or pending');
+        }
+        
+        // Create a new array with the updated status
+        const updatedOrderDetails = orderDetails.map((item, index) => {
+          if (index === orderIndex) {
+            return { ...item, accept_status: status };
+          }
+          return item;
+        });
+        
+        // Check if all items are processed
+        const allItemsProcessed = updatedOrderDetails.every(
+          item => item.accept_status === 'accepted' || item.accept_status === 'rejected'
+        );
+        
+        let updateQuery = `
+          UPDATE corporate_orders 
+          SET order_details = $1
+        `;
+        const queryParams = [JSON.stringify(updatedOrderDetails)];
+        
+        // if (allItemsProcessed) {
+        //   const allAccepted = updatedOrderDetails.every(item => item.accept_status === 'accepted');
+        //   const newOrderStatus = allAccepted ? 'accepted' : 'partially rejected';
+        //   updateQuery += `, corporate_order_status = $2`;
+        //   queryParams.push(newOrderStatus);
+        // }
+        
+
+        if (allItemsProcessed) {
+          const allAccepted = updatedOrderDetails.every(item => item.accept_status === 'accepted');
+          const allRejected = updatedOrderDetails.every(item => item.accept_status === 'rejected');
+          let newOrderStatus;
+      
+          if (allAccepted) {
+              newOrderStatus = 'accepted';
+          } else if (allRejected) {
+              newOrderStatus = 'rejected';
+          } else {
+              newOrderStatus = 'partially rejected';
+          }
+      
+          updateQuery += `, corporate_order_status = $2`;
+          queryParams.push(newOrderStatus);
+      }
+      
+
+
+        updateQuery += ` WHERE corporateorder_generated_id = $${queryParams.length + 1} RETURNING *`;
+        queryParams.push(orderId);
+    
+        const result = await client.query(updateQuery, queryParams);
+        console.log("result:", result);
+        
+        return result.rows[0];
+      } catch (error) {
+        console.error("Error in updateOrderAcceptStatus:", error);
+        throw error;
+      }
+    },
+
+     updateDeliveryStatus: async (_, { orderId, orderIndex, status }) => {
+      try {
+        // First, get the current order details
+        const currentOrderQuery = await client.query(
+          'SELECT order_details FROM corporate_orders WHERE corporateorder_generated_id = $1',
+          [orderId]
+        );
+        
+        if (currentOrderQuery.rows.length === 0) {
+          throw new Error('Order not found');
+        }
+        
+        // Create a new array from the order details
+        // const orderDetails = [...currentOrderQuery.rows[0].order_details];
+        const orderDetails = Array.isArray(currentOrderQuery.rows[0].order_details)
+        ? currentOrderQuery.rows[0].order_details
+        : JSON.parse(currentOrderQuery.rows[0].order_details);
+      
+        // Validate orderIndex
+        if (orderIndex < 0 || orderIndex >= orderDetails.length) {
+          throw new Error('Invalid order index');
+        }
+        
+        // Validate status
+        const validStatuses = ['processing', 'shipped', 'delivered'];
+        if (!validStatuses.includes(status)) {
+          throw new Error('Invalid status. Must be processing, shipped, or delivered');
+        }
+        
+        // Validate the state transition
+        const currentStatus = orderDetails[orderIndex].delivery_status || 'processing';
+        const isValidTransition = (current, next) => {
+          const transitions = {
+            'processing': ['shipped'],
+            'shipped': ['delivered'],
+            'delivered': []
+          };
+          return transitions[current]?.includes(next);
+        };
+
+        if (!isValidTransition(currentStatus, status) && status !== 'processing') {
+          throw new Error(`Invalid status transition from ${currentStatus} to ${status}`);
+        }
+        
+        // Create a new object for the updated item
+        const updatedOrderDetails = orderDetails.map((item, index) => {
+          if (index === orderIndex) {
+            return { 
+              ...item, 
+              delivery_status: status,
+              // Add timestamp for status change
+              [`${status}_at`]: new Date().toISOString()
+            };
+          }
+          return item;
+        });
+        
+        // Update order details in database
+        const updateQuery = `
+          UPDATE corporate_orders 
+          SET order_details = $1
+          WHERE corporateorder_generated_id = $2 
+          RETURNING *
+        `;
+        
+        const result = await client.query(updateQuery, [
+          JSON.stringify(updatedOrderDetails),
+          orderId
+        ]);
+        
+        return result.rows[0];
+      } catch (error) {
+        console.error("Error in updateDeliveryStatus:", error);
+        throw error;
+      }
+    }
+
+
+
   },
 };
 

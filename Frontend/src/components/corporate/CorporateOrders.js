@@ -191,10 +191,10 @@ useEffect(() => {
                     <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.active_quantity}</td>
                     <td
                       className={`p-2 sm:p-3 lg:p-4 font-bold whitespace-nowrap ${
-                        detail.status === 'cancelled' ? 'text-red-500' : 'text-green-500'
+                        detail.accept_status === 'rejected' ? 'text-red-500' : 'text-green-500'
                       }`}
                     >
-                      {detail.status}
+                      {detail.accept_status}
                     </td>
                   </tr>
                 ))}

@@ -282,6 +282,9 @@ const register = async (req, res) => {
     }
 };
 
+
+
+
 const login = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -338,10 +341,14 @@ const login = async (req, res) => {
                 .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
                 .trim()
                 const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
-                console.log('Admin check result:', checkIsAdmin);
+
                 const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
+
                 const customername=customer.customer_name;
-                console.log('Is admin:', isAdmin);
+        
+                const checkIsVendor = await customer_model.findVendorByCustomerId(customer.customer_generated_id);
+                const isVendor = checkIsVendor ? checkIsVendor.isvendor : false;
+               
             // Verify the existing token or generate a new one
             let token;
             try {
@@ -349,7 +356,6 @@ const login = async (req, res) => {
                 var uat = customer.access_token;
                 const id=customer.customer_generated_id;
                 gidStorage.setGid(id);
-                console.log("id is here",id) // ok i am getting the code 
                 logger.info('Token verified successfully',uat );
             } catch (err) {
                 const gid=customer.customer_generated_id;
@@ -362,14 +368,14 @@ const login = async (req, res) => {
                 success: true,
                 message: 'Login successful',
                 token: uat,
-                isAdmin: isAdmin
+                isAdmin: isAdmin,
+                isVendor: isVendor
             });
         } catch (err) {
             logger.error('Error during user login', { error: err.message });
             res.status(500).json({ error: err.message });
         }
     }
-;
 
 const forgotPassword = async (req, res) => {
         const errors = validationResult(req);

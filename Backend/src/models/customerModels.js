@@ -206,6 +206,18 @@ const findAdminByCustomerId = async (customer_generated_id) => {
     }
 };
 
+const findVendorByCustomerId = async (customer_generated_id) => {
+    try {
+        const query = 'SELECT * FROM admin WHERE customer_generated_id = $1';
+        const result = await client.query(query, [customer_generated_id]);
+        logger.info('Admin details found for customer ID:', { customer_generated_id, admin: result.rows[0] });
+
+        return result.rows[0];
+    } catch (err) {
+        logger.error('Error finding admin by customer ID:', { error: err.message });
+        throw err;
+    }
+};
 
 module.exports = {
     createCustomer,
@@ -224,5 +236,6 @@ module.exports = {
     findActivated,
     getCustomerAddress,
     getCustomerDetails,
-    findAdminByCustomerId
+    findAdminByCustomerId,
+    findVendorByCustomerId
 };
