@@ -77,7 +77,7 @@ async function startApolloServer() {
 
   await server.start();
 
-  app.use(
+   app.use(
     '/graphql',
     express.json(),
     expressMiddleware(server, {
@@ -101,15 +101,13 @@ async function startApolloServer() {
 
           const customerGeneratedId = result.rows[0].customer_generated_id;
 
-          // 3. Check if the customer is an admin
-          const query2 = 'select isadmin from admin where customer_generated_id=$1';
-          const adminResult = await client.query(query2, [customerGeneratedId]);
+          // 3. Check for admin OR vendor status
+          const query2 = 'select isadmin, isvendor from admin where customer_generated_id=$1';
+          const accessResult = await client.query(query2, [customerGeneratedId]);
 
-          const isAdmin = adminResult.rows[0]?.isadmin;
-          if (!isAdmin) {
-            logger.error("Access denied: User is not an admin.");
-            throw new Error('Access denied: Admin privileges required.');
-          }
+          // If user exists in admin table, check their roles
+          const isAdmin = accessResult.rows[0]?.isadmin || false;
+          const isVendor = accessResult.rows[0]?.isvendor || false;
 
           // 4. Decode and verify the token
           const decoded = jwt.decode(token);
@@ -118,8 +116,14 @@ async function startApolloServer() {
           const verifiedUser = jwt.verify(token, process.env.SECRET_KEY, { clockTolerance: 60 });
           logger.info("Token verified successfully:", verifiedUser);
 
-          // 5. Return the verified user in the context
-          return { user: verifiedUser };
+          // 5. Return the verified user and roles in the context
+          return { 
+            user: verifiedUser,
+            roles: {
+              isAdmin,
+              isVendor
+            }
+          };
         } catch (err) {
           if (err.name === 'TokenExpiredError') {
             logger.error("Error: Token has expired.");
