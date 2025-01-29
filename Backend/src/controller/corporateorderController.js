@@ -14,6 +14,15 @@ redis.ping().then(() => {
   logger.error('Redis connection failed:', err);
 });
 
+const Ajv = require("ajv");
+
+const addFormats = require("ajv-formats");
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+
+addFormats(ajv);
+
+const {orderSchema } = require("../SchemaValidator/orderschema.js")
 // Fetch corporate categories
 const GetCorporateCategory = async (req, res) => {
   try {
@@ -213,7 +222,24 @@ const getOrderDetails = async (req, res) => {
 // Transfer cart to corporate order
 const transferCartToOrder = async (req, res) => {
   const { customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status } = req.body;
-
+  console.log("order123",req.body)
+  try {
+    req.body.order_details = JSON.parse(order_details);
+    req.body.customer_address = JSON.parse(customer_address);
+  } catch (err) {
+    return res.status(400).json({ error: 'Invalid JSON format in order_details or customer_address' });
+  }
+  const validate = ajv.compile(orderSchema);
+  const valid = validate(req.body);
+  console.log("valid mesg",valid)
+  if (!valid) {
+    console.log("Validation Error for adding order:",validate.errors)
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid request body',
+      errors: validate.errors
+    });
+  }
   try {
     logger.info('Transferring cart to order', { customer_generated_id, total_amount, paymentid });
     

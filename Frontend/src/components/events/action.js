@@ -57,11 +57,12 @@ try {
 
   export const cartToOrder = async(totalAmount,cartDetails,numberOfPlates,selectedDate,selectedTime,address)=>{
    console.log("in action",totalAmount,cartDetails,numberOfPlates,selectedDate,selectedTime,address)
+   const processing_date = new Date(selectedDate).toDateString();
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/transfer-cart-to-order`, {
       
     
-          delivery_status:"pending",
+          delivery_status:"processing",
           total_amount:totalAmount,
           PaymentId:null,
           delivery_details:null,
@@ -71,7 +72,7 @@ try {
           payment_status:"pending",
           event_order_status:"delivered",
           number_of_plates:numberOfPlates,
-          processing_date:selectedDate,
+          processing_date,
           processing_time:selectedTime
       }, {
         headers: {

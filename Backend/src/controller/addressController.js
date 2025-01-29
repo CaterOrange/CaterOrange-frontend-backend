@@ -4,6 +4,17 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const address_model = require('../models/addressModel');
 
+const Ajv = require("ajv");
+
+const addFormats = require("ajv-formats");
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+
+addFormats(ajv);
+
+const { addressSchema } = require("../SchemaValidator/addressSchema")
+const validate = ajv.compile(addressSchema);
+
 
 const createAddress = async (req, res) => {
     try {
@@ -31,8 +42,15 @@ const createAddress = async (req, res) => {
 
         const customer_id = verified_data.id;
         const { tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number } = req.body;
-
-        // Validate that required fields are provided
+            const valid = validate(req.body);
+                console.log('validate address',valid)
+                if (!valid) {
+                console.log("Error validation for address",validate.errors)
+                return res.status(400).json({
+                    message: 'Validation failed',
+                    errors: validate.errors
+                });
+                }
         if (!tag || !pincode || !line1 || !line2 || !location) {
             logger.warn('Missing required fields in address creation request');
             return res.status(400).json({ message: 'Missing required fields' });

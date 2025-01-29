@@ -13,6 +13,14 @@ const uniqid = require('uniqid');
 const crypto = require('crypto');      
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
+
+
+
+const http= require("http");
+const { Server } = require("socket.io");
+
+
+
 const SECRET_KEY = process.env.SECRET_KEY || 'CaterOrange';
 const redis = new Redis({
   host: 'localhost',  
@@ -23,7 +31,20 @@ redis.ping().then(() => {
 }).catch(err => {
   logger.error('Redis connection failed:', err);
 });
-// Route imports
+
+const Ajv = require("ajv");
+
+const addFormats = require("ajv-formats");
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+
+addFormats(ajv);
+
+const { cartSchema,cartOrderDetailsSchema} = require("./SchemaValidator/cartschema.js"); 
+const validateCart = ajv.compile(cartSchema);
+
+const validateCartOrderDetails = ajv.compile(cartOrderDetailsSchema);
+
 const { typeDefs, resolvers } = require('./routes/adminRoutes');
 const paymentRoutes = require('./routes/paymentRoutes.js');
 const addressRoutes = require('./routes/addressRoutes');
@@ -34,7 +55,6 @@ const customerRoutes = require('./routes/customerRoutes.js');
 
 const { fetchAndInsertCSVData } = require('../products.js');
  
-// Constants for PhonePe
 const PHONEPE_HOST_URL = "https://api-preprod.phonepe.com/apis/pg-sandbox";
 const MERCHANT_ID = "PGTESTPAYUAT86";
 const SALT_KEY = "96434309-7796-489d-8924-ab56988a6076";
@@ -42,16 +62,41 @@ const SALT_INDEX = 1;
   
 
 const app = express();
-//'https://admin.caterorange.com','http://dev.caterorange.com','https://dev.caterorange.com',
-// Middleware
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    // origin: [ 'http://localhost:3000','http://localhost:3001','http://192.168.1.48:4000'],
+    origin: '*',
+
+    methods: ["GET", "POST"]
+  }
+});
 app.use(express.json());
+app.use((req,res,next)=>{
+  req.io=io;
+  next();
+})
 app.use(cors({
  origin: [ 'https://studio.apollographql.com','http://localhost:3000','http://localhost:3001'],
  credentials: true,
  allowedHeaders: ['Authorization', 'Content-Type', 'token']
 }));
 
-// Route middleware
+io.on('connection', (socket) => {
+  console.log(`A user connected: ${socket.id}`);
+  
+  socket.on('message', (data) => {
+    console.log(`Message received: ${data}`);
+  
+    io.emit('message', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
 app.use('/api', addressRoutes);
 app.use('/api', paymentRoutes);
 app.use('/api', categoryRoutes);
@@ -83,14 +128,12 @@ async function startApolloServer() {
     expressMiddleware(server, {
       context: async ({ req }) => {
         try {
-          // 1. Retrieve the token from the request headers
           const token = req.headers['token'];
           if (!token) {
             logger.error("Authentication token is missing.");
             throw new Error('Authentication token is missing.');
           }
 
-          // 2. Query the database for customer information
           const query = 'select customer_generated_id from customer where access_token=$1';
           const result = await client.query(query, [token]);
 
@@ -296,34 +339,87 @@ app.get('/api/cart', async (req, res) => {
   }
 });
 
-// Update cart item
-app.post('/api/cart/update', async (req, res) => {
+app.post("/api/cart/update", async (req, res) => {
   try {
+    const { item, itemId } = req.body;
+    console.log("req",req.body)
+    const token = req.headers["token"];
     
-    const {itemId, item } = req.body;
-    const token = req.headers['token']
+    console.log("Request Body:", req.body);
 
-    let verified_data;
+    let parsedItem;
+    try {
+      parsedItem = JSON.parse(item); 
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid item format",
+        error: error.message,
+      });
+    }
+
+    const isCartValid = validateCart({ item: parsedItem, itemId });
+    console.log("isCartValid", isCartValid); 
+    console.log("Validation Errors:", validateCart.errors);
+    if (!isCartValid) {
+      console.log("Error validation for cart",validateCart.errors)
+        return res.status(400).json({
+            message: 'Validation failed',
+            errors: validateCart.errors
+        });
+    }
+    
     
     try {
-      verified_data = jwt.verify(token, process.env.SECRET_KEY);
-      logger.info('Token verified successfully for fetching order details');
-    } catch (err) {
-      logger.error('Token verification failed', { error: err.message });
-      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+      let parsedCartOrderDetails;
+      if (typeof parsedItem.cart_order_details === "string") {
+        parsedCartOrderDetails = JSON.parse(parsedItem.cart_order_details); 
+      } else {
+        parsedCartOrderDetails = parsedItem.cart_order_details; 
+      }
+      console.log("Parsed cart_order_details:", parsedCartOrderDetails);
+      
+      const isCartOrderDetailsValid = validateCartOrderDetails(parsedCartOrderDetails);
+      console.log("iscartorder",isCartOrderDetailsValid)
+    
+      if (!isCartOrderDetailsValid) {
+        console.log("Error validation for cart order details",validateCartOrderDetails.errors)
+        return res.status(400).json({
+            message: 'Validation failed',
+            errors: validateCartOrderDetails.errors
+        });
+      }
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: "cart_order_details must be a valid JSON string",
+        error: error.message,
+      }).end(); 
     }
-    console.log(verified_data)
+
+    console.log("token",token)
+    let verified_data;
+    try {
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
+      console.log("Verified Data:", verified_data);
+      logger.info("Token verified successfully for fetching order details");
+    } catch (err) {
+      logger.error("Token verification failed", { error: err.message });
+      return res.status(401).json({ success: false, message: "Invalid or expired token" });
+    }
+
     const userId = verified_data.id;
-    console.log(userId)
+
     await redis.hset(`cart:${userId}`, itemId, JSON.stringify(item));
-    res.json({ success: true });
+    req.io.emit("cartUpdated", { itemId, item });
+    res.json({ success: true, message: "Cart updated successfully" });
   } catch (error) {
-    console.error('Error updating cart item:', error);
-    res.status(500).json({ error: 'Failed to update cart item' });
+    logger.error("Error updating cart item", { error: error.message });
+    res.status(500).json({ success: false, message: "Failed to update cart item" });
   }
 });
 
-// Remove cart item
+
 app.delete('/api/cart/:itemId', async (req, res) => {
   try {
     const {  itemId } = req.params;
@@ -341,6 +437,8 @@ app.delete('/api/cart/:itemId', async (req, res) => {
     console.log(verified_data)
     const userId = verified_data.id;
     await redis.hdel(`cart:${userId}`, itemId);
+    req.io.emit("cartUpdated", { itemId });
+
     res.json({ success: true });
   } catch (error) {
     console.error('Error removing cart item:', error);
@@ -349,7 +447,6 @@ app.delete('/api/cart/:itemId', async (req, res) => {
 });
 
 
-// Initialize application
 const initializeApp = async () => {
  try {
  await createDatabase();
@@ -366,17 +463,18 @@ const initializeApp = async () => {
  
  const PORT = process.env.PORT || 4000; 
 
- const server = app.listen(PORT, (err) => {
- if (err) {
- logger.error('Error starting the server:', err.message || err);
- process.exit(1); // Exit the process if the server fails to start
- } else {
- logger.info(`Server is running on port ${PORT}`);
- logger.info(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
- }
- });
- 
- // Listen for server errors (like port binding issues)
+
+
+
+server.listen(PORT, (err) => {
+  if (err) {
+  logger.error('Error starting the server:', err.message || err);
+  process.exit(1); 
+  } else {
+  logger.info(`Server is running on port ${PORT}`);
+  logger.info(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
+  }
+  });
  server.on('error', (err) => {
  logger.error('Server encountered an error:', err.message || err);
  process.exit(1);
@@ -385,7 +483,6 @@ const initializeApp = async () => {
  
  
  
- // Initialize data
  await fetchAndInsertCSVData();
  
  } catch (err) {
@@ -394,7 +491,7 @@ const initializeApp = async () => {
  }
 };
   
-// Error handling
+
 process.on('unhandledRejection', (err) => {
  logger.error('Unhandled Promise Rejection:', err);
  process.exit(1);

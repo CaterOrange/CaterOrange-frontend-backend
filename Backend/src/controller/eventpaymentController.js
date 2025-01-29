@@ -8,9 +8,30 @@ const redis = new Redis({
   port: 6379, 
  connectTimeout: 20000
 });
+
+
+const Ajv = require("ajv");
+
+const addFormats = require("ajv-formats");
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+
+addFormats(ajv);
+const { eventpaymentSchema } = require('../SchemaValidator/paymentSchema.js'); 
+const validate = ajv.compile(eventpaymentSchema);
+
 const event_payment = async (req, res) => {
   const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id,corporateorder_id } = req.body;
   console.log("event order data:",corporateorder_id);
+  const valid = validate(req.body);
+console.log('validate payment',valid)
+if (!valid) {
+  console.log("Error validation for payment",validate.errors)
+  return res.status(400).json({
+    message: 'Validation failed',
+    errors: validate.errors
+  });
+}
   const insertPaymentQuery = `
     INSERT INTO payment (
       PaymentType, 
@@ -86,6 +107,8 @@ const deleteEventCart= async (customer_id) => {
   try {
     // Update corporate order details in the database
     const result = await redis.del(`E${customer_id}`);
+    req.io.emit("EventcartUpdated",{customer_id});
+
     if (result === 1) {
       console.log(`Cart for user ${customer_id} deleted successfully.`);
     } else {

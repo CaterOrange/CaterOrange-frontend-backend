@@ -10,6 +10,9 @@ import { StoreContext } from "../../services/contexts/store";
 import './css/date.css';
 import { useNavigate } from "react-router-dom";
 
+import { io } from "socket.io-client";
+
+
 function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     const [selectedDates, setSelectedDates] = useState([]);
     const [monthlyIncludedDays, setMonthlyIncludedDays] = useState({});
@@ -20,11 +23,17 @@ function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     const [isDragging, setIsDragging] = useState(false);
     const [lastClickedDate, setLastClickedDate] = useState(null);
     const [fromDate, setFromDate] = useState(null);
+    const [CartData, setCartData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+        
     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
     const { state, dispatch } = useContext(StoreContext);
     const [toDate, setToDate] = useState(null);
     const { updateCartCount } = useCart();
     const navigate = useNavigate(); 
+
+
+    
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const currentDate = new Date();
     VerifyToken();
@@ -188,7 +197,6 @@ function DateComponent({ foodtype, quantity ,onSaveSuccess, onError }) {
     };
 
 
-// Custom date formatting function
 const formatDate = (date) => {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -207,12 +215,165 @@ const formatCartItem = (cartDetails, amount) => {
       total_amount: amount
     };
   };
-  
 
-const handleSaveDates = async () => {
-    const dates = selectedDates;
-    const local = dates.length * quantity;
+//   const formatCartItem = {
+//     cart_order_details: JSON.stringify(cartDetails),
+//     total_amount: amount
+//   };
   
+//   useEffect(() => {
+//     const socket = io('http://localhost:4000', {
+//         path: '/socket.io',
+//         transports: ['websocket', 'polling'], 
+//     });
+//     socket.on('connect', () => {
+//       console.log(`Connected to server with socket id1: ${socket.id}`);
+//       socket.emit('message', 'Hello, server!');
+//     });
+//     socket.on('cartUpdated', (data) => {
+//         console.log('Cart updated:', data);
+//       });
+ 
+
+//     socket.on('message', (data) => {
+//       console.log(`Message from server: ${data}`);
+//     });
+
+//     socket.on('disconnect', () => {
+//       console.log('Disconnected from server');
+//     });
+
+//     return () => {
+//       socket.disconnect();
+//     };
+//   }, []);
+
+
+
+// const handleSaveDates = async () => {
+//     const dates = selectedDates;
+//     const local = dates.length * quantity;
+//     console.log("hiiiii")
+  
+//     if (quantity === 0) {
+//       onError('Please select a quantity');
+//       return;
+//     } else if (dates.length === 0) {
+//       onError('Please select dates');
+//       return;
+//     }
+  
+//     try {
+//       const token = localStorage.getItem('token');
+//       if(isTokenExpired(token))
+//         {
+//             navigate('/');
+//         }
+//       const cartDetailsPromises = dates.map(async (originalDate) => {
+//         const formattedDate = formatDate(originalDate);
+//   let Count;
+//         const data = {
+//           date: formattedDate,
+//           type: foodtype.category_name,
+//           image: foodtype.category_media,
+//           quantity: quantity,
+//           price: foodtype.category_price,
+//           category_id: foodtype.category_id
+//         };
+  
+//         const amount = foodtype.category_price * quantity;
+//         const item = formatCartItem([data], amount); 
+//         const itemId = `${foodtype.category_name}_${formattedDate}`;
+//         console.log("item id",itemId)
+//         const response = await axios.post(`${process.env.REACT_APP_URL}/api/cart/update`, {
+//           item: JSON.stringify(item),
+//           itemId: itemId
+//         }, {
+//           headers: { token }
+//         });
+//         console.log("response",response.data)
+//         if (response.status === 200) {
+//             const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+//             try{
+            
+//             const response = await axios.get(
+//                 `${process.env.REACT_APP_URL}/api/customer/getCartCount`,
+//                 { headers: { token } }
+//             );
+//             console.log('res',response)
+
+//             if(response.status === 200){
+//                 console.log("count fetched successfully", response.data.totalCartCount)
+//                 // setCount(response.data.data)
+//                  Count= response.data.totalCartCount;
+//             }
+//         }catch(error){
+//             console.error('Error fetching cart count:', error);
+//         }
+//         console.log("snehaa", Count)
+//             // Ensure cartCount is treated as a number
+//             const newCount = Count; // Correctly adding numbers.
+            
+//             console.log("cart count:", newCount)
+
+//             const updatedUserDP = {
+//                 ...storedUserDP,
+//                 cartCount: newCount
+//             };
+
+//             localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+//             updateCartCount(newCount); // Single update call
+       
+//             console.log('Cart details saved successfully:', response.data);
+//             onSaveSuccess();
+//         } else {
+//             console.error('Failed to save cart details:', response.data);
+//             onError('Failed to save cart details');
+//         }
+//         return response.status === 200;
+//       });
+  
+//       const results = await Promise.all(cartDetailsPromises);
+  
+//       if (results.every((status) => status)) {
+//         onSaveSuccess();
+//       } else {
+//         onError('Failed to save one or more cart details');
+//       }
+//     } catch (error) {
+//       console.error('Error saving cart details:', error);
+//       onError('Error saving cart details');
+//     }
+//   };
+  
+const fetchCart = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
+      return null;
+    }
+  
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart`, {
+        headers: { token },
+      });
+      console.log("response",response.data)
+      setCartData(response.data);
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleSaveDates = async () => {
+    const dates = selectedDates;
+    console.log("dates",dates)
+    const local = dates.length * quantity;
   
     if (quantity === 0) {
       onError('Please select a quantity');
@@ -224,73 +385,94 @@ const handleSaveDates = async () => {
   
     try {
       const token = localStorage.getItem('token');
-      if(isTokenExpired(token))
-        {
-            navigate('/');
-        }
+      if (isTokenExpired(token)) {
+        navigate('/');
+        return;
+      }
+  
+      // Fetch current cart data first
+      const currentCart = await fetchCart();
+      
       const cartDetailsPromises = dates.map(async (originalDate) => {
         const formattedDate = formatDate(originalDate);
-  let Count;
+        const itemId = `${foodtype.category_name}_${formattedDate}`;
+        let newQuantity = quantity;
+     
+       
+        
+        if (currentCart[itemId]) {
+        
+            const existingItemData = JSON.parse(JSON.parse(currentCart[itemId]));
+        
+            if (existingItemData && existingItemData.cart_order_details) {
+                const existingCartDetails = typeof existingItemData.cart_order_details === "string"
+                    ? JSON.parse(existingItemData.cart_order_details)
+                    : existingItemData.cart_order_details;
+        
+        
+                if (Array.isArray(existingCartDetails) && existingCartDetails.length > 0) {
+                    newQuantity += existingCartDetails[0].quantity
+                    
+                } else {
+                    console.error("cart_order_details is not an array or is empty.");
+                }
+            } else {
+                console.log("No cart_order_details found for itemId:", itemId);
+            }
+        } else {
+            console.log(`ItemId ${itemId} not found in currentCart`);
+        }
+        
+        
+        const amount = foodtype.category_price * newQuantity;
+
+  
         const data = {
           date: formattedDate,
           type: foodtype.category_name,
           image: foodtype.category_media,
-          quantity: quantity,
+          quantity: newQuantity,
           price: foodtype.category_price,
           category_id: foodtype.category_id
         };
   
-        const amount = foodtype.category_price * quantity;
-        const item = formatCartItem([data], amount); // Each date as a single item
-        const itemId = `${foodtype.category_name}_${formattedDate}_${Date.now()}`; // Unique itemId for each date
+        const item = formatCartItem([data], amount);
   
-        // Save each item to the backend
         const response = await axios.post(`${process.env.REACT_APP_URL}/api/cart/update`, {
           item: JSON.stringify(item),
           itemId: itemId
         }, {
           headers: { token }
         });
+  
         if (response.status === 200) {
-            // Update local storage and cart count only after successful API call
-            const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
-            try{
-            
-            const response = await axios.get(
-                `${process.env.REACT_APP_URL}/api/customer/getCartCount`,
-                { headers: { token } }
+          try {
+            const countResponse = await axios.get(
+              `${process.env.REACT_APP_URL}/api/customer/getCartCount`,
+              { headers: { token } }
             );
-            console.log('res',response)
-
-            if(response.status === 200){
-                console.log("count fetched successfully", response.data.totalCartCount)
-                // setCount(response.data.data)
-                 Count= response.data.totalCartCount;
-            }
-        }catch(error){
-            console.error('Error fetching cart count:', error);
-        }
-        console.log("snehaa", Count)
-            // Ensure cartCount is treated as a number
-            const newCount = Count; // Correctly adding numbers.
-            
-            console.log("cart count:", newCount)
-
-            const updatedUserDP = {
+  
+            if (countResponse.status === 200) {
+              const newCount = countResponse.data.totalCartCount;
+              const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+              const updatedUserDP = {
                 ...storedUserDP,
                 cartCount: newCount
-            };
-
-            localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
-            updateCartCount(newCount); // Single update call
-       
-            console.log('Cart details saved successfully:', response.data);
-            onSaveSuccess();
+              };
+  
+              localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+              updateCartCount(newCount);
+            }
+          } catch (error) {
+            console.error('Error fetching cart count:', error);
+          }
+  
+          return true;
         } else {
-            console.error('Failed to save cart details:', response.data);
-            onError('Failed to save cart details');
+          console.error('Failed to save cart details:', response.data);
+          onError('Failed to save cart details');
+          return false;
         }
-        return response.status === 200;
       });
   
       const results = await Promise.all(cartDetailsPromises);
@@ -306,7 +488,6 @@ const handleSaveDates = async () => {
     }
   };
   
-
 
 
 const handleclear = () => {

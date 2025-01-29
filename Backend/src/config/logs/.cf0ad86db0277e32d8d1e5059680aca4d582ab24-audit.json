@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/harshitha/Downloads/CaterOrange/Backend/src/config/logs/.cf0ad86db0277e32d8d1e5059680aca4d582ab24-audit.json",
+    "files": [
+        {
+            "date": 1738050080642,
+            "name": "/home/harshitha/Downloads/CaterOrange/Backend/src/config/logs/application-2025-01-28.log.1",
+            "hash": "4adecca65686b30fc010211b09aa2310f890fb86be4dbbe04dea5b7e21a89ce9"
+        },
+        {
+            "date": 1738127717652,
+            "name": "/home/harshitha/Downloads/CaterOrange/Backend/src/config/logs/application-2025-01-29.log",
+            "hash": "a0f33a6f1db90466e596b3b80e6925b1c1f47b112f6ef4e56d506dd8149d490b"
+        }
+    ],
+    "hashType": "sha256"
+}

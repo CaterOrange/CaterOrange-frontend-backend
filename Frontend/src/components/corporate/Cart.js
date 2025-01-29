@@ -7,7 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import AddressForm from '../Address/AddressForm';
 import { VerifyToken } from '../../MiddleWare/verifyToken';
 // import AddressForm from '../Address/AddressForm';
-
+import { io } from 'socket.io-client';
 const MyCart = () => {
   const [Total, setTotal] = useState(0);
   const [CartData, setCartData] = useState([]);
@@ -15,7 +15,7 @@ const MyCart = () => {
   const [cartIndividualData, setCartIndividualData] = useState([]);
   const [redirectUrl, setRedirectUrl] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(true);
   const [Address, setAddress] = useState([]);
   const OrderData = [];
   const { updateCartCount } = useCart();
@@ -43,39 +43,117 @@ const MyCart = () => {
   const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   const fetchCart = async () => {
+  //     const token = localStorage.getItem('token');
+  //     if (!token) {
+  //       navigate('/'); // Redirect to home if token is not found
+  //       return;
+  //     }
+
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart`, {
+  //         headers: { 'token': token },
+  //       });
+  //       console.log('in carts', response.data);
+  //       const data = response.data
+  //       console.log(data)
+  //       setCartData(data);
+  //       console.log("cart", CartData)
+  //     } catch (error) {
+  //       console.error('Error fetching cart data:', error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchCart();
+  // }, [navigate]);
+
+
+  const fetchCart = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/'); 
+      return;
+    }
+
+    // setIsLoading(true);
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart`, {
+        headers: { token },
+      });
+      setCartData(response.data);
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+    } 
+  };
+
   useEffect(() => {
-    const fetchCart = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/'); // Redirect to home if token is not found
-        return;
-      }
+    const socket = io(process.env.REACT_APP_URL, {
+      transports: ['websocket', 'polling'] 
+    });
+    socket.on('connect', () => {
+      console.log(`Connected to server with socket id: ${socket.id}`);
+      socket.emit('message', 'Hello, server!');
+    });
+    socket.on('cartUpdated', (data) => {
+        console.log('Cart updated:', data);
+        fetchCart();
+      });
+ 
 
-      setIsLoading(true);
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart`, {
-          headers: { 'token': token },
-        });
-        console.log('in carts', response.data);
-        const data = response.data
-        console.log(data)
-        setCartData(data);
-        console.log("cart", CartData)
-      } catch (error) {
-        console.error('Error fetching cart data:', error);
-      } finally {
-        setIsLoading(false);
-      }
+    socket.on('message', (data) => {
+      console.log(`Message from server: ${data}`);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    return () => {
+      socket.disconnect();
     };
+  }, []);
 
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     navigate('/'); 
+  //     return;
+  //   }
+
+    // // const socket = io('http://localhost:4000');
+    // const socket = io('http://localhost:4000', {
+    //   path: '/socket.io'  
+    // });
+
+  //   socket.on('connect', () => {
+  //     console.log('Connected to WebSocket server:', socket.id);
+  //   });
+
+  //   // Listen for cart updates and refetch data when needed
+  //   socket.on('cartUpdated', (data) => {
+  //     console.log('Cart updated for user:', data.userId);
+  //     fetchCart();
+  //   });
+
+  //   // Cleanup WebSocket connection on component unmount
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, []); 
+
+  useEffect(() => {
     fetchCart();
-  }, [navigate]);
+  }, [navigate]); 
 
   useEffect(() => {
     const fetchCustomer = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        navigate('/'); // Redirect to home if token is not found
+        navigate('/');
         return;
       }
       try {
@@ -131,7 +209,6 @@ const MyCart = () => {
     );
     updateCartCount(count);
 
-    // Update local storage whenever count changes
     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
     const updatedUserDP = {
       ...storedUserDP,
@@ -140,7 +217,6 @@ const MyCart = () => {
     localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
   }, [sortedData]);
 
-  // useEffect to handle changes in local storage
   useEffect(() => {
     const handleStorageChange = () => {
       const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
@@ -179,7 +255,6 @@ const MyCart = () => {
       Object.entries(CartData).forEach(async ([key, value]) => {
         // Parse the entire cart value which might be multiple times stringified
         const parsedCart = await parseNestedJSON(value);
-        console.log(" parsedCart", parsedCart);
         if (!parsedCart || typeof parsedCart !== 'object') {
           console.error('Invalid cart data format');
           return;
@@ -204,7 +279,7 @@ const MyCart = () => {
       console.error('Error processing cart data:', error);
       setCartIndividualData([]);
     }
-  }, [CartData], []);
+  }, [CartData]);
 
 
 
@@ -464,11 +539,10 @@ const MyCart = () => {
   };
 
   const handleViewPayment = async () => {
-
+    console.log("hiiiii")
     try {
 
       for (let i = 0; i < sortedData.length; i++) {
-        // const content = cartIndividualData[i].content;
 
         const Data = {
           category_id: sortedData[i].category_id,
@@ -585,9 +659,7 @@ const MyCart = () => {
       } else {
         setError('Network error or no response from the server.');
       }
-    } finally {
-      setLoading(false);
-    }
+    } 
   }
 
   const handleAddressAdd = () => {
@@ -632,9 +704,9 @@ const MyCart = () => {
     }));
     handleAddressFormToggle();
   };
-  if (isLoading) {
-    return <div className="text-center mt-8">Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className="text-center mt-8">Loading...</div>;
+  // }
   const handleQuantityChange = (index, value) => {
     // Handle empty input
     if (value === '') {
@@ -773,7 +845,6 @@ const MyCart = () => {
           </div>
 
 
-          {/* Cart items section */}
           {sortedData.length === 0 ? (
             <div className="bg-white p-6 rounded-lg shadow-lg text-center">
               <h2 className="text-xl font-bold mb-4">Your cart is empty</h2>
@@ -783,7 +854,6 @@ const MyCart = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {sortedData.map((item, index) => (
                 <div key={index} className="relative bg-white rounded-lg shadow-md p-4">
-                  {/* Remove Button */}
                   <button
                     className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
                     onClick={() => handleRemove(index, sortedData[index].quantity)}
@@ -841,15 +911,14 @@ const MyCart = () => {
       <footer className="bg-white shadow-md p-4 fixed bottom-0 left-0 right-0 z-10">
         <div className="flex justify-between items-center max-w-6xl mx-auto">
           <h2 className="text-lg font-bold">Total: ₹{Total}/-</h2>
-          {/* Pay Now button - disabled when cart is empty */}
           <button
             className={`p-2 px-4 rounded-lg shadow-md transition 
  ${isDisabled
-                ? 'bg-gray-300 cursor-not-allowed' // Faded button when disabled
-                : 'bg-teal-800 text-white hover:bg-teal-600' // Normal button
+                ? 'bg-gray-300 cursor-not-allowed' 
+                : 'bg-teal-800 text-white hover:bg-teal-600' 
               }`}
             onClick={handleViewPayment}
-            disabled={isDisabled} // Disable if cart is empty or address is missing
+            disabled={isDisabled} 
           >
             Pay Now
           </button>

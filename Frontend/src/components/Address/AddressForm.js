@@ -517,7 +517,6 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
                     </div>
                 )}
 
-                {/* Shipping/Default Details Section */}
                 <div className="space-y-2">
                     <div className="flex items-center">
                         <input

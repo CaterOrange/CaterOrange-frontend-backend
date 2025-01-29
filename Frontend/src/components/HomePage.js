@@ -84,7 +84,9 @@ const HomePage = () => {
     const form = event.target;
     const plates = form.elements['plates'].value;
     localStorage.setItem('plates',plates);
-    console.log("selectedtime:",selectedTime);
+    localStorage.setItem('selectedtime',selectedTime);
+    localStorage.setItem('selecteddate',selectedDate);
+
     if (!form.checkValidity()) {
       form.reportValidity();
     } else {

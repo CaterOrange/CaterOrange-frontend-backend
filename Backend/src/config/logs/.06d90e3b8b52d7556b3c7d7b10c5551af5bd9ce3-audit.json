@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/harshitha/Downloads/CaterOrange/Backend/src/config/logs/.06d90e3b8b52d7556b3c7d7b10c5551af5bd9ce3-audit.json",
+    "files": [
+        {
+            "date": 1738129162117,
+            "name": "/home/harshitha/Downloads/CaterOrange/Backend/src/config/logs/error-2025-01-29.log",
+            "hash": "66fb7b5e2d78afa765c4aee083580ae6a80b8a485e8142e86458d33bce4f12f3"
+        }
+    ],
+    "hashType": "sha256"
+}

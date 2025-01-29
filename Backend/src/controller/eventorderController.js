@@ -12,54 +12,71 @@ const redis = new Redis({
   port: 6379, 
  connectTimeout: 20000
 });
+const Ajv = require("ajv");
+
+const addFormats = require("ajv-formats");
+
+const ajv = new Ajv({ allErrors: true, strict: false });
+
+addFormats(ajv);
+
+const {eventCartSchema} = require("../SchemaValidator/cartschema.js")
+const {eventOrderSchema} = require("../SchemaValidator/orderschema.js")
 
 // Function to handle adding items to the cart
 const addToCart = async (req, res) => {
   const { totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime } = req.body;
-  console.log("backend add", totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime);
+  console.log("Received addToCart request:", req.body);
 
   try {
-    const token = req.headers['token'];
-    
+    console.log("Validation result:");
+
+    const validate = ajv.compile(eventCartSchema);
+    const valid = validate(req.body);
+    console.log("Validation result:", valid);
+
+    if (!valid) {
+      console.error("Validation errors:", validate.errors);
+      return res.status(400).json({
+        success: false,
+        message: "Invalid request body",
+        errors: validate.errors,
+      });
+    }
+
+    const token = req.headers["token"];
     if (!token) {
-      return res.status(401).json({ success: false, message: 'Access token is missing or not provided' });
+      return res.status(401).json({ success: false, message: "Access token is missing or not provided" });
     }
 
     let verified_data;
     try {
       verified_data = jwt.verify(token, process.env.SECRET_KEY);
     } catch (err) {
-      if (err instanceof jwt.TokenExpiredError) {
-        return res.status(401).json({ success: false, message: 'Token has expired' });
-      } else if (err instanceof jwt.JsonWebTokenError) {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
-      } else {
-        return res.status(401).json({ success: false, message: 'Token verification failed' });
-      }
+      console.error("Token verification failed:", err.message);
+      return res.status(401).json({ success: false, message: "Token verification failed" });
     }
 
     const customer_generated_id = verified_data.id;
+    const cartKey = `E${customer_generated_id}`;
+    const cartDataToStore = { totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime };
 
     // Store cart data in Redis
-    const cartKey = `E${customer_generated_id}`;
-    const cartDataToStore = {
-      totalAmount,
-      cartData,
-      address,
-      selectedDate,
-      numberOfPlates,
-      selectedTime
-    };
+    const result = await redis.set(cartKey, JSON.stringify(cartDataToStore));
+    req.io.emit("EventcartUpdated", { cartKey ,cartDataToStore });
 
-    await redis.set(cartKey, JSON.stringify(cartDataToStore));
-    console.log("Item added to cart in Redis successfully");
+    if (!result) {
+      throw new Error("Failed to store cart data in Redis");
+    }
 
-    res.status(200).json({ success: true, message: 'Item added to cart successfully in Redis' });
+    console.log("Cart data stored successfully in Redis with key:", cartKey);
+    res.status(200).json({ success: true, message: "Item added to cart successfully in Redis" });
   } catch (error) {
-    console.error('Error adding product to cart in Redis:', error);
-    res.status(500).json({ message: 'Server error', error });
+    console.error("Error in addToCart:", error.message);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
+
 
 // Function to retrieve items from the cart
 const getFromCart = async (req, res) => {
@@ -218,9 +235,21 @@ const transferCartToOrder = async (req, res) => {
     processing_date,
     processing_time,
   } = req.body;
+  console.log('body',req.body)
   const token =req.headers['token']
   let verified_data;
     try {
+      const validate = ajv.compile(eventOrderSchema);
+      const valid = validate(req.body);
+      console.log("valid msg",valid)
+      if (!valid) {
+        console.log("Validation Error for adding order:",validate.errors)
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid request body',
+          errors: validate.errors
+        });
+      }
       verified_data = jwt.verify(token, process.env.SECRET_KEY);
     } catch (err) {
       logger.error('Token verification failed:', err);

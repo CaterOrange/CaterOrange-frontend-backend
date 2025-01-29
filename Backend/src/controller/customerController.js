@@ -9,6 +9,19 @@ const nodemailer = require('nodemailer');
 const client = require('../config/dbConfig.js');
 const gidStorage = require('../middlewares/loggingMiddleware.js');
 
+
+const Ajv = require("ajv");
+
+const addFormats = require("ajv-formats");
+
+const ajv = new Ajv({ allErrors: true, strict: false, $data: true });
+addFormats(ajv);
+const { customerSchema ,loginSchema} = require('../SchemaValidator/signinschema.js'); 
+const validate = ajv.compile(customerSchema);
+
+const validatelogin = ajv.compile(loginSchema);
+
+
 let otpStore = {}; // This should be in memory or persistent storage in production
 const send_otp = async (req, res) => {
     const { email } = req.body;
@@ -87,9 +100,21 @@ const verify_otp = async (req, res) => {
 
 
 // Register function
+
 const register = async (req, res) => {
     try {
         const { customer_name, customer_email, customer_password, customer_phonenumber, confirm_password } = req.body;
+
+        const valid = validate(req.body);
+        console.log('validate sign up',valid)
+        if (!valid) {
+        console.log("Error validation for sign up",validate.errors)
+        return res.status(400).json({
+            message: 'Validation failed',
+            errors: validate.errors
+        });
+        }
+  
         const minNameLength = 3;
         const maxNameLength = 50;
         const minPasswordLength = 8;
@@ -282,9 +307,6 @@ const register = async (req, res) => {
     }
 };
 
-
-
-
 const login = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -293,8 +315,16 @@ const login = async (req, res) => {
 
         try {
             const { customer_email, customer_password } = req.body;
-            console.log('Provided password:', customer_password);
-
+            
+            const valid = validatelogin(req.body);
+            console.log('validate login',valid)
+            if (!valid) {
+              console.log("Error validation for login",validatelogin.errors)
+              return res.status(400).json({
+                message: 'Validation failed',
+                errors: validatelogin.errors
+              });
+            }
             // Fetch user data from the database
             const customer = await customer_model.findCustomerEmail(customer_email);
             console.log('Customer fetched from database:', customer);
@@ -341,14 +371,10 @@ const login = async (req, res) => {
                 .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
                 .trim()
                 const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
-
+                console.log('Admin check result:', checkIsAdmin);
                 const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
-
                 const customername=customer.customer_name;
-        
-                const checkIsVendor = await customer_model.findVendorByCustomerId(customer.customer_generated_id);
-                const isVendor = checkIsVendor ? checkIsVendor.isvendor : false;
-               
+                console.log('Is admin:', isAdmin);
             // Verify the existing token or generate a new one
             let token;
             try {
@@ -356,6 +382,7 @@ const login = async (req, res) => {
                 var uat = customer.access_token;
                 const id=customer.customer_generated_id;
                 gidStorage.setGid(id);
+                console.log("id is here",id) // ok i am getting the code 
                 logger.info('Token verified successfully',uat );
             } catch (err) {
                 const gid=customer.customer_generated_id;
@@ -368,14 +395,14 @@ const login = async (req, res) => {
                 success: true,
                 message: 'Login successful',
                 token: uat,
-                isAdmin: isAdmin,
-                isVendor: isVendor
+                isAdmin: isAdmin
             });
         } catch (err) {
             logger.error('Error during user login', { error: err.message });
             res.status(500).json({ error: err.message });
         }
     }
+;
 
 const forgotPassword = async (req, res) => {
         const errors = validationResult(req);

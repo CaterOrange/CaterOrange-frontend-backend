@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 
 import Body from './Body';
 import './css/styles.css';
@@ -85,6 +86,32 @@ const Header = ({ user }) => {
     }
   }, [fetchCount, updateCartCount]);
 
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_URL, {
+      transports: ['websocket', 'polling'] 
+    });
+    socket.on('connect', () => {
+      console.log(`Connected to server with socket id: ${socket.id}`);
+      socket.emit('message', 'Hello, server!');
+    });
+    socket.on('cartUpdated', (data) => {
+        console.log('Cart updated:', data);
+        fetchCount();
+      });
+ 
+
+    socket.on('message', (data) => {
+      console.log(`Message from server: ${data}`);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   return (
     <>
       <header className="fixed top-0 left-0 w-full bg-teal-800 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">

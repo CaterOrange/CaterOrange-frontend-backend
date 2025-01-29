@@ -5,7 +5,9 @@ import { cartToOrder } from './action';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import { isTokenExpired, VerifyToken } from '../../MiddleWare/verifyToken';
+import { io } from 'socket.io-client';
 
+// import { set } from 'react-datepicker/dist/date_utils'
 
 const ToggleSwitch = ({ isOn, onToggle }) => (
 
@@ -19,9 +21,10 @@ const ToggleSwitch = ({ isOn, onToggle }) => (
     </div>
 );
 
-// MenuItem Component
 const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggleOn }) => {
+    console.log('chetha',item,checked,toggleState)
     const shouldDisplayToggle = item['plate_units'] !== null && item['wtorvol_units'] !== null;
+    console.log('neetoggle',toggleState)
     const [isOpen, setIsOpen] = useState(false);
     const handleToggle = () => {
         setIsOpen(!isOpen);
@@ -51,7 +54,7 @@ const MenuItem = ({ item, checked, toggleState, onToggleUnit, onCheck, mainToggl
                     <div className="flex items-center">
                         <ToggleSwitch
                             isOn={toggleState[item['productid']] === 'wtorvol_units'}
-                            onToggle={() => onToggleUnit(item['productid'])}
+                            onToggle={() => onToggleUnit(item['productid'],item)}
                         />
                     </div>
                 )}
@@ -102,7 +105,7 @@ const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit
                             checked={checkedItems[item['productid']] || false}
                             toggleState={toggleState}
                             onToggleUnit={onToggleUnit}
-                            onCheck={() => onCheck(item['productid'])}
+                            onCheck={() => onCheck(item['productid'],item)}
                             mainToggleOn={mainToggleOn}
                         />
                     ))}
@@ -112,8 +115,8 @@ const MenuCategory = ({ category, items, checkedItems, toggleState, onToggleUnit
     );
 };
 
-const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, onUpdateQuantity, toggleState, onToggleUnit, address, selectedTime, onRemoveItem, onChangeAddress, onClearCart }) => {
-
+const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate, toggleState, onToggleUnit, address, selectedTime, onRemoveItem, onChangeAddress, onClearCart }) => {
+    
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [cartId, setCartId] = useState(0);
@@ -121,10 +124,9 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
     const [localQuantities, setLocalQuantities] = useState({});
     const [cartDetails, setCartDetails] = useState([]);
     const navigate = useNavigate();
-    console.log("huhuuu")
     VerifyToken();
     const token = localStorage.getItem('token');
-    console.log('hii');
+
     const fetchCart = async () => {
         try {
             if (!token || isTokenExpired(token)) {
@@ -135,11 +137,9 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
             });
             console.log('in carts', response.data);
 
-            // Extracting cartData from response
             const cartDataArray = response.data?.cartitem?.cartData || [];
             console.log('Extracted Cart Data:', cartDataArray);
 
-            // Store cartData in a state variable
             setCartDetails(cartDataArray);
         } catch (error) {
             console.error('Error fetching cart data:', error);
@@ -160,8 +160,6 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
 
         if (selectedUnit === 'plate_units') {
             const priceperunit = item['priceperunit'];
-            console.log("priceperunit", priceperunit);
-            // const minunitsperplate = item['minunitsperplate'];
             totalCost = (priceperunit * numberOfPlates * quantity).toFixed(2);
 
         }
@@ -170,15 +168,10 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
             const min_wtorvol_units_per_plate = item['min_wtorvol_units_per_plate'];
 
             const costperkg = price_per_wtorvol_units * 1000;
-            console.log("huhu", costperkg)
-            // totalCost = costperkg;
+            
             if (quantity < 1) {
                 totalCost = quantity * costperkg * numberOfPlates
-                console.log("quantity:", quantity);
-                console.log("costperkg:", costperkg);
-                console.log("numberofplates:", numberOfPlates);
-                console.log("TOTALcOST:", totalCost);
-
+             
             }
             else {
                 totalCost = costperkg * quantity
@@ -193,114 +186,105 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
     };
 
 
-    const totalAmount = cartItems.reduce((sum, item) => {
-        const selectedUnit = toggleState[item['productid']] || item['plate_units'] || item['wtorvol_units'];
-        const totalItemCost = calculateTotalItemCost(item, numberOfPlates, selectedUnit, localQuantities[item.productid] || item.quantity);
+    const totalAmount = cartDetails.reduce((sum, item) => {
+        const selectedUnit = item.unit
+        console.log("select",selectedUnit)
+        const totalItemCost = calculateTotalItemCost(item, numberOfPlates, selectedUnit,  item.quantity);
         return sum + parseFloat(totalItemCost);
     }, 0).toFixed(2);
 
-    const cartData = cartItems.map(item => ({
-        addedat: item.addedat,
-        category_name: item.category_name,
-        image: item.image,
-        isdual: item.isdual,
-        price_category: item.price_category,
-        minunitsperplate: item.minunitsperplate || 1,
-        priceperunit: item.priceperunit,
-        min_wtorvol_units_per_plate: item.min_wtorvol_units_per_plate,
-        price_per_wtorvol_units: item.price_per_wtorvol_units,
-        productid: item.productid,
-        product_id: item.product_id,
-        productname: item.productname,
-        quantity: item.quantity,
-        unit: toggleState[item['productid']] || item['plate_units'] || item['wtorvol_units']
-    }));
-
-    const cart = { totalAmount, cartData, address, selectedDate, numberOfPlates, selectedTime };
-
-    console.log("cartdata:", cartData);
 
 
-    const handleInputChange = (itemId, value) => {
+    const handleInputChange = (item, value) => {
         const newQuantity = value === '' ? '' : Number(value);
-        setLocalQuantities(prev => ({ ...prev, [itemId]: newQuantity }));
-        onUpdateQuantity(itemId, newQuantity);
+        updatenewquantites(newQuantity,item)
+
 
 
     };
 
-    const handleBlur = (itemId, quantity, minunitsperplate) => {
+    const handleBlur = (item, quantity, minunitsperplate) => {
         if (quantity < 1) {
-            return; // Keep the value as it is
+            return;
         }
         const newQuantity = quantity < minunitsperplate ? minunitsperplate : quantity;
-        setLocalQuantities(prev => ({ ...prev, [itemId]: newQuantity }));
-        onUpdateQuantity(itemId, newQuantity);
+        updatenewquantites(newQuantity,item)
+
     };
 
-    const updateQuantity = (itemId, newQuantity) => {
-        setLocalQuantities(prev => ({ ...prev, [itemId]: newQuantity }));
-        onUpdateQuantity(itemId, newQuantity);
+
+    const handleIncrease = (item) => {
+        const currentQuantity = item.quantity || 1;
+        const newQuantity = currentQuantity + 1;
+        console.log('new quantity',newQuantity)
+        updatenewquantites(newQuantity,item)
     };
 
-    const handleIncrease = (itemId) => {
-        const currentQuantity = localQuantities[itemId] || 1;
-        updateQuantity(itemId, currentQuantity + 1);
-    };
-
-    const handleDecrease = (itemId) => {
-        const currentQuantity = localQuantities[itemId] || 1;
+    const handleDecrease = (item) => {
+        const currentQuantity = item.quantity || 1;
         const newQuantity = Math.max(currentQuantity - 1, 1);
-        updateQuantity(itemId, newQuantity);
+        console.log('new quantity',newQuantity)
+        updatenewquantites(newQuantity,item)
     };
-
-    useEffect(() => {
-        if (!token || isTokenExpired(token)) {
-            navigate("/");
-        }
-
-        console.log('hic', cart)
-        const delay = setTimeout(async () => {
-            // const cart_id = await addtocart(cart);
-
-            const token = localStorage.getItem('token');
-
-            const result = await axios.post(
-                `${process.env.REACT_APP_URL}/api/cart/add`,
-                {
-                    totalAmount,
-                    cartData: cartItems,
-                    address,
-                    selectedDate,
+    const updatenewquantites=async(newQuantity,titem)=>{
+    const updatedCartItems = cartDetails.map(item => 
+            item.productid === titem.productid 
+                ? { ...item, quantity: newQuantity }
+                : item
+        );
+  const newTotalAmount = updatedCartItems.reduce((sum, item) => {
+                const selectedUnit = item.unit
+                const totalItemCost = calculateTotalItemCost(
+                    item,
                     numberOfPlates,
-                    selectedTime
-                },
-                {
-                    headers: {
-                        token: token // Use 'token' key as expected by backend
-                    }
-                }
-
-            );
-            console.log("no of plates", totalAmount,
-                cartData,
-                address,
+                    selectedUnit,
+                    item.quantity
+                );
+                return sum + parseFloat(totalItemCost);
+            }, 0).toFixed(2);
+              const result = await axios.post(
+            `${process.env.REACT_APP_URL}/api/cart/add`,
+            {
+                totalAmount:newTotalAmount,
+                cartData: updatedCartItems,
                 selectedDate,
                 numberOfPlates,
-                selectedTime)
+                selectedTime
+            },
+            {
+                headers: { token }
+            }
+        );
+                        console.log('Cart updated successfully:', result.data);
+fetchCart()
 
-
-
-
-
-
-            console.log('res', result)
-
-            setCartId(result);
-        }, 1000);
-        return () => clearTimeout(delay);
-    }, [cartItems], []);
-
+    }
+    useEffect(() => {
+        const socket = io(process.env.REACT_APP_URL, {
+          transports: ['websocket', 'polling'] 
+        });
+        socket.on('connect', () => {
+          console.log(`Connected to server with socket id: ${socket.id}`);
+          socket.emit('message', 'Hello, server!');
+        });
+        socket.on('EventcartUpdated', (data) => {
+            console.log('Cart updated:', data);
+            fetchCart();
+          });
+     
+    
+        socket.on('message', (data) => {
+          console.log(`Message from server: ${data}`);
+        });
+    
+        socket.on('disconnect', () => {
+          console.log('Disconnected from server');
+        });
+    
+        return () => {
+          socket.disconnect();
+        };
+      }, []);
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -308,10 +292,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
             navigate("/");
         }
         try {
-            console.log("in menu ", totalAmount, cartDetails, numberOfPlates, selectedDate, selectedTime, address)
             const respond = await cartToOrder(totalAmount, cartDetails, numberOfPlates, selectedDate, selectedTime, address);
 
-            console.log("respond", respond.eventorder_generated_id)
 
             const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`, {
 
@@ -319,26 +301,19 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                 corporateorder_id: respond.eventorder_generated_id,
 
 
-                // You might want to include other necessary fields here
             }, { headers: { token: `${localStorage.getItem('token')}` } });
 
             if (response.data && response.data.redirectUrl) {
-                // Move cartToOrder here to execute after successful payment
 
 
 
                 setRedirectUrl(response.data.redirectUrl);
                 window.location.href = response.data.redirectUrl;
-                // const currentUser = JSON.parse(localStorage.getItem('userDP'))?.email;
-                // if (currentUser) {
-                // localStorage.removeItem(`cartItems_${currentUser}`);
-                // }
-                // clearLocalStorageExceptToken();
+               
                 setLocalQuantities({});
                 onUpdateQuantity({});
 
                 onClearCart();
-                // localStorage.setItem(`paymentComplete_${currentUser}`, 'true');
             } else {
                 console.log('Unexpected response format.');
             }
@@ -350,7 +325,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
     };
 
 
-    const handleDelete = async (productId) => {
+    const handleDelete = async (productId,item) => {
         console.log("id", productId)
         setLoading(true);
         setError('');
@@ -361,30 +336,25 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
             onRemoveItem(productId);
 
 
-            const updatedCartItems = cartItems.filter(item => item.productid !== productId);
+            const updatedCartItems = cartDetails.filter(item => item.productid !== productId);
+            console.log('deleteee',updatedCartItems,item,numberOfPlates,selectedDate,selectedTime)
             const newTotalAmount = updatedCartItems.reduce((sum, item) => {
-                const selectedUnit = toggleState[item.productid] || item.plate_units || item.wtorvol_units;
+                const selectedUnit = item.unit
                 const totalItemCost = calculateTotalItemCost(
                     item,
                     numberOfPlates,
                     selectedUnit,
-                    localQuantities[item.productid] || item.quantity
+                    item.quantity
                 );
                 return sum + parseFloat(totalItemCost);
             }, 0).toFixed(2);
-
-            // Update cart in backend
-            if (!token || isTokenExpired(token)) {
-                navigate("/");
-                return;
-            }
-            await axios.post(
-                console.log("item added to the cart")
+            console.log('updatednewtotal',newTotalAmount)
+        
+           const result= await axios.post(
                     `${process.env.REACT_APP_URL}/api/cart/add`,
                 {
                     totalAmount: newTotalAmount,
                     cartData: updatedCartItems,
-                    address,
                     selectedDate,
                     numberOfPlates,
                     selectedTime
@@ -393,6 +363,8 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                     headers: { token: localStorage.getItem('token') }
                 }
             );
+            console.log('Cart delete successfully:', result.data);
+
 
         } catch (error) {
             console.error('Error removing item:', error);
@@ -454,7 +426,7 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
                                     <div className='relative'>
                                        <div className='absolute top right-2'>
                                                 <button
-                                                    onClick={() => handleDelete(item['productid'])}
+                                                    onClick={() => handleDelete(item['productid'],item)}
                                                     className="bg-red-500 text-white p-2  rounded-full hover:bg-red-600"
                                                     title="Remove from cart"
                                                 >
@@ -527,21 +499,21 @@ const CartSidebar = ({ isOpen, onClose, cartItems, numberOfPlates, selectedDate,
             
                                         <div className="flex items-center justify-center mb-2">
                                             <button
-                                                onClick={() => handleDecrease(item['productid'])}
+                                                onClick={() => handleDecrease(item)}
                                                 className="p-1 bg-teal-800 text-white rounded-l"
                                             >
                                                 <Minus size={14} />
                                             </button>
                                             <input
                                                 type="number"
-                                                value={localQuantities[item.productid] || item.quantity}
-                                                onChange={(e) => handleInputChange(item['productid'], e.target.value)}
-                                                onBlur={() => handleBlur(item['productid'], localQuantities[item.productid] || item.quantity, minunitsperplate)}
+                                                value={ item.quantity}
+                                                onChange={(e) => handleInputChange(item, e.target.value)}
+                                                onBlur={() => handleBlur(item,  item.quantity, minunitsperplate)}
                                                 className="w-12 text-center px-2 py-1 border"
                                                 min="1"
                                             />
                                             <button
-                                                onClick={() => handleIncrease(item['productid'])}
+                                                onClick={() => handleIncrease(item)}
                                                 className="p-1 bg-teal-800 text-white rounded-r"
                                             >
                                                 <Plus size={14} />
@@ -590,24 +562,23 @@ const Menu = () => {
     const [currentUser, setCurrentUser] = useState(null);
     // const [numberofplates, setNumberOfPlates] = useState(1);
     const location = useLocation();
-   // const numberOfPlates = location.state?.numberOfPlates || 1;
-   const numberOfPlates = localStorage.getItem('plates');
-    const selectedDate = location.state?.selectedDate;
-    const selectedTime = location.state?.selectedTime;
+   const numberOfPlates = location.state?.numberOfPlates || 1;
+   const selectedDate = location.state?.selectedDate || 1;
+
+   const selectedTime = location.state?.selectedTime || 1;
+
+   console.log('number',numberOfPlates,selectedDate,selectedTime)
+
     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
     VerifyToken();
-    // const address = location.state?.address || {
-    //     line1: '',
-    //     line2: '',
-    //     pincode: '',
-    // };
+
     const [address,setAddress]=useState({
         line1:'',
         line2:'',
         pincode:''
 
     })
-    console.log("address", address);
+ 
     useEffect(()=>{
         const savedAddress = JSON.parse(localStorage.getItem('addedaddress'));
         if(savedAddress){
@@ -629,32 +600,113 @@ const Menu = () => {
             if (paymentComplete === 'true') {
                 setCheckedItems({});
                 setQuantities({});
-                localStorage.removeItem(`paymentComplete_${decodedEmail}`);
                 localStorage.removeItem(`cartItems_${decodedEmail}`);
             } else {
-                const storedCart = localStorage.getItem(`cartItems_${decodedEmail}`);
-                if (storedCart) {
-                    const parsedCart = JSON.parse(storedCart);
-                    setCheckedItems(parsedCart.checkedItems || {});
-                    setQuantities(parsedCart.quantities || {});
-                } else {
-                    setCheckedItems({});
-                    setQuantities({});
-                }
+
+
+            
+                fetchCart()
+
+
+                // const storedCart = localStorage.getItem(`cartItems_${decodedEmail}`);
+                // if (storedCart) {
+                //     const parsedCart = JSON.parse(storedCart);
+                //     setCheckedItems(parsedCart.checkedItems || {});
+                //     setQuantities(parsedCart.quantities || {});
+                // } else {
+                //     setCheckedItems({});
+                //     setQuantities({});
+                // }
             }
         }
-        const storedToggleState = localStorage.getItem('toggleState');
-        if (storedToggleState) {
-            setToggleState(JSON.parse(storedToggleState));
-        }
-        fetchProducts();
+        // const storedToggleState = localStorage.getItem('toggleState');
+        // if (storedToggleState) {
+        //     setToggleState(JSON.parse(storedToggleState));
+        // }
     }, [location.state?.numberOfPlates]);
 
 
+    const fetchCart = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart/getcart`, {
+                headers: { token: `${localStorage.getItem('token')}` },
+            });
+    
+            const cartDataArray = response.data?.cartitem?.cartData || [];
+            
+            const quantities = cartDataArray.reduce((acc, item) => ({
+                ...acc,
+                [item.productid]: item.quantity
+            }), {});
+            
+            const checkedItems = cartDataArray.reduce((acc, item) => ({
+                ...acc,
+                [item.productid]: true
+            }), {});
+       
+           
+            setCheckedItems(checkedItems)
+            setQuantities(quantities)
+            fetchProducts(cartDataArray);
 
+            return { quantities, checkedItems };
+        } catch (error) {
+            console.error('Error fetching cart data:', error);
+        }
+    };
+      useEffect(() => {
+        const socket = io(process.env.REACT_APP_URL, {
+          transports: ['websocket', 'polling'] 
+        });
+        socket.on('connect', () => {
+          console.log(`Connected to server with socket id: ${socket.id}`);
+          socket.emit('message', 'Hello, server!');
+        });
+        socket.on('EventcartUpdated', (data) => {
+            console.log('Cart updated:', data);
+            fetchCart();
+          });
+     
+    
+        socket.on('message', (data) => {
+          console.log(`Message from server: ${data}`);
+        });
+    
+        socket.on('disconnect', () => {
+          console.log('Disconnected from server');
+        });
+    
+        return () => {
+          socket.disconnect();
+        };
+      }, []);
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_URL, {
+      transports: ['websocket', 'polling'] 
+    });
+    socket.on('connect', () => {
+      console.log(`Connected to server with socket id: ${socket.id}`);
+      socket.emit('message', 'Hello, server!');
+    });
+    socket.on('EventcartUpdated', (data) => {
+        console.log('Cart updated:', data);
+        // fetchCart();
+      });
+ 
 
+    socket.on('message', (data) => {
+      console.log(`Message from server: ${data}`);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
     const handleChangeAddress = () => {
-        // localStorage.setItem('numberOfPlates', numberofplates.toString());
         navigate('/changeaddress');
     };
 
@@ -708,19 +760,29 @@ const Menu = () => {
 
 
     const navigate = useNavigate();
-    const onToggleUnit = (productId) => {
+    const onToggleUnit = (productId,item) => {
         const newToggleState = {
             ...toggleState,
             [productId]: toggleState[productId] === 'wtorvol_units' ? 'plate_units' : 'wtorvol_units'
         };
         setToggleState(newToggleState);
-        localStorage.setItem('toggleState', JSON.stringify(newToggleState));
+        const updatedCartItems = cartItems.map(cartItem => {
+            if (cartItem.productid === productId) {
+                return {
+                    ...cartItem,
+                    unit: newToggleState[productId] // Update the unit based on the new toggle state
+                };
+            }
+            return cartItem;
+        });
+           console.log('nretogglecart',updatedCartItems)
+        updateCart(updatedCartItems)
     };
     const handleViewOrders = () => {
         navigate('/orders');
     }
 
-    const fetchProducts = async () => {
+    const fetchProducts = async (cartDataArray) => {
         try {
             const token = localStorage.getItem('token');
             if (!token || isTokenExpired(token)) {
@@ -745,12 +807,20 @@ const Menu = () => {
             }, {});
 
             setMenuData(Object.values(transformedData));
+            console.log('cartdataarray',cartDataArray)
+
             const initialToggleState = { ...toggleState };
             data.forEach(item => {
-                if (!(item['productid'] in initialToggleState)) {
-                    initialToggleState[item['productid']] = 'plate_units';
+                const cartItem = cartDataArray.find(cartItem => cartItem.productid === item.productid);
+                
+                if (cartItem) {
+                    initialToggleState[item.productid] = cartItem.unit;
+                } else {
+                    initialToggleState[item.productid] = 'plate_units';
                 }
             });
+            
+            console.log('initial', initialToggleState);
             setToggleState(initialToggleState);
             localStorage.setItem('toggleState', JSON.stringify(initialToggleState));
         } catch (error) {
@@ -778,58 +848,99 @@ const Menu = () => {
         }
     }, [mainToggleOn]);
 
-    const updateQuantity = (itemId, newQuantity) => {
-        const newQuantities = { ...quantities, [itemId]: newQuantity };
-        setQuantities(newQuantities);
-        updateLocalStorage(checkedItems, newQuantities);
-    };
-
-    const handleCheck = (itemId) => {
+    const handleCheck = (itemId,item) => {
         const newCheckedItems = { ...checkedItems, [itemId]: !checkedItems[itemId] };
+        console.log("newcheck",newCheckedItems)
         setCheckedItems(newCheckedItems);
         const newQuantities = { ...quantities };
+        console.log("new", newQuantities,checkedItems[itemId]);
         if (!checkedItems[itemId]) {
             newQuantities[itemId] = 1;
         } else {
             delete newQuantities[itemId];
         }
-        console.log("new", newQuantities);
         setQuantities(newQuantities);
-        updateLocalStorage(newCheckedItems, newQuantities);
+        let updatedCartItems
+        if (!newCheckedItems[itemId]) {
+            console.log('Item removed from cart');
+            updatedCartItems = cartItems.filter(cartItem => cartItem.productid !== itemId);
+        }
+        else {
+            console.log('Item added to cart');
+            const updatedItem = { ...item, quantity: 1, unit: 'plate_units' };
+            updatedCartItems = [...cartItems, updatedItem];
+        }
+        
+
+        console.log('cartttitems',updatedCartItems)
+      
+        updateCart(updatedCartItems);
+        console.log("newi",newCheckedItems, newQuantities)
     };
 
-    const updateLocalStorage = (checkedItems, quantities) => {
+    const updateCart = async (updatedCartItems) => {
+        try {
+            const totalAmount = updatedCartItems.reduce((sum, item) => {
+                const selectedUnit = toggleState[item.productid]
+                console.log("selectedunit",selectedUnit)
+                const totalItemCost = calculateTotalItemCost(item, numberOfPlates, selectedUnit,  1);
+                return sum + parseFloat(totalItemCost);
+            }, 0).toFixed(2);
+        
+            console.log('hiiiiiiiiiiiiiiiiiii',totalAmount,updatedCartItems,selectedDate,numberOfPlates,selectedTime)
+            const token = localStorage.getItem('token');
+         const result = await axios.post(
+                `${process.env.REACT_APP_URL}/api/cart/add`,
+                {
+                    totalAmount,
+                    cartData: updatedCartItems,
+                    selectedDate,
+                    numberOfPlates,
+                    selectedTime
+                },
+                {
+                    headers: { token }
+                }
+            );
 
-        console.log("items", checkedItems, quantities)
-        if (currentUser) {
-            localStorage.setItem(`cartItems_${currentUser}`, JSON.stringify({ checkedItems, quantities }));
+            console.log('Cart updated successfully:', result.data);
+            setCartId(result.data);
+        } catch (error) {
+            console.error('Failed to update cart:', error);
         }
     };
 
-    const updateCheckedItems = (productId, isChecked) => {
-        setCheckedItems(prev => {
-            const newCheckedItems = { ...prev };
-            if (!isChecked) {
-                delete newCheckedItems[productId];
-            } else {
-                newCheckedItems[productId] = true;
+    const calculateTotalItemCost = (item, numberOfPlates, selectedUnit, quantity) => {
+        let totalCost;
+
+        if (selectedUnit === 'plate_units') {
+            const priceperunit = item['priceperunit'];
+            totalCost = (priceperunit * numberOfPlates * quantity).toFixed(2);
+
+        }
+        else if (selectedUnit === 'wtorvol_units') {
+            const price_per_wtorvol_units = item['price_per_wtorvol_units'];
+            const min_wtorvol_units_per_plate = item['min_wtorvol_units_per_plate'];
+
+            const costperkg = price_per_wtorvol_units * 1000;
+            
+            if (quantity < 1) {
+                totalCost = quantity * costperkg * numberOfPlates
+             
+            }
+            else {
+                totalCost = costperkg * quantity
             }
 
-            // Update localStorage when checked items change
-            if (currentUser) {
-                const cartKey = `cartItems_${currentUser}`;
-                const storedCart = localStorage.getItem(cartKey);
-                if (storedCart) {
-                    const parsedCart = JSON.parse(storedCart);
-                    parsedCart.checkedItems = newCheckedItems;
-                    localStorage.setItem(cartKey, JSON.stringify(parsedCart));
-                }
-            }
+            console.log("total", totalCost);
+        } else {
+            throw new Error('Invalid selected unit');
+        }
 
-            return newCheckedItems;
-        });
+        return totalCost;
     };
 
+  
     const removeItem = (productId) => {
         // Update checkedItems to uncheck the item
         const newCheckedItems = { ...checkedItems };
@@ -870,6 +981,7 @@ const Menu = () => {
                 unit: toggleState[item.productid] || item.plate_units
             }))
     );
+    
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -910,7 +1022,6 @@ const Menu = () => {
                 </div>
             </div>
 
-            {/* User Profile Sidebar */}
             {isSidebarOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
                     <div className="fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out translate-x-0 z-50 overflow-y-auto">
@@ -980,7 +1091,7 @@ const Menu = () => {
                 </div>
             )}
 
-            <div className="p-6 mt-15"> {/* Add top margin to account for fixed header */}
+            <div className="p-6 mt-15"> 
                 {menuData.map(category => (
                     <MenuCategory
                         key={category.category}
@@ -999,7 +1110,7 @@ const Menu = () => {
                 onClose={() => setIsCartOpen(false)}
                 cartItems={cartItems}
                 numberOfPlates={numberOfPlates}
-                onUpdateQuantity={updateQuantity}
+                // onUpdateQuantity={updateQuantity}
                 toggleState={toggleState}
                 onToggleUnit={onToggleUnit}
                 mainToggleOn={mainToggleOn}
