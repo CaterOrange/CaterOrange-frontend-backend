@@ -20,7 +20,7 @@ pipeline {
                                     rm -rf CaterOrange
                                 fi
                                 echo "Cloning repository..."
-                                git clone -v --depth 1 https://harshithascaleorange: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@github.com/CaterOrange/CaterOrange.git
+                                git clone -v --depth 1 https://harshithascaleorange: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@github.com/CaterOrange/CaterOrange.git
                             '''
                         }
                     } catch (Exception e) {
