@@ -77,7 +77,7 @@ if (!valid) {
 
     // Now update the corporate order with the generated payment_id
     await updateCorporateOrder(order_id, generatedPaymentId, payment_status);
-    await deleteCorporateCart(io,customer_id)
+    await deleteCorporateCart(customer_id)
     res.status(200).json({ payment_id: generatedPaymentId });
   } catch (error) {
     logger.error("Error inserting payment data: ", error);
@@ -105,38 +105,25 @@ const updateCorporateOrder = async (order_id, paymentid, payment_status) => {
   }
 };
 
-// const deleteCorporateCart= async (customer_id) => {
-//   try {
-//     // Update corporate order details in the database
-//     const result = await redis.del(`cart:${customer_id}`);
-//     req.io.emit("cartDeleted", {customer_id});
-
-//     if (result === 1) {
-//       console.log(`Cart for user ${customer_id} deleted successfully.`);
-//     } else {
-//       console.log(`Cart for user ${customer_id} does not exist or was not deleted.`);
-//     }
-//   } catch (error) {
-//     logger.error('Error updating corporate order:', error);
-//     // You can return an error response if needed, uncomment below line
-//     // return res.status(500).json({ message: 'Error updating corporate order' });
-//   }
-// };
-
-const deleteCorporateCart = async (io, customer_id) => {  
+const deleteCorporateCart= async (customer_id) => {
   try {
-    // Delete the cart from Redis
+    // Update corporate order details in the database
     const result = await redis.del(`cart:${customer_id}`);
+    req.io.emit("cartDeleted", {customer_id});
+
     if (result === 1) {
       console.log(`Cart for user ${customer_id} deleted successfully.`);
-      io.emit("cartdeleted", { customer_id }); 
     } else {
       console.log(`Cart for user ${customer_id} does not exist or was not deleted.`);
     }
   } catch (error) {
-    logger.error('Error deleting corporate cart:', error);
+    logger.error('Error updating corporate order:', error);
+    // You can return an error response if needed, uncomment below line
+    // return res.status(500).json({ message: 'Error updating corporate order' });
   }
 };
+
+
 const getOrdergenId = async (req, res) => {
   try {
     const token = req.headers['token'];
