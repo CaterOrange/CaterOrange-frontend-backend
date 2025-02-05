@@ -203,18 +203,19 @@ function createCorporateCategoryTableQuery() {
       category_description VARCHAR(500),
       category_price FLOAT,
       category_media TEXT,
-      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      is_deactivated BOOLEAN DEFAULT TRUE  -- New column with default value TRUE
     );
 
     -- Insert initial categories if the table is empty
-    INSERT INTO corporate_category (category_name, category_description, category_price, category_media)
+    INSERT INTO corporate_category (category_name, category_description, category_price, category_media, is_deactivated)
     VALUES
-      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
-      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
-      ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
-      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
-      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s'),
-      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s')
+      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
+      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
+      ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
+      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
+      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
+      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE)
     ON CONFLICT (category_name) DO NOTHING;  -- Prevent inserting duplicate category names
   `;
 }
