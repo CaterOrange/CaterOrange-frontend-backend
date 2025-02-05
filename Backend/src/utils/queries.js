@@ -161,7 +161,7 @@ INSERT_CART_TO_ORDER:`INSERT INTO corporate_orders
         VALUES ($1, $2, $3, $4, $5, $6) 
         RETURNING *`,
   GET_CATEGORY_NAME: `
-      SELECT category_name FROM  corporate_category WHERE category_id= $1
+      SELECT category_name,category_price FROM  corporate_category WHERE category_id= $1
   `,
   GET_ALL_ADDRESSES:`
   SELECT * FROM address WHERE customer_id=$1
