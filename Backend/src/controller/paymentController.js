@@ -109,7 +109,7 @@ const deleteCorporateCart= async (customer_id) => {
   try {
     // Update corporate order details in the database
     const result = await redis.del(`cart:${customer_id}`);
-    req.io.emit("cartUpdated", {customer_id});
+    req.io.emit("cartDeleted", {customer_id});
 
     if (result === 1) {
       console.log(`Cart for user ${customer_id} deleted successfully.`);
