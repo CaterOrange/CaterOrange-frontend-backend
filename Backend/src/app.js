@@ -15,7 +15,6 @@ const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
 
 
-
 const http= require("http");
 const { Server } = require("socket.io");
 
@@ -445,6 +444,11 @@ app.delete('/api/cart/:itemId', async (req, res) => {
     res.status(500).json({ error: 'Failed to remove cart item' });
   }
 });
+
+
+
+
+
 
 
 const initializeApp = async () => {

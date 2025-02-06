@@ -4,7 +4,14 @@ const logger = require('../config/logger.js');
 const jwt = require('jsonwebtoken');
 const customer_model = require('../models/customerModels');
 const Redis = require('ioredis');
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 
+
+const razorpayInstance = new Razorpay({
+   key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_Kt3z43uPYnvC9E' ,
+   key_secret: process.env.RAZORPAY_SECRET || 'XET5FYMETkbhl872gXTWMx1i' ,
+ });
 
 const Ajv = require("ajv");
 
@@ -14,9 +21,10 @@ const ajv = new Ajv({ allErrors: true, strict: false });
 
 addFormats(ajv);
 const { paymentSchema } = require('../SchemaValidator/paymentSchema.js'); 
+
 const validate = ajv.compile(paymentSchema);
 
-const redis = new Redis({
+const redis = new Redis({     
   host: 'localhost',  
   port: 6379, 
  connectTimeout: 20000
@@ -182,4 +190,54 @@ const getEOrdergenId = async (req, res) => {
   }
 };
 
-module.exports = { payment, updateCorporateOrder, getOrdergenId, getEOrdergenId ,deleteCorporateCart};
+const create_order = async (req, res) => {
+ console.log("entered");
+  try {
+    const { amount, currency } = req.body;
+    const options = {
+      amount: amount * 100, 
+      currency,
+      receipt: `receipt_${Date.now()}`,
+    };
+
+    const order = await razorpayInstance.orders.create(options);
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const verify_payment = async (req, res) => {
+  try {
+    console.log("Verifying payment...");
+
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ success: false, message: "Invalid payment details" });
+    }
+
+    console.log("Verifying payment... -1");
+    const secret = "XET5FYMETkbhl872gXTWMx1i";
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    console.log("Generated body:", body);
+
+    // Generate expected signature
+    const expectedSignature = crypto.createHmac("sha256", secret).update(body).digest("hex");
+    console.log("Expected Signature:", expectedSignature);
+    console.log("Received Signature:", razorpay_signature);
+
+    console.log("Verifying payment... -2");
+
+    if (expectedSignature === razorpay_signature) {
+      return res.json({ success: true, message: "Payment Verified Successfully" });
+    } else {
+      return res.status(400).json({ success: false, message: "Payment Verification Failed" });
+    }
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+ 
+
+module.exports = { payment, updateCorporateOrder, getOrdergenId, getEOrdergenId ,deleteCorporateCart ,create_order,verify_payment};

@@ -324,7 +324,7 @@ function createEventProductsTableQuery() {
       Price_Per_WtOrVol_Units NUMERIC,
       Min_WtOrVol_Units_per_Plate INTEGER,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      isDeactivated BOOLEAN,   
+      isdeactivated BOOLEAN,   
       description TEXT
     );
   `;  

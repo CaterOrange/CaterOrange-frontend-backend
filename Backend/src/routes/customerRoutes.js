@@ -37,6 +37,8 @@ router.get('/customer/getCustomerDetails',auth,customerController.getCustomerDet
 router.post('/customer/updatePassword',auth, customerController.updatePassword);
 
 
+  
+
 
 module.exports = router;
 

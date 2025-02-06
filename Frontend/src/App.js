@@ -22,6 +22,7 @@ import HomePage from './components/HomePage.js';
 import ChangeAddress from './components/events/changeAddress.js';
 import { useCart } from './services/contexts/CartContext.js';
 import ProtectedRoute from './components/corporate/protectedRoute.js';  // Import the ProtectedRoute component
+import Razorpay from './components/rasorpay.js';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -55,16 +56,15 @@ function App() {
     }
   };
 
-  // Check for existing token on app load
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      handleSignIn(token, false); // Not Google Login, use manual login process
+      handleSignIn(token, false);
     }
-    setIsLoading(false); // After token check is complete, stop loading
+    setIsLoading(false);
   }, []);
 
-  // If loading, show nothing or a loading spinner
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -198,6 +198,14 @@ function App() {
                   <ProtectedRoute>
                     <Settings />
                   </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/razorpay"
+                element={
+                  // <ProtectedRoute>
+                    <Razorpay />
+                  // {/* </ProtectedRoute>     */}
                 }
               />
             </Routes>
