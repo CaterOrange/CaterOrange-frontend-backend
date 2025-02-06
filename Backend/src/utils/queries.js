@@ -100,9 +100,12 @@ SELECT * FROM address WHERE address_id=$1`,
     WHERE customer_id = $1;
   `,
   GET_EVENTORDER_DETAILS_BY_ID: `SELECT * FROM event_orders WHERE customer_generated_id=$1 AND payment_status='Success';`,
+  // GETCORPORATECATEGORY:`
+  // select * from corporate_category
+  // `,
   GETCORPORATECATEGORY:`
-  select * from corporate_category
-  `,
+  SELECT * FROM corporate_category WHERE is_deactivated = true
+`,
   ADD_CORPORATECART:`
   INSERT INTO corporate_cart  (customer_generated_id, cart_order_details,total_amount) 
   VALUES ($1, $2, $3) 
@@ -161,7 +164,7 @@ INSERT_CART_TO_ORDER:`INSERT INTO corporate_orders
         VALUES ($1, $2, $3, $4, $5, $6) 
         RETURNING *`,
   GET_CATEGORY_NAME: `
-      SELECT category_name FROM  corporate_category WHERE category_id= $1
+      SELECT category_name,category_price FROM  corporate_category WHERE category_id= $1
   `,
   GET_ALL_ADDRESSES:`
   SELECT * FROM address WHERE customer_id=$1

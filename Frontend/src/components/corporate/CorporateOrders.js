@@ -226,7 +226,7 @@ useEffect(() => {
         </header>
     
         {/* Fixed Button Group below the header */}
-        <div className="fixed top-16 w-full lg:w-[70%] lg:left-[15%] bg-white shadow-md z-40">
+         {/* <div className="fixed top-16 w-full lg:w-[70%] lg:left-[15%] bg-white shadow-md z-40">
           <div className="flex justify-center gap-4 sm:gap-6 py-4">
             <button
               className={`py-2 px-4 sm:py-3 sm:px-8 w-full max-w-[200px] rounded-full font-semibold text-sm sm:text-lg transition-all duration-300 transform ${
@@ -247,7 +247,7 @@ useEffect(() => {
               Events
             </button>
           </div>
-        </div>
+        </div> */}
     
         {/* Content Container */}
         <div className="pt-32 sm:pt-48 px-4 lg:px-0">

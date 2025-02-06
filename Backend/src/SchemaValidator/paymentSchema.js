@@ -3,27 +3,21 @@ const paymentSchema = {
     properties: {
       paymentType: {
         type: "string",
-        enum: ["NETBANKING"] // Assuming only NETBANKING is allowed
       },
       merchantTransactionId: {
         type: "string",
-        minLength: 1
       },
       phonePeReferenceId: {
         type: "string",
-        pattern: "^[A-Za-z0-9]+$" // Assuming alphanumeric reference ID
       },
       paymentFrom: {
         type: "string",
-        enum: ["PhonePe"] // Only "PhonePe" is allowed
       },
       instrument: {
         type: "string",
-        enum: ["N/A"] // Instrument can only be "N/A"
       },
       bankReferenceNo: {
         type: "string",
-        enum: ["N/A"] // Bank reference number can only be "N/A"
       },
       amount: {
         type: "number",

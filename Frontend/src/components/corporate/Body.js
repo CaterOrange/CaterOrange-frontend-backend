@@ -311,7 +311,8 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
       </div>
 
       {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-md flex justify-around p-2 z-40">
+
+       {/* <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-md flex justify-around p-2 z-40">
         <button 
           onClick={() => setActiveTab('corporate')} 
           className={`flex-1 text-center py-2 px-4 font-semibold rounded-full border-2 ${activeTab === 'corporate' ? 'bg-teal-800 text-white' : 'bg-teal-100 text-green-500'}`}
@@ -324,7 +325,7 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
         >
           <FaUtensils className="inline mr-1" /> Events
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

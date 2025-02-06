@@ -116,6 +116,7 @@ const typeDefs = gql`
     category_price: Int
     category_media: String
     addedat: DateTime
+    is_deactivated: Boolean
   }
 
   type EventOrders {
@@ -167,12 +168,14 @@ const typeDefs = gql`
       category_description: String!,
       category_price: Int!,
       category_media: String!
+      is_deactivated: Boolean
     ): Category!
     updateCategory(
       category_id: Int, 
       category_name: String,
       category_description: String, 
       category_price: Int
+      is_deactivated: Boolean
     ): Category!
     deleteCategory(category_id: Int!): Boolean!
   }
@@ -276,15 +279,15 @@ const resolvers = {
       );
       return result.rows[0];
     },
-    createCategory: async (_, { category_name, category_description, category_price, category_media }) => {
+    createCategory: async (_, { category_name, category_description, category_price, category_media, is_deactivated }) => {
       const result = await client.query(
-        'INSERT INTO corporate_category (category_name, category_description, category_price, category_media, addedat) VALUES ($1, $2, $3, $4, NOW()) RETURNING *',
-        [category_name, category_description, category_price, category_media]
+        'INSERT INTO corporate_category (category_name, category_description, category_price, category_media, addedat,is_deactivated) VALUES ($1, $2, $3, $4, NOW(),$5) RETURNING *',
+        [category_name, category_description, category_price, category_media,is_deactivated]
       );
       return result.rows[0];
     },
    
-    updateCategory: async (_, { category_id, category_name, category_description, category_price }) => {
+    updateCategory: async (_, { category_id, category_name, category_description, category_price,is_deactivated }) => {
       const fields = [];
       const values = [];
       let query = 'UPDATE corporate_category SET ';
@@ -300,6 +303,11 @@ const resolvers = {
       if (category_price !== undefined) {
         fields.push(`category_price = $${fields.length + 1}`);
         values.push(category_price);
+      }
+
+      if (is_deactivated !== undefined) {
+        fields.push(`is_deactivated = $${fields.length + 1}`);
+        values.push(is_deactivated);
       }
     
       if (fields.length === 0) {
