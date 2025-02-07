@@ -2,10 +2,10 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Corrected import for jwt-decode
+import { jwtDecode } from 'jwt-decode'; 
 import React, { useContext, useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // carousel styles
+import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 import { useNavigate } from 'react-router-dom';
 import { Login_customer, Login_forgotPassword, Login_google_auth } from '../../services/context_state_management/actions/action.js';
 import { SignInContext } from '../../services/contexts/SignInContext.js';
@@ -32,14 +32,15 @@ const SignInForm = ({ onSignIn }) => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [forgotPasswordStep, setForgotPasswordStep] = useState(1);
-  const [userProfile, setUserProfile] = useState(null); // for storing Google user profile
+  const [userProfile, setUserProfile] = useState(null); 
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
   const navigate = useNavigate();
   const [fieldErrors, setFieldErrors] = useState({
     email: ''
   });
   const [isOtpExpired, setIsOtpExpired] = useState(false);
-
+  const [timer, setTimer] = useState(0);
+  const [canResend, setCanResend] = useState(true);
   const validateField = (field, value) => {
     let error = '';
     switch (field) {
@@ -51,7 +52,7 @@ const SignInForm = ({ onSignIn }) => {
         }
         break;
       case 'phone':
-        const phoneRegex = /^\d{10}$/;  // Assumes a 10-digit phone number
+        const phoneRegex = /^\d{10}$/; 
         if (value.trim() === '') {
           error = '*Phone number is required*';
         }
@@ -114,7 +115,18 @@ const SignInForm = ({ onSignIn }) => {
   const handleBlur = (field) => {
     validateField(field, field === 'confirmPassword' ? confirmPassword : eval(field));
   };
-  
+  useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setCanResend(true);
+      setIsOtpExpired(true);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
 
   const handleSendOtp = async () => {
     setError('');
@@ -124,7 +136,9 @@ const SignInForm = ({ onSignIn }) => {
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email,headers:{token:localStorage.getItem('token')} });
       setError(response.data.message);
       setForgotPasswordStep(2);
-      setIsOtpExpired(false); // Reset OTP expiration status
+      setIsOtpExpired(false); 
+      setTimer(60);
+      setCanResend(false);
     } catch (error) {
       setError(error.response?.data?.error || 'You are not registered, please register');
     }
@@ -135,7 +149,9 @@ const SignInForm = ({ onSignIn }) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email ,headers:{token:localStorage.getItem('token')}});
       setError(response.data.message || 'OTP sent again');
-      setIsOtpExpired(false); // Reset OTP expiration status
+      setIsOtpExpired(false); 
+      setTimer(60);
+      setCanResend(false);
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to resend OTP');
     }
@@ -150,7 +166,7 @@ const SignInForm = ({ onSignIn }) => {
     } catch (error) {
       if (error.response?.data?.error === 'OTP expired or not found') {
         setError('OTP expired, please resend OTP');
-        setIsOtpExpired(true); // OTP expired, allow resend
+        setIsOtpExpired(true); 
       } else {
         setError(error.response?.data?.error || 'An error occurred while verifying OTP');
       }
@@ -162,7 +178,6 @@ const SignInForm = ({ onSignIn }) => {
     setError('');
     let isValid = true;
 
-    // Validate all fields
     ['email'].forEach(field => {
       if (!validateField(field, eval(field))) {
         isValid = false;
@@ -242,7 +257,6 @@ const SignInForm = ({ onSignIn }) => {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const tokenId = credentialResponse.credential;
-    // Decode the Google token to get user info
     const decodedToken = jwtDecode(tokenId);
     console.log(decodedToken);
     const { name , email, picture } = decodedToken;
@@ -254,7 +268,7 @@ const SignInForm = ({ onSignIn }) => {
       name: name,
       email: email,
       picture: picture,
-      cartCount: cartCount || 0 // Initialize cart count to 0 or use an existing value
+      cartCount: cartCount || 0 
     };
     localStorage.setItem('userDP', JSON.stringify(userDP));
     
@@ -302,7 +316,7 @@ const SignInForm = ({ onSignIn }) => {
                 <img
                   src={src}
                   alt={`Carousel Image ${index + 1}`}
-                  className="object-cover h-40 w-full max-w-[120%]" // Increase width here
+                  className="object-cover h-40 w-full max-w-[120%]" 
                 />
               </div>
             ))}
@@ -366,27 +380,37 @@ const SignInForm = ({ onSignIn }) => {
               </div>
                 )}
 
-            {forgotPasswordStep === 2 && (
-              <div className="mb-4">
-                <input
-                  type="text"
-                  id="otp"
-                  placeholder="Enter OTP"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  required
-                />
-                {isOtpExpired && (
-                  <button
-                    onClick={handleResendOtp}
-                    className="text-sm text-indigo-500 hover:underline mt-2"
-                  >
-                    Resend OTP
-                  </button>
-                )}
-              </div>
-            )}
+                {forgotPassword && forgotPasswordStep === 2 && (
+                            <div className="mb-4">
+                              <div className="relative">
+                                <input
+                                  type="text"
+                                  id="otp"
+                                  placeholder="Enter OTP"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                  value={otp}
+                                  onChange={(e) => setOtp(e.target.value)}
+                                  required
+                                />
+                                <div className="absolute right-0 top-0 h-full flex items-center pr-3">
+                                  {timer > 0 ? (
+                                    <span className="text-sm text-gray-600">
+                                      ⏱ {timer}s
+                                    </span>
+                                  ) : (
+                                    <button
+                                      onClick={handleResendOtp}
+                                      className="text-sm text-orange-500 hover:underline"
+                                      disabled={!canResend}
+                                    >
+                                      Resend OTP
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
 
 
                 {forgotPasswordStep === 3 && (
@@ -436,25 +460,29 @@ const SignInForm = ({ onSignIn }) => {
               </>
             )}
 
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+                {error && (
+                  <p className={error === "OTP sent successfully" ? "text-green-500" : "text-red-500"}>
+                    {error}
+                  </p>
+                )}
 
             <button
               type="submit"
-              className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              {forgotPassword ? (forgotPasswordStep === 3 ? 'Reset Password' : 'Next') : 'Sign In'}
+              {forgotPassword ? (forgotPasswordStep === 3 ? 'Reset Password' : 'Verify') : 'Sign In'}
             </button>
           </form>
 
           <div className="mt-4 flex items-center justify-between">
             <button
-              className="text-sm text-indigo-500 hover:underline focus:outline-none"
+              className="text-sm text-orange-500 hover:underline focus:outline-none"
               onClick={toggleForgotPassword}
             >
               {forgotPassword ? 'Back to Sign In' : 'Forgot Password?'}
             </button>
             <button
-              className="text-sm text-indigo-500 hover:underline focus:outline-none"
+              className="text-sm text-orange-500 hover:underline focus:outline-none"
               onClick={() => setShowSignUpModal(true)}
             >
               Sign Up

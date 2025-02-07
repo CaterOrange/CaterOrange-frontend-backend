@@ -183,7 +183,11 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
   };
 
   if (isLoading) {
-    return <div className="text-center mt-8">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center mt-8">
+        <div className="w-8 h-8 border-4 border-teal-500 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   if (error) {
@@ -217,89 +221,89 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
                  {displayAddress ? 'Change' : 'Add Address'}
                </button>
              </div>
-            <div className={`relative ${isSidenavOpen ? 'blur-sm' : ''} z-10`}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-6 mt-1">
-                {foodData.map((food, index) => (
-                  <ReactCardFlip key={index} isFlipped={flipped[index]} flipDirection="horizontal">
-<div className="relative w-full h-full sm:h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between mt-4 mx-2">
-                      {quantityNotifications[index] && (
-                        <div className="absolute top-0 left-0 right-0 bg-teal-100 border border-teal-200 text-teal-800 px-4 py-3 rounded-t-lg text-center text-sm">
-                          Click the flip icon to select dates
-                        </div>
-                      )}
-                      
-                      <h2 className={`text-lg sm:text-2xl font-bold ${quantityNotifications[index] ? 'mt-14' : 'mt-3'}`}>
-                        {food.category_name}
-                      </h2>
+             <div className={`relative ${isSidenavOpen ? 'blur-sm' : ''} z-10`}>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-6 mt-1">
+    {foodData.map((food, index) => (
+      <ReactCardFlip key={index} isFlipped={flipped[index]} flipDirection="horizontal">
+        <div className="relative w-full h-full sm:h-96 p-4 rounded-lg border border-teal-700 shadow-xl shadow-slate-400 flex flex-col justify-between mt-4 mx-2">
+          {quantityNotifications[index] && (
+            <div className="absolute top-0 left-0 right-0 bg-teal-100 border border-teal-200 text-teal-800 px-4 py-3 rounded-t-lg text-center text-sm">
+              Click the flip icon to select dates
+            </div>
+          )}
+          
+          <h2 className={`text-lg sm:text-2xl font-bold ${quantityNotifications[index] ? 'mt-14' : 'mt-3'}`}>
+            {food.category_name}
+          </h2>
 
-                      <button
-                        onClick={() => handleFlip(index)}
-                        className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none"
-                      >
-                        <FontAwesomeIcon icon={faSyncAlt} size='2xs' />
-                      </button>
+          <button
+            onClick={() => handleFlip(index)}
+            className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none"
+          >
+            <FontAwesomeIcon icon={faSyncAlt} size='2xs' />
+          </button>
 
-                      <div className="w-full flex items-center mb-20">
-                        <div className="w-full max-w-[200px] sm:max-w-[300px] aspect-square overflow-hidden flex justify-center items-center sm:mt-3">
-                          <img
-                            src={food.category_media}
-                            className="w-full h-full object-cover rounded-lg"
-                            alt="Food"
-                          />
-                        </div>
-                        <div className="mt-4 w-full sm:w-auto ml-5">
-                          <p className="text-sm sm:text-base text-gray-600 mt-2">{food.category_description}</p>
-                          <p className="mt-2">
-                            Price Per Plate: <span className="text-teal-800">{food.category_price}/-</span>
-                          </p>
-                          <div className="mt-2 flex items-center">
-                            Quantity:
-                            <button className="text-red-500 text-3xl ml-3" onClick={() => decrementQuantity(index)}>-</button>
-                            <input
-                              type="number"
-                              placeholder='0'
-                              value={quantities[index] === 0 ? '' : quantities[index]}
-                              onChange={(e) => {
-                                const parsedValue = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
-                                handleQuantityChange(index, parsedValue >= 0 ? parsedValue : 0);
-                              }}
-                              className="mx-4 text-lg bg-teal-100 h-7 w-10 text-center rounded-lg"
-                              min="0"
-                            />
-                            <button className="text-red-500 text-3xl ml-1" onClick={() => incrementQuantity(index)}>+</button>
-                          </div>
-                        </div>
-                      </div>
-
-                      {errorMessages[index] && (
-                        <div className="absolute bottom-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                          {errorMessages[index]}
-                        </div>
-                      )}
-                    </div>
-                    {/* Back Side */}
-                    <div className="relative w-full h-full sm:h-96 p-4 rounded-lg shadow-xl shadow-slate-400 flex flex-col justify-between overflow-hidden">
-                      <button onClick={() => handleFlip(index)} className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none">
-                        <FontAwesomeIcon icon={faSyncAlt} size='2xs' />
-                      </button>
-                      <div className="flex-grow overflow-hidden mt-5">
-                        <DateComponent 
-                          foodtype={food} 
-                          quantity={quantities[index]}
-                          onSaveSuccess={() => handleSaveSuccess(index)}
-                          onError={(message) => handleError(index, message)}
-                        />
-                      </div>
-                      {errorMessages[index] && (
-                        <div className="absolute bottom-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                          {errorMessages[index]}
-                        </div>
-                      )}
-                    </div>
-                  </ReactCardFlip>
-                ))}
+          <div className="w-full flex items-center mb-20">
+            <div className="w-full max-w-[200px] sm:max-w-[300px] aspect-square overflow-hidden flex justify-center items-center sm:mt-3">
+              <img
+                src={food.category_media}
+                className="w-full h-full object-cover rounded-lg"
+                alt="Food"
+              />
+            </div>
+            <div className="mt-4 w-full sm:w-auto ml-5">
+              <p className="text-sm sm:text-base text-gray-600 mt-2">{food.category_description}</p>
+              <p className="mt-2">
+                Price Per Plate: <span className="text-teal-800">{food.category_price}/-</span>
+              </p>
+              <div className="mt-2 flex items-center">
+                Quantity:
+                <button className="text-red-500 text-3xl ml-3" onClick={() => decrementQuantity(index)}>-</button>
+                <input
+                  type="number"
+                  placeholder='0'
+                  value={quantities[index] === 0 ? '' : quantities[index]}
+                  onChange={(e) => {
+                    const parsedValue = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
+                    handleQuantityChange(index, parsedValue >= 0 ? parsedValue : 0);
+                  }}
+                  className="mx-4 text-lg bg-teal-100 h-7 w-10 text-center rounded-lg"
+                  min="0"
+                />
+                <button className="text-red-500 text-3xl ml-1" onClick={() => incrementQuantity(index)}>+</button>
               </div>
             </div>
+          </div>
+
+          {errorMessages[index] && (
+            <div className="absolute bottom-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {errorMessages[index]}
+            </div>
+          )}
+        </div>
+        {/* Back Side */}
+        <div className="relative w-full h-full sm:h-96 p-4 rounded-lg border border-teal-700 shadow-xl shadow-slate-400 flex flex-col justify-between overflow-hidden">
+          <button onClick={() => handleFlip(index)} className="absolute top-4 right-4 text-blue-500 text-lg rounded-full focus:outline-none">
+            <FontAwesomeIcon icon={faSyncAlt} size='2xs' />
+          </button>
+          <div className="flex-grow overflow-hidden mt-5">
+            <DateComponent 
+              foodtype={food} 
+              quantity={quantities[index]}
+              onSaveSuccess={() => handleSaveSuccess(index)}
+              onError={(message) => handleError(index, message)}
+            />
+          </div>
+          {errorMessages[index] && (
+            <div className="absolute bottom-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {errorMessages[index]}
+            </div>
+          )}
+        </div>
+      </ReactCardFlip>
+    ))}
+  </div>
+</div>
           </div>
         ) : (
           <AddressForm onAddressAdd={handleAddressUpdate} onAddressSelect={handleAddressSelect} onClose={handleRemove} />

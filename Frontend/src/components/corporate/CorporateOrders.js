@@ -843,7 +843,6 @@ const CorporateOrders = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="fixed top-0 w-full bg-teal-800 h-16 flex items-center pl-4 z-50">
         <HomeIcon
           className="h-6 w-6 sm:h-8 sm:w-8 text-white mr-2 cursor-pointer"
@@ -852,7 +851,6 @@ const CorporateOrders = () => {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl text-white">My Orders</h1>
       </header>
 
-      {/* Content Container */}
       <div className="pt-24 px-4 lg:px-8 flex-grow">
         <div className="bg-gradient-to-r from-blue-50 to-white shadow-xl rounded-lg p-4">
           {showCorporate ? (
@@ -893,7 +891,6 @@ const CorporateOrders = () => {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="bg-teal-800 text-white text-center py-4">
         <p>Good food is just an order away! 🍜📦</p>
       </footer>

@@ -1,26 +1,26 @@
+
+
 import axios from 'axios';
-import { ChevronLeft, CornerDownLeft, Loader, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { ChevronLeft, Loader, Minus, Plus, ShoppingCart, ShoppingCartIcon, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
 import { jwtDecode } from 'jwt-decode';
 import AddressForm from '../Address/AddressForm';
 import { VerifyToken } from '../../MiddleWare/verifyToken';
-// import AddressForm from '../Address/AddressForm';
 import { io } from 'socket.io-client';
+
 const MyCart = () => {
   const [Total, setTotal] = useState(0);
   const [CartData, setCartData] = useState([]);
   const [sortedData, setSortedData] = useState([]);
-  const [cartIndividualData, setCartIndividualData] = useState([]);
   const [redirectUrl, setRedirectUrl] = useState('');
   const [error, setError] = useState('');
-  // const [loading, setLoading] = useState(true);
   const [Address, setAddress] = useState([]);
   const OrderData = [];
   const { updateCartCount } = useCart();
   const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
-  const tokens = localStorage.getItem('token')
+  const tokens = localStorage.getItem('token');
   const decodedToken = jwtDecode(tokens);
   const emails = decodedToken.email;
 
@@ -29,7 +29,7 @@ const MyCart = () => {
     Name: '',
     phonenumber: '',
     address: ''
-  })
+  });
   VerifyToken();
   const [userData, setUserData] = useState({
     Name: '',
@@ -43,11 +43,10 @@ const MyCart = () => {
   const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
   const navigate = useNavigate();
 
-
   const fetchCart = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/'); 
+      navigate('/');
       return;
     }
 
@@ -57,28 +56,25 @@ const MyCart = () => {
         headers: { token },
       });
       setCartData(response.data);
-      setIsLoading(flase);
-      console.log('hii1')
-
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching cart data:', error);
       setIsLoading(false);
-    } 
+    }
   };
 
   useEffect(() => {
     const socket = io(process.env.REACT_APP_URL, {
-      transports: ['websocket', 'polling'] 
+      transports: ['websocket', 'polling']
     });
     socket.on('connect', () => {
       console.log(`Connected to server with socket id: ${socket.id}`);
       socket.emit('message', 'Hello, server!');
     });
     socket.on('cartUpdated', (data) => {
-        console.log('Cart updated:', data);
-        fetchCart();
-      });
- 
+      console.log('Cart updated:', data);
+      fetchCart();
+    });
 
     socket.on('message', (data) => {
       console.log(`Message from server: ${data}`);
@@ -93,37 +89,9 @@ const MyCart = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     navigate('/'); 
-  //     return;
-  //   }
-
-    // // const socket = io('http://localhost:4000');
-    // const socket = io('http://localhost:4000', {
-    //   path: '/socket.io'  
-    // });
-
-  //   socket.on('connect', () => {
-  //     console.log('Connected to WebSocket server:', socket.id);
-  //   });
-
-  //   // Listen for cart updates and refetch data when needed
-  //   socket.on('cartUpdated', (data) => {
-  //     console.log('Cart updated for user:', data.userId);
-  //     fetchCart();
-  //   });
-
-  //   // Cleanup WebSocket connection on component unmount
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []); 
-
   useEffect(() => {
     fetchCart();
-  }, [navigate]); 
+  }, [navigate]);
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -133,11 +101,9 @@ const MyCart = () => {
         return;
       }
       try {
-        console.log('hiii im in cart');
         const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getCustomerDetails`, {
           headers: { "token": token },
         });
-        console.log('user', response.data);
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching customer data:', error);
@@ -170,7 +136,51 @@ const MyCart = () => {
     }
   }, []);
 
+  const parseNestedJSON = (data) => {
+    if (!data) return null;
+    let parsedData = data;
+    while (typeof parsedData === 'string') {
+      try {
+        parsedData = JSON.parse(parsedData);
+      } catch (e) {
+        break;
+      }
+    }
+    return parsedData;
+  };
 
+  useEffect(() => {
+    if (!CartData || Object.keys(CartData).length === 0) return;
+
+    let tempCartData = [];
+
+    try {
+      Object.entries(CartData).forEach(([key, value]) => {
+        const parsedCart = parseNestedJSON(value);
+        if (!parsedCart || typeof parsedCart !== 'object') {
+          console.error('Invalid cart data format');
+          return;
+        }
+
+        const orderDetails = parseNestedJSON(parsedCart.cart_order_details);
+
+        if (Array.isArray(orderDetails)) {
+          orderDetails.forEach(detail => {
+            tempCartData.push({
+              id: key,
+              ...detail,
+            });
+          });
+        }
+      });
+
+      const sortedCartItems = tempCartData.sort((a, b) => new Date(a.date) - new Date(b.date));
+      setSortedData(sortedCartItems);
+    } catch (error) {
+      console.error('Error processing cart data:', error);
+      setSortedData([]);
+    }
+  }, [CartData]);
 
   useEffect(() => {
     const totalAmount = sortedData.reduce(
@@ -203,76 +213,8 @@ const MyCart = () => {
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Clean up event listener on component unmount
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
-
-
-
-  const parseNestedJSON = (data) => {
-    if (!data) return null;
-    let parsedData = data;
-    while (typeof parsedData === 'string') {
-      try {
-        parsedData = JSON.parse(parsedData);
-      } catch (e) {
-        break;
-      }
-    }
-    return parsedData;
-  };
-
-  useEffect(() => {
-    if (!CartData || Object.keys(CartData).length === 0) return;
-
-    let tempCartData = [];
-
-    try {
-      Object.entries(CartData).forEach(async ([key, value]) => {
-        // Parse the entire cart value which might be multiple times stringified
-        const parsedCart = await parseNestedJSON(value);
-        if (!parsedCart || typeof parsedCart !== 'object') {
-          console.error('Invalid cart data format');
-          return;
-        }
-
-        // Parse cart_order_details
-        const orderDetails = parseNestedJSON(parsedCart.cart_order_details);
-
-        if (Array.isArray(orderDetails)) {
-          orderDetails.forEach(detail => {
-            tempCartData.push({
-              id: key,
-              content: detail,
-            });
-          });
-        }
-      });
-
-      console.log('Processed cart data:', tempCartData);
-      setCartIndividualData(tempCartData);
-    } catch (error) {
-      console.error('Error processing cart data:', error);
-      setCartIndividualData([]);
-    }
-  }, [CartData]);
-
-
-
-  useEffect(() => {
-    console.log('hii2')
-
-    if (cartIndividualData.length > 0) {
-      console.log('each data', cartIndividualData);
-      const flattenedData = cartIndividualData.map(cart => ({
-        id: cart.id,
-        ...cart.content
-      }));
-      const sortedCartItems = flattenedData.sort((a, b) => new Date(a.date) - new Date(b.date));
-      console.log('sorted', sortedCartItems);
-      setSortedData(sortedCartItems);
-    }
-  }, [cartIndividualData]);
 
   const handleDecrement = async (index) => {
     setSortedData((prevItems) => {
@@ -285,7 +227,6 @@ const MyCart = () => {
         updatedItems[index] = updatedItem;
 
         try {
-          // Find the matching cart item
           const matchingCartItem = Object.entries(CartData).find(([key, value]) => {
             const parsedValue = parseNestedJSON(value);
             if (!parsedValue || !parsedValue.cart_order_details) return false;
@@ -315,22 +256,18 @@ const MyCart = () => {
                 return detail;
               });
 
-              // Calculate new total amount
               const newTotalAmount = updatedCartDetails.reduce(
                 (sum, detail) => sum + (detail.price * detail.quantity),
                 0
               );
 
-              // Format and update cart item
               const updatedCartItem = {
                 cart_order_details: updatedCartDetails,
                 total_amount: newTotalAmount
               };
 
-              // Update in Redis
               updateCartItem(itemKey, updatedCartItem);
 
-              // Update local storage to persist cart count
               const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
               const updatedUserDP = {
                 ...storedUserDP,
@@ -356,6 +293,7 @@ const MyCart = () => {
       total_amount: totalAmount
     };
   };
+
   const handleIncrement = async (index) => {
     setSortedData((prevItems) => {
       const updatedItems = [...prevItems];
@@ -366,7 +304,6 @@ const MyCart = () => {
       updatedItems[index] = updatedItem;
 
       try {
-        // Find the matching cart item
         const matchingCartItem = Object.entries(CartData).find(([key, value]) => {
           const parsedValue = parseNestedJSON(value);
           if (!parsedValue || !parsedValue.cart_order_details) return false;
@@ -396,13 +333,11 @@ const MyCart = () => {
               return detail;
             });
 
-            // Calculate new total amount
             const newTotalAmount = updatedCartDetails.reduce(
               (sum, detail) => sum + (detail.price * detail.quantity),
               0
             );
 
-            // Format and update cart item
             const updatedCartItem = formatCartItem(updatedCartDetails, newTotalAmount);
             updateCartItem(itemKey, updatedCartItem);
           }
@@ -414,7 +349,6 @@ const MyCart = () => {
       return updatedItems;
     });
   };
-
 
   const updateCartItem = async (itemId, updatedCartItem) => {
     try {
@@ -444,13 +378,11 @@ const MyCart = () => {
     }
   };
 
-
   const handleRemove = async (index) => {
     const itemToRemove = sortedData[index];
 
     try {
       const token = localStorage.getItem('token');
-      // Find the cart item ID that contains this specific item
       const matchingCartItem = Object.entries(CartData).find(([key, value]) => {
         const parsedValue = parseNestedJSON(value);
         if (!parsedValue || !parsedValue.cart_order_details) return false;
@@ -467,7 +399,6 @@ const MyCart = () => {
       if (matchingCartItem) {
         const [itemId] = matchingCartItem;
 
-        // Make the delete request with the correct itemId
         const response = await axios.delete(
           `${process.env.REACT_APP_URL}/api/cart/${itemId}`,
           {
@@ -476,17 +407,14 @@ const MyCart = () => {
         );
 
         if (response.data.success) {
-          // Update local state
           setSortedData(prevItems => prevItems.filter((_, i) => i !== index));
 
-          // Update CartData
           setCartData(prevData => {
             const newData = { ...prevData };
             delete newData[itemId];
             return newData;
           });
 
-          // Update cart count in localStorage
           const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
           const updatedCount = (storedUserDP.cartCount || 0) - itemToRemove.quantity;
           const updatedUserDP = {
@@ -495,7 +423,6 @@ const MyCart = () => {
           };
           localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
 
-          // Update cart count in context
           updateCartCount(Math.max(0, updatedCount));
         }
       } else {
@@ -503,10 +430,8 @@ const MyCart = () => {
       }
     } catch (error) {
       console.error('Error removing cart item:', error);
-      // Optionally show an error message to the user
     }
   };
-
 
   const handleViewHome = () => {
     navigate('/home');
@@ -517,11 +442,8 @@ const MyCart = () => {
   };
 
   const handleViewPayment = async () => {
-    console.log("hiiiii")
     try {
-
       for (let i = 0; i < sortedData.length; i++) {
-
         const Data = {
           category_id: sortedData[i].category_id,
           processing_date: sortedData[i].date,
@@ -530,7 +452,7 @@ const MyCart = () => {
           active_quantity: sortedData[i].quantity,
           media: null,
           delivery_details: null,
-          accept_status:'pending'
+          accept_status: 'pending'
         };
         OrderData.push(Data);
       }
@@ -543,16 +465,13 @@ const MyCart = () => {
         paymentid: null,
         customer_address: localStorage.getItem('address'),
         payment_status: 'pending',
-
       }, {
         headers: { 'token': localStorage.getItem('token') }
-      }
-      );
+      });
+
       if (response.status === 200) {
         await PaymentDetails(response.data.order.corporateorder_generated_id);
         await sendOrderDetails(response.data.order);
-
-        console.log('Cart details added to orders', response.data);
       } else {
         console.error('Failed to add details to order_table:', response.data);
       }
@@ -561,13 +480,10 @@ const MyCart = () => {
     }
   };
 
-
-
   const sendOrderDetails = async (orderDetails) => {
     try {
       let response;
       let details = orderDetails.order_details;
-      console.log('length', details.length);
 
       for (let i = 0; i < details.length; i++) {
         response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`, {
@@ -583,10 +499,8 @@ const MyCart = () => {
             media: details[i].media,
             delivery_details: details[i].delivery_details
           });
-        console.log('Order details sent in loop');
       }
 
-      console.log('Order details sent:', orderDetails);
       if (response) {
         console.log('Order details successfully added:', response.data);
       } else {
@@ -597,104 +511,168 @@ const MyCart = () => {
     }
   };
 
+  // const handleViewPayment = async () => {
+  //   console.log("hiiiii")
+  //   const decodedToken = jwtDecode(tokens);
+
+  //   try {
+
+  //     for (let i = 0; i < sortedData.length; i++) {
+
+  //       const Data = {
+  //         category_id: sortedData[i].category_id,
+  //         processing_date: sortedData[i].date,
+  //         delivery_status: 'processing',
+  //         quantity: sortedData[i].quantity,
+  //         active_quantity: sortedData[i].quantity,
+  //         media: null,
+  //         delivery_details: null,
+  //         accept_status:'pending'
+  //       };
+  //       OrderData.push(Data);
+  //     }
+  //     const OrderDataJSON = JSON.stringify(OrderData);
+  //  console.log('orderdata',OrderDataJSON)
+  //     const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporate/transfer-cart-to-order`, {
+  //       customer_generated_id: decodedToken.id,
+  //       order_details: OrderDataJSON,
+  //       total_amount: Total,
+  //       paymentid: null,
+  //       customer_address: localStorage.getItem('address'),
+  //       payment_status: 'pending',
+
+  //     }, {
+  //       headers: { 'token': localStorage.getItem('token') }
+  //     }
+  //     );
+
+  //     console.log('corporate ',response.data)
+  //     if (response.status === 200) {
+  //       await PaymentDetails(response.data.order.corporateorder_generated_id);
+  //       await sendOrderDetails(response.data.order);
+
+  //       console.log('Cart details added to orders', response.data);
+  //     } else {
+  //       console.error('Failed to add details to order_table:', response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding details to order_table:', error);
+  //   }
+  // };
+
+
+
+  // const PaymentDetails = async (corporateorder_generated_id) => {
+  //   try {
+  //     console.log('corporate orders ',corporateorder_generated_id)
+  //     // const token=localStorage.getItem('token')
+
+  //     const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`,
+  //       { amount: Total, corporateorder_id: corporateorder_generated_id },
+  //       { headers: { token: localStorage.getItem('token') } });
+  //     setSortedData([]);
+  //     setCartData([]);
+  //     setCartIndividualData([]);
+  //     setTotal(0);
+
+  //     // Get user-specific details from local storage
+  //     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+  //     const updatedUserDP = {
+  //       ...storedUserDP,
+  //       cartCount: 0, // Update the cart count for the specific user to 0 after payment
+  //     };
+
+  //     // Update local storage with updated user cart count
+  //     localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+
+  //     // Update cart count in context
+  //     updateCartCount(0);
+
+  //     // Redirect to the payment URL if available
+  //     if (response.data && response.data.redirectUrl) {
+  //       setRedirectUrl(response.data.redirectUrl);
+  //       window.location.href = response.data.redirectUrl;
+  //     } else {
+  //       setError('Unexpected response format.');
+  //     }
+  //   } catch (err) {
+  //     // Check for specific error details
+  //     if (err.response) {
+  //       setError(`Error: ${err.response.data.message || 'An error occurred. Please try again.'}`);
+  //     } else {
+  //       setError('Network error or no response from the server.');
+  //     }
+  //   } 
+  // }
+
+
+  
   const PaymentDetails = async (corporateorder_generated_id) => {
-    const message=""
-    const responsepay={}
+    const message = "";
+    const responsepay = {};
     try {
-
       try {
-        console.log("entered");
-
         if (!window.Razorpay) {
-            alert("Razorpay SDK failed to load. Check your internet connection.");
-            return;
-          }
+          alert("Razorpay SDK failed to load. Check your internet connection.");
+          return;
+        }
 
-      const { data } = await axios.post(`${process.env.REACT_APP_URL}/api/create-order`, {
-        amount: Total,
-        currency: "INR",
-      });
-      console.log("entered-1");
-      const options = {
-        key: 'rzp_test_Kt3z43uPYnvC9E', 
-        amount: data.amount,
-        currency: data.currency,
-        name: "CaterOrange",
-        description: "Test Payment",
-        order_id: data.id,
-        handler: async (response) => {
-          console.log("response",response);
-          const verifyRes = await axios.post(`${process.env.REACT_APP_URL}/api/verify-payment`, response);
-          const paymentPayload = {
-            paymentType: "Net", 
-            merchantTransactionId: "mer123", 
-            phonePeReferenceId: response.razorpay_payment_id, 
-            paymentFrom: "RazorPay", 
-            instrument:  'N/A', 
-            bankReferenceNo: 'N/A', 
-            amount: Total,
-            customer_id:decodedToken.id,
-            corporateorder_id:corporateorder_generated_id
-          }
-          const responsein=await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
-          console.log('resof insert',responsein)
+        const { data } = await axios.post(`${process.env.REACT_APP_URL}/api/create-order`, {
+          amount: Total,
+          currency: "INR",
+        });
 
-        },
-        prefill: {
-          name: "Pratap ",
-          email: "Pratap@gmail.com",
-          contact: "1111111111",
-        },
-        theme: { color: "#3399cc" },
-      };
+        const options = {
+          key: 'rzp_test_Kt3z43uPYnvC9E',
+          amount: data.amount,
+          currency: data.currency,
+          name: "CaterOrange",
+          description: "Test Payment",
+          order_id: data.id,
+          handler: async (response) => {
+            const verifyRes = await axios.post(`${process.env.REACT_APP_URL}/api/verify-payment`, response);
+            const paymentPayload = {
+              paymentType: "Net",
+              merchantTransactionId: "mer123",
+              phonePeReferenceId: response.razorpay_payment_id,
+              paymentFrom: "RazorPay",
+              instrument: 'N/A',
+              bankReferenceNo: 'N/A',
+              amount: Total,
+              customer_id: decodedToken.id,
+              corporateorder_id: corporateorder_generated_id
+            };
+            await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
+          },
+          prefill: {
+            name: "Pratap",
+            email: "Pratap@gmail.com",
+            contact: "1111111111",
+          },
+          theme: { color: "#3399cc" },
+        };
 
-      console.log("entered-2");
-      console.log("create-order",data);
-      const razor = new window.Razorpay(options);
-      console.log("entered-3");
-      razor.open();
-    } catch (error) {
-      console.error(error);
-      alert("Payment Failed!");
-    }
-      // const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`,
-      //   { amount: Total, corporateorder_id: corporateorder_generated_id },
-      //   { headers: { token: localStorage.getItem('token') } });
-      // if (message === "Payment Verified Successfully") {
-      //   const paymentPayload = {
-      //     paymentType: "Net", // PaymentType
-      //     merchantTransactionId: "mer123", // MerchantReferenceId
-      //     phonePeReferenceId: responsepay.razorpay_payment_id, // PhonePeReferenceId
-      //     paymentFrom: "RazorPay", // From
-      //     instrument:  'N/A', // Instrument (CARD or other)
-      //     bankReferenceNo: 'N/A', // BankReferenceNo
-      //     amount: Total,
-      //     customer_id:decodedToken.id,
-      //     corporateorder_id:corporateorder_generated_id
-      //   }
-      //   const response=await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
-      //   console.log('resof insert',response)
-        
-      //   ;}
+        const razor = new window.Razorpay(options);
+        razor.open();
+      } catch (error) {
+        console.error(error);
+        alert("Payment Failed!");
+      }
+
       setSortedData([]);
       setCartData([]);
       setCartIndividualData([]);
       setTotal(0);
 
-      // Get user-specific details from local storage
       const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
       const updatedUserDP = {
         ...storedUserDP,
-        cartCount: 0, // Update the cart count for the specific user to 0 after payment
+        cartCount: 0,
       };
 
-      // Update local storage with updated user cart count
       localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
-
-      // Update cart count in context
       updateCartCount(0);
 
-      // Redirect to the payment URL if available
       if (response.data && response.data.redirectUrl) {
         setRedirectUrl(response.data.redirectUrl);
         window.location.href = response.data.redirectUrl;
@@ -702,14 +680,13 @@ const MyCart = () => {
         setError('Unexpected response format.');
       }
     } catch (err) {
-      // Check for specific error details
       if (err.response) {
         setError(`Error: ${err.response.data.message || 'An error occurred. Please try again.'}`);
       } else {
         setError('Network error or no response from the server.');
       }
-    } 
-  }
+    }
+  };
 
   const handleAddressAdd = () => {
     fetchAddress();
@@ -839,135 +816,132 @@ console.log('length',CartData.length,CartData)
 
   const isDisabled = userAddressDetails.address === '' || sortedData.length === 0;
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
-      <header className="bg-white shadow-md p-4 fixed top-0 left-0 right-0 z-10">
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <header className="bg-teal-800 shadow-lg p-4 fixed top-0 left-0 right-0 z-20">
         <div className="flex justify-between items-center max-w-6xl mx-auto">
           <div className="flex items-center">
             <Link to="/home">
-              <ChevronLeft size={24} className="cursor-pointer" onClick={handleViewHome} />
+              <ChevronLeft size={24} className="cursor-pointer text-white" onClick={handleViewHome} />
             </Link>
-            <h1 className="text-lg font-bold ml-2">My Cart</h1>
+            <h1 className="text-xl text-white font-bold ml-3">My Cart</h1>
           </div>
-          <div className="bg-teal-800 text-white rounded-full h-8 w-8 flex items-center justify-center">
-            <ShoppingCart size={24} />
+          <div className="h-10 w-10 flex items-center justify-center bg-white bg-opacity-20 rounded-full">
+            <ShoppingCartIcon size={24} className="text-white" />
           </div>
         </div>
       </header>
   
-      <main className="flex-grow mt-16 mb-20 p-4">
+      <main className="flex-grow mt-20 mb-20 p-6">
         <div className="max-w-6xl mx-auto">
-          {/* User details section */}
-          <div className="bg-white shadow-lg rounded-lg p-4 mb-6">
-            <h2 className="text-xl font-bold mb-4">Shipping Details</h2>
-  
-            {!userAddressDetails.Name && (
-              <p className="text-red-500 font-bold mb-4">
-                *Shipping details are required to proceed with payment.
-              </p>
-            )}
-  
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <p className="font-bold">Name:</p>
-                <p className="text-gray-700">{userAddressDetails.Name || ''}</p>
-              </div>
-              <div>
-                <p className="font-bold">Email:</p>
-                <p className="text-gray-700">{userAddressDetails.Name === '' ? '' : emails}</p>
-              </div>
-              <div>
-                <p className="font-bold">Phone Number:</p>
-                <p className="text-gray-700">{userAddressDetails.phonenumber || ''}</p>
-              </div>
-              <div>
-                <p className="font-bold">Address:</p>
-                <p className="text-gray-700">{userAddressDetails.address || ''}</p>
-              </div>
-            </div>
-  
-            <button
-              onClick={handleAddressFormToggle}
-              className="mt-4 bg-teal-800 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition"
-            >
-              {userAddressDetails.Name ? 'Change' : 'Add'}
-            </button>
-          </div>
+        <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 mt--2 border border-gray-200 ">
+  <h2 className="text-xl font-bold mb-3 text-gray-900 flex items-center">
+    <span className="mr-2 text-teal-700">🚚</span> Shipping Details
+  </h2>
+
+  {!userAddressDetails.Name && (
+    <p className="text-red-500 font-medium mb-3 text-sm flex items-center">
+      ⚠️ *Shipping details are required to proceed with payment.
+    </p>
+  )}
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
+    <div className="p-2  rounded-md">
+      <p className="font-semibold text-gray-800">Name:</p>
+      <p className="text-gray-600">{userAddressDetails.Name || '-'}</p>
+    </div>
+    <div className="p-2 rounded-md">
+      <p className="font-semibold text-gray-800">Email:</p>
+      <p className="text-gray-600">{userAddressDetails.Name ? emails : '-'}</p>
+    </div>
+    <div className="p-2  rounded-md">
+      <p className="font-semibold text-gray-800">Phone Number:</p>
+      <p className="text-gray-600">{userAddressDetails.phonenumber || '-'}</p>
+    </div>
+    <div className="p-2  rounded-md">
+      <p className="font-semibold text-gray-800">Address:</p>
+      <p className="text-gray-600">{userAddressDetails.address || '-'}</p>
+    </div>
+  </div>
+
+  <button
+    onClick={handleAddressFormToggle}
+    className="mt-4 w-full sm:w-auto bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition-all shadow-md font-medium"
+  >
+    {userAddressDetails.Name ? 'Change Address' : 'Add Address'}
+  </button>
+</div>
   
           {isLoading ? (
             <div className="flex justify-center items-center">
               <Loader />
             </div>
+          ) : Object.keys(CartData).length === 0 ? (
+            <div className="bg-white p-6 rounded-xl shadow-md text-center border border-teal-800">
+              <h2 className="text-xl font-semibold mb-4">Your cart is empty</h2>
+              <p className="text-gray-600">No items added yet. Start shopping now!</p>
+              <button
+                  onClick={() => navigate('/home')}
+                  className="mt-4 bg-teal-700 text-white px-5 py-2 rounded-lg hover:bg-teal-600 transition shadow-md"
+                >
+                  Add Items
+                </button>
+            </div>
           ) : (
-            (Object.keys(CartData).length === 0) ? (
-              <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                <h2 className="text-xl font-bold mb-4">Your cart is empty</h2>
-                <p>No items are added to cart. Please add some items to continue.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sortedData.map((item, index) => (
-                  <div key={index} className="relative bg-white rounded-lg shadow-md p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
+              {sortedData.map((item, index) => (
+                <div key={index} className="relative bg-white rounded-xl shadow-lg p-5 border border-teal-800">
+                  <button
+                    className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
+                    onClick={() => handleRemove(index, sortedData[index].quantity)}
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                  <h3 className="font-semibold text-lg text-gray-900">{item.type}</h3>
+                  <p className="text-sm text-gray-500 mt-1">Date: {item.date}</p>
+  
+                  <div className="flex items-center space-x-3 mt-3">
                     <button
-                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                      onClick={() => handleRemove(index, sortedData[index].quantity)}
+                      className="bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 transition"
+                      onClick={() => handleDecrement(index)}
                     >
-                      <Trash2 size={16} />
+                      <Minus size={16} />
                     </button>
-  
-                    {/* Item Details */}
-                    <div className="flex items-center">
-                      <div className="w-full mt-4 ml-5">
-                        <h3 className="font-bold text-lg md:text-xl text-gray-800">{item.type}</h3>
-                        <p className="text-sm text-gray-500">Date: {item.date}</p>
-  
-                        {/* Quantity and Increment/Decrement */}
-                        <div className="flex space-x-2 mt-2">
-                          <button
-                            className="bg-gray-200 text-gray-700 p-1 rounded-full hover:bg-gray-300 text-xs"
-                            onClick={() => handleDecrement(index)}
-                          >
-                            <Minus size={12} />
-                          </button>
-                          <input
-                            type="number"
-                            min="1"
-                            value={sortedData[index].quantity || ''} // Ensure this is always a number
-                            onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
-                            className="w-10 text-center border border-gray-300 rounded-md p-1 text-xs"
-                          />
-                          <button
-                            className="bg-gray-200 text-gray-700 p-1 rounded-full hover:bg-gray-300 text-xs"
-                            onClick={() => handleIncrement(index)}
-                          >
-                            <Plus size={12} />
-                          </button>
-                        </div>
-  
-                        {/* Price, Quantity, and Amount */}
-                        <div className="text-sm text-gray-600 mt-2">
-                          <p>Price Per Plate: ₹{item.price}</p>
-                          <p>Quantity: {item.quantity}</p>
-                          <p className="font-bold text-gray-800">Amount:  ₹{item.price * item.quantity}</p>
-                        </div>
-                      </div>
-                    </div>
+                    <input
+                      type="number"
+                      min="1"
+                      value={sortedData[index].quantity || ''}
+                      onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
+                      className="w-12 text-center border border-gray-300 rounded-md p-1"
+                    />
+                    <button
+                      className="bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 transition"
+                      onClick={() => handleIncrement(index)}
+                    >
+                      <Plus size={16} />
+                    </button>
                   </div>
-                ))}
-              </div>
-            )
+  
+                  <div className="text-sm text-gray-700 mt-3">
+                    <p>Price Per Plate: ₹{item.price}</p>
+                    <p>Quantity: {item.quantity}</p>
+                    <p className="font-bold text-gray-900">Amount: ₹{item.price * item.quantity}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </main>
   
-      <footer className="bg-white shadow-md p-4 fixed bottom-0 left-0 right-0 z-10">
+      <footer className="bg-white shadow-lg p-4 fixed bottom-0 left-0 right-0 z-20">
         <div className="flex justify-between items-center max-w-6xl mx-auto">
-          <h2 className="text-lg font-bold">Total: ₹{Total}/-</h2>
+          <h2 className="text-xl font-semibold">Total: ₹{Total}/-</h2>
           <button
-            className={`p-2 px-4 rounded-lg shadow-md transition
-              ${isDisabled
-              ? 'bg-gray-300 cursor-not-allowed'
-              : 'bg-teal-800 text-white hover:bg-teal-600'
-              }`}
+            className={`p-3 px-6 rounded-lg transition shadow-md ${
+              isDisabled
+                ? 'bg-gray-300 cursor-not-allowed'
+                : 'bg-teal-700 text-white hover:bg-teal-600'
+            }`}
             onClick={handleViewPayment}
             disabled={isDisabled}
           >
@@ -978,8 +952,8 @@ console.log('length',CartData.length,CartData)
   
       {isAddressFormOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
-            <div className="p-4 overflow-y-auto flex-grow">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
               <AddressForm
                 onAddressAdd={handleAddressAdd}
                 onAddressSelect={handleAddressSelect}
@@ -991,6 +965,13 @@ console.log('length',CartData.length,CartData)
       )}
     </div>
   );
+  
 };
 
 export default MyCart;
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/harshitha/Music/aftercontact/CaterOrangeaftercontact/CaterOrange/Backend/src/config/logs/.acbd25e8b4966046c8a7f1fd144d49ba49a6085e-audit.json",
+    "files": [
+        {
+            "date": 1738910285732,
+            "name": "/home/harshitha/Music/aftercontact/CaterOrangeaftercontact/CaterOrange/Backend/src/config/logs/error-2025-02-07.log",
+            "hash": "8bfd94b4b9e630da0b7c46286b14338ebde4f24ebd666943fd69f27b6933828c"
+        }
+    ],
+    "hashType": "sha256"
+}

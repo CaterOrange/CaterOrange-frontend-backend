@@ -4,11 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-
 import Body from './Body';
 import './css/styles.css';
 import { VerifyToken } from '../../MiddleWare/verifyToken';
-
 const Header = ({ user }) => {
   const { cartCount, updateCartCount } = useCart();
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
@@ -69,7 +67,6 @@ const Header = ({ user }) => {
     return names.map((n) => n[0]).join('').toUpperCase();
   };
 
-  // Memoize the fetchCount function
   const fetchCount = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
@@ -87,18 +84,15 @@ const Header = ({ user }) => {
     }
   }, [updateCartCount]);
 
-  // Effect for fetching cart count and initializing from localStorage
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
       
-      // Initialize from localStorage only on first mount
       const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
       if (storedUserDP.cartCount !== undefined) {
         updateCartCount(storedUserDP.cartCount);
       }
       
-      // Initial fetch
       fetchCount();
     }
   }, [fetchCount, updateCartCount]);
@@ -131,35 +125,47 @@ const Header = ({ user }) => {
   }, []);
   return (
     <>
-      <header className="fixed top-0 left-0 w-full bg-teal-800 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
-        <div className="flex items-center">
-          <UserCircleIcon className="h-9 w-9 cursor-pointer" onClick={toggleSidenav} />
-        </div>
+     <header className="fixed top-0 left-0 w-full bg-teal-800 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
+      <div className="flex items-center">
+        <UserCircleIcon className="h-9 w-9 cursor-pointer" onClick={toggleSidenav} />
+      </div>
 
-        <h2 className="text-2xl font-semibold mb-4 text-white text-center flex-1">
+      <div className="flex items-center flex-1 justify-center ml-10">
+  
+        <h2 className="text-lg md:text-2xl font-semibold text-white text-center">
           {activeTab === 'corporate' ? 'CORPORATE MEALS' : 'EVENTS MENU'}
         </h2>
+      </div>
 
-        {activeTab === 'corporate' && (
-          <div className="flex items-center relative">
-            <Link to="/cart">
-              <ShoppingCartIcon className="h-8 w-8 cursor-pointer" onClick={handleViewCart} />
-            </Link>
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
-                {cartCount}
-              </span>
-            )}
-          </div>
-        )}
-        {activeTab === 'events' && <div className="w-6"></div>}
-      </header>
-
+      {activeTab === 'corporate' && (
+        <div className="flex items-center relative space-x-2 md:space-x-4">
+          <Link to="/orders">
+            <button className="hidden md:block text-white py-1 px-2 md:px-4 rounded-lg shadow-md hover:bg-gray-100 hover:text-teal-500 transition-all text-sm md:text-base">
+              My Orders
+            </button>
+          </Link>
+          {/* <Link to="/contact">
+            <button className="hidden md:block text-white py-1 px-2 md:px-4 rounded-lg shadow-md hover:bg-gray-100 hover:text-teal-500 transition-all text-sm md:text-base">
+              Contact Us
+            </button>
+          </Link> */}
+          <Link to="/cart">
+            <ShoppingCartIcon className="h-6 w-6 md:h-8 md:w-8 cursor-pointer" onClick={handleViewCart} />
+          </Link>
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
+              {cartCount}
+            </span>
+          )}
+        </div>
+      )}
+      {activeTab === 'events' && <div className="w-6"></div>}
+    </header>
       {isSidenavOpen && <div className="fixed inset-0 bg-black opacity-50 z-40 blur-sm"></div>}
 
       <div
       ref={sidenavRef}
-        className={`fixed top-0 left-0 h-full w-64 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-full w-70 bg-white text-black shadow-lg transform transition-transform duration-300 ease-in-out ${
           isSidenavOpen ? 'translate-x-0' : '-translate-x-full'
         } z-50 overflow-y-auto`}
       >

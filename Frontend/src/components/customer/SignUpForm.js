@@ -227,7 +227,7 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
         <SignInForm closeModal={() => setShowSignInModal(false)} onSignIn={handleSignIn} />
       ) : (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-md p-8">
-          <div className="h-40 bg-blue-300 border-back-200 mb-4 overflow-hidden">
+          <div className="h-40 bg-orange-300 border-back-200 mb-4 overflow-hidden">
             <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={3000}>
               {images.map((src, index) => (
                 <div key={index}>
@@ -327,7 +327,7 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
             {fieldErrors.confirmPassword && <p className="text-red-500 text-xs mt-1">{fieldErrors.confirmPassword}</p>}
             
             <button 
-              className="bg-blue-600 text-white font-bold py-2 px-4 rounded w-full hover:bg-blue-700 mt-4"
+              className="bg-orange-500 text-white font-bold py-2 px-4 rounded w-full hover:bg-orange-700 mt-4"
               type="submit"
               disabled={state.isLoading}
             >
@@ -355,7 +355,7 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
               Do you have an account?{' '}
               <button
                 type="button"
-                className="text-blue-600 ml-1"
+                className="text-orange-600 ml-1"
                 onClick={() => setShowSignInModal(true)}
               >
                 Login
