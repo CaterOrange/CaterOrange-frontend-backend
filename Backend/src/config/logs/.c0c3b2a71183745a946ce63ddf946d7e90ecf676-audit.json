@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/karishma/Music/CaterOrangerazor+contact/CaterOrange/Backend/src/config/logs/.c0c3b2a71183745a946ce63ddf946d7e90ecf676-audit.json",
+    "files": [
+        {
+            "date": 1738906378966,
+            "name": "/home/karishma/Music/CaterOrangerazor+contact/CaterOrange/Backend/src/config/logs/application-2025-02-07.log",
+            "hash": "e1351ebc48a96084319666f2db85a5ccbf1494f7762d34c26686019c49a116a6"
+        }
+    ],
+    "hashType": "sha256"
+}

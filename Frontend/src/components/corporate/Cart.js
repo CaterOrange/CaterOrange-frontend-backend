@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ChevronLeft, CornerDownLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { ChevronLeft, CornerDownLeft, Loader, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
@@ -43,34 +43,6 @@ const MyCart = () => {
   const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchCart = async () => {
-  //     const token = localStorage.getItem('token');
-  //     if (!token) {
-  //       navigate('/'); // Redirect to home if token is not found
-  //       return;
-  //     }
-
-  //     setIsLoading(true);
-  //     try {
-  //       const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart`, {
-  //         headers: { 'token': token },
-  //       });
-  //       console.log('in carts', response.data);
-  //       const data = response.data
-  //       console.log(data)
-  //       setCartData(data);
-  //       console.log("cart", CartData)
-  //     } catch (error) {
-  //       console.error('Error fetching cart data:', error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchCart();
-  // }, [navigate]);
-
 
   const fetchCart = async () => {
     const token = localStorage.getItem('token');
@@ -79,14 +51,18 @@ const MyCart = () => {
       return;
     }
 
-    // setIsLoading(true);
+    setIsLoading(true);
     try {
       const response = await axios.get(`${process.env.REACT_APP_URL}/api/cart`, {
         headers: { token },
       });
       setCartData(response.data);
+      setIsLoading(flase);
+      console.log('hii1')
+
     } catch (error) {
       console.error('Error fetching cart data:', error);
+      setIsLoading(false);
     } 
   };
 
@@ -284,6 +260,8 @@ const MyCart = () => {
 
 
   useEffect(() => {
+    console.log('hii2')
+
     if (cartIndividualData.length > 0) {
       console.log('each data', cartIndividualData);
       const flattenedData = cartIndividualData.map(cart => ({
@@ -620,13 +598,84 @@ const MyCart = () => {
   };
 
   const PaymentDetails = async (corporateorder_generated_id) => {
+    const message=""
+    const responsepay={}
     try {
 
-      // const token=localStorage.getItem('token')
+      try {
+        console.log("entered");
 
-      const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`,
-        { amount: Total, corporateorder_id: corporateorder_generated_id },
-        { headers: { token: localStorage.getItem('token') } });
+        if (!window.Razorpay) {
+            alert("Razorpay SDK failed to load. Check your internet connection.");
+            return;
+          }
+
+      const { data } = await axios.post(`${process.env.REACT_APP_URL}/api/create-order`, {
+        amount: Total,
+        currency: "INR",
+      });
+      console.log("entered-1");
+      const options = {
+        key: 'rzp_test_Kt3z43uPYnvC9E', 
+        amount: data.amount,
+        currency: data.currency,
+        name: "CaterOrange",
+        description: "Test Payment",
+        order_id: data.id,
+        handler: async (response) => {
+          console.log("response",response);
+          const verifyRes = await axios.post(`${process.env.REACT_APP_URL}/api/verify-payment`, response);
+          const paymentPayload = {
+            paymentType: "Net", 
+            merchantTransactionId: "mer123", 
+            phonePeReferenceId: response.razorpay_payment_id, 
+            paymentFrom: "RazorPay", 
+            instrument:  'N/A', 
+            bankReferenceNo: 'N/A', 
+            amount: Total,
+            customer_id:decodedToken.id,
+            corporateorder_id:corporateorder_generated_id
+          }
+          const responsein=await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
+          console.log('resof insert',responsein)
+
+        },
+        prefill: {
+          name: "Pratap ",
+          email: "Pratap@gmail.com",
+          contact: "1111111111",
+        },
+        theme: { color: "#3399cc" },
+      };
+
+      console.log("entered-2");
+      console.log("create-order",data);
+      const razor = new window.Razorpay(options);
+      console.log("entered-3");
+      razor.open();
+    } catch (error) {
+      console.error(error);
+      alert("Payment Failed!");
+    }
+      // const response = await axios.post(`${process.env.REACT_APP_URL}/api/pay`,
+      //   { amount: Total, corporateorder_id: corporateorder_generated_id },
+      //   { headers: { token: localStorage.getItem('token') } });
+      // if (message === "Payment Verified Successfully") {
+      //   const paymentPayload = {
+      //     paymentType: "Net", // PaymentType
+      //     merchantTransactionId: "mer123", // MerchantReferenceId
+      //     phonePeReferenceId: responsepay.razorpay_payment_id, // PhonePeReferenceId
+      //     paymentFrom: "RazorPay", // From
+      //     instrument:  'N/A', // Instrument (CARD or other)
+      //     bankReferenceNo: 'N/A', // BankReferenceNo
+      //     amount: Total,
+      //     customer_id:decodedToken.id,
+      //     corporateorder_id:corporateorder_generated_id
+      //   }
+      //   const response=await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
+      //   console.log('resof insert',response)
+        
+      //   ;}
       setSortedData([]);
       setCartData([]);
       setCartIndividualData([]);
@@ -786,7 +835,7 @@ const MyCart = () => {
     }
   };
 
-
+console.log('length',CartData.length,CartData)
 
   const isDisabled = userAddressDetails.address === '' || sortedData.length === 0;
   return (
@@ -804,38 +853,38 @@ const MyCart = () => {
           </div>
         </div>
       </header>
-
+  
       <main className="flex-grow mt-16 mb-20 p-4">
         <div className="max-w-6xl mx-auto">
           {/* User details section */}
           <div className="bg-white shadow-lg rounded-lg p-4 mb-6">
             <h2 className="text-xl font-bold mb-4">Shipping Details</h2>
-
+  
             {!userAddressDetails.Name && (
               <p className="text-red-500 font-bold mb-4">
                 *Shipping details are required to proceed with payment.
               </p>
             )}
-
+  
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <p className="font-bold">Name:</p>
-                <p className='text-gray-700'>{userAddressDetails.Name || ''}</p>
+                <p className="text-gray-700">{userAddressDetails.Name || ''}</p>
               </div>
               <div>
                 <p className="font-bold">Email:</p>
-                <p className='text-gray-700'>{userAddressDetails.Name === '' ? '' : emails}</p>
+                <p className="text-gray-700">{userAddressDetails.Name === '' ? '' : emails}</p>
               </div>
               <div>
                 <p className="font-bold">Phone Number:</p>
-                <p className='text-gray-700'>{userAddressDetails.phonenumber || ''}</p>
+                <p className="text-gray-700">{userAddressDetails.phonenumber || ''}</p>
               </div>
               <div>
                 <p className="font-bold">Address:</p>
-                <p className='text-gray-700'>{userAddressDetails.address || ''}</p>
+                <p className="text-gray-700">{userAddressDetails.address || ''}</p>
               </div>
             </div>
-
+  
             <button
               onClick={handleAddressFormToggle}
               className="mt-4 bg-teal-800 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition"
@@ -843,88 +892,90 @@ const MyCart = () => {
               {userAddressDetails.Name ? 'Change' : 'Add'}
             </button>
           </div>
-
-
-          {sortedData.length === 0 ? (
-            <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-              <h2 className="text-xl font-bold mb-4">Your cart is empty</h2>
-              <p>No items are added to cart. Please add some items to continue.</p>
+  
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <Loader />
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sortedData.map((item, index) => (
-                <div key={index} className="relative bg-white rounded-lg shadow-md p-4">
-                  <button
-                    className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                    onClick={() => handleRemove(index, sortedData[index].quantity)}
-                  >
-                    <Trash2 size={16} />
-                  </button>
-
-                  {/* Item Details */}
-                  <div className="flex items-center">
-
-                    <div className="w-full mt-4 ml-5">
-                      <h3 className="font-bold text-lg md:text-xl text-gray-800">{item.type}</h3>
-                      <p className="text-sm text-gray-500">Date: {item.date}</p>
-
-                      {/* Quantity and Increment/Decrement */}
-                      <div className="flex space-x-2 mt-2">
-                        <button
-                          className="bg-gray-200 text-gray-700 p-1 rounded-full hover:bg-gray-300 text-xs"
-                          onClick={() => handleDecrement(index)}
-                        >
-                          <Minus size={12} />
-                        </button>
-                        <input
-                          type="number"
-                          min="1"
-                          value={sortedData[index].quantity || ''} // Ensure this is always a number
-                          onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
-                          className="w-10 text-center border border-gray-300 rounded-md p-1 text-xs"
-                        />
-
-
-                        <button
-                          className="bg-gray-200 text-gray-700 p-1 rounded-full hover:bg-gray-300 text-xs"
-                          onClick={() => handleIncrement(index)}
-                        >
-                          <Plus size={12} />
-                        </button>
-                      </div>
-
-                      {/* Price, Quantity, and Amount */}
-                      <div className="text-sm text-gray-600 mt-2">
-                        <p>Price Per Plate: ₹{item.price}</p>
-                        <p>Quantity: {item.quantity}</p>
-                        <p className="font-bold text-gray-800">Amount:  ₹{item.price * item.quantity}</p>
+            (Object.keys(CartData).length === 0) ? (
+              <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+                <h2 className="text-xl font-bold mb-4">Your cart is empty</h2>
+                <p>No items are added to cart. Please add some items to continue.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sortedData.map((item, index) => (
+                  <div key={index} className="relative bg-white rounded-lg shadow-md p-4">
+                    <button
+                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                      onClick={() => handleRemove(index, sortedData[index].quantity)}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+  
+                    {/* Item Details */}
+                    <div className="flex items-center">
+                      <div className="w-full mt-4 ml-5">
+                        <h3 className="font-bold text-lg md:text-xl text-gray-800">{item.type}</h3>
+                        <p className="text-sm text-gray-500">Date: {item.date}</p>
+  
+                        {/* Quantity and Increment/Decrement */}
+                        <div className="flex space-x-2 mt-2">
+                          <button
+                            className="bg-gray-200 text-gray-700 p-1 rounded-full hover:bg-gray-300 text-xs"
+                            onClick={() => handleDecrement(index)}
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <input
+                            type="number"
+                            min="1"
+                            value={sortedData[index].quantity || ''} // Ensure this is always a number
+                            onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
+                            className="w-10 text-center border border-gray-300 rounded-md p-1 text-xs"
+                          />
+                          <button
+                            className="bg-gray-200 text-gray-700 p-1 rounded-full hover:bg-gray-300 text-xs"
+                            onClick={() => handleIncrement(index)}
+                          >
+                            <Plus size={12} />
+                          </button>
+                        </div>
+  
+                        {/* Price, Quantity, and Amount */}
+                        <div className="text-sm text-gray-600 mt-2">
+                          <p>Price Per Plate: ₹{item.price}</p>
+                          <p>Quantity: {item.quantity}</p>
+                          <p className="font-bold text-gray-800">Amount:  ₹{item.price * item.quantity}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
           )}
         </div>
       </main>
-
+  
       <footer className="bg-white shadow-md p-4 fixed bottom-0 left-0 right-0 z-10">
         <div className="flex justify-between items-center max-w-6xl mx-auto">
           <h2 className="text-lg font-bold">Total: ₹{Total}/-</h2>
           <button
-            className={`p-2 px-4 rounded-lg shadow-md transition 
- ${isDisabled
-                ? 'bg-gray-300 cursor-not-allowed' 
-                : 'bg-teal-800 text-white hover:bg-teal-600' 
+            className={`p-2 px-4 rounded-lg shadow-md transition
+              ${isDisabled
+              ? 'bg-gray-300 cursor-not-allowed'
+              : 'bg-teal-800 text-white hover:bg-teal-600'
               }`}
             onClick={handleViewPayment}
-            disabled={isDisabled} 
+            disabled={isDisabled}
           >
             Pay Now
           </button>
         </div>
       </footer>
-
+  
       {isAddressFormOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">

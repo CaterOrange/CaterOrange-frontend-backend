@@ -12,7 +12,8 @@ const ajv = new Ajv({ allErrors: true, strict: false });
 
 addFormats(ajv);
 
-const { addressSchema } = require("../SchemaValidator/addressSchema")
+const { addressSchema } = require("../SchemaValidator/addressSchema");
+const client = require('../config/dbConfig');
 const validate = ajv.compile(addressSchema);
 
 
@@ -162,32 +163,39 @@ const getSelectedAddress = async (req, res) => {
 };
 const editAddress = async (req, res) => {
     const { address_id } = req.params;
-    const { tag, pincode, line1, line2 } = req.body;
-
-    if (!tag || !pincode || !line1 || !line2) {
+    const { tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number } = req.body;
+   console.log('request',tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number)
+    if (!tag || !pincode || !line1 || !line2 || !location || !ship_to_name || !ship_to_phone_number) {
         logger.warn('Missing required fields in edit address request');
         return res.status(400).json({ error: 'All fields are required' });
     }
 
     try {
-        logger.info('Updating address', { addressId: address_id });
-        const updatedAddress = await updateAddressById(address_id, tag, pincode, line1, line2);
+        const updatedAddress = await client.query(
+            `UPDATE address 
+             SET tag = $1, pincode = $2, line1 = $3, line2 = $4, location = $5, 
+                 ship_to_name = $6, ship_to_phone_number = $7
+             WHERE address_id = $8 
+             RETURNING *`,
+            [tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number, address_id]
+        );
 
-        if (!updatedAddress) {
-            logger.warn('Address not found for updating', { addressId: address_id });
-            return res.status(404).json({ error: 'Address not found' });
+        if (updatedAddress.rowCount === 0) {
+            return res.status(404).json({ error: "Address not found" });
         }
 
         logger.info('Address updated successfully', { addressId: address_id });
-        return res.status(200).json({
-            message: 'Address updated successfully',
-            updatedAddress,
+        return res.json({
+            success: true,
+            message: 'Address stored successfully',
+            customer: updatedAddress
         });
     } catch (error) {
-        logger.error('Error updating address', { error: error.message });
+        console.log('Error updating address', { error: error.message });
         return res.status(500).json({ error: 'Server error' });
     }
 };
+
 
 module.exports = {
     createAddress,

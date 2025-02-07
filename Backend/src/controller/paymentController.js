@@ -78,8 +78,8 @@ if (!valid) {
     const response = await client.query(insertPaymentQuery, values);
     const generatedPaymentId = response.rows[0].paymentid;
 
-    const order_id = corporateorder_id; // or however you get it
-    const payment_status = 'Success'; // or however you determine the status
+    const order_id = corporateorder_id; 
+    const payment_status = 'Success'; 
     console.log('hi',generatedPaymentId)
     logger.info('Generated Payment ID:', generatedPaymentId);
 
@@ -200,9 +200,11 @@ const create_order = async (req, res) => {
       amount: amount * 100, 
       currency,
       receipt: `receipt_${Date.now()}`,
+      
     };
 
     const order = await razorpayInstance.orders.create(options);
+    console.log('order in back',order)
     res.json(order);
   } catch (error) {
     res.status(500).json({ error: error.message });

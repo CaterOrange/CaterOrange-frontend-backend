@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { X } from 'lucide-react';
+import { Pencil, Trash, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -21,6 +21,8 @@ const DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
+    const [isEdit, setIsEdit] = useState(false);
+const [editAddressId, setEditAddressId] = useState(null);
     const [formData, setFormData] = useState({
         tag: '',
         pincode: '',
@@ -247,88 +249,104 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
         setIsViewAddresses(!isViewAddresses);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const validationErrors = {};
 
-        // Validate all required fields
-        Object.keys(formData).forEach(field => {
-            const error = validateField(field, formData[field]);
-            if (error) {
-                validationErrors[field] = error;
-            }
-        });
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = {};
 
-        // Validate location explicitly
-        const locationError = validateField('location', formData.location);
-        if (locationError) {
-            validationErrors.location = locationError;
+    // Validate all required fields
+    Object.keys(formData).forEach(field => {
+        const error = validateField(field, formData[field]);
+        if (error) {
+            validationErrors[field] = error;
         }
+    });
 
-        // Validate selected option
-        if (!selectedOption) {
-            validationErrors.selectedOption = '*Please select either shipping or default details*';
+    // Validate location explicitly
+    const locationError = validateField('location', formData.location);
+    if (locationError) {
+        validationErrors.location = locationError;
+    }
+
+    // Validate selected option
+    if (!selectedOption) {
+        validationErrors.selectedOption = '*Please select either shipping or default details*';
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+        setFieldErrors(validationErrors);
+        // Scroll to the first error
+        const firstError = document.querySelector('.text-red-500');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        return;
+    }
 
-        if (Object.keys(validationErrors).length > 0) {
-            setFieldErrors(validationErrors);
-            // Scroll to the first error
-            const firstError = document.querySelector('.text-red-500');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+    // Submit the form if no errors
+    try {
+        if (isTokenExpired(localStorage.getItem('token'))) {
+            navigate('/');
             return;
         }
 
-        // Submit the form if no errors
-        try {
-            if (isTokenExpired(localStorage.getItem('token'))) {
-                navigate('/');
-                return;
-            }
-
+        const payload = {
+            tag: formData.tag,
+            pincode: formData.pincode,
+            line1: `${formData.flatNumber}, ${formData.landmark}`,
+            line2: `${formData.city}, ${formData.state}`,
+            location: `https://www.google.com/maps?q=${position[0]},${position[1]}`,
+            ship_to_name: selectedOption === 'shipping'
+                ? formData.shipToName
+                : editableDefaultDetails.customer_name,
+            ship_to_phone_number: selectedOption === 'shipping'
+                ? formData.shipToPhoneNumber
+                : editableDefaultDetails.customer_phonenumber
+        };
+        console.log('edited data',payload,isEdit)
+        if (isEdit) {
+            // Make PUT request to edit endpoint
             await axios.post(
-                `${process.env.REACT_APP_URL}/api/address/createAddres`,
-                {
-                    tag: formData.tag,
-                    pincode: formData.pincode,
-                    line1: `${formData.flatNumber}, ${formData.landmark}`,
-                    line2: `${formData.city}, ${formData.state}`,
-                    location: `https://www.google.com/maps?q=${position[0]},${position[1]}`,
-                    ship_to_name: selectedOption === 'shipping'
-                        ? formData.shipToName
-                        : editableDefaultDetails.customer_name,
-                    ship_to_phone_number: selectedOption === 'shipping'
-                        ? formData.shipToPhoneNumber
-                        : editableDefaultDetails.customer_phonenumber
-                },
+                `${process.env.REACT_APP_URL}/api/address/edit/${editAddressId}`,
+                payload,
                 {
                     headers: { 'token': localStorage.getItem('token') }
                 }
             );
-
-            onAddressAdd();
-
-            // Clear form after submission
-            setFormData({
-                tag: '',
-                pincode: '',
-                city: '',
-                state: '',
-                flatNumber: '',
-                landmark: '',
-                shipToName: '',
-                shipToPhoneNumber: '',
-                location: { lat: null, lng: null }
-            });
+            setSuccessMessage('Address updated successfully.');
+        } else {
+            // Make POST request to create endpoint
+            await axios.post(
+                `${process.env.REACT_APP_URL}/api/address/createAddres`,
+                payload,
+                {
+                    headers: { 'token': localStorage.getItem('token') }
+                }
+            );
             setSuccessMessage('Address saved successfully.');
-
-        } catch (error) {
-            console.error('Error saving address:', error);
-            setSuccessMessage('Failed to save address.');
         }
-    };
 
+        // Clear form and reset edit state
+        setFormData({
+            tag: '',
+            pincode: '',
+            city: '',
+            state: '',
+            flatNumber: '',
+            landmark: '',
+            shipToName: '',
+            shipToPhoneNumber: '',
+            location: { lat: null, lng: null }
+        });
+        setIsEdit(false);
+        setEditAddressId(null);
+        onAddressAdd(); // Refresh the address list
+
+    } catch (error) {
+        console.error('Error saving/updating address:', error);
+        setSuccessMessage(isEdit ? 'Failed to update address.' : 'Failed to save address.');
+    }
+};
     const handleSelect = async (address_id) => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/getAddress`, {
@@ -341,7 +359,73 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
             console.error('Error fetching address:', error);
         }
     };
-
+  
+      
+        const handleEdit = (address) => {
+            // Parse line1 (flatNumber, landmark)
+            setIsEdit(true);
+            setEditAddressId(address.address_id);
+            const [flatNumber, landmark] = address.line1.split(',').map(item => item.trim());
+            
+            // Parse line2 (city, state)
+            const [city, state] = address.line2.split(',').map(item => item.trim());
+            const locationCoords = address.location
+            .split('q=')[1]  // Get everything after 'q='
+            ?.split(',')     // Split into lat,lng
+            .map(coord => parseFloat(coord)); // Convert to numbers
+        
+          const lat = locationCoords?.[0] || null;
+          const lng = locationCoords?.[1] || null;
+            // Update form data with parsed values
+            setFormData({
+              tag: address.tag,
+              pincode: address.pincode,
+              flatNumber: flatNumber,
+              landmark: landmark,
+              city: city,
+              state: state,
+              shipToName: address.ship_to_name || '',
+              shipToPhoneNumber: address.ship_to_phone_number || '',
+              location: { lat, lng }
+            });
+            if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+                setPosition([lat, lng]);
+                setMapCenter([lat, lng]);
+                setMapKey(prev => prev + 1); // Force map re-render
+              }
+       
+            // Set the appropriate shipping option based on whether custom shipping details exist
+            if (address.ship_to_name && address.ship_to_phone_number) {
+                setSelectedOption('shipping');
+              } else {
+                setSelectedOption('default');
+                setEditableDefaultDetails({
+                  customer_name: address.ship_to_name || defaultDetails.customer_name,
+                  customer_phonenumber: address.ship_to_phone_number || defaultDetails.customer_phonenumber
+                });
+              }
+            // Clear any existing field errors
+            setFieldErrors({
+              tag: '',
+              pincode: '',
+              city: '',
+              state: '',
+              flatNumber: '',
+              landmark: '',
+              shipToName: '',
+              shipToPhoneNumber: '',
+              location: '',
+              selectedOption: '',
+              general: ''
+            });
+          
+            // Hide the address list view
+            setIsViewAddresses(false);
+          
+            // Clear any existing success message
+            setSuccessMessage('');
+          };
+          
     return (
         <div className="relative p-4 border rounded-lg shadow-lg max-w-md mx-auto bg-white">
             <button
@@ -355,7 +439,7 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
             <h2 className="text-xl font-bold mb-4">Address Form</h2>
 
             <div className="mb-6">
-                <div className="border rounded overflow-hidden h-64 mb-4">
+                <div className="relative z-0 border border rounded overflow-hidden h-64 mb-4">
                     <MapContainer
                         key={mapKey}
                         center={mapCenter}
@@ -490,33 +574,41 @@ const AddressForm = ({ onAddressAdd, onAddressSelect, onClose }) => {
 
                 {/* Saved Addresses Section */}
                 {isViewAddresses && (
-                    <div className="mt-4 border-t pt-4">
-                        <h3 className="font-bold mb-2">Saved Addresses</h3>
-                        {address.length > 0 ? (
-                            address.map((add) => (
-                                <div
-                                    key={add.address_id}
-                                    className="p-2 border-b border-gray-200 flex items-center justify-between"
-                                >
-                                    <div className="flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="address"
-                                            value={add.address_id}
-                                            checked={selectedAddressId === add.address_id}
-                                            onChange={() => handleSelect(add.address_id)}
-                                            className="mr-2"
-                                        />
-                                        <p>{add.tag}, {add.pincode}, {add.line1}, {add.line2}</p>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No addresses available</p>
-                        )}
-                    </div>
-                )}
-
+  <div className="mt-4 border-t pt-4">
+    <h3 className="font-bold mb-2">Saved Addresses</h3>
+    {address.length > 0 ? (
+      address.map((add) => (
+        <div
+          key={add.address_id}
+          className="p-2 border-b border-gray-200 flex items-center justify-between"
+        >
+          <div className="flex items-center">
+            <input
+              type="radio"
+              name="address"
+              value={add.address_id}
+              checked={selectedAddressId === add.address_id}
+              onChange={() => handleSelect(add.address_id)}
+              className="mr-2"
+            />
+            <p>{add.tag}, {add.pincode}, {add.line1}, {add.line2}</p>
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handleEdit(add )}
+              className="p-1 text-blue-500 hover:text-blue-700"
+            >
+              <Pencil size={18} />
+            </button>
+          
+          </div>
+        </div>
+      ))
+    ) : (
+      <p>No addresses available</p>
+    )}
+  </div>
+)}
                 <div className="space-y-2">
                     <div className="flex items-center">
                         <input
