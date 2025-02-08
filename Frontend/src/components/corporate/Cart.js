@@ -623,11 +623,11 @@ const MyCart = () => {
         });
 
         const options = {
-          key: 'rzp_test_Kt3z43uPYnvC9E',
+          key: process.env.RAZORPAY_KEY_ID,
           amount: data.amount,
           currency: data.currency,
           name: "CaterOrange",
-          description: "Test Payment",
+          description: "Payment",
           order_id: data.id,
           handler: async (response) => {
             const verifyRes = await axios.post(`${process.env.REACT_APP_URL}/api/verify-payment`, response);
@@ -644,10 +644,10 @@ const MyCart = () => {
             };
             await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
           },
-          prefill: {
-            name: "Pratap",
-            email: "Pratap@gmail.com",
-            contact: "1111111111",
+         prefill: {
+            name: userAddressDetails.Name,
+            email: emails,
+            contact: userAddressDetails.phonenumber,
           },
           theme: { color: "#3399cc" },
         };
