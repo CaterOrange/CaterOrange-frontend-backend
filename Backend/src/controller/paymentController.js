@@ -11,7 +11,7 @@ const razorpayInstance = new Razorpay({
    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_Kt3z43uPYnvC9E' ,
    key_secret: process.env.RAZORPAY_SECRET || 'XET5FYMETkbhl872gXTWMx1i' ,
  });
-
+console.log('instances',razorpayInstance)
 // const razorpayInstance = new Razorpay({
 //   key_id: 'rzp_live_L9ioBuAQZXSBDm' ,
 //   key_secret:  'Q4ndGVbSbNHtXclcYEmWq3EK' ,
