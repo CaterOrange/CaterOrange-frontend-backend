@@ -200,6 +200,8 @@ const getEOrdergenId = async (req, res) => {
 
 const create_order = async (req, res) => {
  console.log("entered");
+console.log('instances',razorpayInstance)
+
   try {
     const { amount, currency } = req.body;
     const options = {
@@ -208,6 +210,7 @@ const create_order = async (req, res) => {
       receipt: `receipt_${Date.now()}`,
       
     };
+    console.log('instances',razorpayInstance)
 
     const order = await razorpayInstance.orders.create(options);
     console.log('order in back',order)
