@@ -8,8 +8,8 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
 const razorpayInstance = new Razorpay({
-   key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_Kt3z43uPYnvC9E' ,
-   key_secret: process.env.RAZORPAY_SECRET || 'XET5FYMETkbhl872gXTWMx1i' ,
+   key_id: process.env.RAZORPAY_KEY_ID,
+   key_secret: process.env.RAZORPAY_SECRET,
  });
 console.log('instances',razorpayInstance)
 // const razorpayInstance = new Razorpay({
@@ -225,7 +225,7 @@ const verify_payment = async (req, res) => {
     }
 
     console.log("Verifying payment... -1");
-    const secret = "XET5FYMETkbhl872gXTWMx1i";
+    const secret = process.env.RAZORPAY_SECRET;
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     console.log("Generated body:", body);
 
