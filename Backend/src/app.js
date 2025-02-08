@@ -1,10 +1,14 @@
 const express = require('express');
+console.log("hi");
 const client = require('./config/dbConfig');
+console.log("hi9");
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const cors = require('cors');
 const logger = require('./config/logger');
+console.log("hi8");
 const { createTables } = require('./controller/tableController');
+console.log("hi7");
 const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const sha256 = require('sha256');
@@ -43,12 +47,17 @@ const { cartSchema,cartOrderDetailsSchema} = require("./SchemaValidator/cartsche
 const validateCart = ajv.compile(cartSchema);
 
 const validateCartOrderDetails = ajv.compile(cartOrderDetailsSchema);
-
+console.log("hi6");
 const { typeDefs, resolvers } = require('./routes/adminRoutes');
+console.log("hi5");
 const paymentRoutes = require('./routes/paymentRoutes.js');
+console.log("hi4");
 const addressRoutes = require('./routes/addressRoutes');
+console.log("hi3");
 const eventRoutes = require('./routes/eventorderRoutes.js');
+console.log("hi2");
 const corporateorderRoutes = require('./routes/corporateorderRoutes.js');
+console.log("hi1");
 const categoryRoutes = require('./routes/categoryRoutes.js');
 const customerRoutes = require('./routes/customerRoutes.js');
 
