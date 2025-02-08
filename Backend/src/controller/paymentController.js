@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const client = require('../config/dbConfig.js');
 const paymentmodel = require('../models/paymentModels.js');
 const logger = require('../config/logger.js');
