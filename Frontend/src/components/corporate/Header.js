@@ -125,42 +125,47 @@ const Header = ({ user }) => {
   }, []);
   return (
     <>
-     <header className="fixed top-0 left-0 w-full bg-teal-800 text-white shadow-md py-4 px-6 z-50 flex items-center justify-between">
-      <div className="flex items-center">
-        <UserCircleIcon className="h-9 w-9 cursor-pointer" onClick={toggleSidenav} />
-      </div>
+   <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-teal-700 to-teal-600 text-white shadow-md py-4 px-6 z-50">
+  <div className="flex items-center justify-between relative">
+    <div className="absolute left-0">
+      <UserCircleIcon className="h-9 w-9 cursor-pointer" onClick={toggleSidenav} />
+    </div>
 
-      <div className="flex items-center flex-1 justify-center ml-10">
-  
-        <h2 className="text-lg md:text-2xl font-semibold text-white text-center">
-          {activeTab === 'corporate' ? 'CORPORATE MEALS' : 'EVENTS MENU'}
-        </h2>
-      </div>
+    <div className="flex-1 flex justify-center">
+      <h2 className="text-lg md:text-2xl font-bold text-white text-center font-serif">
+        {activeTab === 'corporate' ? 'CORPORATE MEALS' : 'EVENTS MENU'}
+      </h2>
+    </div>
 
+    <div className="absolute right-0 flex items-center space-x-2 md:space-x-4">
       {activeTab === 'corporate' && (
-        <div className="flex items-center relative space-x-2 md:space-x-4">
+        <>
           <Link to="/orders">
-            <button className="hidden md:block text-white py-1 px-2 md:px-4 rounded-lg shadow-md hover:bg-gray-100 hover:text-teal-500 transition-all text-sm md:text-base">
+            <button className="hidden md:block text-white py-1 px-2 md:px-4 rounded-lg shadow-md hover:bg-gray-100 hover:text-teal-500 transition-all text-sm md:text-base font-serif">
               My Orders
             </button>
           </Link>
-          {/* <Link to="/contact">
-            <button className="hidden md:block text-white py-1 px-2 md:px-4 rounded-lg shadow-md hover:bg-gray-100 hover:text-teal-500 transition-all text-sm md:text-base">
+          <Link to="/contact">
+            <button className="hidden md:block text-white py-1 px-2 md:px-4 rounded-lg shadow-md hover:bg-gray-100 hover:text-teal-500 transition-all text-sm md:text-base font-serif">
               Contact Us
             </button>
-          </Link> */}
-          <Link to="/cart">
-            <ShoppingCartIcon className="h-6 w-6 md:h-8 md:w-8 cursor-pointer" onClick={handleViewCart} />
           </Link>
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
-              {cartCount}
-            </span>
-          )}
-        </div>
+          <div className="relative">
+            <Link to="/cart">
+              <ShoppingCartIcon className="h-6 w-6 md:h-8 md:w-8 cursor-pointer" onClick={handleViewCart} />
+            </Link>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full px-1">
+                {cartCount}
+              </span>
+            )}
+          </div>
+        </>
       )}
       {activeTab === 'events' && <div className="w-6"></div>}
-    </header>
+    </div>
+  </div>
+</header>
       {isSidenavOpen && <div className="fixed inset-0 bg-black opacity-50 z-40 blur-sm"></div>}
 
       <div
@@ -200,20 +205,19 @@ const Header = ({ user }) => {
               My Orders
             </li>
           </Link>
-          <Link to="/address">
-            <li className="p-2 border-b border-gray-200 cursor-pointer">Address</li>
-          </Link>
-          <li
-            className="p-2 border-b border-gray-200 cursor-pointer"
-            onClick={handleViewWalletPage}
-          >
-            Wallet
-          </li>
+       
+         
           <li
             className="p-2 border-b border-gray-200 cursor-pointer"
             onClick={handleViewContactPage}
           >
             Contact Us
+          </li>
+          <li
+            className="p-2 border-b border-gray-200 cursor-pointer"
+            onClick={handleViewWalletPage}
+          >
+            Wallet
           </li>
           <li
             className="p-2 border-b border-gray-200 cursor-pointer"
@@ -252,7 +256,7 @@ const Header = ({ user }) => {
         </div>
       )}
 
-      <div className="pt-20 mt-5">
+      <div className="pt-10 mt-5">
         <Body isSidenavOpen={isSidenavOpen} activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
     </>

@@ -14,10 +14,7 @@ const razorpayInstance = new Razorpay({
    key_secret: process.env.RAZORPAY_SECRET,
  });
 console.log('instances',razorpayInstance)
-// const razorpayInstance = new Razorpay({
-//   key_id: 'rzp_live_L9ioBuAQZXSBDm' ,
-//   key_secret:  'Q4ndGVbSbNHtXclcYEmWq3EK' ,
-// });
+
 
 const Ajv = require("ajv");
 

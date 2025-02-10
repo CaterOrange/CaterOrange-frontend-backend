@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/.2df5e706ae5700f695e8e8620b59df05bab0bf7c-audit.json",
+    "files": [
+        {
+            "date": 1739165013133,
+            "name": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/error-2025-02-10.log",
+            "hash": "c87b4bde7cd68828f991cac05740573a0876b48378ce5deab7730515b54ce67b"
+        }
+    ],
+    "hashType": "sha256"
+}

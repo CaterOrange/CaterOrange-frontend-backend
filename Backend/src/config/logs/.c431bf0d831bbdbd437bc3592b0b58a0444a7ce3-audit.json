@@ -1,0 +1,35 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/.c431bf0d831bbdbd437bc3592b0b58a0444a7ce3-audit.json",
+    "files": [
+        {
+            "date": 1739165013130,
+            "name": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/application-2025-02-10.log",
+            "hash": "5d5febe233eeea9b4cee6956d6464861c95b9c27356de0639dd4d7f2957e2781"
+        },
+        {
+            "date": 1739197711429,
+            "name": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/application-2025-02-10.log.1",
+            "hash": "651d5e08fdd94b6290cbffd8ba1331376f5a35e5b10716b36b71aeccb55e7b5d"
+        },
+        {
+            "date": 1739197860081,
+            "name": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/application-2025-02-10.log.2",
+            "hash": "281211aef00cffe3fe874ab06cf533cb5b53a8f686b6862abaf290c658779116"
+        },
+        {
+            "date": 1739198218258,
+            "name": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/application-2025-02-10.log.3",
+            "hash": "5200c0ab899dde3a87c35bccc070cd84d4029e7e8d07e96e14ae576d21e0ec83"
+        },
+        {
+            "date": 1739198334968,
+            "name": "/home/karishma/Pictures/COFULLCODE/CaterOrange/Backend/src/config/logs/application-2025-02-10.log.4",
+            "hash": "13351c1566d8fd24b7b254a2b37b0fa3f105d9313c3bb17a1abc0a440e2fefd2"
+        }
+    ],
+    "hashType": "sha256"
+}

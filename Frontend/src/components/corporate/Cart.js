@@ -1464,11 +1464,9 @@ const MyCart = () => {
     try {
       let response;
       let details = orderDetails.order_details;
-
+    //  console.log("hee",token);
       for (let i = 0; i < details.length; i++) {
-        response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`, {
-          headers: { token: localStorage.getItem('token') }
-        },
+        response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`,
           {
             corporateorder_id: orderDetails.corporateorder_id,
             processing_date: details[i].processing_date,
@@ -1478,7 +1476,11 @@ const MyCart = () => {
             active_quantity: details[i].active_quantity,
             media: details[i].media,
             delivery_details: details[i].delivery_details
-          });
+          },
+          { // Config object
+            headers: { token: localStorage.getItem('token') }
+          }
+        );
       }
 
       if (response) {
@@ -1490,6 +1492,8 @@ const MyCart = () => {
       console.error('Error sending order details:', error);
     }
   };
+  
+
 
   // const handleViewPayment = async () => {
   //   console.log("hiiiii")
@@ -1603,7 +1607,7 @@ const MyCart = () => {
         });
 
         const options = {
-          key: process.env.RAZORPAY_KEY_ID,
+          key: 'rzp_test_Kt3z43uPYnvC9E',
           amount: data.amount,
           currency: data.currency,
           name: "CaterOrange",
@@ -1627,6 +1631,9 @@ const MyCart = () => {
             console.log("pajldsjkskjdk:",paymentPayload)
            const res= await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
            console.log("insertpayment:",res);
+           console.log("hii",corporateorder_generated_id)
+           navigate('/success', { state: { order_id: corporateorder_generated_id } });
+
           },
           prefill: {
             name: userAddressDetails.Name,
@@ -1671,6 +1678,90 @@ const MyCart = () => {
       }
     }
   };
+  // const PaymentDetails = async (corporateorder_generated_id) => {
+  //   const message = "";
+  //   const responsepay = {};
+  //   try {
+  //     try {
+  //       if (!window.Razorpay) {
+  //         alert("Razorpay SDK failed to load. Check your internet connection.");
+  //         return;
+  //       }
+
+  //       const { data } = await axios.post(`${process.env.REACT_APP_URL}/api/create-order`, {
+  //         amount: Total,
+  //         currency: "INR",
+  //       });
+
+  //       const options = {
+  //         key: process.env.RAZORPAY_KEY_ID,
+  //         amount: data.amount,
+  //         currency: data.currency,
+  //         name: "CaterOrange",
+  //         description: "ORDER Payment",
+  //         order_id: data.id,
+  //         handler: async (response) => {
+  //           console.log("huyt",response)
+  //           const verifyRes = await axios.post(`${process.env.REACT_APP_URL}/api/verify-payment`, response);
+  //           console.log("verifyyy:",verifyRes)
+  //           const paymentPayload = {
+  //             paymentType: "Net",
+  //             merchantTransactionId: "mer123",
+  //             phonePeReferenceId: response.razorpay_payment_id,
+  //             paymentFrom: "RazorPay",
+  //             instrument: 'N/A',
+  //             bankReferenceNo: 'N/A',
+  //             amount: Total,
+  //             customer_id: decodedToken.id,
+  //             corporateorder_id: corporateorder_generated_id
+  //           };
+  //           console.log("pajldsjkskjdk:",paymentPayload)
+  //          const res= await axios.post(`${process.env.REACT_APP_URL}/api/insert-payment`, paymentPayload);
+  //          console.log("insertpayment:",res);
+  //         },
+  //         prefill: {
+  //           name: userAddressDetails.Name,
+  //           email: emails,
+  //           contact: userAddressDetails.phonenumber,
+  //         },
+  //         theme: { color: "#3399cc" },
+  //       };
+
+  //       const razor = new window.Razorpay(options);
+  //       razor.open();
+  //     } catch (error) {
+  //       console.error(error);
+  //       alert("Payment Failed!");
+  //     }
+
+  //     setSortedData([]);
+  //     setCartData([]);
+  //     setCartIndividualData([]);
+  //     setTotal(0);
+
+  //     const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+  //     const updatedUserDP = {
+  //       ...storedUserDP,
+  //       cartCount: 0,
+  //     };
+
+  //     localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+  //     updateCartCount(0);
+
+  //     if (response.data && response.data.redirectUrl) {
+  //       setRedirectUrl(response.data.redirectUrl);
+  //       window.location.href = response.data.redirectUrl;
+  //     } else {
+  //       setError('Unexpected response format.');
+  //     }
+  //   } catch (err) {
+  //     if (err.response) {
+  //       setError(`Error: ${err.response.data.message || 'An error occurred. Please try again.'}`);
+  //     } else {
+  //       setError('Network error or no response from the server.');
+  //     }
+  //   }
+  // };
 
   const handleAddressAdd = () => {
     fetchAddress();
@@ -1800,66 +1891,68 @@ console.log('length',CartData.length,CartData)
 
   const isDisabled = userAddressDetails.address === '' || sortedData.length === 0;
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <header className="bg-teal-800 shadow-lg p-4 fixed top-0 left-0 right-0 z-20">
+    <div className="flex flex-col min-h-screen bg-teal-50">
+      <header className="bg-gradient-to-r from-teal-700 to-teal-500 shadow-lg p-4 fixed top-0 left-0 right-0 z-20">
         <div className="flex justify-between items-center max-w-6xl mx-auto">
           <div className="flex items-center">
             <Link to="/home">
               <ChevronLeft size={24} className="cursor-pointer text-white" onClick={handleViewHome} />
             </Link>
-            <h1 className="text-xl text-white font-bold ml-3">My Cart</h1>
+            <h1 className="text-xl text-white font-bold ml-2 font-serif">My Cart</h1>
+            <ShoppingCartIcon size={24} className=" ml-3 text-white" />
+
           </div>
-          <div className="h-10 w-10 flex items-center justify-center bg-white bg-opacity-20 rounded-full">
-            <ShoppingCartIcon size={24} className="text-white" />
-          </div>
+          
         </div>
       </header>
-  
-      <main className="flex-grow mt-20 mb-20 p-6">
-        <div className="max-w-6xl mx-auto">
-        <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 mt--2 border border-gray-200 ">
+
+
+<main className="flex-grow mt-20 mb-20 p-6">
+  <div className="max-w-6xl mx-auto">
+<div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 border border-gray-200">
   <h2 className="text-xl font-bold mb-3 text-gray-900 flex items-center">
-    <span className="mr-2 text-teal-700">🚚</span> Shipping Details
+    <span className="mr-2 text-teal-500 font-serif">🚚</span> Shipping Details
   </h2>
 
-  {!userAddressDetails.Name && (
-    <p className="text-red-500 font-medium mb-3 text-sm flex items-center">
-      ⚠️ *Shipping details are required to proceed with payment.
-    </p>
-  )}
-
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
-    <div className="p-2  rounded-md">
-      <p className="font-semibold text-gray-800">Name:</p>
-      <p className="text-gray-600">{userAddressDetails.Name || '-'}</p>
+  {!userAddressDetails?.Name || !userAddressDetails?.phonenumber || !userAddressDetails?.address ? (
+    <div className="bg-teal-100 border border-teal-500 p-4 rounded-lg text-teal-700 mb-4 text-center">
+      <p className="text-sm font-medium mb-2">⚠️ No saved addresses found.</p>
+      <p className="text-gray-600 mb-3">Please add an address to proceed with payment.</p>
+      <button
+        onClick={handleAddressFormToggle}
+        className="bg-teal-700 text-white px-5 py-2 rounded-lg hover:bg-teal-600 transition shadow-md font-serif"
+      >
+        Add Address
+      </button>
     </div>
-    <div className="p-2 rounded-md">
-      <p className="font-semibold text-gray-800">Email:</p>
-      <p className="text-gray-600">{userAddressDetails.Name ? emails : '-'}</p>
+  ) : (
+    <div className="p-3 border border-gray-300 rounded-lg bg-gray-50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+    <div className="flex-1">
+    <p className="text-gray-800 text-lg font-bold font-serif">
+        {userAddressDetails?.Name?.replace(/\b\w/g, (char) => char.toUpperCase())}
+      </p>     
+ <p className="text-gray-800 text-md font-serif">
+        {userAddressDetails?.phonenumber} | {emails}
+      </p>
+      <p className="text-gray-800 text-sm font-serif truncate">
+        {userAddressDetails?.address
+          .replace(/\s+/g, " ")
+          .replace(/\b\w/g, (char) => char.toUpperCase())}
+      </p>
     </div>
-    <div className="p-2  rounded-md">
-      <p className="font-semibold text-gray-800">Phone Number:</p>
-      <p className="text-gray-600">{userAddressDetails.phonenumber || '-'}</p>
-    </div>
-    <div className="p-2  rounded-md">
-      <p className="font-semibold text-gray-800">Address:</p>
-      <p className="text-gray-600">{userAddressDetails.address || '-'}</p>
-    </div>
+    
+    <button
+      onClick={handleAddressFormToggle}
+      className="bg-teal-700 text-white font-bold px-4 py-2 rounded-md hover:bg-teal-600 transition-all shadow-md font-medium w-full sm:w-auto font-serif"
+    >
+      {userAddressDetails.Name ? "Change Address" : "Add Address"}
+    </button>
   </div>
-
-  <button
-    onClick={handleAddressFormToggle}
-    className="mt-4 w-full sm:w-auto bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition-all shadow-md font-medium"
-  >
-    {userAddressDetails.Name ? 'Change Address' : 'Add Address'}
-  </button>
-</div>
   
-          {isLoading ? (
-            <div className="flex justify-center items-center">
-              <Loader />
-            </div>
-          ) : Object.keys(CartData).length === 0 ? (
+  )}
+</div>
+
+    { Object.keys(CartData).length === 0 ? (
             <div className="bg-white p-6 rounded-xl shadow-md text-center border border-teal-800">
               <h2 className="text-xl font-semibold mb-4">Your cart is empty</h2>
               <p className="text-gray-600">No items added yet. Start shopping now!</p>
@@ -1873,19 +1966,19 @@ console.log('length',CartData.length,CartData)
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
               {sortedData.map((item, index) => (
-                <div key={index} className="relative bg-white rounded-xl shadow-lg p-5 border border-teal-800">
+                <div key={index} className="relative bg-white rounded-xl shadow-2xl shadow-teal-100/40 hover:shadow-2xl border border-teal-500/50 p-6 transition-all duration-300 hover:-translate-y-2">
                   <button
                     className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
                     onClick={() => handleRemove(index, sortedData[index].quantity)}
                   >
                     <Trash2 size={18} />
                   </button>
-                  <h3 className="font-semibold text-lg text-gray-900">{item.type}</h3>
-                  <p className="text-sm text-gray-500 mt-1">Date: {item.date}</p>
+                  <h3 className="font-bold text-2xl text-gray-900 font-serif">{item.type}</h3>
+                  <p className="text-sm text-gray-500 mt-1 font-bold"><span className="font-bold text-md text-gray-900 font-serif"> Date:</span> {item.date}</p>
   
                   <div className="flex items-center space-x-3 mt-3">
                     <button
-                      className="bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 transition"
+                      className="bg-yellow-200 text-teal-800 p-1 rounded-full hover:bg-gray-300 transition"
                       onClick={() => handleDecrement(index)}
                     >
                       <Minus size={16} />
@@ -1898,7 +1991,7 @@ console.log('length',CartData.length,CartData)
                       className="w-12 text-center border border-gray-300 rounded-md p-1"
                     />
                     <button
-                      className="bg-gray-200 text-gray-700 p-2 rounded-full hover:bg-gray-300 transition"
+                      className="bg-yellow-200 text-teal-800 text-bold p-1 rounded-full hover:bg-gray-300 transition"
                       onClick={() => handleIncrement(index)}
                     >
                       <Plus size={16} />
@@ -1906,18 +1999,25 @@ console.log('length',CartData.length,CartData)
                   </div>
   
                   <div className="text-sm text-gray-700 mt-3">
-                    <p>Price Per Plate: ₹{item.price}</p>
-                    <p>Quantity: {item.quantity}</p>
-                    <p className="font-bold text-gray-900">Amount: ₹{item.price * item.quantity}</p>
+                  <p className="text-gray-700">
+              <span className="font-bold text-gray-900 font-serif">Price Per Plate:</span> ₹{item.price}
+            </p>                    
+            
+            <p className="text-gray-700"><span className="font-bold text-gray-900 font-serif">Quantity:</span> {item.quantity}</p>
+                    <p className="font-bold text-lg text-orange-600 font-serif"><span className="font-bold text-lg text-gray-900 font-serif">Amount:</span> ₹{item.price * item.quantity}</p>
                   </div>
                 </div>
               ))}
             </div>
           )}
+
+
         </div>
-      </main>
+
+</main>
+
   
-      <footer className="bg-white shadow-lg p-4 fixed bottom-0 left-0 right-0 z-20">
+      {/* <footer className="bg-white shadow-lg p-4 fixed bottom-0 left-0 right-0 z-20">
         <div className="flex justify-between items-center max-w-6xl mx-auto">
           <h2 className="text-xl font-semibold">Total: ₹{Total}/-</h2>
           <button
@@ -1932,7 +2032,25 @@ console.log('length',CartData.length,CartData)
             Pay Now
           </button>
         </div>
-      </footer>
+      </footer> */}
+
+<footer className="bg-gradient-to-r from-teal-700 to-teal-600 shadow-md p-3 fixed bottom-0 left-0 right-0 z-20">
+  <div className="flex justify-between items-center max-w-6xl mx-auto text-white">
+    <h2 className="text-xl font-semibold drop-shadow-lg">Total: ₹{Total}/-</h2>
+    <button
+      className={`p-3 px-6 rounded-lg transition-all shadow-lg text-lg font-medium tracking-wide 
+        ${isDisabled 
+          ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+          : 'bg-white text-teal-700 hover:bg-teal-100 hover:shadow-xl transform hover:scale-105 duration-200'
+        }`}
+      onClick={handleViewPayment}
+      disabled={isDisabled}
+    >
+      Pay Now
+    </button>
+  </div>
+</footer>
+
   
       {isAddressFormOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -1948,6 +2066,7 @@ console.log('length',CartData.length,CartData)
         </div>
       )}
     </div>
+    
   );
   
 };

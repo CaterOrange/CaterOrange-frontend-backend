@@ -355,7 +355,7 @@ const SignUpForm = ({ closeModal, onSignUp }) => {
               Do you have an account?{' '}
               <button
                 type="button"
-                className="text-orange-600 ml-1"
+                className="text-sm text-orange-500 hover:underline focus:outline-none transition duration-300 ease-in-out transform hover:scale-105"
                 onClick={() => setShowSignInModal(true)}
               >
                 Login
