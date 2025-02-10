@@ -1607,7 +1607,7 @@ const MyCart = () => {
         });
 
         const options = {
-          key: 'rzp_test_Kt3z43uPYnvC9E',
+          key: process.env.RAZORPAY_KEY_ID,
           amount: data.amount,
           currency: data.currency,
           name: "CaterOrange",
