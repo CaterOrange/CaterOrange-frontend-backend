@@ -169,7 +169,7 @@ INSERT_CART_TO_ORDER:`INSERT INTO corporate_orders
   GET_ALL_ADDRESSES:`
   SELECT * FROM address WHERE customer_id=$1
   `,
-  FETCH_ORDERS:`SELECT corporateorder_generated_id, order_details,ordered_at
+  FETCH_ORDERS:`SELECT corporateorder_generated_id, total_amount,order_details,ordered_at
   FROM corporate_orders 
   WHERE customer_generated_id = $1 AND payment_status='Success'
 `,

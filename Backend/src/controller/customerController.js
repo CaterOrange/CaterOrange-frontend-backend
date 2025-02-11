@@ -43,8 +43,7 @@ const send_otp = async (req, res) => {
     }
     logger.info('Sending OTP to:', email);
     const generatedOtp = Math.floor(100000 + Math.random() * 900000);
-    const expiresIn = Date.now() + 60000; // OTP expires in 60 seconds
-    // Store OTP and expiration time
+    const expiresIn = Date.now() + 60000; 
     otpStore[email] = { otp: generatedOtp, expiresAt: expiresIn };
 
     const mailOtp = {
@@ -54,7 +53,6 @@ const send_otp = async (req, res) => {
         text: `Your OTP is ${generatedOtp}. It will expire in one minute.`
     };
 
-    // Send OTP via email
     transporter.sendMail(mailOtp, (error, info) => {
         if (error) {
             logger.error('Failed to send OTP to:', email, error);
@@ -70,7 +68,6 @@ const send_otp = async (req, res) => {
 const verify_otp = async (req, res) => {
     const { email, otp } = req.body;
 
-    // Check if email and OTP are provided
     if (!email || !otp) {
         logger.warn('Email and OTP are required but not provided');
         return res.status(400).send({ error: 'Email and OTP are required' });
@@ -78,7 +75,6 @@ const verify_otp = async (req, res) => {
 
     const otpData = otpStore[email];
 
-    // Check if OTP exists and has not expired
     if (!otpData || otpData.expiresAt < Date.now()) {
         logger.warn('OTP expired or not found for:', email);
         return res.status(400).send({ error: 'OTP expired or not found' });

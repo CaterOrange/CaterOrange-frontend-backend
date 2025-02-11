@@ -14,9 +14,10 @@ const Razorpay = () => {
             return;
           }
 
-      const { data } = await axios.post('http://localhost:4001/api/create-order', {
+      const { data } = await axios.post('http://localhost:4000/api/create-order', {
         amount: amount,
         currency: "INR",
+        corporateorder_id:"id"
       });
       console.log("entered-1");
       const options = {
@@ -28,8 +29,9 @@ const Razorpay = () => {
         order_id: data.id,
         handler: async (response) => {
           console.log("response",response);
-          const verifyRes = await axios.post('http://localhost:4001/api/verify-payment', response);
+          const verifyRes = await axios.post('http://localhost:4000/api/verify-payment', response);
           alert(verifyRes.data.message);
+          console.log(verifyRes.data.message)
         },
         prefill: {
           name: "Pratap ",

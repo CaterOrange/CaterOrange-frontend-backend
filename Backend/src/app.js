@@ -43,7 +43,6 @@ const { cartSchema,cartOrderDetailsSchema} = require("./SchemaValidator/cartsche
 const validateCart = ajv.compile(cartSchema);
 
 const validateCartOrderDetails = ajv.compile(cartOrderDetailsSchema);
-
 const { typeDefs, resolvers } = require('./routes/adminRoutes');
 const paymentRoutes = require('./routes/paymentRoutes.js');
 const addressRoutes = require('./routes/addressRoutes');

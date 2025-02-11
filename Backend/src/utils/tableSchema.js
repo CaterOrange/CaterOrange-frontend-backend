@@ -210,12 +210,12 @@ function createCorporateCategoryTableQuery() {
     -- Insert initial categories if the table is empty
     INSERT INTO corporate_category (category_name, category_description, category_price, category_media, is_deactivated)
     VALUES
-      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
-      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
+      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1a6kocftO79rmQR53WF8R8Ot53HHl9ugDcw&s', TRUE),
+      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-VdnMmylbU7YiYKeF0p8jxz6nkWTXGetirw&s', TRUE),
       ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
-      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
-      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
-      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE)
+      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwdH9xjOAOB6kzFpM30_pd3jqzL1JtlVBOeg&s', TRUE),
+      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6vJvc47Z0yiKHMx1zZSMKcDTzFZmvduVBmw&s', TRUE),
+      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp5FtQsvjB021UZYuy_uZRKVbtbiQHzTI38Q&s', TRUE)
     ON CONFLICT (category_name) DO NOTHING;  -- Prevent inserting duplicate category names
   `;
 }

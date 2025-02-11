@@ -2,10 +2,10 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Corrected import for jwt-decode
+import { jwtDecode } from 'jwt-decode'; 
 import React, { useContext, useEffect, useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // carousel styles
+import "react-responsive-carousel/lib/styles/carousel.min.css"; 
 import { useNavigate } from 'react-router-dom';
 import { Login_customer, Login_forgotPassword, Login_google_auth } from '../../services/context_state_management/actions/action.js';
 import { SignInContext } from '../../services/contexts/SignInContext.js';
@@ -32,14 +32,16 @@ const SignInForm = ({ onSignIn }) => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [forgotPasswordStep, setForgotPasswordStep] = useState(1);
-  const [userProfile, setUserProfile] = useState(null); // for storing Google user profile
+  const [userProfile, setUserProfile] = useState(null); 
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+  const [isLoading,setIsLoading]=useState(false)
   const navigate = useNavigate();
   const [fieldErrors, setFieldErrors] = useState({
     email: ''
   });
   const [isOtpExpired, setIsOtpExpired] = useState(false);
-
+  const [timer, setTimer] = useState(0);
+  const [canResend, setCanResend] = useState(true);
   const validateField = (field, value) => {
     let error = '';
     switch (field) {
@@ -51,7 +53,7 @@ const SignInForm = ({ onSignIn }) => {
         }
         break;
       case 'phone':
-        const phoneRegex = /^\d{10}$/;  // Assumes a 10-digit phone number
+        const phoneRegex = /^\d{10}$/; 
         if (value.trim() === '') {
           error = '*Phone number is required*';
         }
@@ -114,9 +116,21 @@ const SignInForm = ({ onSignIn }) => {
   const handleBlur = (field) => {
     validateField(field, field === 'confirmPassword' ? confirmPassword : eval(field));
   };
-  
+  useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setCanResend(true);
+      setIsOtpExpired(true);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
 
   const handleSendOtp = async () => {
+    setIsLoading(true)
     setError('');
     try {
       console.log('handle otp called');
@@ -124,36 +138,55 @@ const SignInForm = ({ onSignIn }) => {
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email,headers:{token:localStorage.getItem('token')} });
       setError(response.data.message);
       setForgotPasswordStep(2);
-      setIsOtpExpired(false); // Reset OTP expiration status
+      setIsOtpExpired(false); 
+      setTimer(60);
+      setCanResend(false);
+      setIsLoading(false)
     } catch (error) {
       setError(error.response?.data?.error || 'You are not registered, please register');
+      setIsLoading(false)
+
     }
   };
   
   const handleResendOtp = async () => {
+    setIsLoading(true)
+
     setError('');
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email ,headers:{token:localStorage.getItem('token')}});
       setError(response.data.message || 'OTP sent again');
-      setIsOtpExpired(false); // Reset OTP expiration status
+      setIsOtpExpired(false); 
+      setTimer(60);
+      setCanResend(false);
+      setIsLoading(false)
+
     } catch (error) {
       setError(error.response?.data?.error || 'Failed to resend OTP');
+      setIsLoading(false)
+
     }
   };
   
   const handleVerifyOtp = async () => {
+    setIsLoading(true)
+
     setError('');
     try {
       const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/verify-otp`, { email, otp,headers:{token:localStorage.getItem('token')} });
       setError(response.data.message);
       setForgotPasswordStep(3);
+      setIsLoading(false)
+
     } catch (error) {
       if (error.response?.data?.error === 'OTP expired or not found') {
         setError('OTP expired, please resend OTP');
-        setIsOtpExpired(true); // OTP expired, allow resend
+        setIsOtpExpired(true); 
       } else {
         setError(error.response?.data?.error || 'An error occurred while verifying OTP');
       }
+      setIsLoading(false)
+
     }
   };
 
@@ -162,7 +195,6 @@ const SignInForm = ({ onSignIn }) => {
     setError('');
     let isValid = true;
 
-    // Validate all fields
     ['email'].forEach(field => {
       if (!validateField(field, eval(field))) {
         isValid = false;
@@ -204,8 +236,6 @@ const SignInForm = ({ onSignIn }) => {
 
 
   const handleSignUp = async(token, isGoogleLogin ) =>{
-    
-    console.log("in signup isgooglelogin: ",isGoogleLogin)
   setIsGoogleLogin(isGoogleLogin);
   if(!isGoogleLogin){
     try {
@@ -219,10 +249,9 @@ const SignInForm = ({ onSignIn }) => {
         phone: response.data.customer_phonenumber,
         email: response.data.customer_email
       };
-      const a= localStorage.setItem('userDP', JSON.stringify(profile));
-      console.log('a',a);
+      localStorage.setItem('userDP', JSON.stringify(profile));
+      localStorage.setItem('newSignup', 'true'); 
       setUser({ token, ...profile });
-      console.log('user data', user)
       setIsGoogleLogin(false);
     } catch (error) {
       console.error('Error fetching user info:', error);
@@ -230,6 +259,8 @@ const SignInForm = ({ onSignIn }) => {
   }
   navigate('/home');
   }
+
+
   useEffect(() => {
     
     if (state.data && !state.isError) {
@@ -242,7 +273,6 @@ const SignInForm = ({ onSignIn }) => {
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     const tokenId = credentialResponse.credential;
-    // Decode the Google token to get user info
     const decodedToken = jwtDecode(tokenId);
     console.log(decodedToken);
     const { name , email, picture } = decodedToken;
@@ -254,10 +284,10 @@ const SignInForm = ({ onSignIn }) => {
       name: name,
       email: email,
       picture: picture,
-      cartCount: cartCount || 0 // Initialize cart count to 0 or use an existing value
+      cartCount: cartCount || 0 
     };
     localStorage.setItem('userDP', JSON.stringify(userDP));
-    
+    localStorage.setItem('newSignup', 'true'); 
     const response= await Login_google_auth(name, email, tokenId,dispatch);
     console.log(response)
     setIsGoogleLogin(true);
@@ -289,7 +319,7 @@ const SignInForm = ({ onSignIn }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       {showSignUpModal ? (
-        <SignUpForm 
+        <SignUpForm
           closeModal={() => setShowSignUpModal(false)}
           onSignUp={handleSignUp}
         />
@@ -297,16 +327,16 @@ const SignInForm = ({ onSignIn }) => {
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-md p-8">
           <div className="h-50 bg-teal-600 border-back-200 mb-4 overflow-hidden">
             <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={3000}>
-            {images.map((src, index) => (
-              <div key={index}>
-                <img
-                  src={src}
-                  alt={`Carousel Image ${index + 1}`}
-                  className="object-cover h-40 w-full max-w-[120%]" // Increase width here
-                />
-              </div>
-            ))}
-          </Carousel>
+              {images.map((src, index) => (
+                <div key={index}>
+                  <img
+                    src={src}
+                    alt={`Carousel Image ${index + 1}`}
+                    className="object-cover h-40 w-full max-w-[120%]"
+                  />
+                </div>
+              ))}
+            </Carousel>
           </div>
 
           <h2 className="text-2xl font-bold mb-6 text-center">CaterOrange</h2>
@@ -314,30 +344,30 @@ const SignInForm = ({ onSignIn }) => {
           <form onSubmit={handleSubmit}>
             {!forgotPassword && (
               <>
-              <div className="mb-4 mt-4">
-                <input
-                  type="email"
-                  id="email"
-                  className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  onBlur={() => handleBlur('email')}
-                  required
-                  placeholder="Email"
-                />
-                {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
-              </div>
+                <div className="mb-4 mt-4">
+                  <input
+                    type="email"
+                    id="email"
+                    className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                    value={email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    onBlur={() => handleBlur('email')}
+                    required
+                    placeholder="Email"
+                  />
+                  {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
+                </div>
                 <div className="mb-4 relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  className={`w-full px-4 py-3 border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={password}
-                  onChange={(e) => handleChange('password', e.target.value)}
-                  onBlur={() => handleBlur('password')}
-                  required
-                  placeholder="Password"
-                />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    className={`w-full px-4 py-3 border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                    value={password}
+                    onChange={(e) => handleChange('password', e.target.value)}
+                    onBlur={() => handleBlur('password')}
+                    required
+                    placeholder="Password"
+                  />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -353,46 +383,56 @@ const SignInForm = ({ onSignIn }) => {
               <>
                 {forgotPasswordStep === 1 && (
                   <div className="mb-4 mt-4">
-                <input
-                  type="email"
-                  id="email"
-                  className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={email}
-                  onChange={(e) => handleChange('email', e.target.value)}
-                  onBlur={() => handleBlur('email')}
-                  placeholder="Email"
-                />
-                {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
-              </div>
+                    <input
+                      type="email"
+                      id="email"
+                      className={`w-full px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                      value={email}
+                      onChange={(e) => handleChange('email', e.target.value)}
+                      onBlur={() => handleBlur('email')}
+                      placeholder="Email"
+                    />
+                    {fieldErrors.email && <p className="text-red-500 text-xs mt-1">{fieldErrors.email}</p>}
+                  </div>
                 )}
 
-            {forgotPasswordStep === 2 && (
-              <div className="mb-4">
-                <input
-                  type="text"
-                  id="otp"
-                  placeholder="Enter OTP"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  required
-                />
-                {isOtpExpired && (
-                  <button
-                    onClick={handleResendOtp}
-                    className="text-sm text-indigo-500 hover:underline mt-2"
-                  >
-                    Resend OTP
-                  </button>
+                {forgotPassword && forgotPasswordStep === 2 && (
+                  <div className="mb-4">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        id="otp"
+                        placeholder="Enter OTP"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        required
+                      />
+                      <div className="absolute right-0 top-0 h-full flex items-center pr-3">
+                        {timer > 0 ? (
+                          <span className="text-sm text-gray-600">
+                            ⏱ {timer}s
+                          </span>
+                        ) : (
+                          <button
+                            onClick={handleResendOtp}
+                            className="text-sm text-orange-500 hover:underline"
+                            disabled={!canResend}
+                          >
+                            Resend OTP
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </div>
-            )}
+
 
 
                 {forgotPasswordStep === 3 && (
                   <>
                     <div className="mb-4 relative">
-                     <input
+                      <input
                         type={showPassword ? 'text' : 'password'}
                         id="password"
                         placeholder="Enter New Password"
@@ -400,8 +440,8 @@ const SignInForm = ({ onSignIn }) => {
                         value={password}
                         onChange={(e) => handleChange('password', e.target.value)}
                         required
-                        
-                        
+
+
                       />
                       <button
                         type="button"
@@ -412,17 +452,17 @@ const SignInForm = ({ onSignIn }) => {
                       </button>
                     </div>
                     <div className="mb-4 relative">
-                    <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  id="confirm-password"
-                  className={`w-full px-4 py-3 border ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
-                  value={confirmPassword}
-                  onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                  onBlur={() => handleBlur('confirmPassword')}
-                  placeholder="Confirm New Password"
-                  required
-                 
-                />
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        id="confirm-password"
+                        className={`w-full px-4 py-3 border ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500`}
+                        value={confirmPassword}
+                        onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                        onBlur={() => handleBlur('confirmPassword')}
+                        placeholder="Confirm New Password"
+                        required
+
+                      />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -436,26 +476,33 @@ const SignInForm = ({ onSignIn }) => {
               </>
             )}
 
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            {error && (
+              <p className={error === "OTP sent successfully" || error ==="OTP verified successfully" ? "text-green-500" : "text-red-500"}>
+                {error}
+              </p>
+            )}
 
             <button
               type="submit"
-              className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className={`w-full py-2 rounded-md focus:outline-none focus:ring-2 ${isLoading
+                ? 'bg-orange-300 text-white cursor-not-allowed'
+                : 'bg-orange-500 text-white hover:bg-orange-600 focus:ring-orange-500'
+                }`}
+              disabled={isLoading}
             >
-              {forgotPassword ? (forgotPasswordStep === 3 ? 'Reset Password' : 'Next') : 'Sign In'}
+              {isLoading ? 'Loading...' : (forgotPassword ? (forgotPasswordStep === 3 ? 'Reset Password' : 'Verify') : 'Sign In')}
             </button>
           </form>
 
           <div className="mt-4 flex items-center justify-between">
             <button
-              className="text-sm text-indigo-500 hover:underline focus:outline-none"
-              onClick={toggleForgotPassword}
+              className="text-sm text-orange-500 hover:underline focus:outline-none transition duration-300 ease-in-out transform hover:scale-105"
+               onClick={toggleForgotPassword}
             >
               {forgotPassword ? 'Back to Sign In' : 'Forgot Password?'}
             </button>
             <button
-              className="text-sm text-indigo-500 hover:underline focus:outline-none"
-              onClick={() => setShowSignUpModal(true)}
+              className="text-sm text-orange-500 hover:underline focus:outline-none transition duration-300 ease-in-out transform hover:scale-105" onClick={() => setShowSignUpModal(true)}
             >
               Sign Up
             </button>

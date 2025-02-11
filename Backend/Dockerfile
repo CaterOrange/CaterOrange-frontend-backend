@@ -25,6 +25,9 @@ ENV SECRET_KEY=CaterOrange
 ENV GMAIL_USER=sirisha@scaleorange.com
 ENV GMAIL_PASS=ptbh\ wcoi\ mvnu\ fydh
 
+ENV RAZORPAY_KEY_ID=rzp_live_L9ioBuAQZXSBDm
+ENV RAZORPAY_SECRET=Q4ndGVbSbNHtXclcYEmWq3EK
+
 # Expose the port that the app runs on
 EXPOSE 4000
 

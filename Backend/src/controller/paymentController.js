@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const client = require('../config/dbConfig.js');
 const paymentmodel = require('../models/paymentModels.js');
 const logger = require('../config/logger.js');
@@ -7,11 +9,12 @@ const Redis = require('ioredis');
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 
-
 const razorpayInstance = new Razorpay({
-   key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_Kt3z43uPYnvC9E' ,
-   key_secret: process.env.RAZORPAY_SECRET || 'XET5FYMETkbhl872gXTWMx1i' ,
+   key_id: process.env.RAZORPAY_KEY_ID,
+   key_secret: process.env.RAZORPAY_SECRET,
  });
+console.log('instances',razorpayInstance)
+
 
 const Ajv = require("ajv");
 
@@ -78,8 +81,8 @@ if (!valid) {
     const response = await client.query(insertPaymentQuery, values);
     const generatedPaymentId = response.rows[0].paymentid;
 
-    const order_id = corporateorder_id; // or however you get it
-    const payment_status = 'Success'; // or however you determine the status
+    const order_id = corporateorder_id; 
+    const payment_status = 'Success'; 
     console.log('hi',generatedPaymentId)
     logger.info('Generated Payment ID:', generatedPaymentId);
 
@@ -194,15 +197,20 @@ const getEOrdergenId = async (req, res) => {
 
 const create_order = async (req, res) => {
  console.log("entered");
+console.log('instances',razorpayInstance)
+
   try {
     const { amount, currency } = req.body;
     const options = {
       amount: amount * 100, 
       currency,
       receipt: `receipt_${Date.now()}`,
+      
     };
+    console.log('instances',razorpayInstance)
 
     const order = await razorpayInstance.orders.create(options);
+    console.log('order in back',order)
     res.json(order);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -219,7 +227,7 @@ const verify_payment = async (req, res) => {
     }
 
     console.log("Verifying payment... -1");
-    const secret = "XET5FYMETkbhl872gXTWMx1i";
+    const secret = process.env.RAZORPAY_SECRET;
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     console.log("Generated body:", body);
 

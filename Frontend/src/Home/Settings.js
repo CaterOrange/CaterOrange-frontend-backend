@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline"; 
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const Settings = () => {
   const navigate = useNavigate();
-  VerifyToken();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -78,9 +77,9 @@ export const Settings = () => {
         customer_email: formData.email,
         customer_password: formData.password,
         confirm_password: formData.confirmPassword,
-    },{
-      headers:{'token':localStorage.getItem('token')}
-    });
+      }, {
+        headers: { 'token': localStorage.getItem('token') }
+      });
       setSuccessMessage("Password updated successfully!");
       setTimeout(() => navigate("/"), 1000);
     } catch (error) {
@@ -99,52 +98,46 @@ export const Settings = () => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="relative w-[600px] min-h-[700px] bg-white rounded-lg shadow-lg p-8">
+      <div className="relative w-full max-w-md bg-white rounded-lg shadow-lg p-6 overflow-hidden">
         <header className="w-full border-b border-neutral-300 pb-4 mb-6">
           <h1 className="font-title text-3xl text-primary text-center">Settings</h1>
         </header>
 
-        <div className="space-y-6">
+        <div className="max-h-[80vh] overflow-auto">
           <h2 className="font-title text-xl text-primary mb-4">Change Password</h2>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name" className="text-sm font-semibold block mb-2 text-primary-950">
-                Name
-              </label>
+              <label htmlFor="name" className="text-sm font-semibold block mb-2 text-primary-950">Name</label>
               <input
                 type="text"
                 id="name"
-                className="w-full p-4 border rounded-md border-neutral-300 text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full p-4 border rounded-md border-neutral-300 text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200 ease-in-out"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="abc"
+                placeholder="John Doe"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="text-sm font-semibold block mb-2 text-primary-950">
-                Email
-              </label>
+              <label htmlFor="email" className="text-sm font-semibold block mb-2 text-primary-950">Email</label>
               <input
                 type="email"
                 id="email"
-                className="w-full p-4 border rounded-md border-neutral-300 text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary"
+                className={`w-full p-4 border rounded-md ${error.email ? 'border-red-500' : 'border-neutral-300'} text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200 ease-in-out`}
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="abc@gmail.com"
+                placeholder="example@gmail.com"
               />
-              {error.email && <p className="text-red-500 text-sm">{error.email}</p>}
+              {error.email && <p className="text-red-500 text-sm italic">{error.email}</p>}
             </div>
 
             <div className="relative">
-              <label htmlFor="password" className="text-sm font-semibold block mb-2 text-primary-950" placeholder="*********">
-                New Password
-              </label>
+              <label htmlFor="password" className="text-sm font-semibold block mb-2 text-primary-950">New Password</label>
               <input
                 type={passwordVisible ? "text" : "password"}
                 id="password"
-                className="w-full p-4 border rounded-md border-neutral-300 text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary"
+                className={`w-full p-4 border rounded-md ${error.password ? 'border-red-500' : 'border-neutral-300'} text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200 ease-in-out`}
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="********"
@@ -154,19 +147,17 @@ export const Settings = () => {
                 className="absolute inset-y-0 right-4 flex items-center"
                 onClick={togglePasswordVisibility}
               >
-                {passwordVisible ? <EyeIcon className="h-5 w-5" /> : <EyeOffIcon className="h-5 w-5" />}
+                {passwordVisible ? <EyeIcon className="h-5 w-5 text-gray-500" /> : <EyeOffIcon className="h-5 w-5 text-gray-500" />}
               </button>
-              {error.password && <p className="text-red-500 text-sm">{error.password}</p>}
+              {error.password && <p className="text-red-500 text-sm italic">{error.password}</p>}
             </div>
 
             <div className="relative">
-              <label htmlFor="confirmPassword" className="text-sm font-semibold block mb-2 text-primary-950">
-                Confirm Password
-              </label>
+              <label htmlFor="confirmPassword" className="text-sm font-semibold block mb-2 text-primary-950">Confirm Password</label>
               <input
                 type={confirmPasswordVisible ? "text" : "password"}
                 id="confirmPassword"
-                className="w-full p-4 border rounded-md border-neutral-300 text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary"
+                className={`w-full p-4 border rounded-md ${error.confirmPassword ? 'border-red-500' : 'border-neutral-300'} text-neutral-950 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200 ease-in-out`}
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="*********"
@@ -176,26 +167,26 @@ export const Settings = () => {
                 className="absolute inset-y-0 right-4 flex items-center"
                 onClick={toggleConfirmPasswordVisibility}
               >
-                {confirmPasswordVisible ? <EyeIcon className="h-5 w-5" /> : <EyeOffIcon className="h-5 w-5" />}
+                {confirmPasswordVisible ? <EyeIcon className="h-5 w-5 text-gray-500" /> : <EyeOffIcon className="h-5 w-5 text-gray-500" />}
               </button>
-              {error.confirmPassword && <p className="text-red-500 text-sm">{error.confirmPassword}</p>}
+              {error.confirmPassword && <p className="text-red-500 text-sm italic">{error.confirmPassword}</p>}
             </div>
 
-            {error.submit && <p className="text-red-500 text-sm">{error.submit}</p>}
-            {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
+            {error.submit && <p className="text-red-500 text-sm italic">{error.submit}</p>}
+            {successMessage && <p className="text-green-500 text-sm italic">{successMessage}</p>}
 
             <div className="flex space-x-4">
-              <button type="submit" className="flex-1 py-3 rounded-full bg-gray-500 text-white hover:bg-gray-700">
+              <button type="submit" className="flex-1 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition duration-200 ease-in-out shadow-md">
                 Update Password
               </button>
-              <button type="button" className="flex-1 bg-gray-500 text-white py-3 rounded-full hover:bg-gray-700" onClick={handleCancel}>
+              <button type="button" className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-full hover:bg-gray-400 transition duration-200 ease-in-out shadow-md" onClick={handleCancel}>
                 Cancel
               </button>
             </div>
 
             <button
               type="button"
-              className="mt-4 w-full py-3 bg-blue-500 text-white rounded-full hover:bg-blue-700"
+              className="mt-4 w-full py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition duration-200 ease-in-out shadow-md"
               onClick={goToHome}
             >
               Go to Home

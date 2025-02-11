@@ -23,6 +23,7 @@ import ChangeAddress from './components/events/changeAddress.js';
 import { useCart } from './services/contexts/CartContext.js';
 import ProtectedRoute from './components/corporate/protectedRoute.js';  // Import the ProtectedRoute component
 import Razorpay from './components/rasorpay.js';
+import NotFound from './components/Home/notFound.js';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -208,6 +209,8 @@ function App() {
                   // {/* </ProtectedRoute>     */}
                 }
               />
+              <Route path="*" element={<NotFound />} />
+
             </Routes>
           </Router>
         </SignUpProvider>

@@ -6,9 +6,9 @@
     "auditLog": "/home/harshitha/Music/caterorangeclone/CaterOrange/Backend/src/config/logs/.cf9b0c37c15b5ef3f820e4e986b7438e5827efb8-audit.json",
     "files": [
         {
-            "date": 1738317769054,
-            "name": "/home/harshitha/Music/caterorangeclone/CaterOrange/Backend/src/config/logs/application-2025-01-31.log",
-            "hash": "b453c4fde0a71197441d0c3dd11c4cc986a034fb43243e4b6b6e41587fb0229f"
+            "date": 1738821115612,
+            "name": "/home/harshitha/Music/caterorangeclone/CaterOrange/Backend/src/config/logs/application-2025-02-06.log",
+            "hash": "baba84e548418fa3ab92529d0dd7ce2907a7aababd98edc5e8bded7a9327fb95"
         }
     ],
     "hashType": "sha256"
