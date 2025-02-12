@@ -1,554 +1,621 @@
-import React, { useState, useEffect } from 'react';
+
+
+import React, { useEffect, useState, useRef } from 'react';
+import { Pencil, X } from 'lucide-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { isTokenExpired, VerifyToken } from '../../MiddleWare/verifyToken';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import { VerifyToken } from '../../MiddleWare/verifyToken';
+import 'leaflet/dist/leaflet.css';
 
 const DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
+ iconUrl: icon,
+ shadowUrl: iconShadow,
+ iconSize: [25, 41],
+ iconAnchor: [12, 41]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const AddressForm = ({ saveAddress, existingAddress }) => {
-    const [tag, setTag] = useState('');
-    const [pincode, setPincode] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [flatNumber, setFlatNumber] = useState('');
-    const [landmark, setLandmark] = useState('');
-    const [location, setLocation] = useState(null);
-    const [shipToName, setShipToName] = useState('');
-    const [shipToPhoneNumber, setShipToPhoneNumber] = useState('');
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [errors, setErrors] = useState({});
-    const [successMessage, setSuccessMessage] = useState('');
-    const [defaultDetails, setDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
-    const [editableDefaultDetails, setEditableDefaultDetails] = useState({ customer_name: '', customer_phonenumber: '' });
+const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClose }) => {
+ const [isEdit, setIsEdit] = useState(false);
+ const [editAddressId, setEditAddressId] = useState(null);
+ const [formData, setFormData] = useState({
+ addressLabel: '',
+ doorNumber: '',
+ landmark: '',
+ city: '',
+ state: '',
+ pincode: '',
+ location: { lat: null, lng: null }
+ });
 
-    const [position, setPosition] = useState([20.5937, 78.9629]); // Default to center of India
-    const [mapCenter, setMapCenter] = useState([20.5937, 78.9629]);
-    const [mapKey, setMapKey] = useState(0);
-    const [loading, setLoading] = useState(false);
-    const [locationError, setLocationError] = useState('');
+ const [address, setAddress] = useState([]);
+ const [isViewAddresses, setIsViewAddresses] = useState(false);
+ const [selectedAddressId, setSelectedAddressId] = useState(null);
+ const [position, setPosition] = useState([20.5937, 78.9629]);
+ const [mapCenter, setMapCenter] = useState([20.5937, 78.9629]);
+ const [mapKey, setMapKey] = useState(0);
+ const [loading, setLoading] = useState(false);
+ const [locationError, setLocationError] = useState('');
+ const [successMessage, setSuccessMessage] = useState('');
+ const [formErrors, setFormErrors] = useState({});
+ const [defaultDetails, setDefaultDetails] = useState({
+ customer_name: '',
+ customer_phonenumber: '',
+ isValid: false,
+ errors: {}
+ });
 
-    VerifyToken();
+ const [isFormValid, setIsFormValid] = useState(false);
 
-    // Regular expressions for validation
-    const letterRegex = /^[A-Za-z\s]*$/;
-    const flatNumberRegex = /^[A-Za-z0-9\s]*$/;
-    const pincodeRegex = /^\d{6}$/;
+ const navigate = useNavigate();
+ const modalRef = useRef(null);
+ VerifyToken();
 
-    // Validate function for required location
-    const validateLocation = () => {
-        if (!location || !location.lat || !location.lng) {
-            return 'Location is required.';
-        }
-        return '';
-    };
+ useEffect(() => {
+ fetchDefaultDetails();
+ if (initialData) {
+ populateInitialData();
+ }
+ }, [initialData]);
 
-    // Validation functions for individual fields
-    const validateField = (name, value) => {
-        switch (name) {
-            case 'tag':
-                if (!value) return 'Tag is required';
-                if (value.length < 2) return 'Tag must be at least 2 characters';
-                if (value.length > 50) return 'Tag must be less than 50 characters';
-                if (!letterRegex.test(value)) return 'Tag must only contain letters and spaces';
-                return '';
+ const fetchDefaultDetails = async () => {
+ try {
+ const token = localStorage.getItem('token');
+ if (!token) {
+ navigate('/');
+ return;
+ }
 
-            case 'pincode':
-                if (!value) return 'Pincode is required';
-                if (!pincodeRegex.test(value)) return 'Valid 6-digit pincode is required';
-                return '';
+ const response = await axios.get(
+ `${process.env.REACT_APP_URL}/api/address/getDefaultAddress`,
+ { headers: { token } }
+ );
 
-            case 'city':
-                if (!value) return 'City is required';
-                if (value.length < 2) return 'City must be at least 2 characters';
-                if (value.length > 50) return 'City must be less than 50 characters';
-                if (!letterRegex.test(value)) return 'City must only contain letters and spaces';
-                return '';
+ const { customer_name, customer_phonenumber } = response.data.customer;
+ setDefaultDetails(prev => ({
+ ...prev,
+ customer_name,
+ customer_phonenumber,
+ isValid: validateDefaultDetails(customer_name, customer_phonenumber)
+ }));
+ } catch (error) {
+ console.error('Error fetching default details:', error);
+ }
+ };
 
-            case 'state':
-                if (!value) return 'State is required';
-                if (value.length < 2) return 'State must be at least 2 characters';
-                if (value.length > 50) return 'State must be less than 50 characters';
-                if (!letterRegex.test(value)) return 'State must only contain letters and spaces';
-                return '';
+ const populateInitialData = () => {
+ setIsEdit(true);
+ setEditAddressId(initialData.address_id);
 
-            case 'flatNumber':
-                if (value && value.length > 20) return 'Flat number must be less than 20 characters';
-                if (value && !flatNumberRegex.test(value)) return 'Flat number must contain only letters, numbers, and spaces';
-                return '';
+ const locationUrl = initialData.location || '';
+ const coords = locationUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+ const [doorNumber, landmark] = (initialData.line1 || '').split(',').map(s => s.trim());
+ const [city, state] = (initialData.line2 || '').split(',').map(s => s.trim());
 
-            case 'landmark':
-                if (value && value.length > 100) return 'Landmark must be less than 100 characters';
-                return '';
+ setFormData({
+ addressLabel: initialData.tag || '',
+ doorNumber: doorNumber || '',
+ landmark: landmark || '',
+ city: city || '',
+ state: state || '',
+ pincode: initialData.pincode || '',
+ location: coords ? {
+ lat: parseFloat(coords[1]),
+ lng: parseFloat(coords[2])
+ } : { lat: null, lng: null }
+ });
 
-            case 'shipToName':
-                if (!value) return 'Ship to name is required';
-                if (value.length > 100) return 'Ship to name must be less than 100 characters';
-                if (!letterRegex.test(value)) return 'Ship to name must only contain letters and spaces';
-                return '';
+ if (coords) {
+ const newPos = [parseFloat(coords[1]), parseFloat(coords[2])];
+ setPosition(newPos);
+ setMapCenter(newPos);
+ setMapKey(prev => prev + 1);
+ }
+ };
 
-            case 'shipToPhoneNumber':
-                if (!value || isNaN(value) || value.length !== 10) return 'Valid 10-digit phone number is required';
-                return '';
+ const validateField = (name, value) => {
+ let error = '';
+ switch (name) {
+ case 'addressLabel':
+ if (!value) error = 'Address label is required';
+ break;
+ case 'doorNumber':
+ if (!value) error = 'Door number is required';
+ else if (value.length < 2) error = 'Door number must be at least 2 characters';
+ break;
+ case 'landmark':
+ if (!value) error = 'Landmark is required';
+ break;
+ case 'city':
+ if (!value) error = 'City is required';
+ else if (!/^[a-zA-Z\s]+$/.test(value)) error = 'City should only contain letters';
+ break;
+ case 'state':
+ if (!value) error = 'State is required';
+ else if (!/^[a-zA-Z\s]+$/.test(value)) error = 'State should only contain letters';
+ break;
+ case 'pincode':
+ if (!value) error = 'Pincode is required';
+ else if (!/^\d{6}$/.test(value)) error = 'Pincode must be 6 digits';
+ break;
+ case 'location':
+ if (!value.lat || !value.lng) error = 'Location is required';
+ break;
+ default:
+ break;
+ }
+ return error;
+ };
 
-            case 'customer_name':
-                if (!value) return 'Default name is required';
-                if (value.length > 100) return 'Default name must be less than 100 characters';
-                if (!letterRegex.test(value)) return 'Default name must only contain letters and spaces';
-                return '';
+ // Validate entire form and update isFormValid state
+ const validateForm = () => {
+ const errors = {};
+ let isValid = true;
+ 
+ Object.keys(formData).forEach(key => {
+ const error = validateField(key, formData[key]);
+ if (error) {
+ errors[key] = error;
+ isValid = false;
+ }
+ });
 
-            case 'customer_phonenumber':
-                if (!value || isNaN(value) || value.length !== 10) return 'Valid 10-digit phone number is required';
-                return '';
+ setFormErrors(errors);
+ setIsFormValid(isValid && defaultDetails.isValid);
+ return isValid;
+ };
 
-            default:
-                return '';
-        }
-    };
+ // Handle input changes with immediate validation
+ const handleChange = (e) => {
+ const { name, value } = e.target;
+ setFormData(prev => {
+ const newFormData = {
+ ...prev,
+ [name]: value
+ };
+ 
+ // Validate the changed field immediately
+ const error = validateField(name, value);
+ setFormErrors(prev => ({
+ ...prev,
+ [name]: error
+ }));
+ 
+ // Validate entire form to update button state
+ setTimeout(() => validateForm(), 0);
+ 
+ return newFormData;
+ });
+ };
 
-    // Handle field change with validation
-    const handleFieldChange = (name, value, setter) => {
-        setter(value);
-        const error = validateField(name, value);
-        setErrors(prev => ({
-            ...prev,
-            [name]: error
-        }));
-    };
+ // Validate default details with immediate feedback
+ const validateDefaultDetails = (name, phone) => {
+ const errors = {};
+ 
+ if (!name?.trim() || name.length < 3) {
+ errors.customer_name = 'Name must be at least 3 characters';
+ }
+ 
+ if (!phone?.trim() || !/^\d{10}$/.test(phone)) {
+ errors.customer_phonenumber = 'Phone number must be 10 digits';
+ }
+ 
+ return {
+ isValid: Object.keys(errors).length === 0,
+ errors
+ };
+ };
 
-    // Modified state setters with validation
-    const handleTagChange = (e) => handleFieldChange('tag', e.target.value, setTag);
-    const handlePincodeChange = (e) => handleFieldChange('pincode', e.target.value, setPincode);
-    const handleCityChange = (e) => handleFieldChange('city', e.target.value, setCity);
-    const handleStateChange = (e) => handleFieldChange('state', e.target.value, setState);
-    const handleFlatNumberChange = (e) => handleFieldChange('flatNumber', e.target.value, setFlatNumber);
-    const handleLandmarkChange = (e) => handleFieldChange('landmark', e.target.value, setLandmark);
-    const handleShipToNameChange = (e) => handleFieldChange('shipToName', e.target.value, setShipToName);
-    const handleShipToPhoneNumberChange = (e) => handleFieldChange('shipToPhoneNumber', e.target.value, setShipToPhoneNumber);
+ // Handle default details changes with validation
+ const handleDefaultDetailsChange = (e) => {
+ const { name, value } = e.target;
+ const newDetails = {
+ ...defaultDetails,
+ [name]: value
+ };
+ 
+ const validation = validateDefaultDetails(
+ name === 'customer_name' ? value : newDetails.customer_name,
+ name === 'customer_phonenumber' ? value : newDetails.customer_phonenumber
+ );
+ 
+ setDefaultDetails({
+ ...newDetails,
+ isValid: validation.isValid,
+ errors: validation.errors
+ });
+ 
+ // Update overall form validity
+ setTimeout(() => validateForm(), 0);
+ };
 
-    // Modified default details handler with validation
-    const handleDefaultDetailsChange = (e) => {
-        const { name, value } = e.target;
-        setEditableDefaultDetails(prev => ({ ...prev, [name]: value }));
-        const error = validateField(name, value);
-        setErrors(prev => ({
-            ...prev,
-            [name === 'customer_name' ? 'customerName' : 'customerPhoneNumber']: error
-        }));
-    };
+ // Effect to validate form when component mounts or data changes
+ useEffect(() => {
+ validateForm();
+ }, [formData, defaultDetails]);
 
-    useEffect(() => {
-        const fetchDefaultDetails = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No token found, please log in again.');
-            }
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getDefaultAddress`, {
-                    headers: { 'token': token },
-                });
-                const { customer_name = '', customer_phonenumber = '' } = response.data.customer || {};
-                setDefaultDetails({ customer_name, customer_phonenumber });
-                setEditableDefaultDetails({ customer_name, customer_phonenumber });
-            } catch (error) {
-                console.error('Error fetching default address:', error);
-            }
-        };
+ const getCurrentLocation = () => {
+ setLoading(true);
+ if (navigator.geolocation) {
+ navigator.geolocation.getCurrentPosition(
+ (position) => {
+ const { latitude, longitude } = position.coords;
+ setPosition([latitude, longitude]);
+ setMapCenter([latitude, longitude]);
+ setFormData(prev => ({
+ ...prev,
+ location: { lat: latitude, lng: longitude }
+ }));
+ setMapKey(prev => prev + 1);
+ setLoading(false);
+ },
+ () => {
+ setLoading(false);
+ setLocationError('Failed to get current location');
+ }
+ );
+ } else {
+ setLoading(false);
+ setLocationError('Geolocation is not supported');
+ }
+ };
 
-        fetchDefaultDetails();
-    }, []);
+ const handleLocationSelect = (newPosition) => {
+ setPosition(newPosition);
+ setLocationError('');
+ setFormData(prev => ({
+ ...prev,
+ location: { lat: newPosition[0], lng: newPosition[1] }
+ }));
+ };
 
-    useEffect(() => {
-        if (existingAddress) {
-            setTag(existingAddress.tag || '');
-            setPincode(existingAddress.pincode || '');
-            setCity(existingAddress.city || '');
-            setState(existingAddress.state || '');
-            setFlatNumber(existingAddress.flatNumber || '');
-            setLandmark(existingAddress.landmark || '');
-            setLocation(null);
-            setSelectedOption(existingAddress.selectedOption || null);
-            if (existingAddress.selectedOption === 'shipping') {
-                setShipToName(existingAddress.shipToName || '');
-                setShipToPhoneNumber(existingAddress.shipToPhoneNumber || '');
-            }
-        }
-    }, [existingAddress]);
+ const LocationMarker = ({ position, onLocationSelect }) => {
+ const map = useMapEvents({
+ click(e) {
+ const { lat, lng } = e.latlng;
+ onLocationSelect([lat, lng]);
+ },
+ });
 
-    const validate = () => {
-        const validationErrors = {};
-        
-        if (!tag) validationErrors.tag = 'Tag is required';
-        else if (tag.length < 2) validationErrors.tag = 'Tag must be at least 2 characters';
-        else if (tag.length > 50) validationErrors.tag = 'Tag must be less than 50 characters';
-        else if (!letterRegex.test(tag)) validationErrors.tag = 'Tag must only contain letters and spaces';
-        
-        if (!pincode) validationErrors.pincode = 'Pincode is required';
-        else if (!pincodeRegex.test(pincode)) validationErrors.pincode = 'Valid 6-digit pincode is required';
-        
-        if (!city) validationErrors.city = 'City is required';
-        else if (city.length < 2) validationErrors.city = 'City must be at least 2 characters';
-        else if (city.length > 50) validationErrors.city = 'City must be less than 50 characters';
-        else if (!letterRegex.test(city)) validationErrors.city = 'City must only contain letters and spaces';
-        
-        if (!state) validationErrors.state = 'State is required';
-        else if (state.length < 2) validationErrors.state = 'State must be at least 2 characters';
-        else if (state.length > 50) validationErrors.state = 'State must be less than 50 characters';
-        else if (!letterRegex.test(state)) validationErrors.state = 'State must only contain letters and spaces';
-        
-        if (flatNumber && flatNumber.length > 20) validationErrors.flatNumber = 'Flat number must be less than 20 characters';
-        else if (flatNumber && !flatNumberRegex.test(flatNumber)) validationErrors.flatNumber = 'Flat number must contain only letters, numbers, and spaces';
-        
-        if (landmark && landmark.length > 100) validationErrors.landmark = 'Landmark must be less than 100 characters';
+ return position ? <Marker position={position} /> : null;
+ };
 
-        if (validateLocation()) {
-            validationErrors.location = validateLocation();
-        }
+ 
 
-        if (!selectedOption) {
-            validationErrors.selectedOption = 'You must select either shipping details or set as default';
-        }
+ const handleSubmit = async (e) => {
+ e.preventDefault();
+ 
+ if (!validateForm()) {
+ return;
+ }
 
-        if (selectedOption === 'shipping') {
-            if (!shipToName) validationErrors.shipToName = 'Ship to name is required';
-            else if (shipToName.length > 100) validationErrors.shipToName = 'Ship to name must be less than 100 characters';
-            else if (!letterRegex.test(shipToName)) validationErrors.shipToName = 'Ship to name must only contain letters and spaces';
-        
-            if (!shipToPhoneNumber || isNaN(shipToPhoneNumber) || shipToPhoneNumber.length !== 10) {
-                validationErrors.shipToPhoneNumber = 'Valid 10-digit phone number is required';
-            }
-        }
+ try {
+ const token = localStorage.getItem('token');
+ if (!token || isTokenExpired(token)) {
+ navigate('/');
+ return;
+ }
 
-        if (selectedOption === 'default') {
-            if (!editableDefaultDetails.customer_name) {
-                validationErrors.customerName = 'Default name is required';
-            } else if (editableDefaultDetails.customer_name.length > 100) {
-                validationErrors.customerName = 'Default name must be less than 100 characters';
-            } else if (!letterRegex.test(editableDefaultDetails.customer_name)) {
-                validationErrors.customerName = 'Default name must only contain letters and spaces';
-            }
-        
-            if (!editableDefaultDetails.customer_phonenumber || isNaN(editableDefaultDetails.customer_phonenumber) || editableDefaultDetails.customer_phonenumber.length !== 10) {
-                validationErrors.customerPhoneNumber = 'Valid 10-digit phone number is required';
-            }
-        }
+ const payload = {
+ tag: formData.addressLabel,
+ pincode: formData.pincode,
+ line1: `${formData.doorNumber}, ${formData.landmark}`,
+ line2: `${formData.city}, ${formData.state}`,
+ location: `https://www.google.com/maps?q=${formData.location.lat},${formData.location.lng}`,
+ ship_to_name: defaultDetails.customer_name,
+ ship_to_phone_number: defaultDetails.customer_phonenumber
+ };
 
-        return validationErrors;
-    };
+ if (isEdit) {
+ await axios.put(
+ `${process.env.REACT_APP_URL}/api/customer/address/update/${editAddressId}`,
+ payload,
+ { headers: { token } }
+ );
+ setSuccessMessage('Address updated successfully');
+ } else {
+ await axios.post(
+ `${process.env.REACT_APP_URL}/api/address/createAddres`,
+ payload,
+ { headers: { token } }
+ );
+ setSuccessMessage('Address saved successfully');
+ }
 
-    const getCurrentLocation = () => {
-        setLoading(true);
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setPosition([latitude, longitude]);
-                    setMapCenter([latitude, longitude]);
-                    setMapKey((prev) => prev + 1);
-                    setLocation({ lat: latitude, lng: longitude, address: '' });
-                    setLoading(false);
-                },
-                () => {
-                    setLoading(false);
-                    setLocationError('Failed to get current location');
-                }
-            );
-        } else {
-            setLoading(false);
-            setLocationError('Geolocation is not supported by this browser.');
-        }
-    };
+ if (onAddressAdd) await onAddressAdd();
+ if (onClose) onClose();
 
-    const handleLocationSelect = (newPosition) => {
-        setPosition(newPosition);
-        setLocationError('');
-        setLocation({ lat: newPosition[0], lng: newPosition[1], address: '' });
-    };
+ } catch (error) {
+ setFormErrors(prev => ({
+ ...prev,
+ general: error.response?.data?.message || 'Failed to save address'
+ }));
+ }
+ };
 
-    const LocationMarker = ({ position, onLocationSelect }) => {
-        const map = useMapEvents({
-            click(e) {
-                const { lat, lng } = e.latlng;
-                onLocationSelect([lat, lng]);
-            },
-        });
 
-        return position ? <Marker position={position} /> : null;
-    };
+ const handleViewAddresses = async () => {
+ if (!isViewAddresses) {
+ try {
+ const token = localStorage.getItem('token');
+ if (!token || isTokenExpired(token)) {
+ navigate('/');
+ return;
+ }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const validationErrors = validate();
-        
-        const line1 = `${flatNumber}, ${landmark}`;
-        const line2 = `${city}, ${state}`;
-        const token = localStorage.getItem('token');
-        if (!token) {
-            throw new Error('No token found, please log in again.');
-        }
-        if (Object.keys(validationErrors).length === 0) {
-            try {
-                const url = existingAddress
-                    ? `${process.env.REACT_APP_URL}/api/address/edit/${existingAddress.address_id}`
-                    : `${process.env.REACT_APP_URL}/api/address/createAddres`;
+ const response = await axios.get(
+ `${process.env.REACT_APP_URL}/api/address/getalladdresses`,
+ { headers: { token } }
+ );
 
-                await axios.post(
-                    url,
-                    {
-                        tag,
-                        pincode,
-                        line1,
-                        line2,
-                        location: `https://www.google.com/maps?q=${position[0]},${position[1]}`,
-                        ship_to_name: selectedOption === 'shipping' ? shipToName : editableDefaultDetails.customer_name,
-                        ship_to_phone_number: selectedOption === 'shipping' ? shipToPhoneNumber : editableDefaultDetails.customer_phonenumber,
-                    },
-                    {
-                        headers: { 'token': token },
-                    }
-                );
+ if (response.data.address) {
+ setAddress(response.data.address);
+ }
+ } catch (error) {
+ console.error('Error fetching addresses:', error);
+ }
+ }
+ setIsViewAddresses(!isViewAddresses);
+ };
 
-                clearForm();
-                if (saveAddress) {
-                    saveAddress({ tag, pincode, line1, line2, location, ship_to_name: shipToName, ship_to_phone_number: shipToPhoneNumber });
-                }
-                setSuccessMessage(existingAddress ? 'Address updated successfully.' : 'Address saved successfully.');
-            } catch (error) {
-                console.error('Error saving address:', error);
-                setSuccessMessage('Failed to save address.');
-            }
-        } else {
-            setErrors(validationErrors);
-        }
-    };
+ const handleSelect = async (address_id) => {
+ try {
+ const response = await axios.get(
+ `${process.env.REACT_APP_URL}/api/customer/getAddress`,
+ {
+ params: { address_id },
+ headers: { token: localStorage.getItem('token') }
+ }
+ );
+ setSelectedAddressId(address_id);
+ if (onAddressSelect) onAddressSelect(response.data.result);
+ } catch (error) {
+ console.error('Error fetching address:', error);
+ }
+ };
 
-    const clearForm = () => {
-        setTag('');
-        setPincode('');
-        setCity('');
-        setState('');
-        setFlatNumber('');
-        setLandmark('');
-        setLocation(null);
-        setShipToName('');
-        setShipToPhoneNumber('');
-        setSelectedOption(null);
-        setErrors({});
-    };
+ const handleOverlayClick = (e) => {
+ if (e.target === e.currentTarget) {
+ onClose();
+ }
+ };
 
-    return (
-        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div className="mb-6">
-                <div className="border rounded overflow-hidden h-64 mb-4">
-                    <MapContainer
-                        key={mapKey}
-                        center={mapCenter}
-                        zoom={13}
-                        style={{ height: '100%', width: '100%' }}
-                    >
-                        <TileLayer
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        />
-                        <LocationMarker position={position} onLocationSelect={handleLocationSelect} />
-                    </MapContainer>
-                </div>
+ return (
+ <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4" onClick={handleOverlayClick}>
+ <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto" ref={modalRef}>
+ <div className="sticky top-0 bg-white px-6 py-4 border-b flex justify-between items-center z-10">
+ <h2 className="text-xl font-semibold text-teal-700 font-serif">
+ ✏️ {isEdit ? 'Edit Address' : 'Add New Address'}
+ </h2>
+ <button
+ onClick={onClose}
+ className="p-1 rounded-full bg-gray-200 hover:bg-red-100 active:bg-red-200 transition-all duration-300"
+ >
+ <X size={20} className="text-red-600" />
+ </button>
+ </div>
 
-                <button
-                    type="button"
-                    onClick={getCurrentLocation}
-                    disabled={loading}
-                    className="w-full mb-4 bg-orange-600 text-white py-2 px-4 rounded hover:bg-orange-500 disabled:bg-orange-300"
-                >
-                    {loading ? 'Getting Location...' : '📍 Use Current Location'}
-                </button>
-                {locationError && <p className="text-red-500 text-sm mb-4">{locationError}</p>}
-                {errors.location && <p className="text-red-500 text-xs mb-4">{errors.location}</p>} {/* Display location error */}
-            </div>
+ <div className="px-6 py-4">
+ <div className="mb-6">
+ <div className="relative z-0 border-2 border-teal-500 rounded-lg overflow-hidden h-64 mb-4">
+ <MapContainer
+ key={mapKey}
+ center={mapCenter}
+ zoom={13}
+ style={{ height: '100%', width: '100%' }}
+ >
+ <TileLayer
+ url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+ attribution='© OpenStreetMap contributors'
+ />
+ <LocationMarker position={position} onLocationSelect={handleLocationSelect} />
+ </MapContainer>
+ </div>
 
-            {successMessage && (
-                <p className={`text-center ${successMessage.includes('success') ? 'text-teal-800' : 'text-red-500'}`}>
-                    {successMessage}
-                </p>
-            )}
-            <form>
-                <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Tag</label>
-                    <input
-                        type="text"
-                        value={tag}
-                        onChange={handleTagChange}
-                        placeholder="E.g., Home, Office"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                        required
-                    />
-                    {errors.tag && <p className="text-red-500 text-xs">{errors.tag}</p>}
-                </div>
+ <button
+ type="button"
+ onClick={getCurrentLocation}
+ disabled={loading}
+ className="w-full mb-4 bg-teal-700 text-white py-2 px-4 rounded hover:bg-teal-600 disabled:bg-teal-300"
+ >
+ {loading ? 'Getting Location...' : '📍 Use Current Location'}
+ </button>
+ {locationError && <p className="text-red-500 text-sm mb-4">{locationError}</p>}
+ </div>
 
-                <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Pincode</label>
-                    <input
-                        type="text"
-                        value={pincode}
-                        onChange={handlePincodeChange}
-                        placeholder="Enter pincode"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                        required
-                    />
-                    {errors.pincode && <p className="text-red-500 text-xs">{errors.pincode}</p>}
-                </div>
+ {successMessage && (
+ <div className="text-teal-700 text-center mb-4">{successMessage}</div>
+ )}
 
-                <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">City</label>
-                    <input
-                        type="text"
-                        value={city}
-                        onChange={handleCityChange}
-                        placeholder="Enter city"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                        required
-                    />
-                    {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
-                </div>
+ {formErrors.general && (
+ <div className="text-red-500 text-center mb-4">{formErrors.general}</div>
+ )}
 
-                <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">State</label>
-                    <input
-                        type="text"
-                        value={state}
-                        onChange={handleStateChange}
-                        placeholder="Enter state"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                        required
-                    />
-                    {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
-                </div>
+ <form onSubmit={handleSubmit} className="space-y-4">
+ <div className="grid grid-cols-2 gap-6">
+ <div className="form-group">
+ <label className="block text-sm font-medium text-gray-700 mb-1">
+ Address Label *
+ </label>
+ <select
+ name="addressLabel"
+ value={formData.addressLabel}
+ onChange={handleChange}
+ className={`w-full px-3 py-2 border rounded-md ${
+ formErrors.addressLabel ? 'border-red-500' : 'border-gray-300'
+ }`}
+ >
+ <option value="">Select Label</option>
+ <option value="home">Home</option>
+ <option value="office">Office</option>
+ <option value="other">Other</option>
+ </select>
+ {formErrors.addressLabel && (
+ <p className="text-red-500 text-xs mt-1">{formErrors.addressLabel}</p>
+ )}
+ </div>
 
-                <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Flat Number</label>
-                    <input
-                        type="text"
-                        value={flatNumber}
-                        onChange={handleFlatNumberChange}
-                        placeholder="Enter flat number"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                    />
-                    {errors.flatNumber && <p className="text-red-500 text-xs">{errors.flatNumber}</p>}
-                </div>
+ <div className="form-group">
+ <label className="block text-sm font-medium text-gray-700 mb-1">
+ Door Number & Floor *
+ </label>
+ <input
+ type="text"
+ name="doorNumber"
+ value={formData.doorNumber}
+ onChange={handleChange}
+ className={`w-full px-3 py-2 border rounded-md ${
+ formErrors.doorNumber ? 'border-red-500' : 'border-gray-300'
+ }`}
+ placeholder="Ex: Flat 101"
+ />
+ {formErrors.doorNumber && (
+ <p className="text-red-500 text-xs mt-1">{formErrors.doorNumber}</p>
+ )}
+ </div>
+ </div>
 
-                <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Landmark</label>
-                    <input
-                        type="text"
-                        value={landmark}
-                        onChange={handleLandmarkChange}
-                        placeholder="Enter landmark"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                    />
-                    {errors.landmark && <p className="text-red-500 text-xs">{errors.landmark}</p>}
-                </div>
+ <div className="grid grid-cols-2 gap-6">
+ <div className="form-group">
+ <label className="block text-sm font-medium text-gray-700 mb-1">
+ Landmark *
+ </label>
+ <input
+ type="text"
+ name="landmark"
+ value={formData.landmark}
+ onChange={handleChange}
+ className={`w-full px-3 py-2 border rounded-md ${
+ formErrors.landmark ? 'border-red-500' : 'border-gray-300'
+ }`}
+ placeholder="Ex: Near Post Office"
+ />
+ {formErrors.landmark && (
+ <p className="text-red-500 text-xs mt-1">{formErrors.landmark}</p>
+ )}
+ </div>
 
-                <div className="mb-4">
-                    <label className="block text-gray-700 mb-2">Address Type</label>
-                    <select
-                        value={selectedOption || ""}
-                        onChange={(e) => {
-                            setSelectedOption(e.target.value);
-                            if (!e.target.value) {
-                                setErrors(prev => ({ ...prev, selectedOption: 'You must select either shipping details or set as default' }));
-                            } else {
-                                setErrors(prev => {
-                                    const { selectedOption, ...rest } = prev;
-                                    return rest;
-                                });
-                            }
-                        }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                        required
-                    >
-                        <option value="">Select an option</option>
-                        <option value="default">Set as default</option>
-                        <option value="shipping">Shipping</option>
-                    </select>
-                    {errors.selectedOption && <p className="text-red-500 text-xs">{errors.selectedOption}</p>}
-                </div>
+ <div className="form-group">
+ <label className="block text-sm font-medium text-gray-700 mb-1">
+ City *
+ </label>
+ <input
+ type="text"
+ name="city"
+ value={formData.city}
+ onChange={handleChange}
+ className={`w-full px-3 py-2 border rounded-md ${
+ formErrors.city ? 'border-red-500' : 'border-gray-300'
+ }`}
+ placeholder="Enter city"
+ />
+ {formErrors.city && (
+ <p className="text-red-500 text-xs mt-1">{formErrors.city}</p>
+ )}
+ </div>
+ </div>
 
-                {selectedOption === 'shipping' && (
-                    <>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-2">Ship to Name</label>
-                            <input
-                                type="text"
-                                value={shipToName}
-                                onChange={handleShipToNameChange}
-                                placeholder="Enter name"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                            />
-                            {errors.shipToName && <p className="text-red-500 text-xs">{errors.shipToName}</p>}
-                        </div>
+ <div className="grid grid-cols-2 gap-6">
+ <div className="form-group">
+ <label className="block text-sm font-medium text-gray-700 mb-1">
+ State *
+ </label>
+ <input
+ type="text"
+ name="state"
+ value={formData.state}
+ onChange={handleChange}
+ className={`w-full px-3 py-2 border rounded-md ${
+ formErrors.state ? 'border-red-500' : 'border-gray-300'
+ }`}
+ placeholder="Enter state"
+ />
+ {formErrors.state && (
+ <p className="text-red-500 text-xs mt-1">{formErrors.state}</p>
+ )}
+ </div>
 
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-2">Ship to Phone Number</label>
-                            <input
-                                type="text"
-                                value={shipToPhoneNumber}
-                                onChange={handleShipToPhoneNumberChange}
-                                placeholder="Enter phone number"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                            />
-                            {errors.shipToPhoneNumber && <p className="text-red-500 text-xs">{errors.shipToPhoneNumber}</p>}
-                        </div>
-                    </>
-                )}
+ <div className="form-group">
+ <label className="block text-sm font-medium text-gray-700 mb-1">
+ Pincode *
+ </label>
+ <input
+ type="text"
+ name="pincode"
+ value={formData.pincode}
+ onChange={handleChange}
+ maxLength={6}
+ className={`w-full px-3 py-2 border rounded-md ${
+ formErrors.pincode ? 'border-red-500' : 'border-gray-300'
+ }`}
+ placeholder="Enter 6-digit pincode"
+ />
+ {formErrors.pincode && (
+ <p className="text-red-500 text-xs mt-1">{formErrors.pincode}</p>
+ )}
+ </div>
+ </div>
 
-                {selectedOption === 'default' && (
-                    <>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-2">Default Name</label>
-                            <input
-                                type="text"
-                                name="customer_name"
-                                value={editableDefaultDetails.customer_name}
-                                onChange={handleDefaultDetailsChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                            />
-                            {errors.customerName && <p className="text-red-500 text-xs">{errors.customerName}</p>}
-                        </div>
+ <div className="space-y-4 mt-6">
+ <div className="bg-gray-50 p-4 rounded-lg">
+ <h3 className="text-gray-800 text-sm font-medium mb-3">Default Details</h3>
+ <div className="space-y-3">
+ <div>
+ <input
+ type="text"
+ name="customer_name"
+ value={defaultDetails.customer_name}
+ onChange={handleDefaultDetailsChange}
+ placeholder="Default Name"
+ className="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+ />
+ {defaultDetails.errors.customer_name && (
+ <p className="text-red-500 text-xs mt-1">
+ {defaultDetails.errors.customer_name}
+ </p>
+ )}
+ </div>
 
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-2">Default Phone Number</label>
-                            <input
-                                type="text"
-                                name="customer_phonenumber"
-                                value={editableDefaultDetails.customer_phonenumber}
-                                onChange={handleDefaultDetailsChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-teal-800 focus:border-teal-600"
-                            />
-                            {errors.customerPhoneNumber && <p className="text-red-500 text-xs">{errors.customerPhoneNumber}</p>}
-                        </div>
-                    </>
-                )}
+ <div>
+ <input
+ type="text"
+ name="customer_phonenumber"
+ value={defaultDetails.customer_phonenumber}
+ onChange={handleDefaultDetailsChange}
+ placeholder="Default Phone Number"
+ className="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+ />
+ {defaultDetails.errors.customer_phonenumber && (
+ <p className="text-red-500 text-xs mt-1">
+ {defaultDetails.errors.customer_phonenumber}
+ </p>
+ )}
+ </div>
+ </div>
+ </div>
 
-                <button
-                    onClick={handleSubmit}
-                    type="submit"
-                    className="w-full bg-teal-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-opacity-50"
-                >
-                    {existingAddress ? 'Update Address' : 'Save Address'}
-                </button>
-            </form>
-        </div>
-    );
+ <button 
+ type="submit"
+ className={`w-full font-bold py-2 px-4 rounded transition-colors ${
+ defaultDetails.isValid 
+ ? 'bg-teal-700 hover:bg-teal-600 text-white' 
+ : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+ }`}
+ disabled={!defaultDetails.isValid}
+ >
+ {isEdit ? 'Update Address' : 'Save Address'}
+ </button>
+ </div>
+ </form>
+ </div>
+ </div>
+ </div>
+ );
 };
 
 export default AddressForm;

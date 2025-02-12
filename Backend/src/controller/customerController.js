@@ -47,7 +47,7 @@ const send_otp = async (req, res) => {
     otpStore[email] = { otp: generatedOtp, expiresAt: expiresIn };
 
     const mailOtp = {
-        from: 'sirisha@scaleorange.com',
+        from: 'abhishek@scaleorange.com',
         to: email,
         subject: 'Your OTP Code',
         text: `Your OTP is ${generatedOtp}. It will expire in one minute.`
@@ -95,7 +95,6 @@ const verify_otp = async (req, res) => {
 
 
 
-// Register function
 
 const register = async (req, res) => {
     try {
@@ -141,7 +140,7 @@ const register = async (req, res) => {
             logger.error('Email already in use', { customer_email });
             return res.status(400).json({ success: false, message: 'Email already in use' });
         }
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()-_+=]*$/;
         // Validate password length and complexity
         if (customer_password.length < minPasswordLength || customer_password.length > maxPasswordLength || !passwordRegex.test(customer_password)) {
             return res.status(400).json({
@@ -166,7 +165,7 @@ const register = async (req, res) => {
             const username = customer_email.substring(0, customer_email.indexOf('@'));
 
             const mailOptions = {
-                from: 'sirisha@scaleorange.com',
+                from: 'abhishek@scaleorange.com',
                 to: customer_email,
                 subject: 'Welcome to CaterOrange!',
                 html: `<html>
@@ -302,103 +301,208 @@ const register = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
-
 const login = async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-        try {
-            const { customer_email, customer_password } = req.body;
-            
-            const valid = validatelogin(req.body);
-            console.log('validate login',valid)
-            if (!valid) {
-              console.log("Error validation for login",validatelogin.errors)
-              return res.status(400).json({
-                message: 'Validation failed',
-                errors: validatelogin.errors
-              });
-            }
-            // Fetch user data from the database
-            const customer = await customer_model.findCustomerEmail(customer_email);
-            console.log('Customer fetched from database:', customer);
-
-            // Check if the customer exists
-            if (!customer) {
-                console.log('Invalid login attempt', { customer_email });
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid email, user does not exist'
-                });
-            }
-            // Check if customer_password exists in customer object
-            if (!customer.customer_password) {
-                console.log('Error: customer.customer_password is undefined');
-                return res.status(500).json({
-                    success: false,
-                    message: 'Password not found'
-                });
-            }
-            // Compare passwords
-            const isPasswordValid = await bcrypt.compare(customer_password, customer.customer_password);
-            console.log(isPasswordValid)
-            console.log('Password validation result:', isPasswordValid);
-            if (!isPasswordValid) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid password'
-                });
-            }  
-            const checkActivate= await customer_model.findActivated(customer_email);
-            if (!checkActivate) {
-                logger.error('You are not registered yet, please register', { email });
-                return res.status(400).json({
-                    success: false,
-                    message: 'You are unable to login beacuse you are deactivated'
-                });  
-            }
-            // Validation for email and password
-            body('customer_email')
-                .isEmail().withMessage('Please provide a valid email address.')
-                .normalizeEmail(),
-            body('customer_password')
-                .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
-                .trim()
-                const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
-                console.log('Admin check result:', checkIsAdmin);
-                const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
-                const customername=customer.customer_name;
-                console.log('Is admin:', isAdmin);
-            // Verify the existing token or generate a new one
-            let token;
-            try {
-                token = jwt.verify(customer.access_token, process.env.SECRET_KEY);
-                var uat = customer.access_token;
-                const id=customer.customer_generated_id;
-                gidStorage.setGid(id);
-                console.log("id is here",id) // ok i am getting the code 
-                logger.info('Token verified successfully',uat );
-            } catch (err) {
-                const gid=customer.customer_generated_id;
-                gidStorage.setGid(gid);
-                uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin,id:gid}, process.env.SECRET_KEY, { expiresIn: '365d' });
-                await customer_model.updateAccessToken(customer_email, uat);
-                logger.info('New token generated', { token: uat });
-            }
-            res.json({
-                success: true,
-                message: 'Login successful',
-                token: uat,
-                isAdmin: isAdmin
-            });
-        } catch (err) {
-            logger.error('Error during user login', { error: err.message });
-            res.status(500).json({ error: err.message });
-        }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
-;
+
+    try {
+        const { customer_email, customer_password } = req.body;
+        
+        const valid = validatelogin(req.body);
+        console.log('validate login', valid)
+        if (!valid) {
+            console.log("Error validation for login", validatelogin.errors)
+            return res.status(400).json({
+                message: 'Incorrect password please enter your password',
+                errors: validatelogin.errors
+            });
+        }
+        // Fetch user data from the database
+        const customer = await customer_model.findCustomerEmail(customer_email);
+        console.log('Customer fetched from database:', customer);
+
+        // Check if the customer exists
+        if (!customer) {
+            console.log('Invalid login attempt', { customer_email });
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email, user does not exist'
+            });
+        }
+        // Check if customer_password exists in customer object
+        if (!customer.customer_password) {
+            console.log('Error: customer.customer_password is undefined');
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+        }
+        // Compare passwords
+        const isPasswordValid = await bcrypt.compare(customer_password, customer.customer_password);
+        console.log('Password validation result:', isPasswordValid);
+        
+        // Modified this section to clearly indicate incorrect password
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                success: false,
+                message: 'Incorrect password'
+            });
+        }  
+
+        const checkActivate = await customer_model.findActivated(customer_email);
+        if (!checkActivate) {
+            logger.error('User is deactivated', { email: customer_email });
+            return res.status(400).json({
+                success: false,
+                message: 'You are unable to login because you are deactivated'
+            });  
+        }
+
+        // Validation for email and password
+        body('customer_email')
+            .isEmail().withMessage('Please provide a valid email address.')
+            .normalizeEmail(),
+        body('customer_password')
+            .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
+            .trim()
+
+        const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
+        console.log('Admin check result:', checkIsAdmin);
+        const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
+        const customername = customer.customer_name;
+        console.log('Is admin:', isAdmin);
+
+        // Verify the existing token or generate a new one
+        let token;
+        let uat;
+        try {
+            token = jwt.verify(customer.access_token, process.env.SECRET_KEY);
+            uat = customer.access_token;
+            const id = customer.customer_generated_id;
+            gidStorage.setGid(id);
+            console.log("id is here", id)
+            logger.info('Token verified successfully', uat);
+        } catch (err) {
+            const gid = customer.customer_generated_id;
+            gidStorage.setGid(gid);
+            uat = jwt.sign({ email: customer_email, isAdmin: isAdmin, id: gid}, process.env.SECRET_KEY, { expiresIn: '365d' });
+            await customer_model.updateAccessToken(customer_email, uat);
+            logger.info('New token generated', { token: uat });
+        }
+
+        res.json({
+            success: true,
+            message: 'Login successful',
+            token: uat,
+            isAdmin: isAdmin
+        });
+    } catch (err) {
+        logger.error('Error during user login', { error: err.message });
+        res.status(500).json({ 
+            success: false,
+            message: 'An error occurred during login',
+            error: err.message 
+        });
+    }
+};
+// const login = async (req, res) => {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(400).json({ errors: errors.array() });
+//         }
+
+//         try {
+//             const { customer_email, customer_password } = req.body;
+            
+//             const valid = validatelogin(req.body);
+//             console.log('validate login',valid)
+//             if (!valid) {
+//               console.log("Error validation for login",validatelogin.errors)
+//               return res.status(400).json({
+//                 message: 'Validation failed',
+//                 errors: validatelogin.errors
+//               });
+//             }
+//             // Fetch user data from the database
+//             const customer = await customer_model.findCustomerEmail(customer_email);
+//             console.log('Customer fetched from database:', customer);
+
+//             // Check if the customer exists
+//             if (!customer) {
+//                 console.log('Invalid login attempt', { customer_email });
+//                 return res.status(400).json({
+//                     success: false,
+//                     message: 'Invalid email, user does not exist'
+//                 });
+//             }
+//             // Check if customer_password exists in customer object
+//             if (!customer.customer_password) {
+//                 console.log('Error: customer.customer_password is undefined');
+//                 return res.status(500).json({
+//                     success: false,
+//                     message: 'Password not found'
+//                 });
+//             }
+//             // Compare passwords
+//             const isPasswordValid = await bcrypt.compare(customer_password, customer.customer_password);
+//             console.log(isPasswordValid)
+//             console.log('Password validation result:', isPasswordValid);
+//             if (!isPasswordValid) {
+//                 return res.status(400).json({
+//                     success: false,
+//                     message: 'Invalid password'
+//                 });
+//             }  
+//             const checkActivate= await customer_model.findActivated(customer_email);
+//             if (!checkActivate) {
+//                 logger.error('You are not registered yet, please register', { email });
+//                 return res.status(400).json({
+//                     success: false,
+//                     message: 'You are unable to login beacuse you are deactivated'
+//                 });  
+//             }
+//             // Validation for email and password
+//             body('customer_email')
+//                 .isEmail().withMessage('Please provide a valid email address.')
+//                 .normalizeEmail(),
+//             body('customer_password')
+//                 .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long.')
+//                 .trim()
+//                 const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
+//                 console.log('Admin check result:', checkIsAdmin);
+//                 const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
+//                 const customername=customer.customer_name;
+//                 console.log('Is admin:', isAdmin);
+//             // Verify the existing token or generate a new one
+//             let token;
+//             try {
+//                 token = jwt.verify(customer.access_token, process.env.SECRET_KEY);
+//                 var uat = customer.access_token;
+//                 const id=customer.customer_generated_id;
+//                 gidStorage.setGid(id);
+//                 console.log("id is here",id) // ok i am getting the code 
+//                 logger.info('Token verified successfully',uat );
+//             } catch (err) {
+//                 const gid=customer.customer_generated_id;
+//                 gidStorage.setGid(gid);
+//                 uat = jwt.sign({ email: customer_email ,isAdmin: isAdmin,id:gid}, process.env.SECRET_KEY, { expiresIn: '365d' });
+//                 await customer_model.updateAccessToken(customer_email, uat);
+//                 logger.info('New token generated', { token: uat });
+//             }
+//             res.json({
+//                 success: true,
+//                 message: 'Login successful',
+//                 token: uat,
+//                 isAdmin: isAdmin
+//             });
+//         } catch (err) {
+//             logger.error('Error during user login', { error: err.message });
+//             res.status(500).json({ error: err.message });
+//         }
+//     }
+// ;
 
 const forgotPassword = async (req, res) => {
         const errors = validationResult(req);
@@ -525,7 +629,7 @@ const google_auth = async (req, res) => {
 
             // mail has to be sent 
             const mailOptions = {
-                from: 'sirisha@scaleorange.com',
+                from: 'abhishek@scaleorange.com',
                 to: customer_email,
                 subject: 'Welcome to CaterOrange!',
                 html: `<html>

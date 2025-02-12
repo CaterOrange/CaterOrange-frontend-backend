@@ -92,11 +92,63 @@ const SelectAddress = async (address_id) => {
 }
 
 
+const updateAddress = async (customer_id, address_id, tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number) => {
+    try {
+        logger.info(`Updating address for customer ID: ${customer_id}, Address ID: ${address_id}`);
+        
+        const result = await client.query(
+            DB_COMMANDS.UPDATE_ADDRESS,
+            [customer_id, address_id, tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number]
+        );
+
+        console.log('data is ',customer_id, address_id, tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number);
+        
+        if (result.rowCount === 0) {
+            logger.warn(`Address not found or unauthorized update attempt for Address ID: ${address_id}`);
+            return null;
+        }
+
+        logger.info('Address updated successfully');
+        return result.rows[0];
+    } catch (err) {
+        logger.error(`Error updating address data: ${err.message}`);
+        throw err;
+    }
+};
+
+const deleteAddress = async (customer_id, address_id) => {
+    try {
+        logger.info(`Deleting address for customer ID: ${customer_id}, Address ID: ${address_id}`);
+        
+        const result = await client.query(
+            DB_COMMANDS.DELETE_ADDRESS,
+            [customer_id, address_id]
+        );
+
+        if (result.rowCount === 0) {
+            logger.warn(`Address not found or unauthorized delete attempt for Address ID: ${address_id}`);
+            return null;
+        }
+
+        logger.info('Address deleted successfully');
+        return true;
+    } catch (err) {
+        logger.error(`Error deleting address data: ${err.message}`);
+        throw err;
+    }
+};
+
+
+
+
+
 module.exports = {
     createaddress,
     select_default_address,
     getUserIdFromToken,
     updateAddressById,
     getAllAddresses,
-    SelectAddress
+    SelectAddress,
+    updateAddress,
+    deleteAddress
 }

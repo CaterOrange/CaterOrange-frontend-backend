@@ -10,10 +10,11 @@ const customerSchema = {
         type: "string",
         format: "email", // Validates email format
       },
+      
       customer_password: {
-        type: "string",
-        pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,}$", // At least one uppercase, one lowercase, one digit, and minimum 8 characters
-      },
+          type: "string",
+          pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d!@#$%^&*()\\-_=+]*$"
+        },
       customer_phonenumber: {
         type: "string",
         pattern: "^\\d{10}$", // Exactly 10 digits

@@ -1,4 +1,5 @@
-import { ShoppingCartIcon, UserCircleIcon } from '@heroicons/react/outline';
+import { ShoppingCartIcon } from '@heroicons/react/outline';
+import {UserCircleIcon} from '@heroicons/react/solid';
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../services/contexts/CartContext';
@@ -7,6 +8,9 @@ import { io } from 'socket.io-client';
 import Body from './Body';
 import './css/styles.css';
 import { VerifyToken } from '../../MiddleWare/verifyToken';
+import AddressList from '../Address/AddressList';
+import AddressForm from '../events/AddressForm';
+
 const Header = ({ user }) => {
   const { cartCount, updateCartCount } = useCart();
   const [isSidenavOpen, setIsSidenavOpen] = useState(false);
@@ -15,6 +19,11 @@ const Header = ({ user }) => {
   const sidenavRef = useRef(null);
   const navigate = useNavigate();
   const isInitialMount = useRef(true);
+  const [addresses, setAddresses] = useState([]);
+  const [showAddresses, setShowAddresses] = useState(false);
+  const addressesRef = useRef(null);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+
 
   const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
 
@@ -41,7 +50,6 @@ const Header = ({ user }) => {
   const handleViewCart = () => navigate('/cart');
   const handleViewOrders = () => navigate('/orders');
   const handleViewContactPage = () => navigate('/contact');
-  const handleViewWalletPage = () => navigate('/wallet');
   const handleViewChangePassword = () => navigate('/settings');
 
   const handleLogout = () => {
@@ -83,6 +91,41 @@ const Header = ({ user }) => {
       console.error('Error fetching cart count:', error);
     }
   }, [updateCartCount]);
+
+  const fetchAddresses = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
+        headers: { token }
+      });
+      
+      setAddresses(response.data.addresses || []);
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
+
+  const handleViewAddresses = () => {
+    navigate('/addresses');
+    setIsSidenavOpen(false); // Close the sidenav when navigating
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (addressesRef.current && !addressesRef.current.contains(event.target)) {
+        setShowAddresses(false);
+      }
+    }
+
+    if (showAddresses) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showAddresses]);
+
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -201,35 +244,30 @@ const Header = ({ user }) => {
 
         <ul className="p-2 space-y-2">
           <Link to="/orders">
-            <li className="p-2 border-b border-gray-200 cursor-pointer" onClick={handleViewOrders}>
+            <li className="w-full p-3 text-left rounded hover:bg-gray-100 transition-colors" onClick={handleViewOrders}>
               My Orders
             </li>
           </Link>
-       
+         
          
           <li
-            className="p-2 border-b border-gray-200 cursor-pointer"
+            className="w-full p-3 text-left rounded hover:bg-gray-100 transition-colors"
             onClick={handleViewContactPage}
           >
             Contact Us
           </li>
+          
           <li
-            className="p-2 border-b border-gray-200 cursor-pointer"
-            onClick={handleViewWalletPage}
-          >
-            Wallet
-          </li>
-          <li
-            className="p-2 border-b border-gray-200 cursor-pointer"
+            className="w-full p-3 text-left rounded hover:bg-gray-100 transition-colors"
             onClick={handleViewChangePassword}
           >
             Settings
           </li>
           <li
-            className="p-2 border-b border-gray-200 cursor-pointer"
-            onClick={handleViewLoginPage}
+                className="w-full p-3 text-left text-red-600 rounded hover:bg-red-50 transition-colors"
+                onClick={handleViewLoginPage}
           >
-            LogOut &rarr;
+            LogOut
           </li>
         </ul>
       </div>
@@ -255,10 +293,54 @@ const Header = ({ user }) => {
           </div>
         </div>
       )}
+      {showAddresses && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div ref={addressesRef} className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-800">My Addresses</h2>
+              <button
+                onClick={() => setShowAddresses(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="max-h-96 overflow-y-auto">
+              {addresses.length > 0 ? (
+                addresses.map((address, index) => (
+                  <div
+                    key={index}
+                    className="p-4 border border-gray-200 rounded-lg mb-3 hover:border-teal-500"
+                  >
+                    <p className="font-medium text-gray-800">{address.name}</p>
+                    <p className="text-gray-600">{address.street}</p>
+                    <p className="text-gray-600">{address.city}, {address.state} {address.pincode}</p>
+                    <p className="text-gray-600">{address.phone}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No addresses found</p>
+              )}
+            </div>
+            
+          </div>
+        </div>
+      )}
 
-      <div className="pt-10 mt-5">
+      <div className="pt-20 mt-7">
         <Body isSidenavOpen={isSidenavOpen} activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
+      {showAddressForm && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <AddressForm
+      onClose={() => setShowAddressForm(false)}
+      onAddressAdded={() => {
+        fetchAddresses();
+        setShowAddressForm(false);
+      }}
+    />
+  </div>
+)}
     </>
   );
 };

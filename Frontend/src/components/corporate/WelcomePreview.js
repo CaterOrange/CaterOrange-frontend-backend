@@ -7,7 +7,7 @@ const WelcomePreview = ({ onClose }) => {
   const steps = [
     {
       icon: <Utensils className="w-12 h-12 text-teal-600" />,
-      title: "Welcome to FoodieHub",
+      title: "Welcome to CaterOrange",
       description: "Your corporate meal planning made simple and delicious",
       tip: "Browse our curated selection of quality meals perfect for your workplace"
     },

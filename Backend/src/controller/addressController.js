@@ -43,15 +43,7 @@ const createAddress = async (req, res) => {
 
         const customer_id = verified_data.id;
         const { tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number } = req.body;
-            const valid = validate(req.body);
-                console.log('validate address',valid)
-                if (!valid) {
-                console.log("Error validation for address",validate.errors)
-                return res.status(400).json({
-                    message: 'Validation failed',
-                    errors: validate.errors
-                });
-                }
+            
         if (!tag || !pincode || !line1 || !line2 || !location) {
             logger.warn('Missing required fields in address creation request');
             return res.status(400).json({ message: 'Missing required fields' });
@@ -128,13 +120,20 @@ const getAddressForUser = async (req, res) => {
         }
 
         const customer_id = decoded.id;
-        const result = await address_model.getAllAddresses(customer_id);
+
+        // Fetch addresses from database
+        const addresses = await address_model.getAllAddresses(customer_id);
+
+        if (!addresses || addresses.length === 0) {
+            logger.warn('No addresses found for user', { userId: customer_id });
+            return res.status(404).json({ message: 'No addresses found' });
+        }
 
         logger.info('All addresses retrieved successfully for user', { userId: customer_id });
         return res.json({
             success: true,
             message: 'All addresses retrieved successfully',
-            address: result
+            addresses // Ensure it's named correctly for frontend consistency
         });
     } catch (err) {
         logger.error('Error retrieving all addresses', { error: err.message });
@@ -161,6 +160,8 @@ const getSelectedAddress = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
+
 const editAddress = async (req, res) => {
     const { address_id } = req.params;
     const { tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number } = req.body;
@@ -197,10 +198,115 @@ const editAddress = async (req, res) => {
 };
 
 
+const updateAddress = async (req, res) => {
+    try {
+        // Extract token from headers
+        const token = req.headers['token'];
+        logger.info('Received token for address update', { token });
+
+        if (!token) {
+            logger.warn('No token provided in request headers');
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        let verified_data;
+        try {
+            // Verify token using the secret key
+            verified_data = jwt.verify(token, process.env.SECRET_KEY);
+            logger.info('Token verified successfully', { userId: verified_data.id });
+
+            if (!verified_data.id) {
+                logger.warn('User ID not found in token payload');
+                return res.status(401).json({ message: 'Invalid token payload' });
+            }
+        } catch (err) {
+            logger.error('Token verification failed', { error: err });
+            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+        }
+
+        // Extract user ID from token
+        const customer_id = verified_data.id;
+
+        // Extract address_id properly
+        const { id: address_id } = req.params;  // Fix: Renaming id to address_id
+        console.log('Address ID from controller is:', address_id);
+
+        const { tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number } = req.body;
+
+        // Call the model to update the address
+        const updatedAddress = await address_model.updateAddress(
+            customer_id, address_id, tag, pincode, line1, line2, location, ship_to_name, ship_to_phone_number
+        );
+
+        // If no address was updated, return an error
+        if (!updatedAddress) {
+            logger.warn('Address not found or unauthorized', { userId: customer_id });
+            return res.status(404).json({ message: 'Address not found or unauthorized' });
+        }
+
+        logger.info('Address updated successfully for user', { userId: customer_id });
+        return res.json({
+            success: true,
+            message: 'Address updated successfully',
+            address: updatedAddress
+        });
+    } catch (err) {
+        logger.error('Error updating address', { error: err.message });
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+
+const deleteAddress = async (req, res) => {
+    try {
+        const token = req.headers['token'];
+        logger.info('Received token for address deletion', { token });
+
+        if (!token) {
+            logger.warn('No token provided in request headers');
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        let verified_data;
+        try {
+            verified_data = jwt.verify(token, process.env.SECRET_KEY);
+            logger.info('Token verified successfully', { userId: verified_data.id });
+        } catch (err) {
+            logger.error('Token verification failed', { error: err });
+            return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+        }
+
+        const customer_id = verified_data.id;
+        const { id: address_id } = req.params;  // Fix: Renaming id to address_id
+
+        console.log('ids are ',customer_id,address_id)
+
+        const deletedAddress = await address_model.deleteAddress(customer_id, address_id);
+
+        if (!deletedAddress) {
+            return res.status(404).json({ message: 'Address not found or unauthorized' });
+        }
+
+        logger.info('Address deleted successfully for user', { userId: customer_id });
+        return res.json({
+            success: true,
+            message: 'Address deleted successfully'
+        });
+    } catch (err) {
+        logger.error('Error deleting address', { error: err.message });
+        return res.status(500).json({ error: err.message });
+    }
+};
+
+
+
+
 module.exports = {
     createAddress,
     getDefaultAddress,
     getAddressForUser,
     getSelectedAddress,
-    editAddress
+    editAddress,
+    updateAddress,
+    deleteAddress
 };

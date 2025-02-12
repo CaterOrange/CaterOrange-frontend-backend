@@ -1,0 +1,12 @@
+{"filename":"paymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2025-02-11T19:54:58.837Z","userId":"No userId"}
+{"filename":"paymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2025-02-11T19:58:24.117Z","userId":"No userId"}
+{"code":"EIO","errno":-5,"filename":"app.js","level":"error","message":"Uncaught Exception:","syscall":"write","timestamp":"2025-02-12T06:54:27.701Z","userId":"No userId"}
+{"code":"EIO","errno":-5,"filename":"app.js","level":"error","message":"Uncaught Exception:","syscall":"write","timestamp":"2025-02-12T12:01:30.173Z","userId":"No userId"}
+{"error":"address_model.updateAddress is not a function","filename":"addressController.js","level":"error","message":"Error updating address","timestamp":"2025-02-12T12:42:06.026Z","userId":"No userId"}
+{"filename":"addressController.js","level":"error","message":"Error deleting address data: DB_COMMANDS is not defined","timestamp":"2025-02-12T12:46:20.804Z","userId":"No userId"}
+{"filename":"addressController.js","level":"error","message":"Error deleting address data: Client was passed a null or undefined query","timestamp":"2025-02-12T12:48:43.244Z","userId":"No userId"}
+{"filename":"addressModel.js","level":"error","message":"Error deleting address data: column \"id\" does not exist","timestamp":"2025-02-12T13:01:59.902Z","userId":"No userId"}
+{"error":"column \"id\" does not exist","filename":"addressController.js","level":"error","message":"Error deleting address","timestamp":"2025-02-12T13:01:59.906Z","userId":"No userId"}
+{"filename":"addressModel.js","level":"error","message":"Error deleting address data: column \"id\" does not exist","timestamp":"2025-02-12T13:06:21.903Z","userId":"No userId"}
+{"error":"column \"id\" does not exist","filename":"addressController.js","level":"error","message":"Error deleting address","timestamp":"2025-02-12T13:06:21.924Z","userId":"No userId"}
+{"code":"EIO","errno":-5,"filename":"app.js","level":"error","message":"Uncaught Exception:","syscall":"write","timestamp":"2025-02-12T16:09:11.073Z","userId":"No userId"}

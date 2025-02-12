@@ -24,6 +24,7 @@ import { useCart } from './services/contexts/CartContext.js';
 import ProtectedRoute from './components/corporate/protectedRoute.js';  // Import the ProtectedRoute component
 import Razorpay from './components/rasorpay.js';
 import NotFound from './components/Home/notFound.js';
+import AddressList from './components/Address/AddressList.js';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -185,6 +186,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+          path="/addresses"
+          element={
+            <ProtectedRoute>
+              <AddressList />
+            </ProtectedRoute>
+          }
+        />
               <Route
                 path="/wallet"
                 element={
