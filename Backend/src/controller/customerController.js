@@ -94,52 +94,56 @@ const verify_otp = async (req, res) => {
 };
 
 
-
-
 const register = async (req, res) => {
     try {
         const { customer_name, customer_email, customer_password, customer_phonenumber, confirm_password } = req.body;
 
         const valid = validate(req.body);
-        console.log('validate sign up',valid)
+        console.log('validate sign up', valid)
         if (!valid) {
-        console.log("Error validation for sign up",validate.errors)
-        return res.status(400).json({
-            message: 'Validation failed',
-            errors: validate.errors
-        });
+            console.log("Error validation for sign up", validate.errors)
+            return res.status(400).json({
+                message: 'Validation failed',
+                errors: validate.errors
+            });
         }
-  
+
         const minNameLength = 3;
         const maxNameLength = 50;
         const minPasswordLength = 8;
         const maxPasswordLength = 20;
-        const maxEmailLength=50;
-        const phoneNumberLength=10;
+        const maxEmailLength = 50;
+        const phoneNumberLength = 10;
         const phoneRegex = /^[0-9]{10}$/;
+        
         if (!phoneRegex.test(customer_phonenumber) || customer_phonenumber.length > phoneNumberLength) {
             return res.status(400).json({ success: false, message: 'Invalid phone number' });
         }
+        
         // Validate all required fields
         if (!customer_name || !customer_email || !customer_password || !confirm_password) {
             return res.status(400).json({ success: false, message: 'All fields are required' });
         }
+        
         // Validate name format and length
         const nameRegex = /^[a-zA-Z\s]+$/;
         if (!nameRegex.test(customer_name) || customer_name.length < minNameLength || customer_name.length > maxNameLength) {
-            return res.status(400).json({ success: false, message:`Name must be between ${minNameLength}-${maxNameLength} characters and contain only alphabets. `});
+            return res.status(400).json({ success: false, message: `Name must be between ${minNameLength}-${maxNameLength} characters and contain only alphabets. ` });
         }
+        
         // Validate email format and length
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if (!emailRegex.test(customer_email) || customer_email.length > maxEmailLength) {
             return res.status(400).json({ success: false, message: 'Invalid email format or too long' });
         }
+        
         // Check if email is already in use
         const existingUserByEmail = await customer_model.findCustomerEmail(customer_email);
         if (existingUserByEmail) {
             logger.error('Email already in use', { customer_email });
             return res.status(400).json({ success: false, message: 'Email already in use' });
         }
+        
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()-_+=]*$/;
         // Validate password length and complexity
         if (customer_password.length < minPasswordLength || customer_password.length > maxPasswordLength || !passwordRegex.test(customer_password)) {
@@ -153,6 +157,7 @@ const register = async (req, res) => {
         if (customer_password !== confirm_password) {
             return res.status(400).json({ success: false, message: 'Passwords do not match' });
         }
+
         const hashedPassword = await bcrypt.hash(customer_password, 10);
         const newCustomer = await customer_model.createCustomer(
             customer_name,
@@ -160,135 +165,141 @@ const register = async (req, res) => {
             hashedPassword,
             customer_phonenumber
         );
+
         if (newCustomer) {
             // Send Welcome Email
             const username = customer_email.substring(0, customer_email.indexOf('@'));
 
             const mailOptions = {
-                from: 'abhishek@scaleorange.com',
+                from: {
+                    name: 'CaterOrange',
+                    address: 'orders@x.caterorange.com'
+                },
+                replyTo: 'abhishek@caterorange.com',
                 to: customer_email,
                 subject: 'Welcome to CaterOrange!',
                 html: `<html>
-            <head>
-            <style>
-                body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
-                margin: 0;
-                padding: 20px;
-                color: #333;
-                }
-                .email-container {
-                background-color: #ffffff;
-                padding: 30px;
-                border-radius: 12px;
-                max-width: 600px;
-                margin: 0 auto;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                border: 1px solid #f0f0f0;
-                }
-                .header {
-                color: #ff6600;
-                font-size: 32px;
-                font-weight: bold;
-                text-align: center;
-                padding-bottom: 15px;
-                border-bottom: 3px solid #ff6600;
-                }
-                .section {
-                margin-top: 20px;
-                }
-                .section h2 {
-                color: #ff6600;
-                font-size: 22px;
-                margin-bottom: 10px;
-                }
-                .category {
-                margin-bottom: 15px;
-                color: #555;
-                padding-left: 15px;
-                }
-                .price {
-                font-weight: bold;
-                }
-                .content {
-                font-family: Arial, sans-serif;
-                line-height: 1.8;
-                color: #555;
-                }
-                .footer {
-                margin-top: 40px;
-                text-align: center;
-                font-size: 12px;
-                color: #777;
-                }
-                .footer a {
-                color: #ff6600;
-                text-decoration: none;
-                }
-            </style>
-            </head>
-            <body>
-            <div class="email-container">
-                <div class="header">Welcome to CaterOrange!</div>
-                
-                <p class="content">Dear ${customer_name},</p>
-                <p class="content">Thank you for registering with <strong>CaterOrange</strong>, the premier food delivery app dedicated to meeting all your corporate and event catering needs. We are thrilled to have you as part of our community and look forward to providing you with exceptional service and delicious food!</p>
+                    <head>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                background-color: #f4f4f4;
+                                margin: 0;
+                                padding: 20px;
+                                color: #333;
+                            }
+                            .email-container {
+                                background-color: #ffffff;
+                                padding: 30px;
+                                border-radius: 12px;
+                                max-width: 600px;
+                                margin: 0 auto;
+                                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                                border: 1px solid #f0f0f0;
+                            }
+                            .header {
+                                color: #ff6600;
+                                font-size: 32px;
+                                font-weight: bold;
+                                text-align: center;
+                                padding-bottom: 15px;
+                                border-bottom: 3px solid #ff6600;
+                            }
+                            .section {
+                                margin-top: 20px;
+                            }
+                            .section h2 {
+                                color: #ff6600;
+                                font-size: 22px;
+                                margin-bottom: 10px;
+                            }
+                            .category {
+                                margin-bottom: 15px;
+                                color: #555;
+                                padding-left: 15px;
+                            }
+                            .price {
+                                font-weight: bold;
+                            }
+                            .content {
+                                font-family: Arial, sans-serif;
+                                line-height: 1.8;
+                                color: #555;
+                            }
+                            .footer {
+                                margin-top: 40px;
+                                text-align: center;
+                                font-size: 12px;
+                                color: #777;
+                            }
+                            .footer a {
+                                color: #ff6600;
+                                text-decoration: none;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="email-container">
+                            <div class="header">Welcome to CaterOrange!</div>
+                            
+                            <p class="content">Dear ${customer_name},</p>
+                            <p class="content">Thank you for registering with <strong>CaterOrange</strong>, the premier food delivery app dedicated to meeting all your corporate and event catering needs. We are thrilled to have you as part of our community and look forward to providing you with exceptional service and delicious food!</p>
 
-                <div class="section">
-                <h2>Corporate Orders</h2>
-                <p class="content">At CaterOrange, we offer a diverse range of corporate food options designed to suit any occasion. Here’s a breakdown of what we offer:</p>
-                <ul>
-                    <li class="category"><strong>Breakfast:</strong> Start your day right with our carefully curated breakfast options, perfect for morning meetings and team gatherings.</li>
-                    <li class="category"><strong>Veg Lunch:</strong> Enjoy a satisfying lunch with our vegetarian options at just <span class="price">99/-</span> for 6 items, ensuring your team gets a wholesome and nutritious meal.</li>
-                    <li class="category"><strong>Non-Veg Lunch:</strong> For those who prefer non-vegetarian dishes, our non-veg lunch is available at <span class="price">120/-</span> for 6 items, providing a rich and flavorful meal.</li>
-                    <li class="category"><strong>Snacks:</strong> Keep the energy high with our assortment of snacks, ideal for breaks and light bites throughout the day.</li>
-                    <li class="category"><strong>Veg Dinner:</strong> End the day with our delicious vegetarian dinner options, available at <span class="price">99/-</span> for 6 items, offering a perfect evening meal.</li>
-                    <li class="category"><strong>Non-Veg Dinner:</strong> Our non-veg dinner options, priced at <span class="price">120/-</span> for 6 items, are designed to satisfy hearty appetites and provide a fulfilling end to the day.</li>
-                </ul>
-                </div>
+                            <div class="section">
+                                <h2>Corporate Orders</h2>
+                                <p class="content">At CaterOrange, we offer a diverse range of corporate food options designed to suit any occasion. Here's a breakdown of what we offer:</p>
+                                <ul>
+                                    <li class="category"><strong>Breakfast:</strong> Start your day right with our carefully curated breakfast options, perfect for morning meetings and team gatherings.</li>
+                                    <li class="category"><strong>Veg Lunch:</strong> Enjoy a satisfying lunch with our vegetarian options at just <span class="price">99/-</span> for 6 items, ensuring your team gets a wholesome and nutritious meal.</li>
+                                    <li class="category"><strong>Non-Veg Lunch:</strong> For those who prefer non-vegetarian dishes, our non-veg lunch is available at <span class="price">120/-</span> for 6 items, providing a rich and flavorful meal.</li>
+                                    <li class="category"><strong>Snacks:</strong> Keep the energy high with our assortment of snacks, ideal for breaks and light bites throughout the day.</li>
+                                    <li class="category"><strong>Veg Dinner:</strong> End the day with our delicious vegetarian dinner options, available at <span class="price">99/-</span> for 6 items, offering a perfect evening meal.</li>
+                                    <li class="category"><strong>Non-Veg Dinner:</strong> Our non-veg dinner options, priced at <span class="price">120/-</span> for 6 items, are designed to satisfy hearty appetites and provide a fulfilling end to the day.</li>
+                                </ul>
+                            </div>
 
-                <div class="section">
-                <h2>Event Orders</h2>
-                <p class="content">Planning an event? CaterOrange has you covered with our flexible event ordering options:</p>
-                <ul class="content">
-                    <li><strong>Wide Selection:</strong> Choose from an extensive menu of food items to suit any type of event, whether it’s a formal gathering, casual get-together, or anything in between.</li>
-                    <li><strong>Customization:</strong> Tailor your plate to your preferences, ensuring every guest gets exactly what they want.</li>
-                    <li><strong>Quantity Selection:</strong> Specify the quantities of each item to perfectly match your event’s size and needs.</li>
-                </ul>
-                </div>
+                            <div class="section">
+                                <h2>Event Orders</h2>
+                                <p class="content">Planning an event? CaterOrange has you covered with our flexible event ordering options:</p>
+                                <ul class="content">
+                                    <li><strong>Wide Selection:</strong> Choose from an extensive menu of food items to suit any type of event, whether it's a formal gathering, casual get-together, or anything in between.</li>
+                                    <li><strong>Customization:</strong> Tailor your plate to your preferences, ensuring every guest gets exactly what they want.</li>
+                                    <li><strong>Quantity Selection:</strong> Specify the quantities of each item to perfectly match your event's size and needs.</li>
+                                </ul>
+                            </div>
 
-                <p class="content">We are committed to making your food ordering experience seamless and enjoyable. Our team is here to support you every step of the way, from selecting the perfect menu to ensuring timely delivery.</p>
-                <p class="content">We look forward to serving you and making every occasion memorable with our top-notch food and service!</p>
+                            <p class="content">We are committed to making your food ordering experience seamless and enjoyable. Our team is here to support you every step of the way, from selecting the perfect menu to ensuring timely delivery.</p>
+                            <p class="content">We look forward to serving you and making every occasion memorable with our top-notch food and service!</p>
 
-                <p class="content">Best regards,<br>The <strong>CaterOrange</strong> Team</p>
+                            <p class="content">Best regards,<br>The <strong>CaterOrange</strong> Team</p>
 
-                <div class="footer">
-                <p>For support or inquiries, contact us at <a href="mailto:support@caterorange.com">support@caterorange.com</a></p>
-                </div>
-            </div>
-            </body>
-            </html>
-            ` // HTML content as you have provided
+                            <div class="footer">
+                                <p>For support or inquiries, contact us at <a href="mailto:support@caterorange.com">support@caterorange.com</a></p>
+                            </div>
+                        </div>
+                    </body>
+                </html>`
             };
 
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    return console.log(`Error sending email to ${customer_email}:`, error);
-                }
-                console.log('Email sent to:', customer_email, 'Response:', info.response);
-            });
-        }  
-        // logger.info('Customer registered successfully', { newCustomer});
+            // Send email with error handling
+            try {
+                const info = await transporter.sendMail(mailOptions);
+                console.log('Welcome email sent successfully:', info.messageId);
+            } catch (emailError) {
+                console.error('Error sending welcome email:', emailError);
+                // Continue with registration even if email fails
+            }
+        }
 
-        const gid=newCustomer.customer_generated_id ;
+        const gid = newCustomer.customer_generated_id;
         gidStorage.setGid(gid);
-        const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+        const token = jwt.sign({ email: customer_email, id: gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
 
         const newCustomerToken = await customer_model.createCustomerToken(
             customer_email,
-            token  
+            token
         );
+
         return res.json({
             success: true,
             message: 'Customer registered successfully',
@@ -301,6 +312,212 @@ const register = async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
+// const register = async (req, res) => {
+//     try {
+//         const { customer_name, customer_email, customer_password, customer_phonenumber, confirm_password } = req.body;
+
+//         const valid = validate(req.body);
+//         console.log('validate sign up',valid)
+//         if (!valid) {
+//         console.log("Error validation for sign up",validate.errors)
+//         return res.status(400).json({
+//             message: 'Validation failed',
+//             errors: validate.errors
+//         });
+//         }
+  
+//         const minNameLength = 3;
+//         const maxNameLength = 50;
+//         const minPasswordLength = 8;
+//         const maxPasswordLength = 20;
+//         const maxEmailLength=50;
+//         const phoneNumberLength=10;
+//         const phoneRegex = /^[0-9]{10}$/;
+//         if (!phoneRegex.test(customer_phonenumber) || customer_phonenumber.length > phoneNumberLength) {
+//             return res.status(400).json({ success: false, message: 'Invalid phone number' });
+//         }
+//         // Validate all required fields
+//         if (!customer_name || !customer_email || !customer_password || !confirm_password) {
+//             return res.status(400).json({ success: false, message: 'All fields are required' });
+//         }
+//         // Validate name format and length
+//         const nameRegex = /^[a-zA-Z\s]+$/;
+//         if (!nameRegex.test(customer_name) || customer_name.length < minNameLength || customer_name.length > maxNameLength) {
+//             return res.status(400).json({ success: false, message:`Name must be between ${minNameLength}-${maxNameLength} characters and contain only alphabets. `});
+//         }
+//         // Validate email format and length
+//         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+//         if (!emailRegex.test(customer_email) || customer_email.length > maxEmailLength) {
+//             return res.status(400).json({ success: false, message: 'Invalid email format or too long' });
+//         }
+//         // Check if email is already in use
+//         const existingUserByEmail = await customer_model.findCustomerEmail(customer_email);
+//         if (existingUserByEmail) {
+//             logger.error('Email already in use', { customer_email });
+//             return res.status(400).json({ success: false, message: 'Email already in use' });
+//         }
+//         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()-_+=]*$/;
+//         // Validate password length and complexity
+//         if (customer_password.length < minPasswordLength || customer_password.length > maxPasswordLength || !passwordRegex.test(customer_password)) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: 'Password must be between 8-20 characters with at least one uppercase letter, one lowercase letter, and one digit.'
+//             });
+//         }
+
+//         // Check if passwords match
+//         if (customer_password !== confirm_password) {
+//             return res.status(400).json({ success: false, message: 'Passwords do not match' });
+//         }
+//         const hashedPassword = await bcrypt.hash(customer_password, 10);
+//         const newCustomer = await customer_model.createCustomer(
+//             customer_name,
+//             customer_email,
+//             hashedPassword,
+//             customer_phonenumber
+//         );
+//         if (newCustomer) {
+//             // Send Welcome Email
+//             const username = customer_email.substring(0, customer_email.indexOf('@'));
+
+//             const mailOptions = {
+//                 from: 'abhishek@scaleorange.com',
+//                 to: customer_email,
+//                 subject: 'Welcome to CaterOrange!',
+//                 html: `<html>
+//             <head>
+//             <style>
+//                 body {
+//                 font-family: Arial, sans-serif;
+//                 background-color: #f4f4f4;
+//                 margin: 0;
+//                 padding: 20px;
+//                 color: #333;
+//                 }
+//                 .email-container {
+//                 background-color: #ffffff;
+//                 padding: 30px;
+//                 border-radius: 12px;
+//                 max-width: 600px;
+//                 margin: 0 auto;
+//                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+//                 border: 1px solid #f0f0f0;
+//                 }
+//                 .header {
+//                 color: #ff6600;
+//                 font-size: 32px;
+//                 font-weight: bold;
+//                 text-align: center;
+//                 padding-bottom: 15px;
+//                 border-bottom: 3px solid #ff6600;
+//                 }
+//                 .section {
+//                 margin-top: 20px;
+//                 }
+//                 .section h2 {
+//                 color: #ff6600;
+//                 font-size: 22px;
+//                 margin-bottom: 10px;
+//                 }
+//                 .category {
+//                 margin-bottom: 15px;
+//                 color: #555;
+//                 padding-left: 15px;
+//                 }
+//                 .price {
+//                 font-weight: bold;
+//                 }
+//                 .content {
+//                 font-family: Arial, sans-serif;
+//                 line-height: 1.8;
+//                 color: #555;
+//                 }
+//                 .footer {
+//                 margin-top: 40px;
+//                 text-align: center;
+//                 font-size: 12px;
+//                 color: #777;
+//                 }
+//                 .footer a {
+//                 color: #ff6600;
+//                 text-decoration: none;
+//                 }
+//             </style>
+//             </head>
+//             <body>
+//             <div class="email-container">
+//                 <div class="header">Welcome to CaterOrange!</div>
+                
+//                 <p class="content">Dear ${customer_name},</p>
+//                 <p class="content">Thank you for registering with <strong>CaterOrange</strong>, the premier food delivery app dedicated to meeting all your corporate and event catering needs. We are thrilled to have you as part of our community and look forward to providing you with exceptional service and delicious food!</p>
+
+//                 <div class="section">
+//                 <h2>Corporate Orders</h2>
+//                 <p class="content">At CaterOrange, we offer a diverse range of corporate food options designed to suit any occasion. Here’s a breakdown of what we offer:</p>
+//                 <ul>
+//                     <li class="category"><strong>Breakfast:</strong> Start your day right with our carefully curated breakfast options, perfect for morning meetings and team gatherings.</li>
+//                     <li class="category"><strong>Veg Lunch:</strong> Enjoy a satisfying lunch with our vegetarian options at just <span class="price">99/-</span> for 6 items, ensuring your team gets a wholesome and nutritious meal.</li>
+//                     <li class="category"><strong>Non-Veg Lunch:</strong> For those who prefer non-vegetarian dishes, our non-veg lunch is available at <span class="price">120/-</span> for 6 items, providing a rich and flavorful meal.</li>
+//                     <li class="category"><strong>Snacks:</strong> Keep the energy high with our assortment of snacks, ideal for breaks and light bites throughout the day.</li>
+//                     <li class="category"><strong>Veg Dinner:</strong> End the day with our delicious vegetarian dinner options, available at <span class="price">99/-</span> for 6 items, offering a perfect evening meal.</li>
+//                     <li class="category"><strong>Non-Veg Dinner:</strong> Our non-veg dinner options, priced at <span class="price">120/-</span> for 6 items, are designed to satisfy hearty appetites and provide a fulfilling end to the day.</li>
+//                 </ul>
+//                 </div>
+
+//                 <div class="section">
+//                 <h2>Event Orders</h2>
+//                 <p class="content">Planning an event? CaterOrange has you covered with our flexible event ordering options:</p>
+//                 <ul class="content">
+//                     <li><strong>Wide Selection:</strong> Choose from an extensive menu of food items to suit any type of event, whether it’s a formal gathering, casual get-together, or anything in between.</li>
+//                     <li><strong>Customization:</strong> Tailor your plate to your preferences, ensuring every guest gets exactly what they want.</li>
+//                     <li><strong>Quantity Selection:</strong> Specify the quantities of each item to perfectly match your event’s size and needs.</li>
+//                 </ul>
+//                 </div>
+
+//                 <p class="content">We are committed to making your food ordering experience seamless and enjoyable. Our team is here to support you every step of the way, from selecting the perfect menu to ensuring timely delivery.</p>
+//                 <p class="content">We look forward to serving you and making every occasion memorable with our top-notch food and service!</p>
+
+//                 <p class="content">Best regards,<br>The <strong>CaterOrange</strong> Team</p>
+
+//                 <div class="footer">
+//                 <p>For support or inquiries, contact us at <a href="mailto:support@caterorange.com">support@caterorange.com</a></p>
+//                 </div>
+//             </div>
+//             </body>
+//             </html>
+//             ` // HTML content as you have provided
+//             };
+
+//             transporter.sendMail(mailOptions, (error, info) => {
+//                 if (error) {
+//                     return console.log(`Error sending email to ${customer_email}:`, error);
+//                 }
+//                 console.log('Email sent to:', customer_email, 'Response:', info.response);
+//             });
+//         }  
+//         // logger.info('Customer registered successfully', { newCustomer});
+
+//         const gid=newCustomer.customer_generated_id ;
+//         gidStorage.setGid(gid);
+//         const token = jwt.sign({ email: customer_email ,id:gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+
+//         const newCustomerToken = await customer_model.createCustomerToken(
+//             customer_email,
+//             token  
+//         );
+//         return res.json({
+//             success: true,
+//             message: 'Customer registered successfully',
+//             token,
+//             customer: newCustomerToken
+//         });
+
+//     } catch (err) {
+//         logger.error('Error during customer registration', { error: err.message });
+//         return res.status(500).json({ error: err.message });
+//     }
+// };
 const login = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

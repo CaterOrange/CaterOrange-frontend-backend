@@ -1,1 +1,4 @@
 {"filename":"paymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2025-02-12T18:58:26.416Z","userId":"C000007"}
+{"customer_email":"srivallika@scaleorange.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-12T20:49:08.202Z","userId":"No userId"}
+{"customer_email":"sirisha@scaleorange.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-12T21:02:25.336Z","userId":"No userId"}
+{"customer_email":"sirisha@scaleorange.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-12T21:02:34.755Z","userId":"No userId"}
