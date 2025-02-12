@@ -274,14 +274,13 @@ const register = async (req, res) => {
                             <p class="content">Best regards,<br>The <strong>CaterOrange</strong> Team</p>
 
                             <div class="footer">
-                                <p>For support or inquiries, contact us at <a href="mailto:support@caterorange.com">support@caterorange.com</a></p>
+                                <p>For support or inquiries, contact us at <a href="mailto:abhishek@scaleorange.com">support@caterorange.com</a></p>
                             </div>
                         </div>
                     </body>
                 </html>`
             };
 
-            // Send email with error handling
             try {
                 const info = await transporter.sendMail(mailOptions);
                 console.log('Welcome email sent successfully:', info.messageId);
@@ -846,7 +845,11 @@ const google_auth = async (req, res) => {
 
             // mail has to be sent 
             const mailOptions = {
-                from: 'abhishek@scaleorange.com',
+                from: {
+                    name: 'CaterOrange',
+                    address: 'orders@x.caterorange.com'
+                },
+                replyTo: 'abhishek@caterorange.com',
                 to: customer_email,
                 subject: 'Welcome to CaterOrange!',
                 html: `<html>
@@ -945,7 +948,7 @@ const google_auth = async (req, res) => {
                 <p class="content">Best regards,<br>The <strong>CaterOrange</strong> Team</p>
 
                 <div class="footer">
-                <p>For support or inquiries, contact us at <a href="mailto:support@caterorange.com">support@caterorange.com</a></p>
+                <p>For support or inquiries, contact us at <a href="mailto:abhishek@scaleorange.com">support@caterorange.com</a></p>
                 </div>
             </div>
             </body>
