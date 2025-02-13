@@ -1,29 +1,27 @@
-# Use the official Node.js image as the base image
 FROM node:18-alpine
 
-# Set the working directory inside the container
+# Add necessary build tools for Alpine
+RUN apk add --no-cache python3 make g++
+
+# Set the working directory
 WORKDIR /Frontend
 
-# Copy package.json and package-lock.json first for better caching
+# Copy package files
 COPY package*.json ./
 
-# Clean npm cache and install dependencies with legacy peer deps
-RUN npm cache clean --force && npm install --legacy-peer-deps
+# Clear npm cache and increase memory limit
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+# Install dependencies with specific flags to handle common issues
+RUN npm cache clean --force && \
+    npm install --legacy-peer-deps --no-package-lock --network-timeout=100000
 
 # Copy the rest of the application code
 COPY . .
 
-# Set environment variables
 ENV REACT_APP_URL=https://dev.caterorange.com
 
-# Expose the port the app runs on
 EXPOSE 3000
-
-# Set permissions for the working directory
-RUN chown -R node:node /Frontend
-
-# Use a non-root user
-USER node
 
 # Start the application
 CMD ["npm", "start"]
