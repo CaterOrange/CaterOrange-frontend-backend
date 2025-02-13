@@ -1,7 +1,5 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
-# Add necessary build tools for Alpine
-RUN apk add --no-cache python3 make g++
 
 # Set the working directory
 WORKDIR /Frontend
