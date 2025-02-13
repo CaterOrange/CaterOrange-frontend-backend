@@ -35,13 +35,6 @@ EXPOSE 4000
 CMD ["npm", "start"]
 
 
-
-
-
-
-
-
-
 # docker run --name CO-postgres-db -
 #     e POSTGRES_USER=paras -e POSTGRES_PASSWORD=1224 -e POSTGRES_DB=postgres -p 5435:5432 -d 
 #     postgres
