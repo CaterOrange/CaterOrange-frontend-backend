@@ -2,3 +2,4 @@
 {"customer_email":"srivallika@scaleorange.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-12T20:49:08.202Z","userId":"No userId"}
 {"customer_email":"sirisha@scaleorange.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-12T21:02:25.336Z","userId":"No userId"}
 {"customer_email":"sirisha@scaleorange.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-12T21:02:34.755Z","userId":"No userId"}
+{"code":"EIO","errno":-5,"filename":"app.js","level":"error","message":"Uncaught Exception:","syscall":"write","timestamp":"2025-02-12T21:27:45.468Z","userId":"No userId"}
