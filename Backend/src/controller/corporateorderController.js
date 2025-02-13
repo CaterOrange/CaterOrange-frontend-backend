@@ -229,17 +229,17 @@ const transferCartToOrder = async (req, res) => {
   } catch (err) {
     return res.status(400).json({ error: 'Invalid JSON format in order_details or customer_address' });
   }
-  const validate = ajv.compile(orderSchema);
-  const valid = validate(req.body);
-  console.log("valid mesg",valid)
-  if (!valid) {
-    console.log("Validation Error for adding order:",validate.errors)
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid request body',
-      errors: validate.errors
-    });
-  }
+  // const validate = ajv.compile(orderSchema);
+  // const valid = validate(req.body);
+  // console.log("valid mesg",valid)
+  // if (!valid) {
+  //   console.log("Validation Error for adding order:",validate.errors)
+  //   return res.status(400).json({
+  //     success: false,
+  //     message: 'Invalid request body',
+  //     errors: validate.errors
+  //   });
+  // }
   try {
     logger.info('Transferring cart to order', { customer_generated_id, total_amount, paymentid });
     
