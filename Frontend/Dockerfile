@@ -8,7 +8,7 @@ WORKDIR /Frontend
 COPY package*.json ./
 
 # Install dependencies with specific flags for better reliability
-RUN npm install --legacy-peer-deps
+RUN npm cache clean --force && npm install --legacy-peer-deps
 
 # Copy the rest of the application code
 COPY . .
