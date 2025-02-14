@@ -35,7 +35,6 @@ pipeline {
         }
 
         stage('Build Docker Images') {
-            parallel {
                 stage('Build Frontend') {
                     steps {
                         script {
@@ -71,7 +70,6 @@ pipeline {
                         }
                     }
                 }
-            }
         }
 
         stage('Stop Existing Containers') {
