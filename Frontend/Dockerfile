@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image
-FROM node:20-alpine3.18
+FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /Frontend
@@ -8,8 +8,7 @@ WORKDIR /Frontend
 COPY package*.json ./
 
 # Install dependencies with specific flags for better reliability
-RUN npm install --legacy-peer-deps --no-audit
-
+RUN npm cache clean --force && npm install --legacy-peer-deps
 # Copy the rest of the application code
 COPY . .
 
