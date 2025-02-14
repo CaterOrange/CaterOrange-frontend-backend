@@ -15,12 +15,12 @@ pipeline {
                         timeout(time: 20, unit: 'MINUTES') {
                             sh '''
                                 #!/bin/bash
-                                if [ -d "CaterOrange" ]; then
+                                if [ -d "CaterOrange-frontend-backend" ]; then
                                     echo "Removing existing CaterOrange directory..."
-                                    rm -rf CaterOrange
+                                    rm -rf CaterOrange-frontend-backend
                                 fi
                                 echo "Cloning repository..."
-                                git clone -v --depth 1 git clone https://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@github.com/CaterOrange/CaterOrange-frontend-backend.git
+                                git clone -v --depth 1 https://ParashDeveloper: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@github.com/CaterOrange/CaterOrange-frontend-backend.git
                             '''
                         }
                     } catch (Exception e) {
@@ -38,7 +38,7 @@ pipeline {
                         script {
                             try {
                                 sh '''
-                                    cd CaterOrange/Backend
+                                    cd CaterOrange-frontend-backend/Backend
                                     echo "Building Backend Docker Image..."
                                     docker build -t backendcaterorange:${IMAGE_TAG} .
                                 '''
@@ -56,7 +56,7 @@ pipeline {
                         script {
                             try {
                                 sh '''
-                                    cd CaterOrange/Frontend
+                                    cd CaterOrange-frontend-backend/Frontend
                                     echo "Building Frontend Docker Image..."
                                     docker build -t frontendcaterorange:${IMAGE_TAG} .
                                 '''
@@ -186,7 +186,7 @@ pipeline {
 
 def sendDiscordNotification(buildStatus, errorDetails = null) {
     // Fetch commit details
-    dir('CaterOrange') {
+    dir('CaterOrange-frontend-backend') {
         def commitID = sh(script: 'git log -1 --format=%H', returnStdout: true).trim()
         def author = sh(script: 'git log -1 --format=%an', returnStdout: true).trim()
         def commitMessage = sh(script: 'git log -1 --format=%s', returnStdout: true).trim()
