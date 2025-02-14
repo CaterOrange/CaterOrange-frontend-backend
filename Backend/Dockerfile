@@ -12,8 +12,7 @@ RUN npm install
 
 
 # Install PostgreSQL client utilities
-RUN apk add --no-cache postgresql-client bash
-# Copy the rest of the application code (including the wait-for-it script)
+RUN apk update && apk add --no-cache postgresql-client bash # Copy the rest of the application code (including the wait-for-it script)
 COPY . .
 
 
