@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base image
-FROM node:20-alpine3.18
+FROM node:18-alpine
 
 # Set the working directory inside the container
 WORKDIR /Backend
@@ -8,8 +8,7 @@ WORKDIR /Backend
 COPY src/package*.json ./
 
 # Install the dependencies
-RUN npm install
-
+RUN npm cache clean --force && npm install --legacy-peer-deps
 
 # Install PostgreSQL client utilities
 RUN apk update && apk add --no-cache postgresql-client bash # Copy the rest of the application code (including the wait-for-it script)
