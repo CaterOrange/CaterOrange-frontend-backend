@@ -46,8 +46,12 @@ const send_otp = async (req, res) => {
     const expiresIn = Date.now() + 60000; 
     otpStore[email] = { otp: generatedOtp, expiresAt: expiresIn };
 
-    const mailOtp = {
-        from: 'abhishek@scaleorange.com',
+     const mailOtp = {
+        from: {
+            name: 'CaterOrange',
+            address: 'orders@x.caterorange.com'
+        },
+        replyTo: 'abhishek@caterorange.com',
         to: email,
         subject: 'Your OTP Code',
         text: `Your OTP is ${generatedOtp}. It will expire in one minute.`
