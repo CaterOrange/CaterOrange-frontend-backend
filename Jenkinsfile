@@ -16,19 +16,16 @@ pipeline {
                     try {
                         timeout(time: 20, unit: 'MINUTES') {
                             sh '''
-                                #!/bin/bash
                                 if [ -d "CaterOrange-frontend-backend" ]; then
-                                    echo "Removing existing CaterOrange directory..."
                                     rm -rf CaterOrange-frontend-backend
                                 fi
-                                echo "Cloning repository..."
-                                git clone -v --depth 1 https://Sirisha-eng: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@github.com/CaterOrange/CaterOrange-frontend-backend.git
+                                git clone --depth 1 https://Sirisha-eng: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@github.com/CaterOrange/CaterOrange-frontend-backend.git
                             '''
                         }
                     } catch (Exception e) {
                         failedStage = 'Clone Repository'
                         failedStageMessage = "Error during repository cloning: ${e.getMessage()}"
-                        error("Failed to clone repository. Aborting pipeline.")
+                        error("Failed to clone repository.")
                     }
                 }
             }
@@ -42,7 +39,6 @@ pipeline {
                             try {
                                 sh '''
                                     cd CaterOrange-frontend-backend/Frontend
-                                    echo "Building Frontend Docker Image..."
                                     docker build -t frontendcaterorange:${IMAGE_TAG} .
                                 '''
                             } catch (Exception e) {
@@ -60,7 +56,6 @@ pipeline {
                             try {
                                 sh '''
                                     cd CaterOrange-frontend-backend/Backend
-                                    echo "Building Backend Docker Image..."
                                     docker build -t backendcaterorange:${IMAGE_TAG} .
                                 '''
                             } catch (Exception e) {
@@ -79,7 +74,6 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            echo "Stopping existing containers..."
                             docker stop frontend-container backend-container || true
                             docker rm frontend-container backend-container || true
                         '''
@@ -97,7 +91,6 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            echo "Removing old images..."
                             docker rmi frontendcaterorange:${PREVIOUS_IMAGE_TAG} || true
                             docker rmi backendcaterorange:${PREVIOUS_IMAGE_TAG} || true
                         '''
@@ -115,19 +108,8 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            echo "Starting Backend container..."
-                            docker run \
-                                --name backend-container \
-                                --network host \
-                                -d -p 4000:4000 \
-                                backendcaterorange:${IMAGE_TAG}
-            
-                            echo "Starting Frontend container..."
-                            docker run \
-                                --name frontend-container \
-                                --network host \
-                                -d -p 3000:3000 \
-                                frontendcaterorange:${IMAGE_TAG}
+                            docker run --name backend-container --network host -d -p 4000:4000 backendcaterorange:${IMAGE_TAG}
+                            docker run --name frontend-container --network host -d -p 3000:3000 frontendcaterorange:${IMAGE_TAG}
                         '''
                     } catch (Exception e) {
                         failedStage = 'Deploy Containers'
@@ -143,32 +125,9 @@ pipeline {
                 script {
                     try {
                         sh '''
-                            echo "Performing health check..."
                             sleep 30
-                            
-                            # Check if containers are running
-                            if ! docker ps | grep -q backend-container; then
-                                echo "Backend container is not running!"
-                                exit 1
-                            fi
-                            
-                            if ! docker ps | grep -q frontend-container; then
-                                echo "Frontend container is not running!"
-                                exit 1
-                            fi
-                            
-                            # Health endpoint checks
-                            if ! curl -s http://localhost:4000/health; then
-                                echo "Backend health check failed!"
-                                exit 1
-                            fi
-                            
-                            if ! curl -s http://localhost:3000/health; then
-                                echo "Frontend health check failed!"
-                                exit 1
-                            fi
-                            
-                            echo "All containers are running successfully!"
+                            curl -f http://localhost:4000/health || exit 1
+                            curl -f http://localhost:3000/health || exit 1
                         '''
                     } catch (Exception e) {
                         failedStage = 'Health Check'
@@ -182,14 +141,10 @@ pipeline {
 
     post {
         always {
-            script {
-                sh 'docker logout'
-                cleanWs()
-            }
+            cleanWs()
         }
         failure {
             script {
-                echo 'Pipeline failed! Check the logs for details.'
                 def errorDetails = [
                     stageName: failedStage ?: "Unknown Stage",
                     reason: failedStageMessage ?: "Unknown Error"
@@ -199,7 +154,6 @@ pipeline {
         }
         success {
             script {
-                echo 'Pipeline completed successfully!'
                 sendDiscordNotification("success")
             }
         }
@@ -216,7 +170,6 @@ def sendDiscordNotification(buildStatus, errorDetails = null) {
             commitInfo.relativeTime = sh(script: 'git log -1 --format=%ar', returnStdout: true).trim()
             commitInfo.organizationName = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim().split('/')[3]
         } catch (Exception e) {
-            echo "Failed to get git information: ${e.message}"
             commitInfo.commitID = 'N/A'
             commitInfo.author = 'N/A'
             commitInfo.commitMessage = 'N/A'
@@ -225,9 +178,7 @@ def sendDiscordNotification(buildStatus, errorDetails = null) {
         }
 
         def colorCode = buildStatus == "success" ? 3066993 : 15158332
-        def description = buildStatus == "success" 
-            ? "Pipeline Executed successfully!" 
-            : "Pipeline failed!\nStage: ${errorDetails?.stageName}\nReason: ${errorDetails?.reason}"
+        def description = buildStatus == "success" ? "Pipeline executed successfully!" : "Pipeline failed!\nStage: ${errorDetails?.stageName}\nReason: ${errorDetails?.reason}"
 
         def payload = """{
             "username": "Jenkins",
@@ -237,38 +188,16 @@ def sendDiscordNotification(buildStatus, errorDetails = null) {
                     "title": "CaterOrange-Jenkins Result: ${buildStatus.toUpperCase()}",
                     "description": "${description}",
                     "fields": [
-                        {
-                            "name": "Organization",
-                            "value": "${commitInfo.organizationName}"
-                        },
-                        {
-                            "name": "Commit",
-                            "value": "${commitInfo.commitID}"
-                        },
-                        {
-                            "name": "Author",
-                            "value": "${commitInfo.author}"
-                        },
-                        {
-                            "name": "Message",
-                            "value": "${commitInfo.commitMessage}"
-                        },
-                        {
-                            "name": "Relatives",
-                            "value": "${commitInfo.relativeTime}"
-                        }
+                        {"name": "Organization", "value": "${commitInfo.organizationName}"},
+                        {"name": "Commit", "value": "${commitInfo.commitID}"},
+                        {"name": "Author", "value": "${commitInfo.author}"},
+                        {"name": "Message", "value": "${commitInfo.commitMessage}"},
+                        {"name": "Relatives", "value": "${commitInfo.relativeTime}"}
                     ]
                 }
             ]
         }"""
 
-        try {
-            sh """
-                curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${DISCORD_WEBHOOK_URL}
-            """
-            echo "Notification sent to Discord."
-        } catch (Exception e) {
-            echo "Failed to send Discord notification: ${e.getMessage()}"
-        }
+        sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${DISCORD_WEBHOOK_URL}"
     }
 }
