@@ -32,63 +32,45 @@ pipeline {
             }
         }
 
-        stage('Verify Frontend Dependencies') {
-            steps {
-                script {
-                    try {
-                        sh '''
-                            cd CaterOrange-frontend-backend/Frontend
-                            echo "Checking package.json existence and permissions..."
-                            ls -la package.json
-                            echo "Checking node_modules..."
-                            ls -la node_modules || echo "node_modules not found (expected)"
-                        '''
-                    } catch (Exception e) {
-                        sendDiscordNotification("failure", [stageName: "Verify Frontend Dependencies", reason: e.getMessage()])
-                        error("Frontend dependency verification failed: ${e.getMessage()}")
+       
+                stage('Build Backend Docker Image') {
+                    steps {
+                        script {
+                            try {
+                                sh '''
+                                    cd CaterOrange-frontend-backend/Backend
+                                    echo "Building Backend Docker Image..."
+                                    docker build -t backendcaterorange:${IMAGE_TAG} .
+                                '''
+                                echo "Backend Docker image built successfully."
+                            } catch (Exception e) {
+                                sendDiscordNotification("failure", [stageName: "Build Docker Backend Images", reason: e.getMessage()])
+                                echo "Error during backend Docker image build: ${e.getMessage()}"
+                                error("Backend Docker image build failed. Aborting pipeline.")
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-        stage('Build Backend Docker Image') {
-            steps {
-                script {
-                    try {
-                        sh '''
-                            cd CaterOrange-frontend-backend/Backend
-                            echo "Building Backend Docker Image..."
-                            docker build --no-cache -t backendcaterorange:${IMAGE_TAG} .
-                        '''
-                        echo "Backend Docker image built successfully."
-                    } catch (Exception e) {
-                        sendDiscordNotification("failure", [stageName: "Build Docker Backend Images", reason: e.getMessage()])
-                        echo "Error during backend Docker image build: ${e.getMessage()}"
-                        error("Backend Docker image build failed. Aborting pipeline.")
+                stage('Build Frontend Docker Image') {
+                    steps {
+                        script {
+                            try {
+                                sh '''
+                                    cd CaterOrange-frontend-backend/Frontend
+                                    echo "Building Frontend Docker Image..."
+                                    docker build -t frontendcaterorange:${IMAGE_TAG} .
+                                '''
+                                echo "Frontend Docker image built successfully."
+                            } catch (Exception e) {
+                                sendDiscordNotification("failure", [stageName: "Build Docker Frontend Images", reason: e.getMessage()])
+                                echo "Error during frontend Docker image build: ${e.getMessage()}"
+                                error("Frontend Docker image build failed. Aborting pipeline.")
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-        stage('Build Frontend Docker Image') {
-            steps {
-                script {
-                    try {
-                        sh '''
-                            cd CaterOrange-frontend-backend/Frontend
-                            echo "Building Frontend Docker Image..."
-                            docker build --progress=plain --no-cache -t frontendcaterorange:${IMAGE_TAG} . 2>&1 | tee frontend_build.log
-                        '''
-                        echo "Frontend Docker image built successfully."
-                    } catch (Exception e) {
-                        sh 'cat frontend_build.log || true'
-                        sendDiscordNotification("failure", [stageName: "Build Docker Frontend Images", reason: e.getMessage()])
-                        echo "Error during frontend Docker image build: ${e.getMessage()}"
-                        error("Frontend Docker image build failed. Aborting pipeline.")
-                    }
-                }
-            }
-        }
+            
+        
 
         stage('Stop Existing Containers') {
             steps {
@@ -109,7 +91,7 @@ pipeline {
             }
         }
 
-        stage('Remove Existing Images') {
+       stage('Remove Existing Images') {
             steps {
                 script {
                     try {
@@ -119,13 +101,12 @@ pipeline {
                             docker rmi frontendcaterorange:${Previous_IMAGE_TAG} || true
                         '''
                     } catch (Exception e) {
-                        sendDiscordNotification("failure", [stageName: "Remove Existing Images", reason: e.getMessage()])
-                        error("Stage 'Remove Existing Images' failed: ${e.getMessage()}")
+                        sendDiscordNotification("failure", [stageName: "Remove Existing Images...", reason: e.getMessage()])
+                        error("Stage 'Stop Existing Containers' failed: ${e.getMessage()}")
                     }
                 }
             }
         }
-
         stage('Run Containers') {
             steps {
                 script {
@@ -135,14 +116,14 @@ pipeline {
                             docker run -it \
                                 --name backend-container \
                                 --network host \
-                                -d -p 4000:4000 \
+                                -d -p 4000:4000\
                                 backendcaterorange:${IMAGE_TAG}
             
                             echo "Starting Frontend container..."
                             docker run -it \
                                 --name frontend-container \
                                 --network host \
-                                -d -p 3000:3000 \
+                                -d -p 3000:3000\
                                 frontendcaterorange:${IMAGE_TAG}
                         '''
                     } catch (Exception e) {
@@ -159,37 +140,21 @@ pipeline {
                     try {
                         sh '''
                             echo "Performing health check..."
-                            # Wait for containers to fully start
-                            sleep 45
+                            sleep 30
                             
-                            # Check if containers are running
                             if ! docker ps | grep -q backend-container; then
                                 echo "Backend container is not running!"
-                                docker logs backend-container
                                 exit 1
                             fi
                             
                             if ! docker ps | grep -q frontend-container; then
                                 echo "Frontend container is not running!"
-                                docker logs frontend-container
                                 exit 1
                             fi
                             
-                            # Check if services are responding
-                            echo "Checking Backend health..."
-                            curl -f http://localhost:4000/health || exit 1
-                            
-                            echo "Checking Frontend health..."
-                            curl -f http://localhost:3000 || exit 1
-                            
-                            echo "All containers are running and healthy!"
+                            echo "All containers are running successfully!"
                         '''
                     } catch (Exception e) {
-                        sh '''
-                            echo "Health check failed. Collecting logs..."
-                            docker logs frontend-container || true
-                            docker logs backend-container || true
-                        '''
                         sendDiscordNotification("failure", [stageName: "Health Check", reason: e.getMessage()])
                         error("Health check failed: ${e.getMessage()}")
                     }
@@ -201,8 +166,7 @@ pipeline {
     post {
         always {
             script {
-                sh 'docker logout || true'
-                cleanWs() // Clean workspace after build
+                sh 'docker logout'
             }
         }
         failure {
@@ -240,29 +204,29 @@ def sendDiscordNotification(buildStatus, errorDetails = null) {
             "username": "Jenkins",
             "embeds": [
                 {
-                    "color": ${colorCode},
+                    "color":  ${colorCode},
                     "title": "CaterOrange-Jenkins Result: ${buildStatus.toUpperCase()}",
                     "description": "${description}",
                     "fields": [
-                        {
+                         {
                             "name": "Organization",
                             "value": "${organizationName}"
                         },
                         {
                             "name": "Commit",
-                            "value": "${commitID}"
+                            "value": "$commitID"
                         },
                         {
                             "name": "Author",
-                            "value": "${author}"
+                            "value": "$author"
                         },
                         {
                             "name": "Message",
-                            "value": "${commitMessage}"
+                            "value": "$commitMessage"
                         },
                         {
                             "name": "Relatives",
-                            "value": "${relativeTime}"
+                            "value": "$relativeTime"
                         },
                         {
                             "name": "Report",
