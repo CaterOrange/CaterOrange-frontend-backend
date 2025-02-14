@@ -20,8 +20,7 @@ pipeline {
                                     rm -rf CaterOrange-frontend-backend
                                 fi
                                 echo "Cloning repository..."
-                                git clone -v --depth 1 https://ParashDeveloper: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@github.com/CaterOrange/CaterOrange-frontend-backend.git
-                            '''
+git clone https://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@github.com/CaterOrange/CaterOrange-frontend-backend.git                            '''
                         }
                     } catch (Exception e) {
                         sendDiscordNotification("failure", [stageName: "Clone Repository", reason: e.getMessage()])
