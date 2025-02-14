@@ -51,25 +51,63 @@ pipeline {
                         }
                     }
                 }
-                stage('Build Frontend Docker Image') {
-                    steps {
-                        script {
-                            try {
-                                sh '''
-                                    cd CaterOrange-frontend-backend/Frontend
-                                    echo "Building Frontend Docker Image..."
-                                    docker build -t frontendcaterorange:${IMAGE_TAG} .
-                                '''
-                                echo "Frontend Docker image built successfully."
-                            } catch (Exception e) {
-                                sendDiscordNotification("failure", [stageName: "Build Docker Frontend Images", reason: e.getMessage()])
-                                echo "Error during frontend Docker image build: ${e.getMessage()}"
-                                error("Frontend Docker image build failed. Aborting pipeline.")
-                            }
-                        }
-                    }
-                }
-            
+             stage('Build Frontend Docker Image') {
+    steps {
+        script {
+            try {
+                sh '''
+                    cd CaterOrange-frontend-backend/Frontend
+                    
+                    # Check if package.json exists and is valid
+                    if [ ! -f package.json ]; then
+                        echo "Error: package.json not found!"
+                        exit 1
+                    fi
+                    
+                    # Print Node and npm versions for debugging
+                    echo "Node version:"
+                    node --version
+                    echo "NPM version:"
+                    npm --version
+                    
+                    # Clean up any previous build artifacts
+                    rm -rf build node_modules
+                    docker system prune -f
+                    
+                    echo "Building Frontend Docker Image..."
+                    # Build with verbose output and save logs
+                    DOCKER_BUILDKIT=1 docker build \
+                        --progress=plain \
+                        --no-cache \
+                        -t frontendcaterorange:${IMAGE_TAG} . 2>&1 | tee frontend_build.log
+                    
+                    # Verify the image was created
+                    if ! docker images | grep -q frontendcaterorange:${IMAGE_TAG}; then
+                        echo "Error: Image not created successfully!"
+                        exit 1
+                    fi
+                '''
+                echo "Frontend Docker image built successfully."
+            } catch (Exception e) {
+                // Print build logs if they exist
+                sh '''
+                    if [ -f frontend_build.log ]; then
+                        echo "Build logs:"
+                        cat frontend_build.log
+                    fi
+                    
+                    # Print container logs if the container exists
+                    if docker ps -a | grep -q frontend-container; then
+                        echo "Container logs:"
+                        docker logs frontend-container
+                    fi
+                '''
+                sendDiscordNotification("failure", [stageName: "Build Docker Frontend Images", reason: e.getMessage()])
+                error("Frontend Docker image build failed: ${e.getMessage()}")
+            }
+        }
+    }
+}
         
 
         stage('Stop Existing Containers') {
