@@ -11,7 +11,10 @@ COPY src/package*.json ./
 RUN npm cache clean --force && npm install --legacy-peer-deps
 
 # Install PostgreSQL client utilities
-RUN apk update && apk add --no-cache postgresql-client bash # Copy the rest of the application code (including the wait-for-it script)
+RUN apk update && apk add --no-cache postgresql-client bash 
+
+# Copy the rest of the application code (including the wait-for-it script)
+
 COPY . .
 
 
