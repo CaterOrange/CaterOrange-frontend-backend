@@ -43,7 +43,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange-frontend-backend/Frontend
                                     echo "Building Frontend Docker Image..."
-                                    docker build -t frontendcaterorange:${IMAGE_TAG} .
+                                    docker build --no-cache -t frontendcaterorange:${IMAGE_TAG} .
                                 '''
                             } catch (Exception e) {
                                 failedStage = 'Build Frontend'
@@ -61,7 +61,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange-frontend-backend/Backend
                                     echo "Building Backend Docker Image..."
-                                    docker build -t backendcaterorange:${IMAGE_TAG} .
+                                    docker build --no-cache -t backendcaterorange:${IMAGE_TAG} .
                                 '''
                             } catch (Exception e) {
                                 failedStage = 'Build Backend'
