@@ -34,24 +34,30 @@ pipeline {
             }
         }
 
-                stage('Build Frontend') {
-                    steps {
-                        script {
-                            try {
-                                sh '''
-                                    cd CaterOrange-frontend-backend/Frontend
-                                    echo "Building Frontend Docker Image..."
-                                    docker build --no-cache -t frontendcaterorange:${IMAGE_TAG} .
-                                '''
-                            } catch (Exception e) {
-                                failedStage = 'Build Frontend'
-                                failedStageMessage = "Error during frontend build: ${e.getMessage()}"
-                                error("Frontend build failed.")
-                            }
-                        }
-                    }
-                }
-
+              stage('Build Frontend') {
+    steps {
+        script {
+            try {
+                sh '''
+                    cd CaterOrange-frontend-backend/Frontend
+                    echo "Cleaning previous build artifacts..."
+                    rm -rf node_modules
+                    rm -f package-lock.json
+                    
+                    echo "Installing npm dependencies..."
+                    npm install
+                    
+                    echo "Building Frontend Docker Image..."
+                    docker build --no-cache -t frontendcaterorange:${IMAGE_TAG} .
+                '''
+            } catch (Exception e) {
+                failedStage = 'Build Frontend'
+                failedStageMessage = "Error during frontend build: ${e.getMessage()}"
+                error("Frontend build failed.")
+            }
+        }
+    }
+}
                 stage('Build Backend') {
                     steps {
                         script {
