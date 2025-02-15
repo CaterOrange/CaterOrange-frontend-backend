@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/stranger/Desktop/CaterOrange-frontend-backend/Backend/src/config/logs/.c9ba8e11cc87a1d89dc54fcb22a2a3d30c1ba261-audit.json",
+    "files": [
+        {
+            "date": 1739604323652,
+            "name": "/home/stranger/Desktop/CaterOrange-frontend-backend/Backend/src/config/logs/application-2025-02-15.log",
+            "hash": "0177d8e3777ce6094e4917bb737616ed2251b2d516e2cd818575cd9f70da718b"
+        }
+    ],
+    "hashType": "sha256"
+}

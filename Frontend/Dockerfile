@@ -14,7 +14,7 @@ RUN npm cache clean --force && npm install --legacy-peer-deps
 COPY . .
 
 # Set environment variable
-ENV REACT_APP_URL=https://dev.caterorange.com
+ENV REACT_APP_URL=https://app.caterorange.com
 
 # Build the application (if using Create React App or similar)
 RUN npm run build
