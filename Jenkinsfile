@@ -40,15 +40,10 @@ pipeline {
             try {
                 sh '''
                     cd CaterOrange-frontend-backend/Frontend
-                    echo "Cleaning previous build artifacts..."
-                    rm -rf node_modules
-                    rm -f package-lock.json
-                    
-                    echo "Installing npm dependencies..."
-                    npm install
+                   
                     
                     echo "Building Frontend Docker Image..."
-                    docker build --no-cache -t frontendcaterorange:${IMAGE_TAG} .
+                    docker build --network=host --no-cache -t frontendcaterorange:${IMAGE_TAG} .
                 '''
             } catch (Exception e) {
                 failedStage = 'Build Frontend'
@@ -65,7 +60,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange-frontend-backend/Backend
                                     echo "Building Backend Docker Image..."
-                                    docker build --no-cache -t backendcaterorange:${IMAGE_TAG} .
+                                    docker build --network=host --no-cache -t backendcaterorange:${IMAGE_TAG} .
                                 '''
                             } catch (Exception e) {
                                 failedStage = 'Build Backend'
