@@ -1068,113 +1068,108 @@ return (
   <ShoppingCartIcon size={24} className="ml-3 text-white" />
   </div>
   
-  {/* Clear Cart Button - only show if cart has items */}
-  {Object.keys(CartData).length > 0 && (
-    <button
-      onClick={handleClearCart}
-      className="flex items-center bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition-all duration-300 shadow-md"
-    >
-      <Trash2 size={16} className="mr-1" />
-      <span>Clear Cart</span>
-    </button>
-  )}
   </div>
   </header>
  
  
- <main className="flex-grow mt-20 mb-20 p-6">
-  <div className="max-w-6xl mx-auto">
-  <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 border border-gray-200">
-  <h2 className="text-xl font-bold mb-3 text-gray-900 flex items-center">
-  <span className="mr-2 text-teal-500 font-serif">🚚</span> Shipping Details
-  </h2>
-  {renderShippingDetails()}
-  </div>
- { Object.keys(CartData).length === 0 ? (
-  <div className="bg-white p-8 rounded-xl shadow-md text-center border-2 border-teal-800 transform transition-all duration-300 hover:shadow-xl">
-  <h2 className="text-2xl font-semibold mb-4 text-teal-800">Your cart is empty</h2>
-  <p className="text-gray-600 mb-6">No items added yet. Start shopping now!</p>
-  <button
-  onClick={() => navigate('/home')}
-  className="mt-4 bg-teal-700 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-md flex items-center mx-auto group"
-  >
-  <span className="group-hover:scale-105 transition-transform duration-300">Add Items</span>
-  </button>
-  </div>
- ) : (
-  <div className="flex flex-col space-y-6">
-  
- 
-  {sortedData.map((item, index) => (
-  <div 
-  key={index} 
-  className="relative bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-xl transition-all duration-300"
-  >
-  {/* Delete Button - Top Right */}
-  <button
-  className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors duration-300"
-  onClick={() => handleRemove(index, sortedData[index].quantity)}
-  >
-  <Trash2 size={20} className="hover:rotate-12 transition-transform duration-300" />
-  </button>
- 
-  <div className="flex justify-between">
-  {/* Left Side - Item Details */}
-  <div className="space-y-4 flex-grow">
-  <div>
-  <h3 className="font-bold text-xl text-gray-900 font-serif mb-1">
-  {item.type}
-  </h3>
-  <p className="text-sm text-gray-500">
-  Date: {item.date}
-  </p>
-  </div>
- 
-  {/* Quantity Controls */}
-  <div className="flex items-center space-x-1">
-  <button
-  className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
-  onClick={() => handleDecrement(index)}
-  >
-  <Minus size={16} />
-  </button>
-  
-  <input
-  type="number"
-  min="1"
-  value={sortedData[index].quantity || ''}
-  onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
-  className="w-12 text-center border border-gray-200 rounded-md p-1 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-  />
-  
-  <button
-  className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
-  onClick={() => handleIncrement(index)}
-  >
-  <Plus size={16} />
-  </button>
-  </div>
-  </div>
- 
-  {/* Right Side - Pricing */}
-  <div className="text-right space-y-3 mt-6">
-  <p className="text-gray-600">
-  ₹{item.price.toLocaleString()} per plate
-  </p>
-  <p className="font-bold text-xl text-teal-700">
-  ₹{(item.price * item.quantity).toLocaleString()}
-  </p>
-  </div>
-  </div>
-  </div>
-  ))} 
-  </div>
- )}
- 
- 
-  </div>
- 
- </main>
+  <main className="flex-grow mt-20 mb-20 p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 border border-gray-200">
+          <h2 className="text-xl font-bold mb-3 text-gray-900 flex items-center">
+            <span className="mr-2 text-teal-500 font-serif"></span> Shipping Details
+          </h2>
+          {renderShippingDetails()}
+        </div>
+
+        {Object.keys(CartData).length === 0 ? (
+          <div className="bg-white p-8 rounded-xl shadow-md text-center border-2 border-teal-800 transform transition-all duration-300 hover:shadow-xl">
+            <h2 className="text-2xl font-semibold mb-4 text-teal-800">Your cart is empty</h2>
+            <p className="text-gray-600 mb-6">No items added yet. Start shopping now!</p>
+            <button
+              onClick={() => navigate('/home')}
+              className="mt-4 bg-teal-700 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-md flex items-center mx-auto group"
+            >
+              <span className="group-hover:scale-105 transition-transform duration-300">Add Items</span>
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Clear Cart Button */}
+            <div className="flex justify-end">
+              <button
+                onClick={handleClearCart}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 shadow-md flex items-center space-x-2"
+              >
+                <Trash2 size={16} />
+                <span>Clear Cart</span>
+              </button>
+            </div>
+
+            <div className="flex flex-col space-y-6">
+              {sortedData.map((item, index) => (
+                <div
+                  key={index}
+                  className="relative bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-xl transition-all duration-300"
+                >
+                  <button
+                    className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors duration-300"
+                    onClick={() => handleRemove(index, sortedData[index].quantity)}
+                  >
+                    <Trash2 size={20} className="hover:rotate-12 transition-transform duration-300" />
+                  </button>
+
+                  <div className="flex justify-between">
+                    <div className="space-y-4 flex-grow">
+                      <div>
+                        <h3 className="font-bold text-xl text-gray-900 font-serif mb-1">
+                          {item.type}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Date: {item.date}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center space-x-1">
+                        <button
+                          className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
+                          onClick={() => handleDecrement(index)}
+                        >
+                          <Minus size={16} />
+                        </button>
+
+                        <input
+                          type="number"
+                          min="1"
+                          value={sortedData[index].quantity || ''}
+                          onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
+                          className="w-12 text-center border border-gray-200 rounded-md p-1 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                        />
+
+                        <button
+                          className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
+                          onClick={() => handleIncrement(index)}
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="text-right space-y-3 mt-6">
+                      <p className="text-gray-600">
+                        ₹{item.price.toLocaleString()} per plate
+                      </p>
+                      <p className="font-bold text-xl text-teal-700">
+                        ₹{(item.price * item.quantity).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </main>
  
  
  <footer className="bg-gradient-to-r from-teal-700 to-teal-600 shadow-md p-3 fixed bottom-0 left-0 right-0 z-20">
