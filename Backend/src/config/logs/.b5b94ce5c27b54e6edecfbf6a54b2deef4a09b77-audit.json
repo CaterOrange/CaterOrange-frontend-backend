@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "/home/srivallika/Music/caterorange-feb15/CaterOrange-frontend-backend/Backend/src/config/logs/.b5b94ce5c27b54e6edecfbf6a54b2deef4a09b77-audit.json",
+    "files": [
+        {
+            "date": 1739775868970,
+            "name": "/home/srivallika/Music/caterorange-feb15/CaterOrange-frontend-backend/Backend/src/config/logs/error-2025-02-17.log",
+            "hash": "72e29699ab4ff6e6f644bd1e254720fe0581a161e4ce42a9339fdba2335763a4"
+        }
+    ],
+    "hashType": "sha256"
+}

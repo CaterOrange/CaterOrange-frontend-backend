@@ -337,6 +337,35 @@ app.get('/api/cart', async (req, res) => {
   }
 });
 
+app.delete('/api/cart/clear', async (req, res) => {
+  try {
+    const token = req.headers['token'];
+
+    // Verify the token
+    let verified_data;
+    try {
+      verified_data = jwt.verify(token, process.env.SECRET_KEY);
+      logger.info('Token verified successfully for clearing cart');
+    } catch (err) {
+      logger.error('Token verification failed', { error: err.message });
+      return res.status(401).json({ success: false, message: 'Invalid or expired token' });
+    }
+
+    const userId = verified_data.id;
+    
+    const cartItems = await redis.hgetall(`cart:${userId}`);
+    const itemKeys = Object.keys(cartItems);
+    
+    await redis.del(`cart:${userId}`);
+    
+    req.io.emit("cartCleared", { userId, itemKeys });
+
+    res.json({ success: true, message: 'Cart cleared successfully' });
+  } catch (error) {
+    console.error('Error clearing cart:', error);
+    res.status(500).json({ success: false, error: 'Failed to clear cart' });
+  }
+});
 app.post("/api/cart/update", async (req, res) => {
   try {
     const { item, itemId } = req.body;
@@ -356,18 +385,6 @@ app.post("/api/cart/update", async (req, res) => {
       });
     }
 
-    const isCartValid = validateCart({ item: parsedItem, itemId });
-    console.log("isCartValid", isCartValid); 
-    console.log("Validation Errors:", validateCart.errors);
-    if (!isCartValid) {
-      console.log("Error validation for cart",validateCart.errors)
-        return res.status(400).json({
-            message: 'Validation failed',
-            errors: validateCart.errors
-        });
-    }
-    
-    
     try {
       let parsedCartOrderDetails;
       if (typeof parsedItem.cart_order_details === "string") {
@@ -443,7 +460,6 @@ app.delete('/api/cart/:itemId', async (req, res) => {
     res.status(500).json({ error: 'Failed to remove cart item' });
   }
 });
-
 
 
 
