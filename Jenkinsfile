@@ -200,7 +200,7 @@ pipeline {
 }
 
 def sendDiscordNotification(buildStatus, errorDetails = null) {
-    dir('CaterOrange-frontend-backend') {
+    dir('CaterOrange/CaterOrange-frontend-backend') {
         def commitInfo = [:]
         try {
             commitInfo.commitID = sh(script: 'git log -1 --format=%H', returnStdout: true).trim()
