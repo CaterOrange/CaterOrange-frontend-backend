@@ -4,7 +4,7 @@ const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const cors = require('cors');
 const logger = require('./config/logger');
-const { createTables } = require('./controller/tableController');
+const { createTables } = require('./controller/v1/tableController.js');
 const { createDatabase } = require('./config/config');
 require('dotenv').config();
 const sha256 = require('sha256');
@@ -13,6 +13,11 @@ const uniqid = require('uniqid');
 const crypto = require('crypto');      
 const jwt = require('jsonwebtoken');
 const Redis = require('ioredis');
+
+const Mixpanel = require('mixpanel');
+const fileUpload = require('express-fileupload');
+
+
 
 
 const http= require("http");
@@ -41,15 +46,24 @@ addFormats(ajv);
 
 const { cartSchema,cartOrderDetailsSchema} = require("./SchemaValidator/cartschema.js"); 
 const validateCart = ajv.compile(cartSchema);
-
 const validateCartOrderDetails = ajv.compile(cartOrderDetailsSchema);
-const { typeDefs, resolvers } = require('./routes/adminRoutes');
-const paymentRoutes = require('./routes/paymentRoutes.js');
-const addressRoutes = require('./routes/addressRoutes');
-const eventRoutes = require('./routes/eventorderRoutes.js');
-const corporateorderRoutes = require('./routes/corporateorderRoutes.js');
-const categoryRoutes = require('./routes/categoryRoutes.js');
-const customerRoutes = require('./routes/customerRoutes.js');
+
+
+const { typeDefs, resolvers } = require('./routes/v1/adminRoutes.js');
+const V1paymentRoutes = require('./routes/v1/paymentRoutes.js');
+const V1addressRoutes = require('./routes/v1/addressRoutes.js');
+const V1eventRoutes = require('./routes/v1/eventorderRoutes.js');
+const V1corporateorderRoutes = require('./routes/v1/corporateorderRoutes.js');
+const V1categoryRoutes = require('./routes/v1/categoryRoutes.js');
+const V1customerRoutes = require('./routes/v1/customerRoutes.js');
+
+//v2
+const V2addressRoutes = require('./routes/v2/addressRoutes.js');
+const V2categoryRoutes = require('./routes/v2/categoryRoutes.js');
+
+
+// Initialize Mixpanel with your project token
+const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
 
 const { fetchAndInsertCSVData } = require('../products.js');
  
@@ -60,6 +74,8 @@ const SALT_INDEX = 1;
   
 
 const app = express();
+
+app.use(fileUpload({ useTempFiles: true }));
 
 const server = http.createServer(app);
 
@@ -95,13 +111,41 @@ io.on('connection', (socket) => {
     console.log(`User disconnected: ${socket.id}`);
   });
 });
-app.use('/api', addressRoutes);
-app.use('/api', paymentRoutes);
-app.use('/api', categoryRoutes);
-app.use('/api', customerRoutes);
-app.use('/api', corporateorderRoutes);    
-app.use('/api', eventRoutes);
 
+
+app.use('/api', V1addressRoutes);
+
+app.use('/api', V1paymentRoutes);
+
+app.use('/api', V1categoryRoutes);
+app.use('/api', V1corporateorderRoutes);    
+app.use('/api', V1eventRoutes);
+app.use('/api', V1customerRoutes);
+
+
+app.use('/api/v2',V2addressRoutes)
+app.use('/api/v2/',V2categoryRoutes)
+
+// aap.use('/api/',V1corporateorderdetailsRoutes)
+
+
+
+
+
+
+
+
+
+const trackEvent = (userId, event, properties = {}) => {
+  mixpanel.track(event, {
+    distinct_id: userId,
+    ...properties
+  });
+};
+
+const setPeople = (userId, properties = {}) => {
+  mixpanel.people.set(userId, properties);
+};
 
 
 async function startApolloServer() {
@@ -330,6 +374,17 @@ app.get('/api/cart', async (req, res) => {
     console.log(verified_data)
     const userId = verified_data.id;
     const cartItems = await redis.hgetall(`cart:${userId}`);
+
+    trackEvent(userId, 'Cart Viewed', {
+      items_count: Object.keys(cartItems).length
+    });
+
+    mixpanel.people.set(userId, {
+      $last_cart_view: new Date().toISOString(),
+      cart_items_count: Object.keys(cartItems).length
+  });
+
+
     res.json(cartItems);  
   } catch (error) {
     console.error('Error fetching cart items:', error);
@@ -359,6 +414,16 @@ app.delete('/api/cart/clear', async (req, res) => {
     await redis.del(`cart:${userId}`);
     
     req.io.emit("cartCleared", { userId, itemKeys });
+
+    trackEvent(userId, 'Cart Cleared', {
+      items_cleared: cartItems
+    });
+
+    mixpanel.people.set(userId, {
+      $last_cart_clear: new Date().toISOString(),
+      cart_items_count: cartItems
+  });
+
 
     res.json({ success: true, message: 'Cart cleared successfully' });
   } catch (error) {
@@ -427,6 +492,20 @@ app.post("/api/cart/update", async (req, res) => {
 
     await redis.hset(`cart:${userId}`, itemId, JSON.stringify(item));
     req.io.emit("cartUpdated", { itemId, item });
+
+    trackEvent(userId, 'Cart Item Updated', {
+      item_id: itemId,
+      item_details: parsedItem
+    });
+
+
+    const allCartItems = await redis.hgetall(`cart:${userId}`);
+
+    mixpanel.people.set(userId, {
+      $last_cart_update: new Date().toISOString(),
+      cart_items_count: Object.keys(allCartItems).length
+  })
+
     res.json({ success: true, message: "Cart updated successfully" });
   } catch (error) {
     logger.error("Error updating cart item", { error: error.message });
@@ -453,6 +532,19 @@ app.delete('/api/cart/:itemId', async (req, res) => {
     const userId = verified_data.id;
     await redis.hdel(`cart:${userId}`, itemId);
     req.io.emit("cartUpdated", { itemId });
+
+
+    trackEvent(userId, 'Cart Item Removed', {
+      item_id: itemId,
+      item_details: JSON.parse(itemId)
+    });
+
+    // Update user properties
+    const remainingItems = await redis.hgetall(`cart:${userId}`);
+    mixpanel.people.set(userId, {
+        $last_item_removal: new Date().toISOString(),
+        cart_items_count: Object.keys(remainingItems).length
+    });
 
     res.json({ success: true });
   } catch (error) {

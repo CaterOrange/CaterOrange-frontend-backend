@@ -25,7 +25,7 @@ const AddressList = () => {
         return;
       }
 
-      const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/v2/address/getalladdresses`, {
         headers: { token }
       });
       
@@ -68,7 +68,7 @@ const AddressList = () => {
       try {
         const token = localStorage.getItem('token');
         const response = await axios.delete(
-          `${process.env.REACT_APP_URL}/api/address/deleteaddress/${addressId}`,
+          `${process.env.REACT_APP_URL}/api/v2/address/deleteaddress/${addressId}`,
           { headers: { token } }
         );
 

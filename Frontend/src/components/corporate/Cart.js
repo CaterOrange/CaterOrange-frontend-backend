@@ -9,6 +9,7 @@ import AddressSelectionModal from '../Address/AddressSelectionModal';
 import { VerifyToken } from '../../MiddleWare/verifyToken';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
+import CollapsibleCart from './CollapsibleCart';
 const MyCart = () => {
  const [Total, setTotal] = useState(0);
  const [CartData, setCartData] = useState([]);
@@ -546,238 +547,268 @@ const MyCart = () => {
  
 
  const handleViewPayment = async () => {
- try {
- for (let i = 0; i < sortedData.length; i++) {
- const Data = {
- category_id: sortedData[i].category_id,
- processing_date: sortedData[i].date,
- delivery_status: 'processing',
- quantity: sortedData[i].quantity,
- active_quantity: sortedData[i].quantity,
- media: null,
- delivery_details: null,
- accept_status: 'pending'
- };
- OrderData.push(Data);
- }
- const OrderDataJSON = JSON.stringify(OrderData);
-
- const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporate/transfer-cart-to-order`, {
- customer_generated_id: decodedToken.id,
- order_details: OrderDataJSON,
- total_amount: Total,
- paymentid: null,
- customer_address: localStorage.getItem('address'),
- payment_status: 'pending',
- }, {
- headers: { 'token': localStorage.getItem('token') }
- });
-
- if (response.status === 200) {
- await PaymentDetails(response.data.order.corporateorder_generated_id);
- await sendOrderDetails(response.data.order);
- } else {
- console.error('Failed to add details to order_table:', response.data);
- }
- } catch (error) {
- console.error('Error adding details to order_table:', error);
- }
- };
-
- const sendOrderDetails = async (orderDetails) => {
- try {
- let response;
- let details = orderDetails.order_details;
- // console.log("hee",token);
- for (let i = 0; i < details.length; i++) {
- response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`,
- {
- corporateorder_id: orderDetails.corporateorder_id,
- processing_date: details[i].processing_date,
- delivery_status: details[i].delivery_status,
- category_id: details[i].category_id,
- quantity: details[i].quantity,
- active_quantity: details[i].active_quantity,
- media: details[i].media,
- delivery_details: details[i].delivery_details
- },
- { // Config object
- headers: { token: localStorage.getItem('token') }
- }
- );
- }
-
- if (response) {
- console.log('Order details successfully added:', response.data);
- } else {
- console.error('Failed to add details to order_table:', response.data);
- }
- } catch (error) {
- console.error('Error sending order details:', error);
- }
- };
- const handleClearCart = async () => {
+  const OrderData = []; // Was missing this declaration
   try {
-    // First, confirm with the user
-    const confirmClear = window.confirm("Are you sure you want to clear all items from your cart?");
-    
-    if (!confirmClear) {
-      return; // User canceled the operation
+    // Log the initial data we're working with
+    console.log('Initial sortedData:', sortedData);
+
+    for (let i = 0; i < sortedData.length; i++) {
+      const Data = {
+        category_id: sortedData[i].category_id,
+        processing_date: sortedData[i].date,
+        delivery_status: 'Pending',
+        quantity: sortedData[i].quantity,
+        active_quantity: sortedData[i].quantity,
+        media: null,
+        delivery_details: null,
+        accept_status: 'pending'
+      };
+      OrderData.push(Data);
     }
     
-    // Get the user's token for authentication
-    const token = localStorage.getItem('token');
+    // Log the constructed OrderData before stringifying
+    console.log('OrderData before stringify:', OrderData);
     
-    if (!token) {
-      alert("You must be logged in to clear your cart");
-      return;
-    }
+    const OrderDataJSON = JSON.stringify(OrderData);
     
-    // Call the backend API to clear the cart
-    const response = await axios.delete(`${process.env.REACT_APP_URL}/api/cart/clear`, {
-      headers: {
-        'token': token
+    // Log the stringified data
+    console.log('OrderDataJSON:', OrderDataJSON);
+
+    const response = await axios.post(
+      `${process.env.REACT_APP_URL}/api/customer/corporate/transfer-cart-to-order`,
+      {
+        customer_generated_id: decodedToken.id,
+        order_details: OrderDataJSON, // This is properly stringified
+        total_amount: Total,
+        paymentid: null,
+        customer_address: localStorage.getItem('address'),
+        payment_status: 'pending',
+        corporate_order_status: 'pending'
+      },
+      {
+        headers: { 'token': localStorage.getItem('token') }
       }
-    });
-    
-    if (response.data.success) {
-      // Clear the local cart data
-      setCartData({});
-      setSortedData([]);
-      setTotal(0);
-      
-      // Show success message
-      toast.success("Cart cleared successfully!");
+    );
+
+    if (response.status === 200) {
+      console.log('Order response data:', response.data);
+      await PaymentDetails(response.data.order.corporateorder_generated_id);
+      await sendOrderDetails(response.data.order);
     } else {
-      toast.error("Failed to clear cart. Please try again.");
+      throw new Error(`Server responded with status ${response.status}`);
     }
   } catch (error) {
-    console.error("Error clearing cart:", error);
-    toast.error(error.response?.data?.message || "An error occurred while clearing your cart");
+    console.error('Error in handleViewPayment:', error);
+    throw error; // Re-throw to handle in the UI
   }
+};
+
+const sendOrderDetails = async (orderDetails) => {
+  try {
+    // First, verify we received valid orderDetails
+    if (!orderDetails || !orderDetails.order_details) {
+      throw new Error('Invalid orderDetails received: ' + JSON.stringify(orderDetails));
+    }
+
+    // Parse order_details if it's a string
+    const details = typeof orderDetails.order_details === 'string' 
+      ? JSON.parse(orderDetails.order_details)
+      : orderDetails.order_details;
+    
+    console.log('Parsed order details:', details);
+
+    for (let i = 0; i < details.length; i++) {
+      const payload = {
+        corporateorder_id: orderDetails.corporateorder_id,
+        processing_date: details[i].processing_date || null,
+        delivery_status: details[i].delivery_status || 'pending',
+        category_id: Number(details[i].category_id) || null,
+        quantity: Number(details[i].quantity) || 0,
+        active_quantity: Number(details[i].active_quantity) || 0,
+        media: details[i].media || null,
+        delivery_details: details[i].delivery_details || null
+      };
+
+      console.log(`Sending payload for item ${i}:`, payload);
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_URL}/api/customer/corporateOrderDetails`,
+        payload,
+        {
+          headers: { token: localStorage.getItem('token') }
+        }
+      );
+
+      console.log(`Response for item ${i}:`, response.data);
+    }
+  } catch (error) {
+    console.error('Error in sendOrderDetails:', error);
+    throw error;
+  }
+};
+
+ const handleClearCart = async () => {
+ try {
+ // First, confirm with the user
+ const confirmClear = window.confirm("Are you sure you want to clear all items from your cart?");
+ 
+ if (!confirmClear) {
+ return; // User canceled the operation
+ }
+ 
+ // Get the user's token for authentication
+ const token = localStorage.getItem('token');
+ 
+ if (!token) {
+ alert("You must be logged in to clear your cart");
+ return;
+ }
+ 
+ // Call the backend API to clear the cart
+ const response = await axios.delete(`${process.env.REACT_APP_URL}/api/cart/clear`, {
+ headers: {
+ 'token': token
+ }
+ });
+ 
+ if (response.data.success) {
+ // Clear the local cart data
+ setCartData({});
+ setSortedData([]);
+ setTotal(0);
+ 
+ // Show success message
+ toast.success("Cart cleared successfully!");
+ } else {
+ toast.error("Failed to clear cart. Please try again.");
+ }
+ } catch (error) {
+ console.error("Error clearing cart:", error);
+ toast.error(error.response?.data?.message || "An error occurred while clearing your cart");
+ }
 };
 
 
  const PaymentDetails = async (corporateorder_generated_id) => {
-  try {
-    if (!window.Razorpay) {
-      alert("Razorpay SDK failed to load. Check your internet connection.");
-      return;
-    }
+ try {
+ if (!window.Razorpay) {
+ alert("Razorpay SDK failed to load. Check your internet connection.");
+ return;
+ }
 
-    const { data } = await axios.post(`${process.env.REACT_APP_URL}/api/create-order`, {
-      amount: Total,
-      currency: "INR",
-    });
+ const { data } = await axios.post(`${process.env.REACT_APP_URL}/api/create-order`, {
+ amount: Total,
+ currency: "INR",
+ });
 
-    const options = {
-      key: process.env.RAZORPAY_KEY_ID,
-      amount: data.amount,
-      currency: data.currency,
-      name: "CaterOrange",
-      description: "ORDER Payment",
-      order_id: data.id,
-      handler: async function (response) {
-        try {
-          // Create payment payload first
-          const paymentPayload = {
-            paymentType: "Net",
-            merchantTransactionId: "mer123",
-            phonePeReferenceId: response.razorpay_payment_id,
-            paymentFrom: "RazorPay",
-            instrument: 'N/A',
-            bankReferenceNo: 'N/A',
-            amount: Total,
-            customer_id: decodedToken.id,
-            corporateorder_id: corporateorder_generated_id
-          };
+ const options = {
+ key: process.env.RAZORPAY_KEY_ID,
+ amount: data.amount,
+ currency: data.currency,
+ name: "CaterOrange",
+ description: "ORDER Payment",
+ order_id: data.id,
+ handler: async function (response) {
+ try {
+ // Create payment payload first
+ const paymentPayload = {
+ paymentType: "Net",
+ merchantTransactionId: "mer123",
+ phonePeReferenceId: response.razorpay_payment_id,
+ paymentFrom: "RazorPay",
+ instrument: 'N/A',
+ bankReferenceNo: 'N/A',
+ amount: Total,
+ customer_id: decodedToken.id,
+ corporateorder_id: corporateorder_generated_id
+ };
 
-          // Verify payment first
-          const verifyRes = await axios.post(
-            `${process.env.REACT_APP_URL}/api/verify-payment`,
-            {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
-            }
-          );
+ // Verify payment first
+ const verifyRes = await axios.post(
+ `${process.env.REACT_APP_URL}/api/verify-payment`,
+ {
+ razorpay_order_id: response.razorpay_order_id,
+ razorpay_payment_id: response.razorpay_payment_id,
+ razorpay_signature: response.razorpay_signature
+ }
+ );
 
-          // Insert payment details
-          const paymentRes = await axios.post(
-            `${process.env.REACT_APP_URL}/api/insert-payment`,
-            paymentPayload
-          );
+ // Insert payment details
+ const paymentRes = await axios.post(
+ `${process.env.REACT_APP_URL}/api/insert-payment`,
+ paymentPayload
+ );
 
-          // If everything is successful, clear cart and redirect
-          if (verifyRes.data && paymentRes.data) {
-            // Clear cart data
-            setSortedData([]);
-            setCartData([]);
-            setTotal(0);
+ // If everything is successful, clear cart and redirect
+ if (verifyRes.data && paymentRes.data) {
+ // Clear cart data
+ setSortedData([]);
+ setCartData([]);
+ setTotal(0);
 
-            // Update cart count in localStorage
-            const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
-            const updatedUserDP = {
-              ...storedUserDP,
-              cartCount: 0,
-            };
-            localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
-            updateCartCount(0);
+ // Update cart count in localStorage
+ const storedUserDP = JSON.parse(localStorage.getItem('userDP')) || {};
+ const updatedUserDP = {
+ ...storedUserDP,
+ cartCount: 0,
+ };
+ localStorage.setItem('userDP', JSON.stringify(updatedUserDP));
+ updateCartCount(0);
 
-            // Clear cart items from backend
-            try {
-              const token = localStorage.getItem('token');
-              await axios.delete(`${process.env.REACT_APP_URL}/api/cart/clear`, {
-                headers: { 'token': token }
-              });
-            } catch (error) {
-              console.error('Error clearing cart:', error);
-            }
+ // Clear cart items from backend
+ try {
+ const token = localStorage.getItem('token');
+ await axios.delete(`${process.env.REACT_APP_URL}/api/cart/clear`, {
+ headers: { 'token': token }
+ });
+ } catch (error) {
+ console.error('Error clearing cart:', error);
+ }
 
-            // Navigate to success page
-            navigate('/success', { 
-              state: { 
-                order_id: corporateorder_generated_id,
-                payment_id: response.razorpay_payment_id 
-              } 
-            });
-          }
-        } catch (error) {
-          console.error('Payment processing error:', error);
-          // Don't show error to user, just log it
-          // Cart will remain intact if there's an error
-        }
-      },
-      modal: {
-        ondismiss: function() {
-          console.log('Payment modal closed');
-          // Cart remains intact when modal is dismissed
-        }
-      },
-      prefill: {
-        name: userAddressDetails.Name,
-        email: emails,
-        contact: userAddressDetails.phonenumber,
-      },
-      theme: { color: "#3399cc" },
-      retry: {
-        enabled: false
-      }
-    };
+ // Navigate to success page
+ navigate('/success', { 
+ state: { 
+ order_id: corporateorder_generated_id,
+ payment_id: response.razorpay_payment_id 
+ } 
+ });
+ }
+ } catch (error) {
+ console.error('Payment processing error:', error);
+ // Don't show error to user, just log it
+ // Cart will remain intact if there's an error
+ }
+ },
+ modal: {
+ ondismiss: function() {
+ console.log('Payment modal closed');
+ // Cart remains intact when modal is dismissed
+ }
+ },
+ prefill: {
+ name: userAddressDetails.Name,
+ email: emails,
+ contact: userAddressDetails.phonenumber,
+ },
+ theme: { color: "#3399cc" },
+ retry: {
+ enabled: false
+ }
+ };
 
-    const razor = new window.Razorpay(options);
-    
-    razor.on('payment.failed', function (response) {
-      console.log('Payment failed:', response.error);
-      // Cart remains intact on payment failure
-    });
+ const razor = new window.Razorpay(options);
+ 
+ razor.on('payment.failed', function (response) {
+ console.log('Payment failed:', response.error);
+ // Cart remains intact on payment failure
+ });
 
-    razor.open();
+ razor.open();
 
-  } catch (error) {
-    console.error('Payment initialization error:', error);
-    // Don't show error to user, just log it
-  }
+ } catch (error) {
+ console.error('Payment initialization error:', error);
+ // Don't show error to user, just log it
+ }
 };
 
  const handleAddressAdd = async () => {
@@ -913,296 +944,99 @@ const MyCart = () => {
 console.log('length',CartData.length,CartData)
 
  const isDisabled = userAddressDetails.address === '' || sortedData.length === 0;
-//  return (
-//  <div className="flex flex-col min-h-screen bg-teal-50">
-//  <header className="bg-gradient-to-r from-teal-700 to-teal-500 shadow-lg p-4 fixed top-0 left-0 right-0 z-20">
-//  <div className="flex justify-between items-center max-w-6xl mx-auto">
-//  <div className="flex items-center">
-//  <Link to="/home">
-//  <ChevronLeft size={24} className="cursor-pointer text-white" onClick={handleViewHome} />
-//  </Link>
-//  <h1 className="text-xl text-white font-bold ml-2 font-serif">My Cart</h1>
-//  <ShoppingCartIcon size={24} className=" ml-3 text-white" />
 
-//  </div>
- 
-//  </div>
-//  </header>
-
-
-// <main className="flex-grow mt-20 mb-20 p-6">
-//  <div className="max-w-6xl mx-auto">
-//  <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 border border-gray-200">
-//  <h2 className="text-xl font-bold mb-3 text-gray-900 flex items-center">
-//  <span className="mr-2 text-teal-500 font-serif">🚚</span> Shipping Details
-//  </h2>
-//  {renderShippingDetails()}
-//  </div>
-// { Object.keys(CartData).length === 0 ? (
-//  <div className="bg-white p-8 rounded-xl shadow-md text-center border-2 border-teal-800 transform transition-all duration-300 hover:shadow-xl">
-//  <h2 className="text-2xl font-semibold mb-4 text-teal-800">Your cart is empty</h2>
-//  <p className="text-gray-600 mb-6">No items added yet. Start shopping now!</p>
-//  <button
-//  onClick={() => navigate('/home')}
-//  className="mt-4 bg-teal-700 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-md flex items-center mx-auto group"
-//  >
-//  <span className="group-hover:scale-105 transition-transform duration-300">Add Items</span>
-//  </button>
-//  </div>
-// ) : (
-//  <div className="flex flex-col space-y-6">
- 
-
-//  {sortedData.map((item, index) => (
-//  <div 
-//  key={index} 
-//  className="relative bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-xl transition-all duration-300"
-//  >
-//  {/* Delete Button - Top Right */}
-//  <button
-//  className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors duration-300"
-//  onClick={() => handleRemove(index, sortedData[index].quantity)}
-//  >
-//  <Trash2 size={20} className="hover:rotate-12 transition-transform duration-300" />
-//  </button>
-
-//  <div className="flex justify-between">
-//  {/* Left Side - Item Details */}
-//  <div className="space-y-4 flex-grow">
-//  <div>
-//  <h3 className="font-bold text-xl text-gray-900 font-serif mb-1">
-//  {item.type}
-//  </h3>
-//  <p className="text-sm text-gray-500">
-//  Date: {item.date}
-//  </p>
-//  </div>
-
-//  {/* Quantity Controls */}
-//  <div className="flex items-center space-x-1">
-//  <button
-//  className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
-//  onClick={() => handleDecrement(index)}
-//  >
-//  <Minus size={16} />
-//  </button>
- 
-//  <input
-//  type="number"
-//  min="1"
-//  value={sortedData[index].quantity || ''}
-//  onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
-//  className="w-12 text-center border border-gray-200 rounded-md p-1 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-//  />
- 
-//  <button
-//  className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
-//  onClick={() => handleIncrement(index)}
-//  >
-//  <Plus size={16} />
-//  </button>
-//  </div>
-//  </div>
-
-//  {/* Right Side - Pricing */}
-//  <div className="text-right space-y-3 mt-6">
-//  <p className="text-gray-600">
-//  ₹{item.price.toLocaleString()} per plate
-//  </p>
-//  <p className="font-bold text-xl text-teal-700">
-//  ₹{(item.price * item.quantity).toLocaleString()}
-//  </p>
-//  </div>
-//  </div>
-//  </div>
-//  ))} 
-//  </div>
-// )}
-
-
-//  </div>
-
-// </main>
-
-
-// <footer className="bg-gradient-to-r from-teal-700 to-teal-600 shadow-md p-3 fixed bottom-0 left-0 right-0 z-20">
-//  <div className="flex justify-between items-center max-w-6xl mx-auto text-white">
-//  <h2 className="text-xl font-semibold drop-shadow-lg">Total: ₹{Total}/-</h2>
-//  <button
-//  className={`p-3 px-6 rounded-lg transition-all shadow-lg text-lg font-medium tracking-wide 
-//  ${isDisabled 
-//  ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
-//  : 'bg-white text-teal-700 hover:bg-teal-100 hover:shadow-xl transform hover:scale-105 duration-200'
-//  }`}
-//  onClick={handleViewPayment}
-//  disabled={isDisabled}
-//  >
-//  Pay Now
-//  </button>
-//  </div>
-// </footer>
-
-
-// {isAddressModalOpen && (
-//  <AddressSelectionModal
-//  isOpen={isAddressModalOpen}
-//  onClose={() => setIsAddressModalOpen(false)}
-//  AddressForm={AddressForm}
-//  onAddressSelect={handleAddressSelect}
-//  onAddressSubmit={handleAddressFormSubmit}
-//  refreshAddresses={checkUserAddresses} // Pass the refresh function
-//  />
-//  )}
-//  </div>
- 
-//  );
 return (
-  <div className="flex flex-col min-h-screen bg-teal-50">
-  <header className="bg-gradient-to-r from-teal-700 to-teal-500 shadow-lg p-4 fixed top-0 left-0 right-0 z-20">
-  <div className="flex justify-between items-center max-w-6xl mx-auto">
-  <div className="flex items-center">
-  <Link to="/home">
-  <ChevronLeft size={24} className="cursor-pointer text-white" onClick={handleViewHome} />
-  </Link>
-  <h1 className="text-xl text-white font-bold ml-2 font-serif">My Cart</h1>
-  <ShoppingCartIcon size={24} className="ml-3 text-white" />
-  </div>
-  
-  </div>
-  </header>
+ <div className="flex flex-col min-h-screen bg-teal-50">
+ <header className="bg-gradient-to-r from-teal-700 to-teal-500 shadow-lg p-4 fixed top-0 left-0 right-0 z-20">
+ <div className="flex justify-between items-center max-w-6xl mx-auto">
+ <div className="flex items-center">
+ <Link to="/home">
+ <ChevronLeft size={24} className="cursor-pointer text-white" onClick={handleViewHome} />
+ </Link>
+ <h1 className="text-xl text-white font-bold ml-2 font-serif">My Cart</h1>
+ <ShoppingCartIcon size={24} className="ml-3 text-white" />
+ </div>
+ 
+ </div>
+ </header>
  
  
-  <main className="flex-grow mt-20 mb-20 p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 border border-gray-200">
-          <h2 className="text-xl font-bold mb-3 text-gray-900 flex items-center">
-            <span className="mr-2 text-teal-500 font-serif"></span> Shipping Details
-          </h2>
-          {renderShippingDetails()}
-        </div>
+ <main className="flex-grow mt-20 mb-20 p-6">
+ <div className="max-w-6xl mx-auto">
+ <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 mb-4 border border-gray-200">
+ <h2 className="text-xl font-bold mb-3 text-gray-900 flex items-center">
+ <span className="mr-2 text-teal-500 font-serif"></span> Shipping Details
+ </h2>
+ {renderShippingDetails()}
+ </div>
 
-        {Object.keys(CartData).length === 0 ? (
-          <div className="bg-white p-8 rounded-xl shadow-md text-center border-2 border-teal-800 transform transition-all duration-300 hover:shadow-xl">
-            <h2 className="text-2xl font-semibold mb-4 text-teal-800">Your cart is empty</h2>
-            <p className="text-gray-600 mb-6">No items added yet. Start shopping now!</p>
-            <button
-              onClick={() => navigate('/home')}
-              className="mt-4 bg-teal-700 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-md flex items-center mx-auto group"
-            >
-              <span className="group-hover:scale-105 transition-transform duration-300">Add Items</span>
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Clear Cart Button */}
-            <div className="flex justify-end">
-              <button
-                onClick={handleClearCart}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 shadow-md flex items-center space-x-2"
-              >
-                <Trash2 size={16} />
-                <span>Clear Cart</span>
-              </button>
-            </div>
-
-            <div className="flex flex-col space-y-6">
-              {sortedData.map((item, index) => (
-                <div
-                  key={index}
-                  className="relative bg-white rounded-xl shadow-md border border-gray-200 p-6 hover:shadow-xl transition-all duration-300"
-                >
-                  <button
-                    className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors duration-300"
-                    onClick={() => handleRemove(index, sortedData[index].quantity)}
-                  >
-                    <Trash2 size={20} className="hover:rotate-12 transition-transform duration-300" />
-                  </button>
-
-                  <div className="flex justify-between">
-                    <div className="space-y-4 flex-grow">
-                      <div>
-                        <h3 className="font-bold text-xl text-gray-900 font-serif mb-1">
-                          {item.type}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                          Date: {item.date}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center space-x-1">
-                        <button
-                          className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
-                          onClick={() => handleDecrement(index)}
-                        >
-                          <Minus size={16} />
-                        </button>
-
-                        <input
-                          type="number"
-                          min="1"
-                          value={sortedData[index].quantity || ''}
-                          onChange={(e) => handleQuantityChange(index, e.target.value, sortedData[index].quantity)}
-                          className="w-12 text-center border border-gray-200 rounded-md p-1 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        />
-
-                        <button
-                          className="text-teal-700 hover:text-teal-800 p-1 rounded-full hover:bg-teal-50 transition-colors duration-300"
-                          onClick={() => handleIncrement(index)}
-                        >
-                          <Plus size={16} />
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="text-right space-y-3 mt-6">
-                      <p className="text-gray-600">
-                        ₹{item.price.toLocaleString()} per plate
-                      </p>
-                      <p className="font-bold text-xl text-teal-700">
-                        ₹{(item.price * item.quantity).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </main>
+ {Object.keys(CartData).length === 0 ? (
+ <div className="bg-white p-8 rounded-xl shadow-md text-center border-2 border-teal-800 transform transition-all duration-300 hover:shadow-xl">
+ <h2 className="text-2xl font-semibold mb-4 text-teal-800">Your cart is empty</h2>
+ <p className="text-gray-600 mb-6">No items added yet. Start shopping now!</p>
+ <button
+ onClick={() => navigate('/home')}
+ className="mt-4 bg-teal-700 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-md flex items-center mx-auto group"
+ >
+ <span className="group-hover:scale-105 transition-transform duration-300">Add Items</span>
+ </button>
+ </div>
+ ) : (
+ <div className="space-y-6">
+ {/* Clear Cart Button */}
+ <div className="flex justify-end">
+ <button
+ onClick={handleClearCart}
+ className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300 shadow-md flex items-center space-x-2"
+ >
+ <Trash2 size={16} />
+ <span>Clear Cart</span>
+ </button>
+ </div>
+ <CollapsibleCart 
+ sortedData={sortedData}
+ handleRemove={handleRemove}
+ handleIncrement={handleIncrement}
+ handleDecrement={handleDecrement}
+ handleQuantityChange={handleQuantityChange}
+ />
+ </div>
+ )}
+ </div>
+ </main>
  
  
  <footer className="bg-gradient-to-r from-teal-700 to-teal-600 shadow-md p-3 fixed bottom-0 left-0 right-0 z-20">
-  <div className="flex justify-between items-center max-w-6xl mx-auto text-white">
-  <h2 className="text-xl font-semibold drop-shadow-lg">Total: ₹{Total}/-</h2>
-  <button
-  className={`p-3 px-6 rounded-lg transition-all shadow-lg text-lg font-medium tracking-wide 
-  ${isDisabled 
-  ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
-  : 'bg-white text-teal-700 hover:bg-teal-100 hover:shadow-xl transform hover:scale-105 duration-200'
-  }`}
-  onClick={handleViewPayment}
-  disabled={isDisabled}
-  >
-  Pay Now
-  </button>
-  </div>
+ <div className="flex justify-between items-center max-w-6xl mx-auto text-white">
+ <h2 className="text-xl font-semibold drop-shadow-lg">Total: ₹{Total}/-</h2>
+ <button
+ className={`p-3 px-6 rounded-lg transition-all shadow-lg text-lg font-medium tracking-wide 
+ ${isDisabled 
+ ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+ : 'bg-white text-teal-700 hover:bg-teal-100 hover:shadow-xl transform hover:scale-105 duration-200'
+ }`}
+ onClick={handleViewPayment}
+ disabled={isDisabled}
+ >
+ Pay Now
+ </button>
+ </div>
  </footer>
  
  
  {isAddressModalOpen && (
-  <AddressSelectionModal
-  isOpen={isAddressModalOpen}
-  onClose={() => setIsAddressModalOpen(false)}
-  AddressForm={AddressForm}
-  onAddressSelect={handleAddressSelect}
-  onAddressSubmit={handleAddressFormSubmit}
-  refreshAddresses={checkUserAddresses} // Pass the refresh function
-  />
-  )}
-  </div>
-  
-  );
+ <AddressSelectionModal
+ isOpen={isAddressModalOpen}
+ onClose={() => setIsAddressModalOpen(false)}
+ AddressForm={AddressForm}
+ onAddressSelect={handleAddressSelect}
+ onAddressSubmit={handleAddressFormSubmit}
+ refreshAddresses={checkUserAddresses} // Pass the refresh function
+ />
+ )}
+ </div>
+ 
+ );
 };
 
 export default MyCart;

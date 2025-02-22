@@ -8,6 +8,8 @@ const Client1 = new Client({
 
 const createDatabase = async () => {
   try {
+
+    console.log('hi')
     await Client1.connect();
     console.log("Connected to PostgreSQL server");
 

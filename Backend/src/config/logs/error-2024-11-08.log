@@ -1,6 +1,0 @@
-{"expiredAt":"2024-11-07T12:57:58.000Z","filename":"customerController.js","level":"error","message":"jwt expired","name":"TokenExpiredError","timestamp":"2024-11-08T09:35:10.308Z","userId":"No userId"}
-{"error":"jwt expired","filename":"corporateorderController.js","level":"error","message":"Token verification failed","timestamp":"2024-11-08T09:35:10.318Z","userId":"No userId"}
-{"expiredAt":"2024-11-07T12:57:58.000Z","filename":"customerController.js","level":"error","message":"jwt expired","name":"TokenExpiredError","timestamp":"2024-11-08T09:35:10.368Z","userId":"No userId"}
-{"error":"jwt expired","filename":"corporateorderController.js","level":"error","message":"Token verification failed","timestamp":"2024-11-08T09:35:10.384Z","userId":"No userId"}
-{"filename":"paymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2024-11-08T09:36:51.865Z","userId":"C000001"}
-{"filename":"paymentController.js","level":"error","message":"Error updating corporate order:","timestamp":"2024-11-08T09:41:08.673Z","userId":"No userId"}

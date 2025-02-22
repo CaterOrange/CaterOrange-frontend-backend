@@ -153,7 +153,7 @@ export const add_address = async  ( address , dispatch ) =>{
     dispatch(Request());
     try {
        
-        const token = localStorage.getItem('token'); // Or wherever you store the token
+        const token = localStorage.getItem('token'); 
         const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/corporate/addAddress`, {
             address
         }, {

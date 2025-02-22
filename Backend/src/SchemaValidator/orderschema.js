@@ -21,7 +21,7 @@ const orderSchema = {
             },
             delivery_status: { 
               type: "string", 
-              enum: [ "processing", "shipped", "delivered"] // Assuming these are possible statuses
+              enum: [ "pending", "accepted", "shipped","delivered","cancelled by user","cancelled by admin"]  // Assuming these are possible statuses
             },
             quantity: { 
               type: "number", 

@@ -92,7 +92,7 @@ function createCorporateOrdersTableQuery() {
       order_details JSON,  
       total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
-      customer_address JSON,
+      customer_address JSON, 
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       payment_status VARCHAR(50),
       corporate_order_status VARCHAR(50),
@@ -195,6 +195,7 @@ function createEventOrdersTableQuery() {
 
 
 
+
 function createCorporateCategoryTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS corporate_category (
@@ -204,21 +205,40 @@ function createCorporateCategoryTableQuery() {
       category_price FLOAT,
       category_media TEXT,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      closure_time TIME,
       is_deactivated BOOLEAN DEFAULT TRUE  -- New column with default value TRUE
     );
 
-    -- Insert initial categories if the table is empty
-    INSERT INTO corporate_category (category_name, category_description, category_price, category_media, is_deactivated)
+    INSERT INTO corporate_category (category_name, category_description, category_price, category_media, closure_time, is_deactivated)
     VALUES
-      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1a6kocftO79rmQR53WF8R8Ot53HHl9ugDcw&s', TRUE),
-      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-VdnMmylbU7YiYKeF0p8jxz6nkWTXGetirw&s', TRUE),
-      ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', TRUE),
-      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwdH9xjOAOB6kzFpM30_pd3jqzL1JtlVBOeg&s', TRUE),
-      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6vJvc47Z0yiKHMx1zZSMKcDTzFZmvduVBmw&s', TRUE),
-      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp5FtQsvjB021UZYuy_uZRKVbtbiQHzTI38Q&s', TRUE)
-    ON CONFLICT (category_name) DO NOTHING;  -- Prevent inserting duplicate category names
+      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 
+       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1a6kocftO79rmQR53WF8R8Ot53HHl9ugDcw&s', 
+       '06:00:00', TRUE),
+       
+      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 
+       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-VdnMmylbU7YiYKeF0p8jxz6nkWTXGetirw&s', 
+       '10:00:00', TRUE),
+       
+      ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 
+       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', 
+       '10:00:00', TRUE),
+       
+      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 
+       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwdH9xjOAOB6kzFpM30_pd3jqzL1JtlVBOeg&s', 
+       '4:00:00', TRUE),
+       
+      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 
+       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6vJvc47Z0yiKHMx1zZSMKcDTzFZmvduVBmw&s', 
+       '18:00:00', TRUE),
+       
+      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 
+       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp5FtQsvjB021UZYuy_uZRKVbtbiQHzTI38Q&s', 
+       '18:00:00', TRUE)
+    ON CONFLICT (category_name) DO NOTHING;
   `;
+
 }
+
 
 
 // Create Event Category Table
@@ -348,4 +368,3 @@ module.exports = {
   createEventProductsTableQuery,
   createAdminTableQuery
 };
-

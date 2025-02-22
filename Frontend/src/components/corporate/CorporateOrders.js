@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircleIcon, MinusCircleIcon, UserCircleIcon } from '@heroicons/react/solid';
@@ -7,15 +6,30 @@ import { Loader } from 'lucide-react';
 import OrderDashboard from '../events/myorders';
 import { VerifyToken } from '../../MiddleWare/verifyToken';
 
-// Navbar Component
+import {
+  Package,
+  Truck,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  ShoppingBag,
+  MapPin,
+  ChevronDown,
+  ChevronUp,
+  Calendar,
+  Box,
+  UserCheck,
+  XCircle
+} from 'lucide-react';
+
 const Navbar = ({ activeTab, toggleSidenav, cartCount }) => {
   return (
     <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-teal-700 to-teal-600 text-white shadow-md py-4 px-6 z-20">
       <div className="flex items-center justify-between relative">
         <div className="absolute left-0">
           <UserCircleIcon
-            className="h-9 w-9 cursor-pointer hover:opacity-80 transition-opacity" 
-            onClick={toggleSidenav} 
+            className="h-9 w-9 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={toggleSidenav}
           />
         </div>
 
@@ -32,7 +46,7 @@ const Navbar = ({ activeTab, toggleSidenav, cartCount }) => {
 // Sidenav Component
 const Sidenav = ({ isOpen, onClose, sidenavRef, userDP }) => {
   const navigate = useNavigate();
-  
+ 
   const getInitials = (name) => {
     if (!name) return '';
     const names = name.split(' ');
@@ -54,7 +68,7 @@ const Sidenav = ({ isOpen, onClose, sidenavRef, userDP }) => {
   return (
     <>
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-30"
           onClick={onClose}
           aria-hidden="true"
@@ -68,8 +82,8 @@ const Sidenav = ({ isOpen, onClose, sidenavRef, userDP }) => {
       >
         <div className="p-4 bg-teal-800 text-white">
           <div className="flex justify-end p-2">
-            <button 
-              className="text-white hover:opacity-80 transition-opacity" 
+            <button
+              className="text-white hover:opacity-80 transition-opacity"
               onClick={onClose}
               aria-label="Close menu"
             >
@@ -130,7 +144,238 @@ const Sidenav = ({ isOpen, onClose, sidenavRef, userDP }) => {
   );
 };
 
-// Main Component
+// Status Step Component for Delivery Progress
+const StatusStep = ({ status, isActive, isCompleted, icon: Icon, title, description, timestamp, isLast }) => (
+  <div className="flex items-start relative">
+    {/* Vertical line - only show if not the last item */}
+    {!isLast && (
+      <div className="absolute left-4 top-8 h-full w-0.5 bg-gray-200">
+        <div
+          className={`w-full ${isCompleted ? 'bg-green-500' : isActive ? 'bg-blue-500' : 'bg-gray-200'}`}
+          style={{ height: isActive ? '50%' : isCompleted ? '100%' : '0%' }}
+        />
+      </div>
+    )}
+   
+    {/* Status circle and content */}
+    <div className="flex items-start z-10">
+      <div className={`rounded-full p-2 ${
+        isCompleted ? 'bg-green-500 text-white' :
+        isActive ? 'bg-blue-500 text-white' :
+        'bg-gray-200 text-gray-500'
+      }`}>
+        <Icon size={20} />
+      </div>
+      <div className="ml-4">
+        <h4 className={`font-semibold ${
+          isCompleted ? 'text-green-600' :
+          isActive ? 'text-blue-600' :
+          'text-gray-500'
+        }`}>
+          {title}
+        </h4>
+        <p className="text-sm text-gray-500">{description}</p>
+        {timestamp && (
+          <p className="text-xs text-gray-400 mt-1">
+            {new Date(timestamp).toLocaleString()}
+          </p>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+// Delivery Progress Component
+const DeliveryProgress = ({ status, details }) => {
+  const steps = [
+    {
+      status: 'pending',
+      icon: Clock,
+      title: 'Order Placed',
+      description: 'Your order has been placed successfully'
+    },
+    {
+      status: 'accepted',
+      icon: UserCheck,
+      title: 'Order Confirmed',
+      description: 'Seller has processed your order'
+    },
+    {
+      status: 'shipped',
+      icon: Truck,
+      title: 'Shipped',
+      description: 'Your order is on the way'
+    },
+    {
+      status: 'delivered',
+      icon: CheckCircle,
+      title: 'Delivered',
+      description: 'Order has been delivered'
+    }
+  ];
+
+  const statusIndex = steps.findIndex(step => step.status === status.toLowerCase());
+ 
+  // If the current status is "delivered", mark it as completed
+  const isDelivered = status.toLowerCase() === 'delivered';
+
+  return (
+    <div className="space-y-8 py-6">
+      {steps.map((step, index) => (
+        <StatusStep
+          key={step.status}
+          {...step}
+          isCompleted={isDelivered && step.status === 'delivered' ? true : index < statusIndex}
+          isActive={index === statusIndex}
+          timestamp={index <= statusIndex ? new Date() : null}
+          isLast={index === steps.length - 1}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Order Card Component
+const OrderCard = ({ order }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+
+  const handleItemClick = (index) => {
+    setSelectedItemIndex(selectedItemIndex === index ? null : index);
+  };
+
+  // Get status color
+  const getStatusColor = (status) => {
+    switch(status.toLowerCase()) {
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'accepted':
+        return 'bg-blue-100 text-blue-800 border-blue-300';
+      case 'shipped':
+        return 'bg-purple-100 text-purple-800 border-purple-300';
+      case 'delivered':
+        return 'bg-green-100 text-green-800 border-green-300';
+      case 'cancelled by user':
+      case 'cancelled by admin':
+        return 'bg-red-100 text-red-800 border-red-300';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-300';
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+      {/* Order Header */}
+      <div
+        className="cursor-pointer p-6 border-b"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="flex items-center space-x-3">
+              <ShoppingBag className="text-teal-600" size={24} />
+              <h3 className="text-lg font-semibold text-gray-800">
+                {order.corporateorder_generated_id}
+              </h3>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">
+              Ordered on {new Date(order.ordered_at).toLocaleDateString()}
+            </p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <span className="text-xl font-bold text-teal-600">
+              ₹{order.total_amount}
+            </span>
+            {isExpanded ? <ChevronUp /> : <ChevronDown />}
+          </div>
+        </div>
+
+        {/* Delivery Address Preview */}
+        {order.customer_address && (
+          <div className="mt-4 flex items-start space-x-2 text-sm text-gray-600">
+            <MapPin size={16} className="flex-shrink-0 mt-1" />
+            <p>{order.customer_address.line1}, {order.customer_address.line2}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Expanded Content */}
+      {isExpanded && (
+        <div className="divide-y divide-gray-100">
+          {order.order_details.map((item, index) => (
+            <div key={index} className="p-4">
+              <div
+                className="cursor-pointer"
+                onClick={() => handleItemClick(index)}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Package size={24} className="text-gray-400" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-800">
+                        {item.category_name}
+                      </h4>
+                      <p className="text-sm text-gray-500">
+                        Qty: {item.quantity}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      getStatusColor(item.delivery_status)
+                    }`}>
+                      {item.delivery_status}
+                    </span>
+                    {selectedItemIndex === index ? <ChevronUp /> : <ChevronDown />}
+                  </div>
+                </div>
+              </div>
+
+              {/* Delivery Progress */}
+              {selectedItemIndex === index && (
+                <div className="mt-6 pl-20">
+                  <DeliveryProgress
+                    status={item.delivery_status}
+                    details={item}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Order Summary */}
+          <div className="p-6 bg-gray-50">
+            <h4 className="font-medium text-gray-800 mb-4">Order Summary</h4>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Total Items</span>
+                <span className="font-medium">
+                  {order.order_details.reduce((acc, item) => acc + item.quantity, 0)}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Total Amount</span>
+                <span className="font-medium">₹{order.total_amount}</span>
+              </div>
+              {/* <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Payment Status</span>
+                <span className={`font-medium ${
+                  order.payment_status === 'Success' ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {order.payment_status}
+                </span>
+              </div> */}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Main CorporateOrders Component
 const CorporateOrders = () => {
   const [showCorporate, setShowCorporate] = useState(true);
   const [expandedOrders, setExpandedOrders] = useState([]);
@@ -142,8 +387,10 @@ const CorporateOrders = () => {
   const sidenavRef = useRef(null);
   const navigate = useNavigate();
 
+  // Verify user token
   VerifyToken();
 
+  // Load user display picture
   useEffect(() => {
     const userDPData = localStorage.getItem('userDP');
     if (userDPData) {
@@ -151,6 +398,7 @@ const CorporateOrders = () => {
     }
   }, []);
 
+  // Handle sidenav click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (sidenavRef.current && !sidenavRef.current.contains(event.target)) {
@@ -162,9 +410,9 @@ const CorporateOrders = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  function parseNestedJSON(input) {
+  // Parse nested JSON helper
+  const parseNestedJSON = (input) => {
     if (typeof input !== 'string') return input;
-
     try {
       const parsed = JSON.parse(input);
       if (typeof parsed === 'string') {
@@ -175,17 +423,34 @@ const CorporateOrders = () => {
       console.error('Failed to parse JSON', input);
       return input;
     }
-  }
+  };
 
+  // Fetch category name
+  const fetchCategoryName = async (categoryId) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_URL}/api/customer/getcategorynameById`,
+        { categoryId },
+        { headers: { token: localStorage.getItem('token') } }
+      );
+      return response.data.categoryname.category_name;
+    } catch (error) {
+      console.error('Error fetching category name:', error);
+      return 'Unknown Category';
+    }
+  };
+
+  // Fetch orders data
   useEffect(() => {
     const fetchOrders = async () => {
       setIsLoading(true);
       setError(null);
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_URL}/api/customer/corporate/myorders`, {
-          headers: { token: token },
-        });
+        const response = await axios.get(
+          `${process.env.REACT_APP_URL}/api/customer/corporate/myorders`,
+          { headers: { token } }
+        );
 
         const parsedOrders = parseNestedJSON(response.data.data);
 
@@ -224,180 +489,74 @@ const CorporateOrders = () => {
     fetchOrders();
   }, []);
 
-  const fetchCategoryName = async (categoryId) => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_URL}/api/customer/getcategorynameById`,
-        { categoryId },
-        { headers: { token: localStorage.getItem('token') } }
-      );
-      return response.data.categoryname.category_name;
-    } catch (error) {
-      console.error('Error fetching category name:', error);
-      return 'Unknown Category';
-    }
-  };
-
-  const toggleOrderDetails = useCallback((orderId) => {
-    setExpandedOrders(prev => {
-      const newExpandedOrders = prev.includes(orderId)
-        ? prev.filter(id => id !== orderId)
-        : [...prev, orderId];
-      return newExpandedOrders;
-    });
-  }, []);
-
-  const renderProgressIcons = (progress) => {
-    const stages = ['processing', 'shipped', 'delivered'];
-    const activeIndex = stages.indexOf(progress);
-
-    return (
-      <div className="flex justify-between items-center">
-        {stages.map((stage, index) => (
-          <div key={stage} className="flex flex-col items-center">
-            {index <= activeIndex ? (
-              <CheckCircleIcon className="text-green-500 h-4 w-4 sm:h-6 sm:w-6 mb-1 transition-transform transform hover:scale-110" />
-            ) : (
-              <MinusCircleIcon className="text-gray-400 h-4 w-4 sm:h-6 sm:w-6 mb-1 transition-transform transform hover:scale-110" />
-            )}
-            <span className={`text-xs ${index <= activeIndex ? 'text-gray-900 font-semibold' : 'text-gray-400'}`}>
-              {stage.charAt(0).toUpperCase() + stage.slice(1)}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const renderOrder = useCallback((order) => {
-    const isExpanded = expandedOrders.includes(order.corporateorder_generated_id);
-
-    return (
-      <div key={order.corporateorder_generated_id} className="w-full bg-white rounded-lg border shadow-md hover:shadow-xl transition-shadow duration-300 mb-4">
-        <div
-          className="flex justify-between items-center p-4 sm:p-6 bg-blue-100 cursor-pointer hover:bg-blue-200 transition-colors rounded-t-lg"
-          onClick={() => toggleOrderDetails(order.corporateorder_generated_id)}
-        >
-          <div className="w-full flex justify-between items-start">
-            <div>
-              <p className="text-lg sm:text-xl font-bold text-teal-800">Order ID: {order.corporateorder_generated_id}</p>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                Date: {new Date(order.ordered_at).toLocaleDateString('en-GB', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })} {new Date(order.ordered_at).toLocaleTimeString('en-GB', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: true,
-                })}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-lg sm:text-xl font-bold text-blue-100 bg-teal-700 px-3 py-1 rounded-lg shadow-md">
-                Total: ₹ {order.total_amount}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {isExpanded && (
-          <div className="p-4 sm:p-6 overflow-x-auto">
-            <table className="w-full bg-white min-w-max">
-              <thead className="bg-gray-100 text-left text-xs sm:text-sm">
-                <tr>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Category Name</th>
-                  <th className="p-2 sm:p-6 lg:p-4 whitespace-nowrap w-1/3 text-center">Progress</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Date</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Qty</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Active Qty</th>
-                  <th className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.order_details.map((detail, i) => (
-                  <tr key={i} className="border-t text-xs sm:text-sm hover:bg-gray-50">
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">
-                      {detail.category_name || 'Unknown Category'}
-                    </td>
-                    <td className="p-2 sm:p-6 lg:p-4 whitespace-nowrap w-1/4">
-                      {renderProgressIcons(detail.delivery_status)}
-                    </td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.processing_date}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.quantity}</td>
-                    <td className="p-2 sm:p-3 lg:p-4 whitespace-nowrap">{detail.active_quantity}</td>
-                    <td className={`p-2 sm:p-3 lg:p-4 font-bold whitespace-nowrap ${
-                      detail.accept_status === 'rejected' ? 'text-red-500' : 'text-green-500'
-                    }`}>
-                      {detail.accept_status}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    );
-  }, [expandedOrders, toggleOrderDetails]);
-
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <Navbar 
+    <div className="min-h-screen bg-gray-50">
+      <Navbar
         activeTab="orders"
         toggleSidenav={() => setIsSidenavOpen(!isSidenavOpen)}
+        cartCount={0}
       />
-      
       <Sidenav
         isOpen={isSidenavOpen}
         onClose={() => setIsSidenavOpen(false)}
         sidenavRef={sidenavRef}
         userDP={userDP}
       />
-
-      <div className="pt-24 px-4 lg:px-8 flex-grow">
-        <div className="bg-gradient-to-r from-blue-50 to-white shadow-xl rounded-lg p-4">
-          {showCorporate ? (
-            <div className="space-y-4 sm:space-y-8 w-full">
-              {isLoading ? (
-                <div className="flex justify-center items-center h-64">
-                  <Loader />
-                </div>
-              ) : error ? (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative flex flex-col items-center" role="alert">
-                  <span className="block sm:inline">Go and place an order to see it here.</span>
-                  <button
-                    className="mt-4 bg-teal-800 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition"
-                    onClick={() => navigate('/home')}
-                  >
-                    Order Now
-                  </button>
-                </div>
-              ) : orderData && orderData.length > 0 ? (
-                orderData.map(renderOrder)
-              ) : (
-                <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative flex flex-col items-center" role="alert">
-                  <span className="block sm:inline">Go and place an order to see it here.</span>
-                  <button
-                    className="mt-4 bg-teal-800 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition"
-                    onClick={() => navigate('/home')}
-                  >
-                    Order Now
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <OrderDashboard />
-            </div>
-          )}
+      <div className="max-w-7xl mx-auto px-4 py-8 pt-20">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-bold text-gray-800">My Orders</h1>
+          <button
+            onClick={() => navigate('/home')}
+            className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg
+                     transition-colors duration-200 flex items-center space-x-2"
+          >
+            <ShoppingBag size={20} />
+            <span>Place New Order</span>
+          </button>
         </div>
-      </div>
 
-      <footer className="bg-teal-800 text-white text-center py-4">
-        <p>Good food is just an order away! 🍜📦</p>
-      </footer>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-teal-600 border-t-transparent" />
+          </div>
+        ) : error ? (
+          <div className="bg-white rounded-lg p-8 text-center">
+            <AlertCircle className="mx-auto text-yellow-500 mb-4" size={48} />
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">{error}</h2>
+            <button
+              onClick={() => navigate('/home')}
+              className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+              Start Ordering
+            </button>
+          </div>
+        ) : orderData && orderData.length > 0 ? (
+          <div className="space-y-6">
+            {orderData.map(order => (
+              <OrderCard
+                key={order.corporateorder_generated_id}
+                order={order}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg p-8 text-center">
+            <ShoppingBag className="mx-auto text-gray-400 mb-4" size={48} />
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              No orders yet
+            </h2>
+            <p className="text-gray-500 mb-6">
+              Start shopping to see your orders here
+            </p>
+            <button
+              onClick={() => navigate('/home')}
+              className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+              Browse Products
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

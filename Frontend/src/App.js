@@ -26,6 +26,12 @@ import Razorpay from './components/rasorpay.js';
 import NotFound from './components/Home/notFound.js';
 import AddressList from './components/Address/AddressList.js';
 
+
+import mixpanel from "mixpanel-browser";
+
+mixpanel.init("cb19042cf789f9c44e059bd4be6f2c5d", { debug: true }); // Replace with your token
+
+
 function App() {
   const [user, setUser] = useState(null);
   const { cartCount } = useCart();

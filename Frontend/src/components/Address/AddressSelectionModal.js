@@ -55,7 +55,7 @@ const AddressSelectionModal = ({ isOpen, onClose, onAddressSelect, AddressForm }
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${process.env.REACT_APP_URL}/api/address/getalladdresses`, {
+      const response = await axios.get(`${process.env.REACT_APP_URL}/api/v2/address/getalladdresses`, {
         headers: { token },
       });
       
@@ -76,7 +76,7 @@ const AddressSelectionModal = ({ isOpen, onClose, onAddressSelect, AddressForm }
     try {
       const token = localStorage.getItem('token');
       const response = await axios.delete(
-        `${process.env.REACT_APP_URL}/api/customer/address/delete/${addressId}`,
+        `${process.env.REACT_APP_URL}/api/v2/customer/address/delete/${addressId}`,
         {
           headers: { token },
         }
@@ -100,7 +100,7 @@ const AddressSelectionModal = ({ isOpen, onClose, onAddressSelect, AddressForm }
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `${process.env.REACT_APP_URL}/api/customer/address/update/${addressId}`,
+        `${process.env.REACT_APP_URL}/api/v2/customer/address/update/${addressId}`,
         updatedData,
         {
           headers: { token },

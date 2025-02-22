@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Pencil, X } from 'lucide-react';
+import { Pencil, X, Upload, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -8,6 +8,7 @@ import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/leaflet.css';
+
 
 const DefaultIcon = L.icon({
  iconUrl: icon,
@@ -19,6 +20,7 @@ const DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClose }) => {
+
  const [isEdit, setIsEdit] = useState(false);
  const [editAddressId, setEditAddressId] = useState(null);
  const [formData, setFormData] = useState({
@@ -29,7 +31,19 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
  state: '',
  pincode: '',
  location: { lat: null, lng: null }
- });
+ }); 
+ 
+ const [selectedImage, setSelectedImage] = useState(null);
+ const [existingImage, setExistingImage] = useState(null);
+
+ const [imagePreview, setImagePreview] = useState(null);
+ const fileInputRef = useRef(null);
+ const [touchedFields, setTouchedFields] = useState({});
+ const [showImagePreview, setShowImagePreview] = useState(false);
+
+
+
+
 
  const [address, setAddress] = useState([]);
  const [isViewAddresses, setIsViewAddresses] = useState(false);
@@ -70,7 +84,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
  }
 
  const response = await axios.get(
- `${process.env.REACT_APP_URL}/api/address/getDefaultAddress`,
+ `${process.env.REACT_APP_URL}/api/v2/address/getDefaultAddress`,
  { headers: { token } }
  );
 
@@ -87,140 +101,290 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
  };
 
  const populateInitialData = () => {
- setIsEdit(true);
- setEditAddressId(initialData.address_id);
+  setIsEdit(true);
+  setEditAddressId(initialData.address_id);
 
- const locationUrl = initialData.location || '';
- const coords = locationUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
- const [doorNumber, landmark] = (initialData.line1 || '').split(',').map(s => s.trim());
- const [city, state] = (initialData.line2 || '').split(',').map(s => s.trim());
+  const locationUrl = initialData.location || '';
+  const coords = locationUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  const [doorNumber, landmark] = (initialData.line1 || '').split(',').map(s => s.trim());
+  const [city, state] = (initialData.line2 || '').split(',').map(s => s.trim());
 
- setFormData({
- addressLabel: initialData.tag || '',
- doorNumber: doorNumber || '',
- landmark: landmark || '',
- city: city || '',
- state: state || '',
- pincode: initialData.pincode || '',
- location: coords ? {
- lat: parseFloat(coords[1]),
- lng: parseFloat(coords[2])
- } : { lat: null, lng: null }
- });
+  // Set the existing image if available
+  if (initialData.media_image_url) {
+    setExistingImage(initialData.media_image_url);
+    setImagePreview(initialData.media_image_url);
+    setShowImagePreview(true);
+  }
 
- if (coords) {
- const newPos = [parseFloat(coords[1]), parseFloat(coords[2])];
- setPosition(newPos);
- setMapCenter(newPos);
- setMapKey(prev => prev + 1);
- }
- };
+  setFormData({
+    addressLabel: initialData.tag || '',
+    doorNumber: doorNumber || '',
+    landmark: landmark || '',
+    city: city || '',
+    state: state || '',
+    pincode: initialData.pincode || '',
+    location: coords ? {
+      lat: parseFloat(coords[1]),
+      lng: parseFloat(coords[2])
+    } : { lat: null, lng: null }
+  });
+
+  if (coords) {
+    const newPos = [parseFloat(coords[1]), parseFloat(coords[2])];
+    setPosition(newPos);
+    setMapCenter(newPos);
+    setMapKey(prev => prev + 1);
+  }
+};
 
  const validateField = (name, value) => {
- let error = '';
- switch (name) {
- case 'location':
- if (!value || !value.lat || !value.lng) {
- error = 'Please select a location on the map';
- }
- break;
- 
- case 'addressLabel':
- if (!value) error = 'Address label is required';
- break;
- case 'doorNumber':
- if (!value) error = 'Door number is required';
- else if (value.length < 2) error = 'Door number must be at least 2 characters';
- break;
- case 'landmark':
- if (!value) error = 'Landmark is required';
- break;
- case 'city':
- if (!value) error = 'City is required';
- else if (!/^[a-zA-Z\s]+$/.test(value)) error = 'City should only contain letters';
- break;
- case 'state':
- if (!value) error = 'State is required';
- else if (!/^[a-zA-Z\s]+$/.test(value)) error = 'State should only contain letters';
- break;
- case 'pincode':
- if (!value) {
- error = 'Pincode is required';
- } else {
- // Remove any spaces or non-digit characters
- const cleanPincode = value.replace(/\D/g, '');
- if (cleanPincode.length !== 6) {
- error = 'Pincode must be 6 digits';
- }
- }
- break;
- case 'location':
- if (!value.lat || !value.lng) error = 'Location is required';
- break;
- default:
- break;
- }
- return error;
- };
+    let error = '';
+
+    switch (name) {
+        case 'location':
+            if (!value || !value.lat || !value.lng) {
+                error = 'Please select a location on the map';
+            }
+            break;
+
+        case 'addressLabel':
+            if (!value) error = 'Address label is required';
+            break;
+
+        case 'doorNumber':
+            if (!value) {
+                error = 'Door number is required';
+            } else if (value.length < 2) {
+                error = 'Door number must be at least 2 characters';
+            }
+            break;
+
+        case 'landmark':
+            if (!value) error = 'Landmark is required';
+            break;
+
+        case 'city':
+            if (!value) {
+                error = 'City is required';
+            } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+                error = 'City should only contain letters';
+            }
+            break;
+
+        case 'state':
+            if (!value) {
+                error = 'State is required';
+            } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+                error = 'State should only contain letters';
+            }
+            break;
+
+        case 'pincode':
+            if (!value) {
+                error = 'Pincode is required';
+            } else {
+                // Remove any spaces or non-digit characters
+                const cleanPincode = value.replace(/\D/g, '');
+                if (cleanPincode.length !== 6) {
+                    error = 'Pincode must be 6 digits';
+                }
+            }
+            break;
+
+        case 'media_image_url':
+            if (value) {
+                const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!validTypes.includes(value.type)) {
+                    error = 'Please upload a valid image file (JPEG, PNG)';
+                } else if (value.size > 5 * 1024 * 1024) { // 5MB limit
+                    error = 'Image size should be less than 5MB';
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    return error;
+};
+
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const error = validateField('media_image_url', file);
+    if (error) {
+      setFormErrors(prev => ({
+        ...prev,
+        media_image_url: error
+      }));
+      return;
+    }
+
+    setSelectedImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setShowImagePreview(true);
+    };
+    reader.readAsDataURL(file);
+
+    // Clear existing image when new one is selected
+    setExistingImage(null);
+    
+    setFormErrors(prev => ({
+      ...prev,
+      media_image_url: ''
+    }));
+  }
+};
+
+// Add function to remove image
+const handleRemoveImage = () => {
+  setSelectedImage(null);
+  setImagePreview(null);
+  setExistingImage(null);
+  setShowImagePreview(false);
+  if (fileInputRef.current) {
+    fileInputRef.current.value = '';
+  }
+};
+
+
+const renderImageSection = () => (
+  <div className="bg-gray-50 p-4 rounded-lg">
+    <h3 className="text-gray-800 text-sm font-medium mb-3">Address Image</h3>
+    <div className="space-y-3">
+      <div className="flex items-center justify-center w-full">
+        <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+          {showImagePreview ? (
+            <div className="relative w-full h-full">
+              <img
+                src={imagePreview || existingImage}
+                alt="Address"
+                className="w-full h-full object-contain rounded-lg"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    fileInputRef.current?.click();
+                  }}
+                  className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center space-x-2"
+                >
+                  <Pencil size={16} />
+                  <span>Change Image</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRemoveImage();
+                  }}
+                  className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg flex items-center space-x-2"
+                >
+                  <Trash2 size={16} />
+                  <span>Remove Image</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+              <Upload className="w-8 h-8 mb-4 text-gray-500" />
+              <p className="mb-2 text-sm text-gray-500">
+                <span className="font-semibold">Click to upload</span> or drag and drop
+              </p>
+              <p className="text-xs text-gray-500">PNG, JPG (MAX. 5MB)</p>
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </label>
+      </div>
+      {formErrors.media_image_url && (
+        <p className="text-red-500 text-xs mt-1">{formErrors.media_image_url}</p>
+      )}
+    </div>
+  </div>
+);
 
  // Validate entire form and update isFormValid state
- const validateForm = () => {
- const errors = {};
- let isValid = true;
- 
- Object.keys(formData).forEach(key => {
- const error = validateField(key, 
- key === 'location' ? formData[key] : formData[key]);
- if (error) {
- errors[key] = error;
- isValid = false;
- }
- });
+ const validateForm = (respectTouched = false) => {
+    const errors = {};
+    let isValid = true;
+    
+    Object.keys(formData).forEach(key => {
+      // Only validate if field has been touched or we're ignoring touched state
+      if (!respectTouched || touchedFields[key]) {
+        const error = validateField(key, 
+          key === 'location' ? formData[key] : formData[key]);
+        if (error) {
+          errors[key] = error;
+          isValid = false;
+        }
+      }
+    });
 
- setFormErrors(errors);
- setIsFormValid(isValid && defaultDetails.isValid);
- return isValid;
- };
-
+    setFormErrors(errors);
+    setIsFormValid(isValid && defaultDetails.isValid);
+    return isValid;
+  };
  // Handle input changes with immediate validation
  const handleChange = (e) => {
- const { name, value } = e.target;
- 
- // Special handling for pincode
- if (name === 'pincode') {
- // Remove any non-digit characters
- const cleanValue = value.replace(/\D/g, '');
- // Only update if it's empty or contains digits and is not longer than 6
- if (cleanValue.length <= 6) {
- setFormData(prev => ({
- ...prev,
- [name]: cleanValue
- }));
- 
- // Validate the cleaned pincode value
- const error = validateField(name, cleanValue);
- setFormErrors(prev => ({
- ...prev,
- [name]: error
- }));
- }
- } else {
- setFormData(prev => ({
- ...prev,
- [name]: value
- }));
- 
- // Validate the changed field immediately
- const error = validateField(name, value);
- setFormErrors(prev => ({
- ...prev,
- [name]: error
- }));
- }
- 
- // Validate entire form to update button state
- setTimeout(() => validateForm(), 0);
- };
+    const { name, value } = e.target;
+    
+    // Mark field as touched
+    setTouchedFields(prev => ({
+      ...prev,
+      [name]: true
+    }));
+
+
+
+    
+    // Special handling for pincode
+    if (name === 'pincode') {
+      const cleanValue = value.replace(/\D/g, '');
+      if (cleanValue.length <= 6) {
+        setFormData(prev => ({
+          ...prev,
+          [name]: cleanValue
+        }));
+        
+        // Only validate if field has been touched
+        if (touchedFields[name]) {
+          const error = validateField(name, cleanValue);
+          setFormErrors(prev => ({
+            ...prev,
+            [name]: error
+          }));
+        }
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+      
+      // Only validate if field has been touched
+      if (touchedFields[name]) {
+        const error = validateField(name, value);
+        setFormErrors(prev => ({
+          ...prev,
+          [name]: error
+        }));
+      }
+    }
+    
+    // Validate entire form to update button state
+    setTimeout(() => validateForm(true), 0);
+  };
 
  // Validate default details with immediate feedback
  const validateDefaultDetails = (name, phone) => {
@@ -240,33 +404,44 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
  };
  };
 
+
+ 
+
  // Handle default details changes with validation
  const handleDefaultDetailsChange = (e) => {
- const { name, value } = e.target;
- const newDetails = {
- ...defaultDetails,
- [name]: value
- };
- 
- const validation = validateDefaultDetails(
- name === 'customer_name' ? value : newDetails.customer_name,
- name === 'customer_phonenumber' ? value : newDetails.customer_phonenumber
- );
- 
- setDefaultDetails({
- ...newDetails,
- isValid: validation.isValid,
- errors: validation.errors
- });
- 
- // Update overall form validity
- setTimeout(() => validateForm(), 0);
- };
+    const { name, value } = e.target;
+    
+    // Mark field as touched
+    setTouchedFields(prev => ({
+      ...prev,
+      [name]: true
+    }));
 
- // Effect to validate form when component mounts or data changes
- useEffect(() => {
- validateForm();
- }, [formData, defaultDetails]);
+    const newDetails = {
+      ...defaultDetails,
+      [name]: value
+    };
+    
+    const validation = validateDefaultDetails(
+      name === 'customer_name' ? value : newDetails.customer_name,
+      name === 'customer_phonenumber' ? value : newDetails.customer_phonenumber
+    );
+    
+    setDefaultDetails({
+      ...newDetails,
+      isValid: validation.isValid,
+      errors: touchedFields[name] ? validation.errors : {}
+    });
+    
+    setTimeout(() => validateForm(true), 0);
+  };
+
+
+  useEffect(() => {
+    if (initialData) {
+      validateForm(true);
+    }
+  }, [initialData]);
 
  const getCurrentLocation = () => {
  setLoading(true);
@@ -320,58 +495,77 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
  };
 
  
-
  const handleSubmit = async (e) => {
- e.preventDefault();
- 
- if (!validateForm()) {
- return;
- }
+  e.preventDefault();
+  
+  const allFields = {...formData, ...defaultDetails};
+  setTouchedFields(Object.keys(allFields).reduce((acc, key) => {
+    acc[key] = true;
+    return acc;
+  }, {}));
+  
+  if (!validateForm(false)) {
+    return;
+  }
 
- try {
- const token = localStorage.getItem('token');
- if (!token || isTokenExpired(token)) {
- navigate('/');
- return;
- }
+  try {
+    const token = localStorage.getItem('token');
+    if (!token || isTokenExpired(token)) {
+      navigate('/');
+      return;
+    }
 
- const payload = {
- tag: formData.addressLabel,
- pincode: formData.pincode,
- line1: `${formData.doorNumber}, ${formData.landmark}`,
- line2: `${formData.city}, ${formData.state}`,
- location: `https://www.google.com/maps?q=${formData.location.lat},${formData.location.lng}`,
- ship_to_name: defaultDetails.customer_name,
- ship_to_phone_number: defaultDetails.customer_phonenumber
- };
+    const formDataToSend = new FormData();
+    formDataToSend.append('tag', formData.addressLabel);
+    formDataToSend.append('pincode', formData.pincode);
+    formDataToSend.append('line1', `${formData.doorNumber}, ${formData.landmark}`);
+    formDataToSend.append('line2', `${formData.city}, ${formData.state}`);
+    formDataToSend.append('location', `https://www.google.com/maps?q=${formData.location.lat},${formData.location.lng}`);
+    formDataToSend.append('ship_to_name', defaultDetails.customer_name);
+    formDataToSend.append('ship_to_phone_number', defaultDetails.customer_phonenumber);
+    
+    // Only append new image if selected
+    if (selectedImage) {
+      formDataToSend.append('media_image_url', selectedImage);
+    } else if (imagePreview && !selectedImage && isEdit) {
+      // If editing and there's an existing image but no new one selected,
+      // send the existing image URL
+      formDataToSend.append('media_image_url', imagePreview);
+    }
 
- if (isEdit) {
- await axios.put(
- `${process.env.REACT_APP_URL}/api/customer/address/update/${editAddressId}`,
- payload,
- { headers: { token } }
- );
- setSuccessMessage('Address updated successfully');
- } else {
- await axios.post(
- `${process.env.REACT_APP_URL}/api/address/createAddres`,
- payload,
- { headers: { token } }
- );
- setSuccessMessage('Address saved successfully');
- }
+    const config = {
+      headers: {
+        'token': token,
+        'Content-Type': 'multipart/form-data'
+      }
+    };
 
- if (onAddressAdd) await onAddressAdd();
- if (onClose) onClose();
+    if (isEdit) {
+      await axios.put(
+        `${process.env.REACT_APP_URL}/api/v2/customer/address/update/${editAddressId}`,
+        formDataToSend,
+        config
+      );
+      setSuccessMessage('Address updated successfully');
+    } else {
+      await axios.post(
+        `${process.env.REACT_APP_URL}/api/v2/address/createAddres`,
+        formDataToSend,
+        config
+      );
+      setSuccessMessage('Address saved successfully');
+    }
 
- } catch (error) {
- setFormErrors(prev => ({
- ...prev,
- general: error.response?.data?.message || 'Failed to save address'
- }));
- }
- };
+    if (onAddressAdd) await onAddressAdd();
+    if (onClose) onClose();
 
+  } catch (error) {
+    setFormErrors(prev => ({
+      ...prev,
+      general: error.response?.data?.message || 'Failed to save address'
+    }));
+  }
+};
 
  const handleViewAddresses = async () => {
  if (!isViewAddresses) {
@@ -383,7 +577,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
  }
 
  const response = await axios.get(
- `${process.env.REACT_APP_URL}/api/address/getalladdresses`,
+ `${process.env.REACT_APP_URL}/api/v2/address/getalladdresses`,
  { headers: { token } }
  );
 
@@ -400,7 +594,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
  const handleSelect = async (address_id) => {
  try {
  const response = await axios.get(
- `${process.env.REACT_APP_URL}/api/customer/getAddress`,
+ `${process.env.REACT_APP_URL}/api/v2/customer/getAddress`,
  {
  params: { address_id },
  headers: { token: localStorage.getItem('token') }
@@ -603,57 +797,60 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
 
  </div>
 
+
  <div className="space-y-4 mt-6">
- <div className="bg-gray-50 p-4 rounded-lg">
- <h3 className="text-gray-800 text-sm font-medium mb-3">Default Details</h3>
- <div className="space-y-3">
- <div>
- <input
- type="text"
- name="customer_name"
- value={defaultDetails.customer_name}
- onChange={handleDefaultDetailsChange}
- placeholder="Default Name"
- className="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
- />
- {defaultDetails.errors.customer_name && (
- <p className="text-red-500 text-xs mt-1">
- {defaultDetails.errors.customer_name}
- </p>
- )}
- </div>
+ {renderImageSection()}
 
- <div>
- <input
- type="text"
- name="customer_phonenumber"
- value={defaultDetails.customer_phonenumber}
- onChange={handleDefaultDetailsChange}
- placeholder="Default Phone Number"
- className="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
- />
- {defaultDetails.errors.customer_phonenumber && (
- <p className="text-red-500 text-xs mt-1">
- {defaultDetails.errors.customer_phonenumber}
- </p>
- )}
- </div>
- </div>
- </div>
+              {/* Default Details Section */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-gray-800 text-sm font-medium mb-3">Default Details</h3>
+                <div className="space-y-3">
+                  <div>
+                    <input
+                      type="text"
+                      name="customer_name"
+                      value={defaultDetails.customer_name}
+                      onChange={handleDefaultDetailsChange}
+                      placeholder="Default Name"
+                      className="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                    />
+                    {defaultDetails.errors.customer_name && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {defaultDetails.errors.customer_name}
+                      </p>
+                    )}
+                  </div>
 
- <button 
- type="submit"
- className={`w-full font-bold py-2 px-4 rounded transition-colors ${
- defaultDetails.isValid 
- ? 'bg-teal-700 hover:bg-teal-600 text-white' 
- : 'bg-gray-300 text-gray-500 cursor-not-allowed'
- }`}
- disabled={!defaultDetails.isValid}
- >
- {isEdit ? 'Update Address' : 'Save Address'}
- </button>
- </div>
- </form>
+                  <div>
+                    <input
+                      type="text"
+                      name="customer_phonenumber"
+                      value={defaultDetails.customer_phonenumber}
+                      onChange={handleDefaultDetailsChange}
+                      placeholder="Default Phone Number"
+                      className="w-full px-3 py-2 text-sm border rounded-lg border-gray-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500"
+                    />
+                    {defaultDetails.errors.customer_phonenumber && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {defaultDetails.errors.customer_phonenumber}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                type="submit"
+                className={`w-full font-bold py-2 px-4 rounded transition-colors ${
+                  isFormValid 
+                    ? 'bg-teal-700 hover:bg-teal-600 text-white' 
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                {isEdit ? 'Update Address' : 'Save Address'}
+              </button>
+            </div>
+          </form>
  </div>
  </div>
  </div>

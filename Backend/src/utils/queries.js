@@ -159,9 +159,9 @@ DELETECARTROW:`
           WHERE corporatecart_id = $1
             AND (cart_order_details IS NULL OR jsonb_array_length(cart_order_details::jsonb) = 0);
       `,
-INSERT_CART_TO_ORDER:`INSERT INTO corporate_orders
-      (customer_generated_id,order_details,total_amount, paymentid, customer_address ,payment_status ) 
-      VALUES ($1, $2, $3, $4, $5, $6) 
+      INSERT_CART_TO_ORDER:`INSERT INTO corporate_orders
+      (customer_generated_id,order_details,total_amount, paymentid, customer_address ,payment_status,corporate_order_status ) 
+      VALUES ($1, $2, $3, $4, $5, $6,$7) 
       RETURNING *`,
 GET_CATEGORY_NAME: `
     SELECT category_name,category_price FROM  corporate_category WHERE category_id= $1
