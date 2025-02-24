@@ -9,6 +9,11 @@
             "date": 1740225997850,
             "name": "/home/stranger/CaterOrange-frontend-backend/Backend/src/config/logs/error-2025-02-22.log",
             "hash": "e29c1b36625b815711c98be964198162ab78e6d75b654b8a542a5574670fe0f2"
+        },
+        {
+            "date": 1740380663141,
+            "name": "/home/stranger/CaterOrange-frontend-backend/Backend/src/config/logs/error-2025-02-24.log",
+            "hash": "1eec6acf1e470cbf4d9c3ede015862fc0d7275247f8b8037f480699ca6bdd1ad"
         }
     ],
     "hashType": "sha256"

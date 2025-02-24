@@ -160,16 +160,7 @@ const register = async (req, res) => {
             phone_number_provided: !!customer_phonenumber
         });
 
-        const valid = validate(req.body);
-        console.log('validate sign up', valid)
-        if (!valid) {
-            console.log("Error validation for sign up", validate.errors)
-            return res.status(400).json({
-                message: 'Validation failed',
-                errors: validate.errors
-            });
-        }
-
+    
         const minNameLength = 3;
         const maxNameLength = 50;
         const minPasswordLength = 8;

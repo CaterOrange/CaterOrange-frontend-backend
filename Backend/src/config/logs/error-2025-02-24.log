@@ -1,0 +1,4 @@
+{"customer_email":"admin@gmail.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-24T07:09:34.626Z","userId":"No userId"}
+{"customer_email":"sirisha@scaleorange.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-24T07:12:09.026Z","userId":"C000030"}
+{"customer_email":"sirishatatipaka3@gmail.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-24T07:27:17.809Z","userId":"C000030"}
+{"customer_email":"siri@gmail.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-02-24T07:45:18.334Z","userId":"C000031"}
