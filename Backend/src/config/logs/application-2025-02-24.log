@@ -163,3 +163,26 @@
 {"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2025-02-24T08:35:13.907Z","userId":"No userId"}
 {"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2025-02-24T08:35:13.997Z","userId":"No userId"}
 {"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2025-02-24T08:35:13.997Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2025-02-24T13:10:13.533Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2025-02-24T13:10:13.536Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2025-02-24T13:10:13.556Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2025-02-24T13:10:13.570Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2025-02-24T13:10:13.572Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2025-02-24T13:10:13.574Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2025-02-24T13:10:13.575Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2025-02-24T13:10:13.577Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2025-02-24T13:10:13.579Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2025-02-24T13:10:13.592Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2025-02-24T13:10:13.596Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2025-02-24T13:10:13.596Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2025-02-24T13:10:13.600Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2025-02-24T13:10:13.601Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2025-02-24T13:10:13.602Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2025-02-24T13:10:13.603Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2025-02-24T13:10:13.604Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2025-02-24T13:10:13.605Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2025-02-24T13:10:13.672Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2025-02-24T13:10:13.734Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2025-02-24T13:10:13.734Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2025-02-24T13:13:48.692Z","userId":"No userId"}
+{"filename":"categoryModels.js","level":"info","message":"Corporate categories fetched successfully","timestamp":"2025-02-24T13:13:48.713Z","userId":"No userId"}

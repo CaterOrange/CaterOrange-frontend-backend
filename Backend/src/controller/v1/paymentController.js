@@ -48,7 +48,6 @@ addFormats(ajv);
 
 const { paymentSchema }=require('../../SchemaValidator/paymentSchema.js')
 
-const validate = ajv.compile(paymentSchema);
 
 const redis = new Redis({     
   host: 'localhost',  
@@ -60,19 +59,9 @@ const payment = async (req, res) => {
   const { paymentType, merchantTransactionId, phonePeReferenceId, paymentFrom, instrument, bankReferenceNo, amount, customer_id, corporateorder_id } = req.body;
 console.log('payment',req.body)
 
-const valid = validate(req.body);
-console.log('validate payment',valid)
-if (!valid) {
-  console.log("Error validation for payment",validate.errors)
-  return res.status(400).json({
-    message: 'Validation failed',
-    errors: validate.errors
-  });
-}
+
 
 mixpanel.track('Payment Validation Failed', {
-  distinct_id: customer_id,
-  errors: validate.errors,
   payment_type: paymentType,
   amount: amount
 });
@@ -124,7 +113,6 @@ mixpanel.track('Payment Validation Failed', {
 
 
     mixpanel.track('Payment Completed', {
-      distinct_id: customer_id,
       payment_id: generatedPaymentId,
       payment_type: paymentType,
       amount: amount,
@@ -137,9 +125,7 @@ mixpanel.track('Payment Validation Failed', {
     mixpanel.people.set(customer_id, {
       '$last_payment_date': new Date().toISOString(),
       'last_payment_amount': amount,
-      'last_payment_type': paymentType,
-      'total_payments': mixpanel.people.increment(1),
-      'total_spent': mixpanel.people.increment(amount)
+      'last_payment_type': paymentType
     });
 
 
@@ -149,7 +135,6 @@ mixpanel.track('Payment Validation Failed', {
 
 
     mixpanel.track('Payment Error', {
-      distinct_id: customer_id,
       error_message: error.message,
       payment_type: paymentType,
       amount: amount
@@ -277,7 +262,6 @@ console.log('instances',razorpayInstance)
     const order = await razorpayInstance.orders.create(options);
 
     mixpanel.track('Payment Order Created', {
-      distinct_id: customer_id,
       order_id: order.id,
       amount: amount,
       currency: currency
@@ -288,7 +272,6 @@ console.log('instances',razorpayInstance)
   } catch (error) {
 
     mixpanel.track('Payment Order Creation Failed', {
-      distinct_id: req.user?.id,
       error_message: error.message,
       amount: req.body.amount,
       currency: req.body.currency
@@ -306,7 +289,6 @@ const verify_payment = async (req, res) => {
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
 
       mixpanel.track('Payment Verification Failed', {
-        distinct_id: customer_id,
         reason: 'Missing payment details',
         order_id: razorpay_order_id
       });
@@ -329,7 +311,6 @@ const verify_payment = async (req, res) => {
     if (expectedSignature === razorpay_signature) {
 
       mixpanel.track('Payment Verification Successful', {
-        distinct_id: customer_id,
         order_id: razorpay_order_id,
         payment_id: razorpay_payment_id
       });
@@ -339,7 +320,6 @@ const verify_payment = async (req, res) => {
 
 
       mixpanel.track('Payment Signature Mismatch', {
-        distinct_id: customer_id,
         order_id: razorpay_order_id,
         payment_id: razorpay_payment_id
       });
@@ -351,7 +331,6 @@ const verify_payment = async (req, res) => {
 
 
     mixpanel.track('Payment Verification Error', {
-      distinct_id: req.user?.id,
       error_message: error.message
     });
 

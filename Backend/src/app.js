@@ -536,7 +536,6 @@ app.delete('/api/cart/:itemId', async (req, res) => {
 
     trackEvent(userId, 'Cart Item Removed', {
       item_id: itemId,
-      item_details: JSON.parse(itemId)
     });
 
     // Update user properties
