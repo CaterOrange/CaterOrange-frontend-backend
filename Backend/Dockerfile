@@ -26,7 +26,7 @@ ENV GMAIL_USER=sirisha@scaleorange.com
 ENV GMAIL_PASS=ptbh\ wcoi\ mvnu\ fydh
 ENV RAZORPAY_KEY_ID=rzp_live_L9ioBuAQZXSBDm
 ENV RAZORPAY_SECRET=Q4ndGVbSbNHtXclcYEmWq3EK
-
+ENV MIXPANEL_TOKEN=cb19042cf789f9c44e059bd4be6f2c5d
 # Expose the port that the app runs on
 EXPOSE 4000
 
