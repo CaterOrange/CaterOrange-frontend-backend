@@ -163,14 +163,13 @@ const deleteCartItem = async (req, res) => {
   }
 };
 
-// Add corporate order details
 const addCorporateOrderDetails = async (req, res) => {
-  const { corporateorder_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details } = req.body;
+  const { corporateorder_generated_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details } = req.body;
   
   try {
-    logger.info('Adding corporate order details', { corporateorder_id, processing_date, delivery_status, category_id });
+    logger.info('Adding corporate order details', { corporateorder_generated_id, processing_date, delivery_status, category_id });
     
-    const insertedDetail = await corporate_model.insertCorporateOrderDetails(corporateorder_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details);
+    const insertedDetail = await corporate_model.insertCorporateOrderDetails(corporateorder_generated_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details);
 
     res.status(201).json({
       success: true,
@@ -191,6 +190,7 @@ const getOrderDetails = async (req, res) => {
     let verified_data;
     try {
       verified_data = jwt.verify(token, process.env.SECRET_KEY);
+      console.log("verified data",verified_data);
       logger.info('Token verified successfully for fetching order details');
     } catch (err) {
       logger.error('Token verification failed', { error: err.message });
@@ -219,31 +219,69 @@ const getOrderDetails = async (req, res) => {
   }
 };
 
-// Transfer cart to corporate order
+// // Transfer cart to corporate order
+// const transferCartToOrder = async (req, res) => {
+//   const { customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status,corporate_order_status } = req.body;
+//   console.log("order123",req.body)
+//   try {
+//     req.body.order_details = JSON.parse(order_details);
+//     req.body.customer_address = JSON.parse(customer_address);
+//   } catch (err) {
+//     return res.status(400).json({ error: 'Invalid JSON format in order_details or customer_address' });
+//   }
+
+//   try {
+//     logger.info('Transferring cart to order', { customer_generated_id, total_amount, paymentid });
+    
+//     const order = await corporate_model.insertCartToOrder(customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status,corporate_order_status);
+
+//     res.json({
+//       success: true,
+//       order
+//     });
+//   } catch (err) {
+//     logger.error('Error transferring cart to order', { error: err.message });
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 const transferCartToOrder = async (req, res) => {
-  const { customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status,corporate_order_status } = req.body;
-  console.log("order123",req.body)
+  const { 
+    customer_generated_id, 
+    order_details, 
+    total_amount, 
+    paymentid, 
+    customer_address, 
+    payment_status,
+    corporate_order_status 
+  } = req.body;
+
+  console.log("order123", req.body);
+
   try {
-    req.body.order_details = JSON.parse(order_details);
+    // Parse JSON strings into objects/arrays
+    req.body.order_details = Array.isArray(order_details) ? order_details : JSON.parse(order_details);
     req.body.customer_address = JSON.parse(customer_address);
   } catch (err) {
     return res.status(400).json({ error: 'Invalid JSON format in order_details or customer_address' });
   }
-  // const validate = ajv.compile(orderSchema);
-  // const valid = validate(req.body);
-  // console.log("valid mesg",valid)
-  // if (!valid) {
-  //   console.log("Validation Error for adding order:",validate.errors)
-  //   return res.status(400).json({
-  //     success: false,
-  //     message: 'Invalid request body',
-  //     errors: validate.errors
-  //   });
-  // }
+
   try {
-    logger.info('Transferring cart to order', { customer_generated_id, total_amount, paymentid });
-    
-    const order = await corporate_model.insertCartToOrder(customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status,corporate_order_status);
+    logger.info('Transferring cart to order', { 
+      customer_generated_id, 
+      total_amount, 
+      paymentid 
+    });
+
+    // Insert the corporate order and get the generated corporate order ID
+    const order = await corporate_model.insertCartToOrder(
+      customer_generated_id,
+      req.body.order_details,
+      total_amount,
+      paymentid,
+      req.body.customer_address,
+      payment_status,
+      corporate_order_status
+    );
 
     res.json({
       success: true,
@@ -254,7 +292,6 @@ const transferCartToOrder = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 // Get category name by ID
 const getcategorynameById = async (req, res) => {
   const { categoryId } = req.body;
@@ -270,8 +307,25 @@ const getcategorynameById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+// const updateOrderDetails = async (req, res) => {
+//   try {
+//     const { corporateOrderId } = req.params;
+//     const { order_details } = req.body;
 
+//     const updatedOrder = await corporate_model.updateOrderDetailsIds(
+//       corporateOrderId,
+//       order_details
+//     );
 
+//     res.json({
+//       success: true,
+//       order: updatedOrder
+//     });
+//   } catch (err) {
+//     logger.error('Error updating order details', { error: err.message });
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 // const getCartCount = async (req, res) => {
 //   try {
 //     const token = req.headers['token'];
@@ -305,7 +359,23 @@ const getcategorynameById = async (req, res) => {
 //     res.status(500).json({ message: 'Server error' });
 //   }
 // };
-
+const updateOrderDetails = async (req, res) => {
+  try {
+    const { corporateOrderId } = req.params;
+    
+    const updatedOrder = await corporate_model.updateOrderDetailsIds(
+      corporateOrderId
+    );
+    
+    res.json({
+      success: true,
+      order: updatedOrder
+    });
+  } catch (err) {
+    logger.error('Error updating order details', { error: err.message });
+    res.status(500).json({ error: err.message });
+  }
+};
 
 const getCartCount = async (req, res) => {
   try {
@@ -380,5 +450,7 @@ module.exports = {
   GetCorporateCategory,
   updateCartItem,
   deleteCartItem,
-  getCartCount
+  getCartCount,
+  updateOrderDetails,
+ 
 };

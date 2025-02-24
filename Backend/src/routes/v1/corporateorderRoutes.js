@@ -20,7 +20,7 @@ router.get('/customer/corporate/myorders',auth,corporateOrderController.getOrder
 router.post('/customer/corporate/transfer-cart-to-order', auth,corporateOrderController.transferCartToOrder);
 
 
-
+router.put('/customer/corporate/update-order-details/:corporateOrderId',auth,corporateOrderController.updateOrderDetails);
 
 
 

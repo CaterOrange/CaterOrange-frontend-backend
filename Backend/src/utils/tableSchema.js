@@ -47,7 +47,6 @@ function createPaymentTableQuery() {
   `;
 }
 
-// Create Corporate Orders Table
 function createCorporateOrdersTableQuery() {
   return `
     -- Create function to generate corporateorder_generated_id
@@ -89,10 +88,10 @@ function createCorporateOrdersTableQuery() {
       corporateorder_id SERIAL PRIMARY KEY,
       corporateorder_generated_id VARCHAR(255) UNIQUE NOT NULL,
       customer_generated_id VARCHAR(100),
-      order_details JSON,  
+    order_details TEXT[],
       total_amount FLOAT NOT NULL,
       PaymentId INTEGER,
-      customer_address JSON, 
+      customer_address JSON,
       ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       payment_status VARCHAR(50),
       corporate_order_status VARCHAR(50),
@@ -109,12 +108,11 @@ function createCorporateOrdersTableQuery() {
 }
 
 
-// Create Corporate Order Details Table
 function createCorporateOrderDetailsTableQuery() {
   return `
     CREATE TABLE IF NOT EXISTS corporateorder_details (
       order_detail_id SERIAL PRIMARY KEY,
-      corporateorder_id INTEGER,
+      corporateorder_generated_id VARCHAR(255),
       processing_date DATE,
       delivery_status VARCHAR(50),
       category_id INTEGER,
@@ -123,11 +121,12 @@ function createCorporateOrderDetailsTableQuery() {
       media JSON,
       delivery_details JSON,
       addedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (corporateorder_id) REFERENCES corporate_orders(corporateorder_id),
+      FOREIGN KEY (corporateorder_generated_id) REFERENCES corporate_orders(corporateorder_generated_id),
       FOREIGN KEY (category_id) REFERENCES corporate_category(category_id)
     );
   `;
 }
+
 
 
 // Create Event Orders Table
@@ -279,7 +278,7 @@ function createGroupsTableQuery() {
             ship_to_phone_number BIGINT,
             added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             group_id INTEGER,
-            media_image_url TEXT
+              media_image_url TEXT
 
         );
     `;
