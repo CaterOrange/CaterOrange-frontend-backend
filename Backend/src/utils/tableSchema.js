@@ -278,7 +278,9 @@ function createGroupsTableQuery() {
             ship_to_name VARCHAR(255),
             ship_to_phone_number BIGINT,
             added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            group_id INTEGER
+            group_id INTEGER,
+            media_image_url TEXT
+
         );
     `;
     return createTableQuery;
