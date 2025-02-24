@@ -25,10 +25,12 @@ import ProtectedRoute from './components/corporate/protectedRoute.js';  // Impor
 import Razorpay from './components/rasorpay.js';
 import NotFound from './components/Home/notFound.js';
 import AddressList from './components/Address/AddressList.js';
-
-
+import ShippingPolicy from './components/corporate/shippingPolicies.js';
 import mixpanel from "mixpanel-browser";
-
+import TermsConditions from './components/corporate/TermsAndConditions.js';
+import PrivacyPolicy from './components/corporate/PrivacyPolicy.js';
+import CancellationRefunds from './components/Cancellation.js';
+import FAQ from './components/corporate/FAQ.js';
 mixpanel.init("cb19042cf789f9c44e059bd4be6f2c5d", { debug: true }); // Replace with your token
 
 
@@ -104,11 +106,27 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              
               <Route
                 path="/changeaddress"
                 element={
                   <ProtectedRoute>
                     <ChangeAddress />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cancellation-refunds"
+                element={
+                  <ProtectedRoute>
+                    <CancellationRefunds />
+                  </ProtectedRoute>
+                }
+              />  <Route
+                path="/privacy-policy"
+                element={
+                  <ProtectedRoute>
+                    <PrivacyPolicy />
                   </ProtectedRoute>
                 }
               />
@@ -185,6 +203,14 @@ function App() {
                 }
               />
               <Route
+                path="/shipping-policy"
+                element={
+                  <ProtectedRoute>
+                    <ShippingPolicy />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/contact"
                 element={
                   <ProtectedRoute>
@@ -193,13 +219,29 @@ function App() {
                 }
               />
               <Route
-          path="/addresses"
-          element={
-            <ProtectedRoute>
-              <AddressList />
-            </ProtectedRoute>
-          }
-        />
+                path="/addresses"
+                element={
+                  <ProtectedRoute>
+                    <AddressList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/terms-conditions"
+                element={
+                  <ProtectedRoute>
+                    <TermsConditions />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/faq"
+                element={
+                  <ProtectedRoute>
+                    <FAQ />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/wallet"
                 element={
@@ -220,7 +262,7 @@ function App() {
                 path="/razorpay"
                 element={
                   // <ProtectedRoute>
-                    <Razorpay />
+                  <Razorpay />
                   // {/* </ProtectedRoute>     */}
                 }
               />

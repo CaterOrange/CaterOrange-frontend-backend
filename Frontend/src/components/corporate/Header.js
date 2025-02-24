@@ -10,6 +10,7 @@ import './css/styles.css';
 import { VerifyToken } from '../../MiddleWare/verifyToken';
 import AddressList from '../Address/AddressList';
 import AddressForm from '../events/AddressForm';
+import Footer from './Footer';
 
 const Header = ({ user }) => {
   const { cartCount, updateCartCount } = useCart();
@@ -339,8 +340,11 @@ const Header = ({ user }) => {
         setShowAddressForm(false);
       }}
     />
+    
   </div>
+
 )}
+      <Footer/>
     </>
   );
 };
