@@ -65,7 +65,6 @@ const createAddress = async (req, res) => {
 
         mixpanel.people.set(customer_id, {
             '$last_address_added': new Date().toISOString(),
-            'address_count': await address_model.getAddressCount(customer_id),
             'last_address_location': location
         });
 
@@ -340,7 +339,6 @@ const deleteAddress = async (req, res) => {
 
         mixpanel.people.set(customer_id, {
             '$last_address_deleted': new Date().toISOString(),
-            'address_count': await address_model.getAddressCount(customer_id)
         });
 
         
