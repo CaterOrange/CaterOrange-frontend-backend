@@ -169,10 +169,18 @@ GET_CATEGORY_NAME: `
 GET_ALL_ADDRESSES:`
 SELECT * FROM address WHERE customer_id=$1
 `,
-FETCH_ORDERS:`SELECT corporateorder_generated_id, total_amount,order_details,ordered_at
-FROM corporate_orders 
-WHERE customer_generated_id = $1 AND payment_status='Success'
-`,
+// FETCH_ORDERS:`SELECT corporateorder_generated_id, total_amount,order_details,ordered_at
+// FROM corporate_orders 
+// WHERE customer_generated_id = $1 AND payment_status='Success'
+// `,
+
+FETCH_ORDERS:`SELECT co.corporateorder_generated_id, co.total_amount, co.order_details, co.ordered_at, 
+       cod.*, cc.category_name
+FROM corporate_orders co
+JOIN corporateorder_details cod ON cod.order_detail_id = ANY(co.order_details::int[])
+LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
+WHERE co.customer_generated_id = $1 
+AND co.payment_status = 'Success'`,
 GET_ORDER_GENID: `
 SELECT corporateorder_generated_id FROM corporate_orders WHERE customer_generated_id=$1
 `,

@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/srivallika/Videos/CaterOrange-frontend-backend/Backend/src/config/logs/.e673542f29f24726b267c1d1dcc2dbc9b6122bf1-audit.json",
+    "files": [
+        {
+            "date": 1740408238453,
+            "name": "/home/srivallika/Videos/CaterOrange-frontend-backend/Backend/src/config/logs/error-2025-02-24.log",
+            "hash": "e0c1faa01ba20f6c0fe7021f3d3729a10a42edd7e368d0f29ba512eb9e576718"
+        }
+    ],
+    "hashType": "sha256"
+}

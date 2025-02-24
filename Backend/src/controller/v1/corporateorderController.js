@@ -219,31 +219,6 @@ const getOrderDetails = async (req, res) => {
   }
 };
 
-// // Transfer cart to corporate order
-// const transferCartToOrder = async (req, res) => {
-//   const { customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status,corporate_order_status } = req.body;
-//   console.log("order123",req.body)
-//   try {
-//     req.body.order_details = JSON.parse(order_details);
-//     req.body.customer_address = JSON.parse(customer_address);
-//   } catch (err) {
-//     return res.status(400).json({ error: 'Invalid JSON format in order_details or customer_address' });
-//   }
-
-//   try {
-//     logger.info('Transferring cart to order', { customer_generated_id, total_amount, paymentid });
-    
-//     const order = await corporate_model.insertCartToOrder(customer_generated_id, order_details, total_amount, paymentid, customer_address, payment_status,corporate_order_status);
-
-//     res.json({
-//       success: true,
-//       order
-//     });
-//   } catch (err) {
-//     logger.error('Error transferring cart to order', { error: err.message });
-//     res.status(500).json({ error: err.message });
-//   }
-// };
 const transferCartToOrder = async (req, res) => {
   const { 
     customer_generated_id, 
