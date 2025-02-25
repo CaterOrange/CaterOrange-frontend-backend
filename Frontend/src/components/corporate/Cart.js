@@ -10,6 +10,7 @@ import { VerifyToken } from '../../MiddleWare/verifyToken';
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
 import CollapsibleCart from './CollapsibleCart';
+import Footer from './Footer';
 const MyCart = () => {
  const [Total, setTotal] = useState(0);
  const [CartData, setCartData] = useState([]);
@@ -205,6 +206,7 @@ const MyCart = () => {
  }
 
  return (
+    
  <div className="p-3 border border-gray-300 rounded-lg bg-gray-50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
  <div className="flex-1">
  <p className="text-gray-800 text-lg font-bold font-serif">
@@ -544,44 +546,6 @@ const MyCart = () => {
  setIsAddressModalOpen(true);
 
  };
- // const handleViewPayment = async () => {
- // try {
- // console.log('Initial sortedData:', sortedData);
- 
- // // Create the main corporate order first
- // const response = await axios.post(
- // `${process.env.REACT_APP_URL}/api/customer/corporate/transfer-cart-to-order`,
- // {
- // customer_generated_id: decodedToken.id,
- // order_details: [],//JSON.stringify(sortedData), // Send the original sorted data
- // total_amount: Total,
- // paymentid: null,
- // customer_address: localStorage.getItem('address'),
- // payment_status: 'pending',
- // corporate_order_status: 'pending'
- // },
- // {
- // headers: { 'token': localStorage.getItem('token') }
- // }
- // );
- 
- // if (response.status === 200) {
- // console.log('Order response data:', response.data);
- 
- // // Get the corporate order ID
- // const corporateOrderId = response.data.order.corporateorder_generated_id;
- 
- // // Store order details directly in corporateorder_details table
- // await storeOrderDetails(corporateOrderId, sortedData);
- 
- // // Process payment details
- // await PaymentDetails(corporateOrderId);
- // }
- // } catch (error) {
- // console.error('Error in handleViewPayment:', error);
- // throw error;
- // }
- // };
  const handleViewPayment = async () => {
  try {
  console.log('Initial sortedData:', sortedData);
@@ -929,6 +893,7 @@ const MyCart = () => {
  const isDisabled = userAddressDetails.address === '' || sortedData.length === 0;
 
  return (
+    <div>
  <div className="flex flex-col min-h-screen bg-teal-50">
  <header className="bg-gradient-to-r from-teal-700 to-teal-500 shadow-lg p-4 fixed top-0 left-0 right-0 z-20">
  <div className="flex justify-between items-center max-w-6xl mx-auto">
@@ -1010,11 +975,12 @@ const MyCart = () => {
  AddressForm={AddressForm}
  onAddressSelect={handleAddressSelect}
  onAddressSubmit={handleAddressFormSubmit}
- refreshAddresses={checkUserAddresses} // Pass the refresh function
+ refreshAddresses={checkUserAddresses} 
  />
  )}
  </div>
-
+ <Footer/>
+ </div>
  );
 };
 export default MyCart;

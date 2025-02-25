@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaInstagram, FaLinkedin, FaPhoneAlt, FaWhatsapp, FaStar, FaQuoteLeft, FaArrowLeft } from 'react-icons/fa';
 import { MdLocationOn, MdEmail, MdFoodBank, MdDeliveryDining, MdSupportAgent } from 'react-icons/md';
 import { UserCircleIcon } from '@heroicons/react/solid';
-
+import Footer from '../corporate/Footer';
 const ServiceCard = ({ icon: Icon, title, description }) => (
   <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
     <div className="flex flex-col items-center text-center space-y-4">
@@ -410,16 +410,7 @@ export const AboutUs = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-neutral-900 text-white py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex flex-col items-center space-y-6">
-            <p className="text-center text-neutral-400">
-              © {new Date().getFullYear()} Cater Orange. All rights reserved. 
-              Bringing delicious food to your doorstep.
-            </p>
-          </div>
-        </div>
-      </footer>
+    <Footer/>
     </div>
   );
 };
