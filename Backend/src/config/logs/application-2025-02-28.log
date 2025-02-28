@@ -2535,3 +2535,26 @@
 {"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2025-02-28T13:01:32.597Z","userId":"No userId"}
 {"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2025-02-28T13:01:32.668Z","userId":"No userId"}
 {"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2025-02-28T13:01:32.668Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2025-02-28T13:16:53.153Z","userId":"No userId"}
+{"filename":"task_queues","level":"info","message":"Successfully connected to Redis","timestamp":"2025-02-28T13:16:53.158Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Database created or already exists","timestamp":"2025-02-28T13:16:53.209Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Connected to the Caterorange DB","timestamp":"2025-02-28T13:16:53.258Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Groups table created successfully","timestamp":"2025-02-28T13:16:53.261Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Customer table created successfully","timestamp":"2025-02-28T13:16:53.263Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Admin table created successfully","timestamp":"2025-02-28T13:16:53.265Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Addresses table created successfully","timestamp":"2025-02-28T13:16:53.270Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Payment table created successfully","timestamp":"2025-02-28T13:16:53.272Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Orders table created successfully","timestamp":"2025-02-28T13:16:53.296Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Category table created successfully","timestamp":"2025-02-28T13:16:53.299Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Order Details table created successfully","timestamp":"2025-02-28T13:16:53.300Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Orders table created successfully","timestamp":"2025-02-28T13:16:53.303Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Category table created successfully","timestamp":"2025-02-28T13:16:53.304Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Cart table created successfully","timestamp":"2025-02-28T13:16:53.305Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Corporate Cart table created successfully","timestamp":"2025-02-28T13:16:53.306Z","userId":"No userId"}
+{"filename":"tableController.js","level":"info","message":"Event Products table created successfully","timestamp":"2025-02-28T13:16:53.308Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Tables created successfully","timestamp":"2025-02-28T13:16:53.308Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Apollo Server started","timestamp":"2025-02-28T13:16:53.383Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"Server is running on port 4000","timestamp":"2025-02-28T13:16:53.468Z","userId":"No userId"}
+{"filename":"app.js","level":"info","message":"GraphQL endpoint: http://localhost:4000/graphql","timestamp":"2025-02-28T13:16:53.468Z","userId":"No userId"}
+{"customer_name":"Sirisha Tatipaka","filename":"customerModels.js","level":"info","message":"Customer activation check result:","timestamp":"2025-02-28T13:19:15.223Z","userId":"No userId"}
+{"admin":{"adminid":1,"customer_generated_id":"C000001","isadmin":true,"isvendor":false},"customer_generated_id":"C000001","filename":"customerModels.js","level":"info","message":"Admin details found for customer ID:","timestamp":"2025-02-28T13:19:15.225Z","userId":"No userId"}
