@@ -181,7 +181,6 @@ pipeline {
         always {
             script {
                 sh 'docker logout'
-                cleanWs() // Clean workspace after build
             }
         }
         failure {
