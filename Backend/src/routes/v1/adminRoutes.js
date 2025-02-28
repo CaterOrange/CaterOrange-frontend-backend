@@ -2,6 +2,17 @@ const { ApolloServer, gql } = require('apollo-server');
 const { GraphQLScalarType, Kind } = require('graphql');
 const client = require('../../config/dbConfig');
 
+
+const { v2: cloudinary } = require('cloudinary');
+
+// Configure Cloudinary
+cloudinary.config({ 
+  cloud_name: 'dlwhfodp0', 
+  api_key: '355764148341634', 
+  api_secret: 'FL_Tcr3odbnbVQnHUG1AzWEGnIo' 
+});
+
+
 const DateTimeScalar = new GraphQLScalarType({
   name: 'DateTime',
   description: 'A custom DateTime scalar with formatted date and time',
@@ -192,6 +203,13 @@ const typeDefs = gql`
       closure_time: String
     ): Category!
     deleteCategory(category_id: Int!): Boolean!
+
+    updateCorporateOrderMedia(
+    corporateOrderGeneratedId: ID!, 
+    categoryId: Int!, 
+    media: JSON!
+  ): CorporateOrder!
+
   }
 `;
 
@@ -223,196 +241,195 @@ const resolvers = {
       return result.rows;
     },
 
-  getAllOrders: async () => {
-    // Get all orders
-    const ordersResult = await client.query(
-      `SELECT co.*, c.customer_name, c.customer_phonenumber 
+    getAllOrders: async () => {
+  try {
+    // Get all orders with customer info and details in a single query
+    const result = await client.query(
+      `SELECT 
+        co.corporateorder_id, 
+        co.corporateorder_generated_id,
+        co.customer_generated_id,
+        co.order_details,
+        co.total_amount,
+        co.paymentid,
+        co.customer_address,
+        co.ordered_at,
+        co.payment_status,
+        co.corporate_order_status,
+        c.customer_name, 
+        c.customer_phonenumber,
+
+        cod.order_detail_id,
+        cod.processing_date,
+        cod.delivery_status,
+        cod.category_id,
+        cod.quantity,
+        cod.active_quantity,
+        cod.media,
+        cod.delivery_details,
+        cod.addedat,
+
+        cc.category_name
        FROM corporate_orders co 
        JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
-       ORDER BY co.ordered_at DESC`,
+       LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
+       LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
+       ORDER BY co.ordered_at DESC`
     );
     
-    // Get all category mappings
-    const categoriesResult = await client.query(
-      `SELECT category_id, category_name FROM corporate_category`
-    );
+    // Group order details by order
+    const orderMap = {};
     
-    // Create category lookup map
-    const categoryMap = {};
-    categoriesResult.rows.forEach(cat => {
-      categoryMap[cat.category_id] = cat.category_name;
-    });
-    
-    // Process each order to include category names
-    const processedOrders = ordersResult.rows.map(order => {
-      // Parse order_details regardless of whether it's a single order or multiple
-      try {
-        // Handle string format (JSON)
-        if (typeof order.order_details === 'string') {
-          const parsedDetails = JSON.parse(order.order_details);
-          // Process array of order details
-          const detailsWithCategories = parsedDetails.map(detail => ({
-            ...detail,
-            category_name: categoryMap[detail.category_id] || 'Unknown Category'
-          }));
-          // Keep original string format but with updated content
-          order.order_details = JSON.stringify(detailsWithCategories);
-        } 
-        // Handle array format (already parsed)
-        else if (Array.isArray(order.order_details)) {
-          order.order_details = order.order_details.map(detail => ({
-            ...detail,
-            category_name: categoryMap[detail.category_id] || 'Unknown Category'
-          }));
-        }
-        // Add category_name at order level for easy reference
-        const firstDetail = typeof order.order_details === 'string' 
-          ? JSON.parse(order.order_details)[0]
-          : order.order_details[0];
-          
-        if (firstDetail && firstDetail.category_id) {
-          order.category_name = categoryMap[firstDetail.category_id] || 'Unknown Category';
-        }
-      } catch (error) {
-        console.error(`Failed to process order ${order.corporateorder_generated_id}:`, error);
+    result.rows.forEach(row => {
+      const orderId = row.corporateorder_generated_id;
+      
+      if (!orderMap[orderId]) {
+        // Create a new order entry
+        orderMap[orderId] = {
+          corporateorder_id: row.corporateorder_id,
+          corporateorder_generated_id: row.corporateorder_generated_id,
+          customer_generated_id: row.customer_generated_id,
+          total_amount: row.total_amount,
+          paymentid: row.paymentid,
+          customer_address: row.customer_address,
+          ordered_at: row.ordered_at,
+          payment_status: row.payment_status,
+          corporate_order_status: row.corporate_order_status,
+          customer_name: row.customer_name,
+          customer_phonenumber: row.customer_phonenumber,
+          order_details: []
+        };
       }
       
-      return order;
+      // Add order detail if it exists
+      if (row.order_detail_id) {
+        orderMap[orderId].order_details.push({
+          order_detail_id: row.order_detail_id,
+          processing_date: row.processing_date,
+          delivery_status: row.delivery_status,
+          category_id: row.category_id,
+          category_name: row.category_name,
+          quantity: row.quantity,
+          active_quantity: row.active_quantity,
+          media: row.media,
+          delivery_details: row.delivery_details,
+          addedat: row.addedat
+        });
+      }
     });
     
-    return processedOrders;
-  },
-  getTodayCorporateOrders: async () => {
-    // First get orders
-    const ordersResult = await client.query(
-      `SELECT co.*, c.customer_name, c.customer_phonenumber
-       FROM corporate_orders co
-       JOIN customer c ON co.customer_generated_id = c.customer_generated_id
-       ORDER BY co.ordered_at DESC`,
-    );
-  
-    console.log("Fetched Orders:", ordersResult.rows);
-  
-    // Get all category mappings
-    const categoriesResult = await client.query(
-      `SELECT category_id, category_name FROM corporate_category`
-    );
-  
-    // Create category lookup map
-    const categoryMap = {};
-    categoriesResult.rows.forEach(cat => {
-      categoryMap[cat.category_id] = cat.category_name;
+    // Convert map to array
+    const orders = Object.values(orderMap);
+    
+    // Convert order_details to JSON string for each order
+    orders.forEach(order => {
+      order.order_details = JSON.stringify(order.order_details);
     });
-  
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-    console.log("Today's Date:", today);
-  
-    // Add category names and filter by processing_date
-    const filteredOrders = ordersResult.rows
-      .map(order => {
-        console.log("Processing Order ID:", order.order_id);
-  
-        // Check if order_details exists
-        if (!order.order_details) {
-          console.log(`Order ID ${order.order_id} has no order_details`);
-          return null;
-        }
-  
-        // If order_details is a string, parse it
-        if (typeof order.order_details === "string") {
-          try {
-            order.order_details = JSON.parse(order.order_details);
-            console.log("Parsed order_details:", order.order_details);
-          } catch (error) {
-            console.error(`Error parsing order_details for Order ID ${order.order_id}:`, error);
-            return null;
+    
+    console.log("Corporate Orders:", orders);
+    return orders;
+    
+  } catch (error) {
+    console.error("Error in getAllOrders:", error);
+    throw error;
+  }
+}
+    
+    ,
+
+    getTodayCorporateOrders: async () => {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        console.log("Today's Date:", today);
+    
+        const result = await client.query(`
+          SELECT 
+            co.corporateorder_id, 
+            co.corporateorder_generated_id,
+            co.customer_generated_id,
+            co.order_details,
+            co.total_amount,
+            co.paymentid,
+            co.customer_address,
+            co.ordered_at,
+            co.payment_status,
+            co.corporate_order_status,
+            c.customer_name, 
+            c.customer_phonenumber,
+    
+            cod.order_detail_id,
+            cod.processing_date,
+            cod.delivery_status,
+            cod.category_id,
+            cod.quantity,
+            cod.active_quantity,
+            cod.media,
+            cod.delivery_details,
+            cod.addedat,
+    
+            cc.category_name
+          FROM corporate_orders co 
+          JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
+          LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
+          LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
+          WHERE cod.processing_date = $1
+          ORDER BY co.ordered_at DESC
+        `, [today]);
+    
+        const orderMap = {};
+    
+        result.rows.forEach(row => {
+          const orderId = row.corporateorder_generated_id;
+    
+          if (!orderMap[orderId]) {
+            orderMap[orderId] = {
+              corporateorder_id: row.corporateorder_id,
+              corporateorder_generated_id: row.corporateorder_generated_id,
+              customer_generated_id: row.customer_generated_id,
+              total_amount: row.total_amount,
+              paymentid: row.paymentid,
+              customer_address: row.customer_address,
+              ordered_at: row.ordered_at,
+              payment_status: row.payment_status,
+              corporate_order_status: row.corporate_order_status,
+              customer_name: row.customer_name,
+              customer_phonenumber: row.customer_phonenumber,
+              order_details: []
+            };
           }
-        }
-  
-        // Ensure order_details is an array
-        if (!Array.isArray(order.order_details)) {
-          console.log(`Order ID ${order.order_id} has invalid order_details format:`, order.order_details);
-          return null;
-        }
-  
-        // Log each processing_date before filtering
-        order.order_details.forEach(detail => {
-          console.log(`Order ID ${order.order_id} - Processing Date:`, detail.processing_date);
+    
+          // Add order detail with media check
+          if (row.order_detail_id) {
+            orderMap[orderId].order_details.push({
+              order_detail_id: row.order_detail_id,
+              processing_date: row.processing_date,
+              delivery_status: row.delivery_status,
+              category_id: row.category_id,
+              category_name: row.category_name,
+              quantity: row.quantity,
+              active_quantity: row.active_quantity,
+              media: row.media && Object.keys(row.media).length > 0 ? row.media : "No Media", // Check if media exists
+              delivery_details: row.delivery_details,
+              addedat: row.addedat
+            });
+          }
         });
+    
+        const orders = Object.values(orderMap);
+    
+        orders.forEach(order => {
+          order.order_details = JSON.stringify(order.order_details);
+        });
+    
+        console.log("Today's Corporate Orders:", orders);
+        return orders;
+      } catch (error) {
+        console.error("Error in getTodayCorporateOrders:", error);
+        throw error;
+      }
+    }
+    ,
   
-        // Check if any order detail has processing_date as current date
-        const hasTodayProcessing = order.order_details.some(detail => detail.processing_date === today);
-  
-        if (!hasTodayProcessing) {
-          console.log(`Order ID ${order.order_id} does not have today's processing_date`);
-          return null;
-        }
-  
-        // Add category names to each order detail
-        order.order_details = order.order_details.map(detail => ({
-          ...detail,
-          category_name: categoryMap[detail.category_id] || 'Unknown Category'
-        }));
-  
-        return order;
-      })
-      .filter(order => order !== null); // Remove null entries
-  
-    console.log("Filtered Orders:", filteredOrders);
-    return filteredOrders;
-  },
-  
-  // getTodayCorporateOrders: async () => {
-  //   // First get orders
-  //   const ordersResult = await client.query(
-  //     `SELECT co.*, c.customer_name, c.customer_phonenumber
-  //      FROM corporate_orders co
-  //      JOIN customer c ON co.customer_generated_id = c.customer_generated_id
-  //      WHERE DATE(co.ordered_at) = CURRENT_DATE
-  //      ORDER BY co.ordered_at DESC`,
-  //   );
-  
-  //   // Get all category mappings
-  //   const categoriesResult = await client.query(
-  //     `SELECT category_id, category_name FROM corporate_category`
-  //   );
-  
-  //   // Create category lookup map
-  //   const categoryMap = {};
-  //   categoriesResult.rows.forEach(cat => {
-  //     categoryMap[cat.category_id] = cat.category_name;
-  //   });
-  
-  //   // Filter orders with order_details having processing_date as current date
-  //   const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-  //   console.log("Today:", today);
-  //   // Add category names and filter by processing_date
-  //   const filteredOrders = ordersResult.rows
-  //     .filter(order => {
-  //       if (!order.order_details || !Array.isArray(order.order_details)) {
-  //         return false;
-  //       }
-  //       // Check if any order detail has processing_date as current date
-  //       return order.order_details.some(detail => {
-  //         console.log("Processing Date:", detail.processing_date);
-  //         return detail.processing_date === today;
-  //       });
-  //     })
-  //     .map(order => {
-  //       // Add category names to each order detail
-  //       if (order.order_details && Array.isArray(order.order_details)) {
-  //         order.order_details = order.order_details.map(detail => {
-  //           return {
-  //             ...detail,
-  //             category_name: categoryMap[detail.category_id] || 'Unknown Category'
-  //           };
-  //         });
-  //       }
-  //       return order;
-  //     });
-  
-  //   return filteredOrders;
-  // },
     getAllItems: async () => {
       const result = await client.query('SELECT * FROM event_products');
       return result.rows;
@@ -467,7 +484,140 @@ const resolvers = {
       };
     }
   },
+
   Mutation: {
+
+    updateCorporateOrderMedia: async (_, { corporateOrderGeneratedId, categoryId, media }) => {
+      try {
+        // Check if the order and category exist
+        const orderCheck = await client.query(
+          'SELECT * FROM corporateorder_details WHERE corporateorder_generated_id = $1 AND category_id = $2',
+          [corporateOrderGeneratedId, categoryId]
+        );
+        
+        if (orderCheck.rows.length === 0) {
+          throw new Error('No matching record found for the provided category and order ID');
+        }
+    
+        // Get existing media
+        let existingMedia = orderCheck.rows[0].media || { urls: [] };
+        if (typeof existingMedia === 'string') {
+          try {
+            existingMedia = JSON.parse(existingMedia);
+          } catch (e) {
+            existingMedia = { urls: [] };
+          }
+        }
+        
+        if (!existingMedia.urls) {
+          existingMedia.urls = [];
+        }
+    
+        // Process media uploads to Cloudinary
+        let newMediaUrls = [];
+        
+        // Handle media input based on its structure
+        if (media) {
+          // If media is an array of URLs
+          if (Array.isArray(media)) {
+            for (const url of media) {
+              try {
+                const uploadResult = await cloudinary.uploader.upload(url, {
+                  folder: 'corporate_order_media',
+                  transformation: {
+                    width: 500,
+                    height: 1000,
+                    quality: 'auto',
+                    fetch_format: 'auto'
+                  }
+                });
+                newMediaUrls.push(uploadResult.secure_url);
+              } catch (error) {
+                console.error("Error uploading to Cloudinary:", error);
+                throw new Error('Error uploading media to Cloudinary');
+              }
+            }
+          } 
+          // If media is a single URL
+          else if (typeof media === 'string') {
+            try {
+              const uploadResult = await cloudinary.uploader.upload(media, {
+                folder: 'corporate_order_media',
+                transformation: {
+                  width: 500,
+                  height: 1000,
+                  quality: 'auto',
+                  fetch_format: 'auto'
+                }
+              });
+              newMediaUrls.push(uploadResult.secure_url);
+            } catch (error) {
+              console.error("Error uploading to Cloudinary:", error);
+              throw new Error('Error uploading media to Cloudinary');
+            }
+          }
+          // If media is an object with urls property (JSON format)
+          else if (media.urls && Array.isArray(media.urls)) {
+            for (const url of media.urls) {
+              try {
+                const uploadResult = await cloudinary.uploader.upload(url, {
+                  folder: 'corporate_order_media',
+                  transformation: {
+                    width: 500,
+                    height: 1000,
+                    quality: 'auto',
+                    fetch_format: 'auto'
+                  }
+                });
+                newMediaUrls.push(uploadResult.secure_url);
+              } catch (error) {
+                console.error("Error uploading to Cloudinary:", error);
+                throw new Error('Error uploading media to Cloudinary');
+              }
+            }
+          }
+        }
+    
+        // Combine existing and new media URLs
+        const combinedUrls = [...existingMedia.urls, ...newMediaUrls];
+        const mediaJson = { urls: combinedUrls };
+    
+        // Update the database
+        const result = await client.query(
+          'UPDATE corporateorder_details SET media = $1 WHERE category_id = $2 AND corporateorder_generated_id = $3 RETURNING *',
+          [mediaJson, categoryId, corporateOrderGeneratedId]
+        );
+        
+        if (result.rowCount === 0) {
+          throw new Error('Failed to update media for order');
+        }
+    
+        // Fetch the complete order to return
+        const orderQuery = `
+          SELECT 
+            co.*,
+            c.customer_name,
+            c.customer_phonenumber
+          FROM corporate_orders co
+          JOIN customer c ON co.customer_generated_id = c.customer_generated_id
+          WHERE co.corporateorder_generated_id = $1
+        `;
+        
+        const orderResult = await client.query(orderQuery, [corporateOrderGeneratedId]);
+        
+        if (orderResult.rows.length === 0) {
+          throw new Error('Order not found after update');
+        }
+        
+        return orderResult.rows[0];
+      } catch (error) {
+        console.error("Error in updateCorporateOrderMedia:", error);
+        throw error;
+      }
+    }
+
+
+    ,
     updateCustomer: async (_, { id, name, email, phoneNumber }) => {
       const fields = [];
       const values = [];
@@ -506,13 +656,7 @@ const resolvers = {
       );
       return result.rows[0];
     },
-    // updateCorporateOrderStatus: async (_, { id, status }) => {
-    //   const result = await client.query(
-    //     'UPDATE corporate_orders SET corporate_order_status = $1 WHERE corporateorder_generated_id = $2 RETURNING *',
-    //     [status, id]
-    //   );updateCorporateOrderStatus
-    //   return result.rows[0];
-    // },
+    
     createCategory: async (_, { category_name, category_description, category_price, category_media, closure_time, is_deactivated }) => {
       const result = await client.query(
         'INSERT INTO corporate_category (category_name, category_description, category_price, category_media, closure_time, addedat, is_deactivated) VALUES ($1, $2, $3, $4, $5, NOW(), $6) RETURNING *',
@@ -562,27 +706,9 @@ const resolvers = {
       const result = await client.query('DELETE FROM corporate_category WHERE category_id = $1', [category_id]);
       return result.rowCount > 0;
     },
-    updateDeliveryStatus : async (_, { orderId, orderIndex, status }) => {
+
+    updateDeliveryStatus: async (_, { orderId, orderIndex, status }) => {
       try {
-        // First, get the current order details
-        const currentOrderQuery = await client.query(
-          'SELECT order_details FROM corporate_orders WHERE corporateorder_generated_id = $1',
-          [orderId]
-        );
-        
-        if (currentOrderQuery.rows.length === 0) {
-          throw new Error('Order not found');
-        }
-        
-        const orderDetails = Array.isArray(currentOrderQuery.rows[0].order_details)
-          ? currentOrderQuery.rows[0].order_details
-          : JSON.parse(currentOrderQuery.rows[0].order_details);
-        
-        // Validate orderIndex
-        if (orderIndex < 0 || orderIndex >= orderDetails.length) {
-          throw new Error('Invalid order index');
-        }
-        
         // Validate status
         const validStatuses = [
           'Pending',
@@ -597,38 +723,63 @@ const resolvers = {
           throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
         }
         
-        // Create a new object for the updated item
-        const updatedOrderDetails = orderDetails.map((item, index) => {
-          if (index === orderIndex) {
-            return { 
-              ...item, 
-              delivery_status: status,
-              [`${status.toLowerCase()}_at`]: new Date().toISOString()
-            };
-          }
-          return item;
-        });
+        // Check if the order exists
+        const orderCheck = await client.query(
+          'SELECT corporateorder_generated_id FROM corporate_orders WHERE corporateorder_generated_id = $1',
+          [orderId]
+        );
         
-        // Update order details in database
+        if (orderCheck.rows.length === 0) {
+          throw new Error('Order not found');
+        }
+        
+        // Get the order detail by order ID and index
+        const orderDetailsQuery = await client.query(
+          'SELECT order_detail_id FROM corporateorder_details WHERE corporateorder_generated_id = $1 ORDER BY order_detail_id LIMIT 1 OFFSET $2',
+          [orderId, orderIndex]
+        );
+        
+        if (orderDetailsQuery.rows.length === 0) {
+          throw new Error('Order detail not found');
+        }
+        
+        const orderDetailId = orderDetailsQuery.rows[0].order_detail_id;
+        
+        // Update ONLY the delivery_status in the corporateorder_details table
         const updateQuery = `
-          UPDATE corporate_orders 
-          SET order_details = $1
-          WHERE corporateorder_generated_id = $2 
-          RETURNING *
+        UPDATE corporateorder_details 
+        SET delivery_status = $1
+        WHERE order_detail_id = $2
+        RETURNING *
         `;
         
-        const result = await client.query(updateQuery, [
-          JSON.stringify(updatedOrderDetails),
-          orderId
-        ]);
+        const result = await client.query(updateQuery, [status, orderDetailId]);
         
-        return result.rows[0];
+        if (result.rows.length === 0) {
+          throw new Error('Failed to update order detail');
+        }
+        
+        // Get the updated order with all its details
+        const updatedOrderQuery = `
+          SELECT co.*, c.customer_name, c.customer_phonenumber 
+          FROM corporate_orders co 
+          JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
+          WHERE co.corporateorder_generated_id = $1
+        `;
+        
+        const updatedOrder = await client.query(updatedOrderQuery, [orderId]);
+        
+        return updatedOrder.rows[0];
       } catch (error) {
         console.error("Error in updateDeliveryStatus:", error);
         throw error;
       }
-    },
-    
+    }
+   
+,
+
+
+
     updateCorporateOrderStatus : async (_, { id, status }) => {
       try {
         const validStatuses = [
@@ -659,12 +810,14 @@ const resolvers = {
         throw error;
       }
     }
+
+
+    ,
+
+
+
+    
   }
-
-   
-
-
-
 
 
 

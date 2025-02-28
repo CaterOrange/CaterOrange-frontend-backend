@@ -439,9 +439,11 @@ const login = async (req, res) => {
             });
         }
 
-        const checkIsAdmin = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
-        const isAdmin = checkIsAdmin ? checkIsAdmin.isadmin : false;
-        console.log('Is admin:', isAdmin);
+        // Get admin and vendor status
+        const adminData = await customer_model.findAdminByCustomerId(customer.customer_generated_id);
+        const isAdmin = adminData ? adminData.isadmin : false;
+        const isVendor = adminData ? adminData.isvendor : false;
+        console.log('Is admin:', isAdmin, 'Is vendor:', isVendor);
 
         // Verify the existing token or generate a new one
         let uat;
@@ -450,7 +452,12 @@ const login = async (req, res) => {
             uat = customer.access_token;
         } catch (err) {
             const gid = customer.customer_generated_id;
-            uat = jwt.sign({ email: customer_email, isAdmin, id: gid }, process.env.SECRET_KEY, { expiresIn: '365d' });
+            uat = jwt.sign({ 
+                email: customer_email, 
+                isAdmin, 
+                isVendor, 
+                id: gid 
+            }, process.env.SECRET_KEY, { expiresIn: '365d' });
             await customer_model.updateAccessToken(customer_email, uat);
         }
 
@@ -458,7 +465,8 @@ const login = async (req, res) => {
             success: true,
             message: 'Login successful',
             token: uat,
-            isAdmin
+            isAdmin,
+            isVendor
         });
 
     } catch (err) {

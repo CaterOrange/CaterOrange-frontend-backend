@@ -6,6 +6,12 @@ const cors = require('cors');
 const logger = require('./config/logger');
 const { createTables } = require('./controller/v1/tableController.js');
 const { createDatabase } = require('./config/config');
+
+
+const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
+
+
+
 require('dotenv').config();
 const sha256 = require('sha256');
 const axios = require('axios');
@@ -61,6 +67,9 @@ const V1customerRoutes = require('./routes/v1/customerRoutes.js');
 const V2addressRoutes = require('./routes/v2/addressRoutes.js');
 const V2categoryRoutes = require('./routes/v2/categoryRoutes.js');
 
+const V2adminRoutes = require('./routes/v2/adminRoutes.js');
+const V2vendorRoutes=require('./routes/v2/vendorRoutes.js')
+
 
 // Initialize Mixpanel with your project token
 const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
@@ -76,6 +85,7 @@ const SALT_INDEX = 1;
 const app = express();
 
 app.use(fileUpload({ useTempFiles: true }));
+
 
 const server = http.createServer(app);
 
@@ -125,6 +135,12 @@ app.use('/api', V1customerRoutes);
 
 app.use('/api/v2',V2addressRoutes)
 app.use('/api/v2/',V2categoryRoutes)
+app.use('/api/v2/',V2adminRoutes)
+
+app.use('/api/v2/',V2vendorRoutes)
+
+
+
 
 // aap.use('/api/',V1corporateorderdetailsRoutes)
 
@@ -152,6 +168,7 @@ async function startApolloServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    csrfPrevention: false, // Disable CSRF prevention (use with caution)
     formatError: (error) => {
       logger.error('GraphQL Error:', error);
       return {

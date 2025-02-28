@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@apollo/server": "^4.11.0",
+    "@graphql-tools/graphql-file-loader": "^8.0.16",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "apollo-server": "^3.13.0",
