@@ -102,11 +102,11 @@ app.use((req,res,next)=>{
   req.io=io;
   next();
 })
-app.use(cors({
- origin: '*' ,
-   credentials: true,
- allowedHeaders: ['Authorization', 'Content-Type', 'token']
-}));
+// app.use(cors({
+//  origin: '*' ,
+//    credentials: true,
+//  allowedHeaders: ['Authorization', 'Content-Type', 'token']
+// }));
 
 io.on('connection', (socket) => {
   console.log(`A user connected: ${socket.id}`);
