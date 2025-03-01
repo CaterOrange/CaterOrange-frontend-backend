@@ -93,7 +93,18 @@ SELECT * FROM address WHERE address_id=$1`,
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   RETURNING *;
 `,
-
+UPDATE_CORPORATE_ORDER_DETAILS: `
+  UPDATE corporateorder_details 
+  SET processing_date = $1, 
+      delivery_status = $2, 
+      category_id = $3, 
+      quantity = $4, 
+      active_quantity = $5, 
+      media = $6, 
+      delivery_details = $7
+  WHERE corporateorder_generated_id = $8
+  RETURNING *;
+`,
 GET_ORDER_DETAILS_BY_ID: `
   SELECT corporateorder_generated_id, order_details 
   FROM corporate_orders 

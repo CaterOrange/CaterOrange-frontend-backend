@@ -9,6 +9,9 @@ router.put('/customer/updateCartItem/:corporatecart_id',auth,corporateOrderContr
 router.delete('/customer/removeCartItem/:corporatecart_id',auth,corporateOrderController.deleteCartItem)
 router.post('/customer/corporateOrderDetails',auth,corporateOrderController.addCorporateOrderDetails);
 
+
+router.put('/customer/corporateOrderDetails/android/:id', auth, corporateOrderController.updateCorporateOrderDetails);
+
 router.get('/customer/corporate/myorders',auth,corporateOrderController.getOrderDetails);
 
 

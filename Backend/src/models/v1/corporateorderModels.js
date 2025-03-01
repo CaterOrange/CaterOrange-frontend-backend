@@ -697,6 +697,32 @@ const insertCorporateOrderDetails = async (corporateorder_generated_id, processi
     }
 };
 
+const updateCorporateOrderDetails = async (corporateorder_generated_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details) => {
+    logger.info('Updating corporate order details:', {
+        corporateorder_generated_id,
+        processing_date,
+        delivery_status,
+        category_id,
+        quantity,
+        active_quantity,
+        media,
+        delivery_details
+    });
+
+    try {
+        const result = await client.query(DB_COMMANDS.UPDATE_CORPORATE_ORDER_DETAILS, [processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details, corporateorder_generated_id]);
+        logger.info("Successfully updated corporate order details:", result);
+        
+        if (result.rowCount === 0) {
+            throw new Error('No record found with the provided ID');
+        }
+        
+        return result.rows[0];
+    } catch (err) {
+        logger.error('Error updating corporate order details:', { error: err.message });
+        throw err;
+    }
+};
 
 const getCartCountById = async (customer_id) => {
     try {
@@ -891,5 +917,6 @@ module.exports = {
     getCarts,
     add_cart,
     findCustomerByGid,
-    getCartCountById
+    getCartCountById,
+    updateCorporateOrderDetails
 };

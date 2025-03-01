@@ -699,6 +699,26 @@ const transferCartToOrder = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+const updateCorporateOrderDetails = async (req, res) => {
+  const { corporateorder_generated_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details } = req.body;
+  
+  try {
+    logger.info('Updating corporate order details', { corporateorder_generated_id, processing_date, delivery_status, category_id });
+    
+    const updatedDetail = await corporate_model.updateCorporateOrderDetails(corporateorder_generated_id, processing_date, delivery_status, category_id, quantity, active_quantity, media, delivery_details);
+
+    res.status(200).json({
+      success: true,
+      message: 'Order details updated successfully',
+      data: updatedDetail
+    });
+  } catch (error) {
+    logger.error('Error updating corporate order details', { error: error.message });
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
 // Get category name by ID
 const getcategorynameById = async (req, res) => {
   console.log('Request body:', req.body);
@@ -1122,5 +1142,6 @@ module.exports = {
   updateOrderDetails,
   pauseDays,
   getProcessingDates,
+  updateCorporateOrderDetails,
   getMediaByOrderDetailId
 };
