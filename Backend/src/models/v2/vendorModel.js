@@ -58,7 +58,6 @@ const getTodayCorporateOrders = async () => {
 
     const result = await client.query(`
       SELECT 
-        co.corporateorder_id, 
         co.corporateorder_generated_id,
         co.customer_generated_id,
         co.order_details,

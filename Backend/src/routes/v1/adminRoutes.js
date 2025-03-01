@@ -707,6 +707,7 @@ const resolvers = {
       return result.rowCount > 0;
     },
 
+    
     updateDeliveryStatus: async (_, { orderId, orderIndex, status }) => {
       try {
         // Validate status
@@ -747,10 +748,10 @@ const resolvers = {
         
         // Update ONLY the delivery_status in the corporateorder_details table
         const updateQuery = `
-        UPDATE corporateorder_details 
-        SET delivery_status = $1
-        WHERE order_detail_id = $2
-        RETURNING *
+          UPDATE corporateorder_details 
+          SET delivery_status = $1
+          WHERE order_detail_id = $2
+          RETURNING *
         `;
         
         const result = await client.query(updateQuery, [status, orderDetailId]);
@@ -761,13 +762,33 @@ const resolvers = {
         
         // Get the updated order with all its details
         const updatedOrderQuery = `
-          SELECT co.*, c.customer_name, c.customer_phonenumber 
+          SELECT 
+            co.*,
+            c.customer_name,
+            c.customer_phonenumber,
+            json_agg(
+              json_build_object(
+                'order_detail_id', cod.order_detail_id,
+                'category_name', cat.category_name,
+                'quantity', cod.quantity,
+                'active_quantity', cod.active_quantity,
+                'processing_date', cod.processing_date,
+                'delivery_status', cod.delivery_status
+              )
+            ) as order_details
           FROM corporate_orders co 
-          JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
+          JOIN customer c ON co.customer_generated_id = c.customer_generated_id
+          JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
+          LEFT JOIN corporate_category cat ON cod.category_id = cat.category_id
           WHERE co.corporateorder_generated_id = $1
+          GROUP BY co.corporateorder_id, co.corporateorder_generated_id, c.customer_name, c.customer_phonenumber
         `;
         
         const updatedOrder = await client.query(updatedOrderQuery, [orderId]);
+        
+        if (updatedOrder.rows.length === 0) {
+          throw new Error('Failed to retrieve updated order');
+        }
         
         return updatedOrder.rows[0];
       } catch (error) {
@@ -775,8 +796,7 @@ const resolvers = {
         throw error;
       }
     }
-   
-,
+  ,
 
 
 

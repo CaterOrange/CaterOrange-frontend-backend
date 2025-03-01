@@ -36,9 +36,6 @@ const trackEvent = (event, properties = {}) => {
         console.error('Mixpanel tracking error:', error);
     }
 };
-
-
-
 let otpStore = {}; // This should be in memory or persistent storage in production
 const send_otp = async (req, res) => {
     const { email } = req.body;
