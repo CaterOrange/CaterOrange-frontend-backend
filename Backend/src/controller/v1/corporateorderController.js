@@ -701,16 +701,33 @@ const transferCartToOrder = async (req, res) => {
 };
 // Get category name by ID
 const getcategorynameById = async (req, res) => {
+  console.log('Request body:', req.body);
   const { categoryId } = req.body;
+  
+  if (!categoryId) {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'Missing categoryId' 
+    });
+  }
+  
   try {
     const categoryname = await corporate_model.getcategoryname(categoryId);
-    logger.info(`Fetched category name { ${categoryId} `);
+    console.log(`Fetched category name for ID: ${categoryId}`, categoryname);
+    
+    if (!categoryname || !categoryname.category_name) {
+      return res.json({
+        success: true,
+        categoryname: { category_name: 'Unknown', category_price: 0 }
+      });
+    }
+    
     return res.json({
       success: true,
       categoryname
     });
   } catch (err) {
-    logger.error('Error fetching category name', { error: err.message });
+    console.error('Error fetching category name', err);
     res.status(500).json({ error: err.message });
   }
 };
