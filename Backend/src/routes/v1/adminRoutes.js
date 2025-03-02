@@ -339,7 +339,9 @@ const resolvers = {
 
     getTodayCorporateOrders: async () => {
       try {
-        const today = new Date().toISOString().split('T')[0];
+        // const today = new Date().toISOString().split('T')[0];
+        const today = "2025-03-03"; // As a string
+
         console.log("Today's Date admin route:", today);
     
         const result = await client.query(`
