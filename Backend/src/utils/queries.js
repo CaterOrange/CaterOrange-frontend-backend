@@ -166,6 +166,9 @@ INSERT_CART_TO_ORDER:`INSERT INTO corporate_orders
 GET_CATEGORY_NAME: `
     SELECT category_name,category_price FROM  corporate_category WHERE category_id= $1
 `,
+GET_ORDER_MEDIA: `
+    SELECT media FROM corporateorder_details WHERE order_detail_id = $1
+  `,
 GET_ALL_ADDRESSES:`
 SELECT * FROM address WHERE customer_id=$1
 `,

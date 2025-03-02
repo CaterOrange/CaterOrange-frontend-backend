@@ -20,4 +20,9 @@ router.get('/corporate-orders/:corporateOrderId/processing-dates', corporateOrde
 
 router.post('/customer/getcategorynameByid', auth,corporateOrderController.getcategorynameById)
 
+
+router.post('/customer/getMediaByOrderId', auth, corporateOrderController.getMediaByOrderDetailId);
+
+
 module.exports = router;
+

@@ -1057,6 +1057,56 @@ const getProcessingDates = async (req, res) => {
   }
 };
 
+const getMediaByOrderDetailId = async (req, res) => {
+  try {
+    const { orderDetailId } = req.body;
+    
+    if (!orderDetailId) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Missing orderDetailId' 
+      });
+    }
+    
+    // Query to get media from corporateorder_details
+    const mediaResult = await client.query(
+      `SELECT 
+        od.media,
+        od.category_id,
+        cc.category_name,
+        cc.category_media
+       FROM 
+        corporateorder_details od
+       LEFT JOIN
+        corporate_category cc ON od.category_id = cc.category_id
+       WHERE 
+        od.order_detail_id = $1`,
+      [orderDetailId]
+    );
+    
+    if (mediaResult.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No media found for order detail ID ${orderDetailId}`
+      });
+    }
+    
+    // Return both the order-specific media and the category media
+    res.json({
+      success: true,
+      orderMedia: mediaResult.rows[0].media,
+      categoryInfo: {
+        categoryId: mediaResult.rows[0].category_id,
+        categoryName: mediaResult.rows[0].category_name,
+        categoryMedia: mediaResult.rows[0].category_media
+      }
+    });
+  } catch (err) {
+    logger.error('Error fetching media for order detail', { error: err.message, orderDetailId: req.params.orderDetailId });
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 module.exports = {
   addCorporateOrderDetails,
   getOrderDetails,
@@ -1071,5 +1121,6 @@ module.exports = {
   getCartCount,
   updateOrderDetails,
   pauseDays,
-  getProcessingDates
+  getProcessingDates,
+  getMediaByOrderDetailId
 };
