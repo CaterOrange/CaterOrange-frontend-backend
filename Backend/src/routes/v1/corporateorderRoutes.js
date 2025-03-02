@@ -8,7 +8,10 @@ router.get('/customer/getCartCount', auth,corporateOrderController.getCartCount)
 router.put('/customer/updateCartItem/:corporatecart_id',auth,corporateOrderController.updateCartItem);
 router.delete('/customer/removeCartItem/:corporatecart_id',auth,corporateOrderController.deleteCartItem)
 router.post('/customer/corporateOrderDetails',auth,corporateOrderController.addCorporateOrderDetails);
+
 router.get('/customer/corporate/myorders',auth,corporateOrderController.getOrderDetails);
+
+
 router.post('/customer/corporate/transfer-cart-to-order', auth,corporateOrderController.transferCartToOrder);
 router.post('/corporate-orders/:corporateOrderId/pause-days', auth, corporateOrderController.pauseDays);
 router.put('/customer/corporate/update-order-details/:corporateOrderId',auth,corporateOrderController.updateOrderDetails);
