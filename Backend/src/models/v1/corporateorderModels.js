@@ -645,16 +645,23 @@ const insertCartToOrder = async (
       throw err;
     }
   };
-const getcategoryname = async (categoryId) => {
+  const getcategoryname = async (categoryId) => {
     try {
-        const category_name = await client.query(DB_COMMANDS.GET_CATEGORY_NAME, [categoryId]);
-        logger.info('Category name fetched in model:', category_name);
+      console.log('Querying for category ID:', categoryId);
+      const category_name = await client.query(DB_COMMANDS.GET_CATEGORY_NAME, [categoryId]);
+      console.log('Query result:', category_name);
+      
+      if (category_name.rows && category_name.rows.length > 0) {
         return category_name.rows[0];
+      } else {
+        console.log('No category found with ID:', categoryId);
+        return null;
+      }
     } catch (err) {
-        logger.error('Error fetching category_name', { error: err.message });
-        throw err;
+      console.error('Error fetching category_name', err);
+      throw err;
     }
-}
+  }
    
 const getOrderDetailsById = async (customer_id) => {
     logger.info(`Fetching order details for customer ID:${customer_id}`);

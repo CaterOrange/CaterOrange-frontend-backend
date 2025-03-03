@@ -1,16 +1,8 @@
 const winston = require('winston');
 const gidStorage = require('../middlewares/loggingMiddleware.js');
 require('dotenv').config();
-const { combine, timestamp, json, printf, errors, splat, colorize } = winston.format;
-const fs = require('fs');
+const { combine, timestamp, printf, errors, splat, colorize } = winston.format;
 const path = require('path');
-const dailyRotateFile = require('winston-daily-rotate-file');
-
-// Create logs directory if it doesn't exist
-const logDir = path.resolve(__dirname, 'logs');
-if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
-}
 
 // Define custom log levels
 const customLevels = {
@@ -56,7 +48,7 @@ const getUserId = () => {
     }
 };
 
-// Custom format for both console and file logging
+// Custom format for console logging
 const customFormat = printf(({ level, message, timestamp, filename, userId, ...meta }) => {
     try {
         const metaStr = Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
@@ -66,47 +58,17 @@ const customFormat = printf(({ level, message, timestamp, filename, userId, ...m
     }
 });
 
-// Create transports with error handling
-const createDailyRotateFileTransport = (options) => {
-    const transport = new dailyRotateFile({
-        ...options,
-        handleExceptions: true,
-        handleRejections: true,
-        maxSize: '10m', // Increased from 1m
-        maxFiles: '14d', // Increased from 1d
-        format: combine(
-            customFormat,
-            json()
-        )
-    });
-
-    transport.on('error', (error) => {
-        console.error('Error in daily rotate file transport:', error);
-    });
-
-    return transport;
-};
-
-// Configure the logger with error handling
+// Configure the logger for console only
 const logger = winston.createLogger({
     level: process.env.LOG_LEVEL || 'info',
     levels: customLevels.levels,
-    exitOnError: false, // Don't exit on handled exceptions
+    exitOnError: false,
     format: combine(
         timestamp(),
         errors({ stack: true }),
         splat()
     ),
     transports: [
-        createDailyRotateFileTransport({
-            filename: path.join(logDir, 'application-%DATE%.log'),
-            datePattern: 'YYYY-MM-DD'
-        }),
-        createDailyRotateFileTransport({
-            filename: path.join(logDir, 'error-%DATE%.log'),
-            datePattern: 'YYYY-MM-DD',
-            level: 'error'
-        }),
         new winston.transports.Console({
             format: combine(
                 colorize(),
@@ -118,27 +80,10 @@ const logger = winston.createLogger({
     ]
 });
 
-// Exception handling with safeguards
-const exceptionHandler = new winston.transports.File({ 
-    filename: path.join(logDir, 'exceptions.log'),
-    format: combine(timestamp(), json()),
-    handleExceptions: true,
-    handleRejections: true,
-    maxsize: 10485760, // 10MB
-    maxFiles: 5
-});
-
-exceptionHandler.on('error', (error) => {
-    console.error('Error in exception handler:', error);
-});
-
-logger.exceptions.handle(exceptionHandler);
-
 // Safer process handling
 process.on('unhandledRejection', (error) => {
     try {
         logger.error('Unhandled Rejection:', error);
-        // Give logger time to write before exiting
         setTimeout(() => process.exit(1), 1000);
     } catch (err) {
         console.error('Error handling unhandled rejection:', err);
@@ -171,3 +116,4 @@ logger.info = wrapLogFunction(logger.info);
 logger.debug = wrapLogFunction(logger.debug);
 
 module.exports = logger;
+

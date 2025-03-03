@@ -13,6 +13,8 @@ router.post('/customer/corporate/transfer-cart-to-order', auth,corporateOrderCon
 router.post('/corporate-orders/:corporateOrderId/pause-days', auth, corporateOrderController.pauseDays);
 router.put('/customer/corporate/update-order-details/:corporateOrderId',auth,corporateOrderController.updateOrderDetails);
 router.get('/corporate-orders/:corporateOrderId/processing-dates', corporateOrderController.getProcessingDates);
+
+
 router.post('/customer/getcategorynameByid', auth,corporateOrderController.getcategorynameById)
 
 module.exports = router;
