@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircleIcon, MinusCircleIcon, UserCircleIcon } from '@heroicons/react/solid';
@@ -20,8 +19,12 @@ import {
   Calendar,
   Box,
   UserCheck,
-  XCircle
+  XCircle,
+  Modal,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
+import RescheduleDaysSelector from '../PauseDays';
 
 const Navbar = ({ activeTab, toggleSidenav, cartCount }) => {
   return (
@@ -145,6 +148,99 @@ const Sidenav = ({ isOpen, onClose, sidenavRef, userDP }) => {
   );
 };
 
+// Modal Component for Reschedule Days
+const RescheduleModal = ({ isOpen, onClose, corporateOrderId, onSaveRescheduleDays, onError }) => {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div 
+        className="fixed inset-0 bg-black/50 z-50"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div 
+          className="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-gray-800">Reschedule Days</h3>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label="Close modal"
+            >
+              <XCircle size={24} />
+            </button>
+          </div>
+
+          <div className="p-6">
+            <RescheduleDaysSelector
+              corporateOrderId={corporateOrderId}
+              onSaveRescheduleDays={(payload) => {
+                onSaveRescheduleDays(payload);
+                onClose();
+              }}
+              onError={(error) => {
+                onError(error);
+                // Keep modal open on error so user can try again
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+// Image Modal Component
+const ImageModal = ({ isOpen, onClose, images, currentIndex, onNext, onPrev }) => {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+        <div className="relative bg-white rounded-lg shadow-lg max-w-3xl w-full overflow-hidden">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+            aria-label="Close modal"
+          >
+            <XCircle size={24} />
+          </button>
+          <div className="flex items-center justify-center p-4">
+            <button
+              onClick={onPrev}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={32} />
+            </button>
+            <img
+              src={images[currentIndex].url}
+              alt={`Image ${currentIndex + 1}`}
+              className="max-h-[80vh] object-contain mx-4"
+            />
+            <button
+              onClick={onNext}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label="Next image"
+            >
+              <ChevronRight size={32} />
+            </button>
+          </div>
+          {images[currentIndex].tag && (
+            <div className="text-center text-gray-700 p-2">
+              {images[currentIndex].tag}
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
 // Status Step Component for Delivery Progress
 const StatusStep = ({ status, isActive, isCompleted, icon: Icon, title, description, timestamp, isLast }) => (
   <div className="flex items-start relative">
@@ -240,9 +336,27 @@ const DeliveryProgress = ({ status, details }) => {
 const OrderCard = ({ order, orderDetails }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const [isRescheduleModalOpen, setIsRescheduleModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImages, setCurrentImages] = useState([]);
 
   const handleItemClick = (index) => {
     setSelectedItemIndex(selectedItemIndex === index ? null : index);
+  };
+
+  const handleImageClick = (images, index) => {
+    setCurrentImages(images);
+    setCurrentImageIndex(index);
+    setIsImageModalOpen(true);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % currentImages.length);
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + currentImages.length) % currentImages.length);
   };
 
   // Get status color
@@ -264,13 +378,43 @@ const OrderCard = ({ order, orderDetails }) => {
     }
   };
 
+  // Format date to display correctly accounting for timezone
+  const formatProcessingDate = (dateString) => {
+    if (!dateString) return "N/A";
+    
+    // Create a date object using the string
+    const date = new Date(dateString);
+    
+    // Format the date to YYYY-MM-DD
+    return date.toLocaleDateString('en-CA'); // en-CA uses YYYY-MM-DD format
+  };
+
+  // Parse media JSON and get the first image URL
+  const getImageUrl = (mediaString) => {
+    try {
+      if (!mediaString) return null;
+      
+      // Parse the JSON if it's a string
+      const mediaData = typeof mediaString === 'string' 
+        ? JSON.parse(mediaString) 
+        : mediaString;
+      
+      // Check if items array exists and has elements
+      if (mediaData && mediaData.items && mediaData.items.length > 0) {
+        return mediaData.items[0].url;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error("Error parsing media data:", error);
+      return null;
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
       {/* Order Header */}
-      <div
-        className="cursor-pointer p-6 border-b"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
+      <div className="p-6 border-b">
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center space-x-3">
@@ -278,6 +422,16 @@ const OrderCard = ({ order, orderDetails }) => {
               <h3 className="text-lg font-semibold text-gray-800">
                 {order.corporateorder_generated_id}
               </h3>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsRescheduleModalOpen(true);
+                }}
+                className="flex items-center space-x-1 text-sm text-teal-600 hover:text-teal-800 border border-teal-300 hover:border-teal-500 rounded-full px-3 py-1 transition-colors"
+              >
+                <Calendar size={14} />
+                <span>Reschedule</span>
+              </button>
             </div>
             <p className="text-sm text-gray-500 mt-1">
               Ordered on {new Date(order.ordered_at).toLocaleDateString()}
@@ -287,7 +441,12 @@ const OrderCard = ({ order, orderDetails }) => {
             <span className="text-xl font-bold text-teal-600">
               ₹{order.total_amount}
             </span>
-            {isExpanded ? <ChevronUp /> : <ChevronDown />}
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="focus:outline-none"
+            >
+              {isExpanded ? <ChevronUp /> : <ChevronDown />}
+            </button>
           </div>
         </div>
 
@@ -303,48 +462,102 @@ const OrderCard = ({ order, orderDetails }) => {
       {/* Expanded Content */}
       {isExpanded && (
         <div className="divide-y divide-gray-100">
-          {orderDetails.map((item, index) => (
-            <div key={item.order_detail_id} className="p-4">
-              <div
-                className="cursor-pointer"
-                onClick={() => handleItemClick(index)}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <Package size={24} className="text-gray-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-800">
-                        {item.category_name}
-                      </h4>
-                      <p className="text-sm text-gray-500">
-                        Qty: {item.quantity}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      getStatusColor(item.delivery_status)
-                    }`}>
-                      {item.delivery_status}
-                    </span>
-                    {selectedItemIndex === index ? <ChevronUp /> : <ChevronDown />}
-                  </div>
-                </div>
-              </div>
+          {orderDetails.map((item, index) => {
+            // Get image URL from media field
+            const imageUrl = getImageUrl(item.media);
+            const mediaData = typeof item.media === 'string' ? JSON.parse(item.media) : item.media;
 
-              {/* Delivery Progress */}
-              {selectedItemIndex === index && (
-                <div className="mt-6 pl-20">
-                  <DeliveryProgress
-                    status={item.delivery_status}
-                    details={item}
-                  />
+            return (
+              <div key={item.order_detail_id} className="p-4">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => handleItemClick(index)}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-4">
+                      {/* Show image if available, otherwise show package icon */}
+                      {imageUrl ? (
+                        <div className="w-16 h-16 rounded-lg overflow-hidden">
+                          <img 
+                            src={imageUrl} 
+                            alt={item.category_name} 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              // Fallback to icon if image fails to load
+                              e.target.onerror = null;
+                              e.target.style.display = 'none';
+                              e.target.parentNode.innerHTML = `<div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="M16 16h.01"></path><path d="M12 16h.01"></path><path d="M8 16h.01"></path><path d="M4 8h16"></path></svg></div>`;
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <Package size={24} className="text-gray-400" />
+                        </div>
+                      )}
+                      <div>
+                        <h4 className="font-medium text-gray-800">
+                          {item.category_name}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          Qty: {item.quantity}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Date: {formatProcessingDate(item.processing_date)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        getStatusColor(item.delivery_status)
+                      }`}>
+                        {item.delivery_status}
+                      </span>
+                      {selectedItemIndex === index ? <ChevronUp /> : <ChevronDown />}
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
+
+                {/* Delivery Progress */}
+                {selectedItemIndex === index && (
+                  <div className="mt-6 pl-20">
+                    <DeliveryProgress
+                      status={item.delivery_status}
+                      details={item}
+                    />
+                  </div>
+                )}
+
+                {/* Show all media images when item is expanded */}
+                {selectedItemIndex === index && item.media && (
+                  <div className="mt-4 pl-20">
+                    <h5 className="font-medium text-gray-700 mb-2">Order Images</h5>
+                    {mediaData.items && mediaData.items.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {mediaData.items.map((mediaItem, idx) => (
+                          <div key={idx} className="relative group">
+                            <img
+                              src={mediaItem.url}
+                              alt={`Image ${idx + 1}`}
+                              className="w-24 h-24 object-cover rounded-lg border border-gray-200 cursor-pointer"
+                              onClick={() => handleImageClick(mediaData.items, idx)}
+                            />
+                            {mediaItem.tag && (
+                              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center rounded-b-lg">
+                                {mediaItem.tag}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500">No order images found</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
           {/* Order Summary */}
           <div className="p-6 bg-gray-50">
@@ -364,6 +577,31 @@ const OrderCard = ({ order, orderDetails }) => {
           </div>
         </div>
       )}
+
+      {/* Reschedule Modal */}
+      <RescheduleModal
+        isOpen={isRescheduleModalOpen}
+        onClose={() => setIsRescheduleModalOpen(false)}
+        corporateOrderId={order.corporateorder_generated_id}
+        onSaveRescheduleDays={(payload) => {
+          console.log("Days rescheduled:", payload);
+          // Add any success notification here if needed
+        }}
+        onError={(error) => {
+          console.error("Reschedule error:", error);
+          // Add any error notification here if needed
+        }}
+      />
+
+      {/* Image Modal */}
+      <ImageModal
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        images={currentImages}
+        currentIndex={currentImageIndex}
+        onNext={handleNextImage}
+        onPrev={handlePrevImage}
+      />
     </div>
   );
 };
@@ -378,7 +616,6 @@ const CorporateOrders = () => {
   const sidenavRef = useRef(null);
   const navigate = useNavigate();
 
-  // Verify user token
   VerifyToken();
 
   // Load user display picture
@@ -414,7 +651,8 @@ const CorporateOrders = () => {
           orderInfo: {
             corporateorder_generated_id: item.corporateorder_generated_id,
             total_amount: item.total_amount,
-            ordered_at: item.ordered_at
+            ordered_at: item.ordered_at,
+            customer_address: item.customer_address // Ensure customer_address is included
           },
           orderDetails: []
         };
@@ -429,7 +667,8 @@ const CorporateOrders = () => {
         quantity: item.quantity,
         active_quantity: item.active_quantity,
         processing_date: item.processing_date,
-        addedat: item.addedat
+        addedat: item.addedat,
+        media: item.media
       });
     });
     

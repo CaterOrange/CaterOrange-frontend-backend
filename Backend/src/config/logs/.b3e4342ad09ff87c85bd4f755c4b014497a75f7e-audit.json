@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/srivallika/Videos/CaterOrange-frontend-backend/Backend/src/config/logs/.b3e4342ad09ff87c85bd4f755c4b014497a75f7e-audit.json",
+    "files": [
+        {
+            "date": 1740751053823,
+            "name": "/home/srivallika/Videos/CaterOrange-frontend-backend/Backend/src/config/logs/application-2025-02-28.log",
+            "hash": "8719fbb65c653274b9fc80365637c4d89c09418befd748ceedf6de81fe69791c"
+        },
+        {
+            "date": 1740930248446,
+            "name": "/home/srivallika/Videos/CaterOrange-frontend-backend/Backend/src/config/logs/application-2025-03-02.log",
+            "hash": "b755b279354ff16b7665d27ebe3f6803510e6265b37895fd11d3205f7c3f1846"
+        }
+    ],
+    "hashType": "sha256"
+}
