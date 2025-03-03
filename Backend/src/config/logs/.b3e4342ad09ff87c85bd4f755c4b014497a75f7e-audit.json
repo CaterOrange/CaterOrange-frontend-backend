@@ -14,6 +14,11 @@
             "date": 1740930248446,
             "name": "/home/srivallika/Videos/CaterOrange-frontend-backend/Backend/src/config/logs/application-2025-03-02.log",
             "hash": "b755b279354ff16b7665d27ebe3f6803510e6265b37895fd11d3205f7c3f1846"
+        },
+        {
+            "date": 1740984039211,
+            "name": "/home/srivallika/Videos/CaterOrange-frontend-backend/Backend/src/config/logs/application-2025-03-03.log",
+            "hash": "f1e5b939d3023cb11e8a2736cf4507cc012ff420b9ed12ceb6ac50f1c82a2659"
         }
     ],
     "hashType": "sha256"
