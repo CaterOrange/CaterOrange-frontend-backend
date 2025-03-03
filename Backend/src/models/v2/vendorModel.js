@@ -211,14 +211,14 @@ const updateSingleCorporateOrderDeliveryStatus = async (corporateOrderGeneratedI
 const updateCorporateOrderDeliveryStatus = async (corporateOrderGeneratedId, categoryId, deliveryStatus) => {
   try {
       const result = await client.query(
-          'UPDATE corporateorder_details SET delivery_status = $1, updatedat = NOW() WHERE category_id = $2 AND corporateorder_generated_id = $3 RETURNING *',
+          'UPDATE corporateorder_details SET delivery_status = $1 WHERE category_id = $2 AND corporateorder_generated_id = $3 RETURNING *',
           [deliveryStatus, categoryId, corporateOrderGeneratedId]
       );
       
       // If the update was successful, update timestamps in the main corporateorders table
       if (result.rows.length > 0) {
           await client.query(
-              'UPDATE corporateorders SET updatedat = NOW() WHERE corporateorder_generated_id = $1',
+              'UPDATE corporate_orders SET  WHERE corporateorder_generated_id = $1',
               [corporateOrderGeneratedId]
           );
       }
@@ -278,7 +278,7 @@ const updateAllCategoriesDeliveryStatus = async (corporateOrderId, deliveryStatu
       // Then update the timestamp in the main order table
       if (updateResult.rows.length > 0) {
           await client.query(
-              'UPDATE corporateorders SET updatedat = NOW() WHERE corporateorder_generated_id = $1',
+              'UPDATE corporate_orders SET  WHERE corporateorder_generated_id = $1',
               [corporateOrderId]
           );
       }
