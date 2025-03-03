@@ -1,0 +1,7 @@
+{"customer_email":"srivallikavalli2004@gmail.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-03-03T07:04:49.155Z","userId":"No userId"}
+{"customer_email":"srivallikavalli2004@gmail.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-03-03T07:05:03.452Z","userId":"No userId"}
+{"customer_email":"pravallika@gmail.com","filename":"customerController.js","level":"error","message":"Email already in use","timestamp":"2025-03-03T07:05:14.508Z","userId":"No userId"}
+{"filename":"vendorModel.js","level":"error","message":"Error in updateAllCategoriesDeliveryStatus: syntax error at or near \"WHERE\"","timestamp":"2025-03-03T08:22:07.588Z","userId":"C000007"}
+{"filename":"vendorController.js","level":"error","message":"Error updating delivery status for order CO202502281C000001: syntax error at or near \"WHERE\"","timestamp":"2025-03-03T08:22:07.590Z","userId":"C000007"}
+{"filename":"vendorModel.js","level":"error","message":"Error in updateAllCategoriesDeliveryStatus: syntax error at or near \"WHERE\"","timestamp":"2025-03-03T08:23:00.324Z","userId":"C000007"}
+{"filename":"vendorController.js","level":"error","message":"Error updating delivery status for order CO202502281C000001: syntax error at or near \"WHERE\"","timestamp":"2025-03-03T08:23:00.327Z","userId":"C000007"}
