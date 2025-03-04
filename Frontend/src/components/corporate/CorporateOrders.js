@@ -1274,7 +1274,7 @@ const OrderCard = ({ order, orderDetails }) => {
  <div className="p-4 sm:p-6 border-b">
         <div className="flex flex-col sm:flex-row justify-between items-start">
           <div className="w-full">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3" onClick={() => setIsExpanded(!isExpanded)}>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3" onClick={() => setIsExpanded(!isExpanded)}>
               <div className="flex items-center space-x-2 w-full" >
                 <ShoppingBag className="text-teal-600 hidden sm:block" size={24} />
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 flex-grow">
