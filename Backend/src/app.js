@@ -6,6 +6,8 @@ const cors = require('cors');
 const logger = require('./config/logger');
 const { createTables } = require('./controller/v1/tableController.js');
 const { createDatabase } = require('./config/config');
+const fs=require('fs');
+
 
 
 const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
@@ -84,7 +86,14 @@ const SALT_INDEX = 1;
 
 const app = express();
 
-app.use(fileUpload({ useTempFiles: true }));
+app.use(fileUpload({ 
+  useTempFiles: true,
+  limits: { 
+    fileSize: 100 * 1024 * 1024 // 100MB limit
+  },
+  abortOnLimit: true,
+  responseOnLimit: 'File is too large'
+}));
 
 
 const server = http.createServer(app);
