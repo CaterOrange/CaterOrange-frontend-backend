@@ -189,6 +189,11 @@ async function startApolloServer() {
         path: error.path,
       };
     },
+    bodyParserOptions: {
+      limit: '50mb', // Increase to a larger size
+      type: 'application/json'
+
+    }
   });
 
   await server.start();
@@ -248,12 +253,14 @@ async function startApolloServer() {
           throw new Error(err.message || 'Authentication error');
         }
       },
+      bodyParserOptions: {
+        limit: '100mb' // Even larger limit if needed
+      }
     })
   );
 
   return server;
 }
-
 app.post("/api/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
   const merchantTransactionId = uniqid();
