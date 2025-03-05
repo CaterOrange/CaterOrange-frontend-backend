@@ -4,10 +4,7 @@ const admin_model = require('../../models/v2/adminModel');
 const JWT_SECRET = process.env.SECRET_KEY;
 const Mixpanel = require('mixpanel');
 const fs=require('fs');
-<<<<<<< HEAD
-=======
-
->>>>>>> 7120826e7fcfbf60f343c6e9bdc86bc678fa8a19
+const client = require('../../config/dbConfig.js');
 
 // Initialize Mixpanel
 const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
@@ -543,12 +540,54 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
 };
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 7120826e7fcfbf60f343c6e9bdc86bc678fa8a19
+
+const getMedia = async (req, res) => {
+    try {
+        const categoryId = parseInt(req.params.categoryId); 
+
+
+
+        console.log("Received categoryId:", req.params.categoryId);
+
+
+        
+
+        console.log("Received categoryId  :", categoryId);
+
+
+        const result = await client.query(
+            `SELECT category_media FROM corporate_category WHERE category_id = $1`,
+            [categoryId] // Now it's an integer
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Category not found"
+            });
+        }
+
+        return res.json({
+            success: true,
+            media_url: result.rows[0].category_media
+        });
+
+    } catch (error) {
+        console.error("Error in getMedia:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching media",
+            error: error.message
+        });
+    }
+};
+
+
+
 module.exports = {
     updateCorporateOrderMedia,
     getTodayCorporateOrders,
-    bulkUpdateCorporateOrderMedia
+    bulkUpdateCorporateOrderMedia,
+    getMedia
 };
