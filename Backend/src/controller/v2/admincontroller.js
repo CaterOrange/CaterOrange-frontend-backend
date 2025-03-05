@@ -4,6 +4,10 @@ const admin_model = require('../../models/v2/adminModel');
 const JWT_SECRET = process.env.SECRET_KEY;
 const Mixpanel = require('mixpanel');
 const fs=require('fs');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7120826e7fcfbf60f343c6e9bdc86bc678fa8a19
 
 // Initialize Mixpanel
 const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
@@ -539,7 +543,10 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
 };
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7120826e7fcfbf60f343c6e9bdc86bc678fa8a19
 module.exports = {
     updateCorporateOrderMedia,
     getTodayCorporateOrders,

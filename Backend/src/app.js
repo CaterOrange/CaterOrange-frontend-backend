@@ -6,6 +6,8 @@ const cors = require('cors');
 const logger = require('./config/logger');
 const { createTables } = require('./controller/v1/tableController.js');
 const { createDatabase } = require('./config/config');
+const fs=require('fs');
+
 
 
 const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
