@@ -25,6 +25,7 @@ async function fetchAndInsertCSVData() {
                         category_name = EXCLUDED.category_name,
                         category_description = EXCLUDED.category_description,
                         category_price = EXCLUDED.category_price,
+                        vendor_price = EXCLUDED.vendor_price,
                         category_media = EXCLUDED.category_media,
                        `,
                     [
@@ -32,6 +33,7 @@ async function fetchAndInsertCSVData() {
                         record.category_name,
                         record.category_description,
                         record.category_price,
+                        record.vendor_price,  // Assuming vendor_price is a separate column in the CSV data
                         record.category_media,
      
                     ]
@@ -53,7 +55,7 @@ function parseCSV(data) {
         // Split by commas and trim spaces from the resulting fields
         const [
             category_id_from_csv, category_name,
-            category_description,category_price, category_media
+            category_description,category_price, category_media,vendor_price
         ] = row.split(',');
 
         return {
@@ -63,7 +65,7 @@ function parseCSV(data) {
             category_description:category_description.trim() === 'TRUE',  // Convert 'TRUE'/'FALSE' to boolean
             category_price: category_price.trim() || null,
             category_media: category_media.trim() || null,  // Handle empty or non-numeric values as null
-           
+           vendor_price: vendor_price.trim() || null,
         };
 
     });

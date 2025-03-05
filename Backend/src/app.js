@@ -97,8 +97,8 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
-app.use(express.json());
-app.use((req,res,next)=>{
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));app.use((req,res,next)=>{
   req.io=io;
   next();
 })
@@ -177,6 +177,11 @@ async function startApolloServer() {
         path: error.path,
       };
     },
+    bodyParserOptions: {
+      limit: '50mb', // Increase to a larger size
+      type: 'application/json'
+
+    }
   });
 
   await server.start();
@@ -236,6 +241,9 @@ async function startApolloServer() {
           throw new Error(err.message || 'Authentication error');
         }
       },
+      bodyParserOptions: {
+        limit: '100mb' // Even larger limit if needed
+      }
     })
   );
 

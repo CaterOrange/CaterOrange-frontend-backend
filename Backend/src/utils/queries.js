@@ -164,7 +164,7 @@ INSERT_CART_TO_ORDER:`INSERT INTO corporate_orders
       VALUES ($1, $2, $3, $4, $5, $6,$7) 
       RETURNING *`,
 GET_CATEGORY_NAME: `
-    SELECT category_name,category_price FROM  corporate_category WHERE category_id= $1
+    SELECT category_name,category_price , FROM  corporate_category WHERE category_id= $1
 `,
 GET_ORDER_MEDIA: `
     SELECT media FROM corporateorder_details WHERE order_detail_id = $1

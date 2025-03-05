@@ -234,8 +234,8 @@ function createCorporateCategoryTableQuery() {
        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp5FtQsvjB021UZYuy_uZRKVbtbiQHzTI38Q&s', 
        '18:00:00', TRUE)
     ON CONFLICT (category_name) DO NOTHING;
-  `;
 
+  `;
 }
 
 

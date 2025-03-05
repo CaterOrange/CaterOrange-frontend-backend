@@ -54,9 +54,9 @@ const getCorporateOrderWithCustomerDetails = async (corporateOrderGeneratedId) =
 
 const getTodayCorporateOrders = async () => {
   try {
-    // const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split('T')[0];
 
-    const today = "2025-03-02";
+    // const today = "2025-03-03";
 
 
     console.log("Today's Date admin route :", today);
