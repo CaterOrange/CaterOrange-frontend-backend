@@ -473,7 +473,7 @@ const OrderCard = ({ order, orderDetails }) => {
 
 
  // Parse media JSON and get the first image URL
-const getCorporateImageUrl = async (categoryId) => {
+ const getCorporateImageUrl = async (categoryId) => {
   try {
     if (!categoryId) return null;
     
@@ -484,17 +484,18 @@ const getCorporateImageUrl = async (categoryId) => {
       { headers: { token } }
     );
     
+    console.log(`Corporate Image for Category ${categoryId}:`, response.data);
+    
     if (response.data && response.data.success && response.data.media_url) {
       return response.data.media_url;
     }
     
     return null;
   } catch (error) {
-    console.error("Error fetching category media:", error);
+    console.error(`Error fetching category media for ${categoryId}:`, error);
     return null;
   }
 };
-
 
 const getOrderTitle = (orderDetails) => {
   if (!orderDetails || orderDetails.length === 0) return 'No Items';
