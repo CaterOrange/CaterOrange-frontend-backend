@@ -6,6 +6,8 @@ const cors = require('cors');
 const logger = require('./config/logger');
 const { createTables } = require('./controller/v1/tableController.js');
 const { createDatabase } = require('./config/config');
+const fs=require('fs');
+
 
 
 const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
@@ -84,7 +86,15 @@ const SALT_INDEX = 1;
 
 const app = express();
 
-app.use(fileUpload({ useTempFiles: true }));
+app.use(fileUpload({ 
+  useTempFiles: true,
+  limits: { 
+    fileSize: 1024 * 1024 * 1024 // 1GB limit
+  },
+  abortOnLimit: true,
+  responseOnLimit: 'File is too large'
+}));
+
 
 
 const server = http.createServer(app);
@@ -97,8 +107,10 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
-app.use(express.json({ limit: '100mb' }));
-app.use(express.urlencoded({ limit: '100mb', extended: true }));app.use((req,res,next)=>{
+app.use(express.json({ limit: '1gb' }));
+app.use(express.urlencoded({ extended: true, limit: '1gb' }));
+
+app.use((req,res,next)=>{
   req.io=io;
   next();
 })
@@ -249,7 +261,6 @@ async function startApolloServer() {
 
   return server;
 }
-
 app.post("/api/pay", async(req, res) => {
   const payEndpoint = "/pg/v1/pay";
   const merchantTransactionId = uniqid();

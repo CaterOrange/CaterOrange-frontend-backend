@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const admin_model = require('../../models/v2/adminModel');
 const JWT_SECRET = process.env.SECRET_KEY;
 const Mixpanel = require('mixpanel');
+const fs=require('fs');
+const client = require('../../config/dbConfig.js');
 
 // Initialize Mixpanel
 const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
@@ -265,6 +267,7 @@ const updateCorporateOrderMedia = async (req, res) => {
 };
 
 
+
 const bulkUpdateCorporateOrderMedia = async (req, res) => {
     try {
         const { categoryId } = req.params;
@@ -308,8 +311,7 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
             });
         }
         
-        // No need to convert alphanumeric IDs to numbers
-        // Just ensure they're all strings and non-empty
+        // Validate and prepare order IDs
         corporateOrderIds = corporateOrderIds.map(id => {
             if (id === null || id === undefined || id === '') {
                 throw new Error(`Empty or invalid order ID found`);
@@ -325,14 +327,25 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
             failed: []
         };
         
-        // Process media uploads to Cloudinary once
+        // Process media uploads to Cloudinary
         let mediaItems = [];
         
+        // Large file size limit (200MB)
+        const MAX_FILE_SIZE = 200 * 1024 * 1024; 
+
         // Handle file uploads
         if (req.files && req.files.media) {
             const mediaFiles = Array.isArray(req.files.media) ? req.files.media : [req.files.media];
             
             for (const file of mediaFiles) {
+                // File size validation
+                if (file.size > MAX_FILE_SIZE) {
+                    return res.status(400).json({
+                        success: false,
+                        message: `File ${file.name} exceeds maximum upload size of 200MB`
+                    });
+                }
+
                 const tag = req.body.tags && Array.isArray(req.body.tags) 
                     ? req.body.tags[mediaFiles.indexOf(file)] 
                     : (req.body.tag || 'untagged');
@@ -341,7 +354,8 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
                 const uploadOptions = {
                     folder: 'corporate_order_media',
                     resource_type: isVideo ? 'video' : 'image',
-                    tags: [tag, 'bulk_upload']
+                    tags: [tag, 'bulk_upload'],
+                    chunk_size: 6_000_000, // 6MB chunks for better reliability
                 };
                 
                 // Add transformations only for images
@@ -360,7 +374,15 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
                 }
                 
                 try {
-                    const uploadResult = await cloudinary.uploader.upload(file.tempFilePath, uploadOptions);
+                    const uploadResult = await new Promise((resolve, reject) => {
+                        cloudinary.uploader.upload_stream(
+                            uploadOptions, 
+                            (error, result) => {
+                                if (error) reject(error);
+                                else resolve(result);
+                            }
+                        ).end(fs.readFileSync(file.tempFilePath));
+                    });
                     
                     mediaItems.push({
                         url: uploadResult.secure_url,
@@ -520,8 +542,52 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
 
 
 
+const getMedia = async (req, res) => {
+    try {
+        const categoryId = parseInt(req.params.categoryId); 
+
+
+
+        console.log("Received categoryId:", req.params.categoryId);
+
+
+        
+
+        console.log("Received categoryId  :", categoryId);
+
+
+        const result = await client.query(
+            `SELECT category_media FROM corporate_category WHERE category_id = $1`,
+            [categoryId] // Now it's an integer
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Category not found"
+            });
+        }
+
+        return res.json({
+            success: true,
+            media_url: result.rows[0].category_media
+        });
+
+    } catch (error) {
+        console.error("Error in getMedia:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching media",
+            error: error.message
+        });
+    }
+};
+
+
+
 module.exports = {
     updateCorporateOrderMedia,
     getTodayCorporateOrders,
-    bulkUpdateCorporateOrderMedia
+    bulkUpdateCorporateOrderMedia,
+    getMedia
 };

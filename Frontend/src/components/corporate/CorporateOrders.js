@@ -415,6 +415,24 @@ const OrderCard = ({ order, orderDetails }) => {
  const [currentImageIndex, setCurrentImageIndex] = useState(0);
  const [currentImages, setCurrentImages] = useState([]);
 
+
+ const [expandedItemMediaUrls, setExpandedItemMediaUrls] = useState({});
+
+ useEffect(() => {
+  const fetchMediaUrls = async () => {
+    const mediaUrls = {};
+    for (const item of orderDetails) {
+      const mediaUrl = await getCorporateImageUrl(item.category_id);
+      mediaUrls[item.category_id] = mediaUrl;
+    }
+    setExpandedItemMediaUrls(mediaUrls);
+  };
+
+  fetchMediaUrls();
+}, [orderDetails])
+
+
+
  const handleItemClick = (index) => {
  setSelectedItemIndex(selectedItemIndex === index ? null : index);
  };
@@ -451,6 +469,47 @@ const OrderCard = ({ order, orderDetails }) => {
  return 'bg-gray-100 text-gray-800 border-gray-300';
  }
  };
+
+
+
+ // Parse media JSON and get the first image URL
+ const getCorporateImageUrl = async (categoryId) => {
+  try {
+    if (!categoryId) return null;
+    
+    const token = localStorage.getItem('token');
+    
+    const response = await axios.get(
+      `${process.env.REACT_APP_URL}/api/v2/co/getmedia/${categoryId}`,
+      { headers: { token } }
+    );
+    
+    console.log(`Corporate Image for Category ${categoryId}:`, response.data);
+    
+    if (response.data && response.data.success && response.data.media_url) {
+      return response.data.media_url;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error(`Error fetching category media for ${categoryId}:`, error);
+    return null;
+  }
+};
+
+const getOrderTitle = (orderDetails) => {
+  if (!orderDetails || orderDetails.length === 0) return 'No Items';
+  
+  if (orderDetails.length === 1) {
+    return orderDetails[0].category_name;
+  }
+  
+  // If multiple items, create a combined title
+  const primaryItem = orderDetails[0].category_name;
+  const additionalItemCount = orderDetails.length - 1;
+  
+  return `${primaryItem} + ${additionalItemCount} more`;
+};
 
  // Format date to display correctly accounting for timezone
  const formatProcessingDate = (dateString) => {
@@ -494,8 +553,8 @@ const OrderCard = ({ order, orderDetails }) => {
  <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3" onClick={() => setIsExpanded(!isExpanded)}>
  <div className="flex items-center space-x-2 w-full" >
  <ShoppingBag className="text-teal-600 hidden sm:block" size={24} />
- <h3 className="text-base sm:text-lg font-semibold text-gray-800 flex-grow">
- {order.corporateorder_generated_id}
+ <h3 className="text-base sm:text-lg font-semibold text-gray-800 truncate max-w-[200px]">
+      {getOrderTitle(orderDetails)}
  </h3>
  </div>
  <div className="flex justify-between w-full items-center">
@@ -536,6 +595,9 @@ const OrderCard = ({ order, orderDetails }) => {
  const imageUrl = getImageUrl(item.media);
  const mediaData = typeof item.media === 'string' ? JSON.parse(item.media) : item.media;
 
+ const corporateImageUrl = expandedItemMediaUrls[item.category_id];
+
+
  return (
  <div key={item.order_detail_id} className="p-4">
  <div
@@ -545,25 +607,44 @@ const OrderCard = ({ order, orderDetails }) => {
  <div className="flex justify-between items-center">
  <div className="flex items-center space-x-4">
  {/* Show image if available, otherwise show package icon */}
- {imageUrl ? (
- <div className="w-16 h-16 rounded-lg overflow-hidden">
- <img 
- src={imageUrl} 
- alt={item.category_name} 
- className="w-full h-full object-cover"
- onError={(e) => {
- // Fallback to icon if image fails to load
- e.target.onerror = null;
- e.target.style.display = 'none';
- e.target.parentNode.innerHTML = `<div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="M16 16h.01"></path><path d="M12 16h.01"></path><path d="M8 16h.01"></path><path d="M4 8h16"></path></svg></div>`;
- }}
- />
- </div>
- ) : (
- <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
- <Package size={24} className="text-gray-400" />
- </div>
- )}
+ {corporateImageUrl ? (
+                  <div className="w-16 h-16 rounded-lg overflow-hidden">
+                    <img 
+                      src={corporateImageUrl} 
+                      alt={item.category_name} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to category media if image fails to load
+                        e.target.onerror = null;
+                        if (corporateImageUrl) {
+                          e.target.src = corporateImageUrl;
+                        } else {
+                          e.target.style.display = 'none';
+                          e.target.parentNode.innerHTML = `<div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="M16 16h.01"></path><path d="M12 16h.01"></path><path d="M8 16h.01"></path><path d="M4 8h16"></path></svg></div>`;
+                        }
+                      }}
+                    />
+                  </div>
+                ) : corporateImageUrl ? (
+                  <div className="w-16 h-16 rounded-lg overflow-hidden">
+                    <img 
+                      src={corporateImageUrl} 
+                      alt={item.category_name} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to package icon if category media fails to load
+                        e.target.onerror = null;
+                        e.target.style.display = 'none';
+                        e.target.parentNode.innerHTML = `<div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="M16 16h.01"></path><path d="M12 16h.01"></path><path d="M8 16h.01"></path><path d="M4 8h16"></path></svg></div>`;
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <Package size={24} className="text-gray-400" />
+                  </div>
+                )}
+
  <div>
  <h4 className="font-medium text-gray-800">
  {item.category_name}

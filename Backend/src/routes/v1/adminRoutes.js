@@ -3,6 +3,7 @@ const { GraphQLScalarType, Kind } = require('graphql');
 const client = require('../../config/dbConfig');
 const { v2: cloudinary } = require('cloudinary');
 const logger = require('../../config/logger');
+const logger = require('../../config/logger');
 
 // Configure Cloudinary
 cloudinary.config({ 
@@ -11,6 +12,80 @@ cloudinary.config({
   api_secret: 'FL_Tcr3odbnbVQnHUG1AzWEGnIo' 
 });
 
+const uploadCategoryMedia = async (mediaInput, tags = 'category') => {
+  let mediaItems = [];
+  
+  // Normalize input to always be an array
+  const files = Array.isArray(mediaInput) ? mediaInput : [mediaInput];
+  
+  for (const file of files) {
+    try {
+      // Skip empty or null inputs
+      if (!file) {
+        console.warn('Skipping empty file');
+        continue;
+      }
+
+      // Debugging: Log file details
+      console.log('Processing media:', {
+        type: typeof file,
+        value: file && file.substring ? file.substring(0, 50) + '...' : file
+      });
+
+      // Determine upload method based on input type
+      let uploadResult;
+      const uploadOptions = {
+        folder: tags,
+        transformation: {
+          width: 500,
+          height: 1000,
+          quality: 'auto',
+          fetch_format: 'auto'
+        }
+      };
+
+      // Handle different input types
+      if (typeof file === 'string') {
+        if (file.startsWith('data:image/')) {
+          // Base64 image
+          uploadResult = await cloudinary.uploader.upload(file, uploadOptions);
+        } else if (file.startsWith('http')) {
+          // URL upload
+          uploadResult = await cloudinary.uploader.upload(file, uploadOptions);
+        } else {
+          // Assume local file path
+          uploadResult = await cloudinary.uploader.upload(file, uploadOptions);
+        }
+      } else if (file && file.url) {
+        // Object with url property
+        uploadResult = await cloudinary.uploader.upload(file.url, uploadOptions);
+      } else {
+        console.warn('Unsupported file type:', file);
+        continue;
+      }
+
+      // Add uploaded URL to media items
+      mediaItems.push(uploadResult.secure_url);
+    } catch (error) {
+      // Comprehensive error logging
+      console.error('Cloudinary Upload Error:', {
+        message: error.message,
+        name: error.name,
+        http_code: error.http_code,
+        file: file
+      });
+
+      // Optional: skip failed uploads instead of throwing
+      console.warn(`Skipping failed upload for: ${file}`);
+    }
+  }
+  
+  // Return JSON string with media items
+  return JSON.stringify({ 
+    items: mediaItems,
+    upload_timestamp: new Date().toISOString()
+  });
+};
 const uploadCategoryMedia = async (mediaInput, tags = 'category') => {
   let mediaItems = [];
   
@@ -203,6 +278,7 @@ const typeDefs = gql`
     closure_time: String
     is_deactivated: Boolean
     vendor_price: Int  # Added this field
+    vendor_price: Int  # Added this field
   }
 
   type EventOrders {
@@ -264,6 +340,7 @@ const typeDefs = gql`
       category_description: String!,
       category_price: Int!,
       vendor_price: Int!,
+      vendor_price: Int!,
       category_media: String!
       is_deactivated: Boolean
       closure_time: String
@@ -273,6 +350,8 @@ const typeDefs = gql`
       category_name: String,
       category_description: String, 
       category_price: Int
+      category_media:String,
+      vendor_price: Int
       category_media:String,
       vendor_price: Int
       is_deactivated: Boolean
@@ -733,6 +812,119 @@ const resolvers = {
       return result.rows[0];
     },
     
+createCategory : async (_, { 
+  category_name, 
+  category_description, 
+  category_price, 
+  vendor_price, 
+  category_media, 
+  closure_time, 
+  is_deactivated = false 
+}) => {
+  try {
+    // Log input for debugging
+    console.log('Creating category with media:', category_media);
+
+    // Process media if provided
+    let processedMedia = null;
+    if (category_media) {
+      try {
+        const uploadResult = await uploadCategoryMedia(category_media, category_name);
+        const mediaUrls = JSON.parse(uploadResult).items;
+        processedMedia = mediaUrls.length > 0 ? mediaUrls[0] : null;
+        console.log('Processed Media:', processedMedia);
+      } catch (uploadError) {
+        console.error('Media upload error:', uploadError);
+        // Optional: You can choose to continue without media or handle the error
+      }
+    }
+    
+    const result = await client.query(
+      'INSERT INTO corporate_category (category_name, category_description, category_price, vendor_price, category_media, closure_time, is_deactivated, addedat) VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING *',
+      [
+        category_name, 
+        category_description, 
+        category_price, 
+        vendor_price, 
+        processedMedia, 
+        closure_time, 
+        is_deactivated
+      ]
+    );
+    return result.rows[0];
+  } catch (error) {
+    logger.error(`Error creating category: ${error.message}`);
+    console.error('Full error details:', error);
+    throw new Error(`Category creation failed: ${error.message}`);
+  }
+},
+
+ updateCategory:async (_, { 
+  category_id, 
+  category_name, 
+  category_description, 
+  category_price, 
+  vendor_price, 
+  category_media,
+  closure_time, 
+  is_deactivated 
+}) => {
+  try {
+    const fields = [];
+    const values = [];
+    let query = 'UPDATE corporate_category SET ';
+
+    // Existing field updates
+    if (category_name !== undefined) {
+      fields.push(`category_name = $${fields.length + 1}`);
+      values.push(category_name);
+    }
+    if (category_description !== undefined) {
+      fields.push(`category_description = $${fields.length + 1}`);
+      values.push(category_description);
+    }
+    if (category_price !== undefined) {
+      fields.push(`category_price = $${fields.length + 1}`);
+      values.push(category_price);
+    }
+    if (vendor_price !== undefined) {
+      fields.push(`vendor_price = $${fields.length + 1}`);
+      values.push(vendor_price);
+    }
+    if (closure_time !== undefined) {
+      fields.push(`closure_time = $${fields.length + 1}`);
+      values.push(closure_time);
+    }
+    if (is_deactivated !== undefined) {
+      fields.push(`is_deactivated = $${fields.length + 1}`);
+      values.push(is_deactivated);
+    }
+    
+    // Handle media upload and update
+    if (category_media !== undefined) {
+      // Upload new media
+      const uploadResult = await uploadCategoryMedia(category_media, category_name);
+      const mediaUrls = JSON.parse(uploadResult).items;
+      const processedMedia = mediaUrls.length > 0 ? mediaUrls[0] : null;
+      
+      fields.push(`category_media = $${fields.length + 1}`);
+      values.push(processedMedia);
+    }
+
+    if (fields.length === 0) {
+      throw new Error('No fields to update');
+    }
+
+    values.push(category_id);
+    query += fields.join(', ') + ` WHERE category_id = $${fields.length + 1} RETURNING *`;
+
+    const result = await client.query(query, values);
+    return result.rows[0];
+  } catch (error) {
+    logger.error(`Error updating category: ${error.message}`);
+    throw new Error(`Category update failed: ${error.message}`);
+  }
+},
 createCategory : async (_, { 
   category_name, 
   category_description, 
