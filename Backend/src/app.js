@@ -89,11 +89,12 @@ const app = express();
 app.use(fileUpload({ 
   useTempFiles: true,
   limits: { 
-    fileSize: 100 * 1024 * 1024 // 100MB limit
+    fileSize: 1024 * 1024 * 1024 // 1GB limit
   },
   abortOnLimit: true,
   responseOnLimit: 'File is too large'
 }));
+
 
 
 const server = http.createServer(app);
@@ -106,11 +107,16 @@ const io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
-app.use(express.json());
+
+app.use(express.json({ limit: '1gb' }));
+app.use(express.urlencoded({ extended: true, limit: '1gb' }));
+
+
 app.use((req,res,next)=>{
   req.io=io;
   next();
 })
+
 app.use(cors({
  origin: '*' ,
    credentials: true,
