@@ -196,50 +196,126 @@ const RescheduleModal = ({ isOpen, onClose, corporateOrderId, onSaveRescheduleDa
 
 // Image Modal Component
 const ImageModal = ({ isOpen, onClose, images, currentIndex, onNext, onPrev }) => {
+  const videoRef = useRef(null);
+  const modalContentRef = useRef(null);
+
+  // Use a useCallback to memoize the playback logic
+  const handleVideoPlayback = useCallback((media) => {
+    if (media && videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.error('Error playing video:', error);
+      });
+    }
+  }, []);
+
+  // Handle click outside
+  const handleClickOutside = useCallback((event) => {
+    if (modalContentRef.current && 
+        !modalContentRef.current.contains(event.target)) {
+      onClose();
+    }
+  }, [onClose]);
+
+  // Add click outside listener
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isOpen, handleClickOutside]);
+
+  // Separate effect for handling video playback
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const currentMedia = images[currentIndex];
+    const isVideo = currentMedia.url.toLowerCase().includes('.mp4') || 
+                    currentMedia.url.toLowerCase().includes('.mov') || 
+                    currentMedia.url.toLowerCase().includes('.webm');
+
+    if (isVideo) {
+      handleVideoPlayback(currentMedia);
+    }
+  }, [isOpen, currentIndex, images, handleVideoPlayback]);
+
   if (!isOpen) return null;
 
+  const currentMedia = images[currentIndex];
+  const isVideo = currentMedia.url.toLowerCase().includes('.mp4') || 
+                  currentMedia.url.toLowerCase().includes('.mov') || 
+                  currentMedia.url.toLowerCase().includes('.webm');
+
   return (
-    <>
-      <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
-        <div className="relative bg-white rounded-lg shadow-lg max-w-3xl w-full overflow-hidden">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
-            aria-label="Close modal"
-          >
-            <XCircle size={24} />
-          </button>
-          <div className="flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+      <div 
+        ref={modalContentRef}
+        className="relative bg-black rounded-lg shadow-lg max-w-4xl w-full overflow-hidden"
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+          aria-label="Close modal"
+        >
+          <XCircle size={24} />
+        </button>
+        <div className="flex items-center justify-center p-4">
+          {/* Previous button */}
+          {images.length > 1 && (
             <button
               onClick={onPrev}
-              className="text-gray-500 hover:text-gray-700 transition-colors"
-              aria-label="Previous image"
+              className="text-white hover:text-gray-300 transition-colors"
+              aria-label="Previous media"
             >
               <ChevronLeft size={32} />
             </button>
+          )}
+          
+          {/* Media display */}
+          {isVideo ? (
+            <video 
+              ref={videoRef}
+              controls 
+              autoPlay
+              className="max-h-[80vh] max-w-full object-contain mx-4"
+              key={currentMedia.url}
+            >
+              <source 
+                src={currentMedia.url} 
+                type={`video/${currentMedia.url.split('.').pop()}`} 
+              />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
             <img
-              src={images[currentIndex].url}
-              alt={`Image ${currentIndex + 1}`}
-              className="max-h-[80vh] object-contain mx-4"
+              src={currentMedia.url}
+              alt="Media"
+              className="max-h-[80vh] max-w-full object-contain mx-4"
             />
+          )}
+          
+          {/* Next button */}
+          {images.length > 1 && (
             <button
               onClick={onNext}
-              className="text-gray-500 hover:text-gray-700 transition-colors"
-              aria-label="Next image"
+              className="text-white hover:text-gray-300 transition-colors"
+              aria-label="Next media"
             >
               <ChevronRight size={32} />
             </button>
-          </div>
-          {images[currentIndex].tag && (
-            <div className="text-center text-gray-700 p-2">
-              {images[currentIndex].tag}
-            </div>
           )}
         </div>
+        {currentMedia.tag && (
+          <div className="text-center text-white bg-black/50 p-2">
+            {currentMedia.tag}
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
+
 
 // Status Step Component for Delivery Progress
 const StatusStep = ({ status, isActive, isCompleted, icon: Icon, title, description, timestamp, isLast }) => (
@@ -528,33 +604,52 @@ const OrderCard = ({ order, orderDetails }) => {
                   </div>
                 )}
 
-                {/* Show all media images when item is expanded */}
-                {selectedItemIndex === index && item.media && (
-                  <div className="mt-4 pl-20">
-                    <h5 className="font-medium text-gray-700 mb-2">Order Images</h5>
-                    {mediaData.items && mediaData.items.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {mediaData.items.map((mediaItem, idx) => (
-                          <div key={idx} className="relative group">
-                            <img
-                              src={mediaItem.url}
-                              alt={`Image ${idx + 1}`}
-                              className="w-24 h-24 object-cover rounded-lg border border-gray-200 cursor-pointer"
-                              onClick={() => handleImageClick(mediaData.items, idx)}
-                            />
-                            {mediaItem.tag && (
-                              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center rounded-b-lg">
-                                {mediaItem.tag}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-gray-500">No order images found</p>
-                    )}
+{selectedItemIndex === index && item.media && (
+  <div className="mt-4 pl-20">
+    <h5 className="font-medium text-gray-700 mb-2">Order Media</h5>
+    {mediaData.items && mediaData.items.length > 0 ? (
+      <div className="flex flex-wrap gap-2">
+        {mediaData.items.map((mediaItem, idx) => {
+          const isVideo = mediaItem.url.toLowerCase().includes('.mp4') || mediaItem.url.toLowerCase().includes('.mov');
+          
+          return (
+            <div key={idx} className="relative group">
+              {isVideo ? (
+                <div 
+                  className="w-24 h-24 bg-gray-200 rounded-lg border border-gray-200 cursor-pointer flex items-center justify-center relative"
+                  onClick={() => handleImageClick(mediaData.items, idx)}
+                >
+                  <img 
+                    src={mediaItem.url} 
+                    className="absolute inset-0 w-full h-full object-cover rounded-lg opacity-70"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="z-10">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
                   </div>
-                )}
+                </div>
+              ) : (
+                <img
+                  src={mediaItem.url}
+                  className="w-24 h-24 object-cover rounded-lg border border-gray-200 cursor-pointer"
+                  onClick={() => handleImageClick(mediaData.items, idx)}
+                />
+              )}
+              {mediaItem.tag && (
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center rounded-b-lg">
+                  {mediaItem.tag}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    ) : (
+      <p className="text-sm text-gray-500">No order media found</p>
+    )}
+  </div>
+)}
               </div>
             );
           })}

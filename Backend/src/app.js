@@ -84,7 +84,14 @@ const SALT_INDEX = 1;
 
 const app = express();
 
-app.use(fileUpload({ useTempFiles: true }));
+app.use(fileUpload({ 
+  useTempFiles: true,
+  limits: { 
+    fileSize: 100 * 1024 * 1024 // 100MB limit
+  },
+  abortOnLimit: true,
+  responseOnLimit: 'File is too large'
+}));
 
 
 const server = http.createServer(app);
@@ -102,11 +109,11 @@ app.use((req,res,next)=>{
   req.io=io;
   next();
 })
-// app.use(cors({
-//  origin: '*' ,
-//    credentials: true,
-//  allowedHeaders: ['Authorization', 'Content-Type', 'token']
-// }));
+app.use(cors({
+ origin: '*' ,
+   credentials: true,
+ allowedHeaders: ['Authorization', 'Content-Type', 'token']
+}));
 
 io.on('connection', (socket) => {
   console.log(`A user connected: ${socket.id}`);
