@@ -7,6 +7,8 @@ const logger = require('./config/logger');
 const { createTables } = require('./controller/v1/tableController.js');
 const { createDatabase } = require('./config/config');
 const fs=require('fs');
+const schedule = require('node-schedule');
+const { v2: cloudinary } = require('cloudinary');
 
 
 
@@ -25,6 +27,13 @@ const Redis = require('ioredis');
 const Mixpanel = require('mixpanel');
 const fileUpload = require('express-fileupload');
 
+
+
+cloudinary.config({ 
+  cloud_name: 'dlwhfodp0', 
+  api_key: '355764148341634', 
+  api_secret: 'FL_Tcr3odbnbVQnHUG1AzWEGnIo' 
+});
 
 
 
@@ -114,11 +123,11 @@ app.use((req,res,next)=>{
   req.io=io;
   next();
 })
-// app.use(cors({
-//  origin: '*' ,
-//    credentials: true,
-//  allowedHeaders: ['Authorization', 'Content-Type', 'token']
-// }));
+app.use(cors({
+ origin: '*' ,
+   credentials: true,
+ allowedHeaders: ['Authorization', 'Content-Type', 'token']
+}));
 
 io.on('connection', (socket) => {
   console.log(`A user connected: ${socket.id}`);
@@ -157,6 +166,85 @@ app.use('/api/v2/',V2vendorRoutes)
 // aap.use('/api/',V1corporateorderdetailsRoutes)
 
 
+const deleteOldFilesFromFolder = async (folderName) => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 1); // 15 days ago
+  
+  try {
+    logger.info(`Starting cleanup for ${folderName} folder`);
+    
+    // Get paginated results to handle large folders
+    let nextCursor = null;
+    let deletedCount = 0;
+    let hasMore = true;
+    
+    while (hasMore) {
+      // Get list of files from the specific folder
+      const result = await cloudinary.api.resources({
+        type: 'upload',
+        prefix: folderName + '/',
+        max_results: 500,
+        next_cursor: nextCursor
+      });
+      
+      for (const resource of result.resources) {
+        const createdAt = new Date(resource.created_at);
+        
+        if (createdAt < cutoffDate) {
+          logger.info(`Deleting ${resource.public_id} (created on ${createdAt.toISOString()})`);
+          await cloudinary.uploader.destroy(resource.public_id);
+          deletedCount++;
+        }
+      }
+      
+      // Check if there are more results to process
+      if (result.next_cursor) {
+        nextCursor = result.next_cursor;
+      } else {
+        hasMore = false;
+      }
+    }
+    
+    logger.info(`Cleanup for ${folderName} completed. Deleted ${deletedCount} files.`);
+    return deletedCount;
+  } catch (error) {
+    logger.error(`Error during cleanup for ${folderName}:`, error);
+    throw error;
+  }
+};
+
+// Schedule a daily job to clean up specified folders
+const scheduleCloudinaryFolderCleanup = () => {
+  // Define the folders to clean up
+  const foldersToClean = ['address_images', 'corporate_order_media'];
+  
+  // Run at 2:00 AM every day
+  const job = schedule.scheduleJob('0 2 * * *', async () => {
+    logger.info('Starting scheduled Cloudinary folder cleanup');
+    
+    try {
+      let totalDeleted = 0;
+      
+      // Process each folder
+      for (const folder of foldersToClean) {
+        try {
+          const deleted = await deleteOldFilesFromFolder(folder);
+          totalDeleted += deleted;
+        } catch (error) {
+          logger.error(`Failed to clean folder ${folder}:`, error);
+          // Continue with other folders even if one fails
+        }
+      }
+      
+      logger.info(`Cloudinary folder cleanup completed. Total deleted: ${totalDeleted} files.`);
+    } catch (error) {
+      logger.error('Error during Cloudinary folder cleanup:', error);
+    }
+  });
+  
+  logger.info(`Cloudinary folder cleanup job scheduled for folders: ${foldersToClean.join(', ')}`);
+  return job;
+};
 
 
 
@@ -609,9 +697,6 @@ const initializeApp = async () => {
  
  const PORT = process.env.PORT || 4000; 
 
-
-
-
 server.listen(PORT, (err) => {
   if (err) {
   logger.error('Error starting the server:', err.message || err);
@@ -630,6 +715,10 @@ server.listen(PORT, (err) => {
  
  
  await fetchAndInsertCSVData();
+ const cleanupJob = scheduleCloudinaryFolderCleanup();
+ logger.info('Cloudinary folder cleanup job scheduled:', cleanupJob.nextInvocation());
+
+
  
  } catch (err) {
  logger.error('Initialization error:', err.message);
