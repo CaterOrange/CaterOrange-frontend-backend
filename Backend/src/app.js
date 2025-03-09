@@ -11,7 +11,6 @@ const schedule = require('node-schedule');
 const { v2: cloudinary } = require('cloudinary');
 
 
-
 const { GraphQLFileLoader } = require('@graphql-tools/graphql-file-loader');
 
 
