@@ -167,7 +167,7 @@ app.use('/api/v2/',V2vendorRoutes)
 
 const deleteOldFilesFromFolder = async (folderName) => {
   const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - 1); // 15 days ago
+  cutoffDate.setDate(cutoffDate.getDate() - 15); // 15 days ago
   
   try {
     logger.info(`Starting cleanup for ${folderName} folder`);
