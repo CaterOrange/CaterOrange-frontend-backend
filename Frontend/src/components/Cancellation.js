@@ -5,7 +5,6 @@ const CancellationRefunds = () => {
     <div className="container mx-auto px-4 py-10 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold text-teal-800 mb-6">Cancellation & Refunds Policy</h1>
-        
         <section className="mb-6">
           <h2 className="text-xl font-semibold text-teal-700 mb-3">Order Cancellation</h2>
           <p className="mb-2">
