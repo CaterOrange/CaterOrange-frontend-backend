@@ -39,6 +39,7 @@
     "react-toastify": "^11.0.3",
     "redux": "^5.0.1",
     "redux-devtools-extension": "^2.13.9",
+    "server": "^1.0.41",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },

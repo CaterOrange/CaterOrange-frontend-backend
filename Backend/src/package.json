@@ -6,7 +6,7 @@
     "start": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "sirisha_harshitha_sneha",
+  "author": "caterorange-team",
   "license": "ISC",
   "description": "",
   "dependencies": {
