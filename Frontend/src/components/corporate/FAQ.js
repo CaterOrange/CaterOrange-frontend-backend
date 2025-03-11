@@ -107,7 +107,6 @@
 // };
 
 // export default FAQ;
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -156,7 +155,7 @@ const FAQ = () => {
   return (
     <div className="container mx-auto px-4 py-10 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-orange-600 mb-6">Frequently Asked Questions</h1>
+        <h1 className="text-2xl font-bold text-teal-600 mb-6">Frequently Asked Questions</h1>
         
         <div className="mb-6">
           <p className="mb-4">
@@ -172,7 +171,7 @@ const FAQ = () => {
                 className="w-full px-4 py-3 text-left bg-gray-50 hover:bg-gray-100 flex justify-between items-center focus:outline-none"
                 onClick={() => toggleItem(index)}
               >
-                <span className="font-medium text-orange-600">{item.question}</span>
+                <span className="font-medium text-teal-600">{item.question}</span>
                 <svg 
                   className={`w-5 h-5 transition-transform ${openItem === index ? 'transform rotate-180' : ''}`} 
                   fill="none" 
@@ -193,23 +192,23 @@ const FAQ = () => {
         </div>
         
         <section className="mt-8 p-4 bg-gray-50 rounded-md border border-gray-200">
-          <h2 className="text-xl font-semibold text-orange-700 mb-3">Still Have Questions?</h2>
+          <h2 className="text-xl font-semibold text-teal-700 mb-3">Still Have Questions?</h2>
           <p className="mb-4">
             Our customer support team is available Monday through Friday from 8:00 AM to 6:00 PM 
             to assist you with any questions or concerns.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href="mailto:info@caterorange.com" className="inline-block bg-orange-600 text-white py-2 px-4 rounded hover:bg-orange-700 text-center">
+            <a href="mailto:info@caterorange.com" className="inline-block bg-teal-600 text-white py-2 px-4 rounded hover:bg-teal-700 text-center">
               Email Support
             </a>
-            <a href="tel:+918123700851" className="inline-block bg-white border border-orange-600 text-orange-600 py-2 px-4 rounded hover:bg-gray-50 text-center">
+            <a href="tel:+918123700851" className="inline-block bg-white border border-teal-600 text-teal-600 py-2 px-4 rounded hover:bg-gray-50 text-center">
               Call 8123700851
             </a>
           </div>
         </section>
         
         <div className="mt-8">
-          <Link to="/" className="text-orange-600 hover:underline">Back to Home</Link>
+          <Link to="/" className="text-teal-600 hover:underline">Back to Home</Link>
         </div>
       </div>
     </div>
