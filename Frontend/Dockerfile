@@ -14,15 +14,12 @@ COPY . .
 
 # Set environment variable
 ENV REACT_APP_URL=https://app.caterorange.com
+ENV GENERATE_SOURCEMAP=false
 
 # Build the application (if using Create React App or similar)
 RUN npm run build
 
 RUN npm install -g serve
-
-RUN npx serve -s build
-
-ENV GENERATE_SOURCEMAP=false
 
 # Expose the port the app runs on
 EXPOSE 3000
