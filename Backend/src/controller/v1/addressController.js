@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const address_model = require('../../models/v1/addressModel');
 const Ajv = require("ajv");
-
 const addFormats = require("ajv-formats");
 const Mixpanel = require('mixpanel');
 const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
