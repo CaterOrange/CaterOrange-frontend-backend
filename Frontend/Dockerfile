@@ -18,8 +18,12 @@ ENV REACT_APP_URL=https://app.caterorange.com
 # Build the application (if using Create React App or similar)
 RUN npm run build
 
+RUN npm install -g serve
+
+ENV GENERATE_SOURCEMAP=false
+
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["serve", "-s", "build", "-p", "3000"]
