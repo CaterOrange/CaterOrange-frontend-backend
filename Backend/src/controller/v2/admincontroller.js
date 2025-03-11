@@ -12,11 +12,11 @@ const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
 const { v2: cloudinary } = require('cloudinary');
 
 cloudinary.config({ 
-    cloud_name: 'dlwhfodp0', 
-    api_key: '355764148341634', 
-    api_secret: 'FL_Tcr3odbnbVQnHUG1AzWEGnIo' 
-});
-
+    cloud_name: 'dimuwrwxw', 
+    api_key: '888367322417257', 
+    api_secret: 'xXByzVUNWdJ__uExTTGlomF5iDM' 
+  });
+  
 const getTodayCorporateOrders = async (req, res) => {
     try {
         const orders = await admin_model.getTodayCorporateOrders();

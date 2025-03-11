@@ -6,9 +6,9 @@ const logger = require('../../config/logger');
 
 // Configure Cloudinary
 cloudinary.config({ 
-  cloud_name: 'dlwhfodp0', 
-  api_key: '355764148341634', 
-  api_secret: 'FL_Tcr3odbnbVQnHUG1AzWEGnIo' 
+  cloud_name: 'dimuwrwxw', 
+  api_key: '888367322417257', 
+  api_secret: 'xXByzVUNWdJ__uExTTGlomF5iDM' 
 });
 
 const uploadCategoryMedia = async (mediaInput, tags = 'category') => {
@@ -995,11 +995,7 @@ module.exports = { typeDefs, resolvers };
 // const { v2: cloudinary } = require('cloudinary');
 
 // // Configure Cloudinary
-// cloudinary.config({ 
-//   cloud_name: 'dlwhfodp0', 
-//   api_key: '355764148341634', 
-//   api_secret: 'FL_Tcr3odbnbVQnHUG1AzWEGnIo' 
-// });
+
 
 
 // const DateTimeScalar = new GraphQLScalarType({

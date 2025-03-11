@@ -24,9 +24,9 @@ const fileUpload = require('express-fileupload');
 
 
 cloudinary.config({ 
-  cloud_name: 'dlwhfodp0', 
-  api_key: '355764148341634', 
-  api_secret: 'FL_Tcr3odbnbVQnHUG1AzWEGnIo' 
+  cloud_name: 'dimuwrwxw', 
+  api_key: '888367322417257', 
+  api_secret: 'xXByzVUNWdJ__uExTTGlomF5iDM' 
 });
 
 
@@ -117,11 +117,12 @@ app.use((req,res,next)=>{
   req.io=io;
   next();
 })
-// app.use(cors({
-//  origin: '*' ,
-//    credentials: true,
-//  allowedHeaders: ['Authorization', 'Content-Type', 'token']
-// }));
+
+app.use(cors({
+ origin: '*' ,
+   credentials: true,
+ allowedHeaders: ['Authorization', 'Content-Type', 'token']
+}));
 
 io.on('connection', (socket) => {
   console.log(`A user connected: ${socket.id}`);
