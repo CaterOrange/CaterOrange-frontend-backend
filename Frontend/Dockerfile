@@ -16,9 +16,11 @@ COPY . .
 ENV REACT_APP_URL=https://app.caterorange.com
 
 # Build the application (if using Create React App or similar)
-RUN npx serve -s build
+RUN npm run build
 
 RUN npm install -g serve
+
+RUN npx serve -s build
 
 ENV GENERATE_SOURCEMAP=false
 
