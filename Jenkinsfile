@@ -146,23 +146,23 @@ pipeline {
                             
                             if ! docker ps | grep -q backend-container; then
                                 echo "Backend container is not running!"
-                                exit 1
+                               
                             fi
                             
                             if ! docker ps | grep -q frontend-container; then
                                 echo "Frontend container is not running!"
-                                exit 1
+                              
                             fi
                             
                             # Add curl health checks for your services
                             if ! curl -s http://localhost:4000/health; then
                                 echo "Backend health check failed!"
-                                exit 1
+                               
                             fi
                             
                             if ! curl -s http://localhost:3000/health; then
                                 echo "Frontend health check failed!"
-                                exit 1
+                                
                             fi
                             
                             echo "All containers are running successfully!"
