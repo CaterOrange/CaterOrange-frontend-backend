@@ -207,6 +207,7 @@ function createCorporateCategoryTableQuery() {
       closure_time TIME,
       is_deactivated BOOLEAN DEFAULT TRUE  -- New column with default value TRUE
     );
+    ALTER TABLE corporate_category ADD COLUMN IF NOT EXISTS vendor_price FLOAT;
 
     INSERT INTO corporate_category (category_name, category_description, category_price, category_media, closure_time, is_deactivated)
     VALUES
