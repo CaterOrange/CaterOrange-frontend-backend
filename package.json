@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "cloudinary": "^2.5.1",
-    "node-schedule": "^2.1.1"
-  }
-}
