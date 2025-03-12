@@ -21,6 +21,7 @@
     "body-parser": "^1.20.3",
     "bull": "^4.16.3",
     "cloudinary": "^2.5.1",
+    "node-schedule": "^2.1.1"
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
