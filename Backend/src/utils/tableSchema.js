@@ -212,27 +212,27 @@ function createCorporateCategoryTableQuery() {
     INSERT INTO corporate_category (category_name, category_description, category_price, category_media, closure_time, is_deactivated)
     VALUES
       ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 
-       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1a6kocftO79rmQR53WF8R8Ot53HHl9ugDcw&s', 
+       'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536545/breakfast_x0szkd.jpg', 
        '06:00:00', TRUE),
        
       ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 
-       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-VdnMmylbU7YiYKeF0p8jxz6nkWTXGetirw&s', 
+       'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/veg_qo0pfv.jpg', 
        '10:00:00', TRUE),
        
       ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 
-       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnZovlevz8SutD4Y3OAbDqEcbqiu-QV12l5w&s', 
+       'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/nonvegdinner_hiwbck.jpg', 
        '10:00:00', TRUE),
        
       ('Snacks', 'We are offering tasty Snacks here!!!', 50, 
-       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwdH9xjOAOB6kzFpM30_pd3jqzL1JtlVBOeg&s', 
+       'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/snacks_qtdtlq.jpg', 
        '4:00:00', TRUE),
        
       ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 
-       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6vJvc47Z0yiKHMx1zZSMKcDTzFZmvduVBmw&s', 
+       'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/vegdinner_x9atpb.jpg', 
        '18:00:00', TRUE),
        
       ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 
-       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp5FtQsvjB021UZYuy_uZRKVbtbiQHzTI38Q&s', 
+       'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/nonveg_brio9j.jpg', 
        '18:00:00', TRUE)
     ON CONFLICT (category_name) DO NOTHING;
 
