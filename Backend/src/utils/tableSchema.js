@@ -211,27 +211,27 @@ function createCorporateCategoryTableQuery() {
 
     INSERT INTO corporate_category (category_name, category_description, category_price, category_media, closure_time, is_deactivated)
     VALUES
-      ('Breakfast', 'We are offering tasty Breakfast here!!!', 40, 
+      ('Breakfast 10AM', 'We are offering tasty Breakfast here!!!', 40, 
        'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536545/breakfast_x0szkd.jpg', 
        '06:00:00', TRUE),
        
-      ('Veg Lunch', 'We are offering tasty Veg Lunch here!!!', 99, 
+      ('Veg Lunch 1PM', 'We are offering tasty Veg Lunch here!!!', 99, 
        'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/veg_qo0pfv.jpg', 
        '10:00:00', TRUE),
        
-      ('NonVeg Lunch', 'We are offering tasty Nonveg Lunch here!!!', 120, 
+      ('NonVeg Lunch 1PM', 'We are offering tasty Nonveg Lunch here!!!', 120, 
        'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/nonvegdinner_hiwbck.jpg', 
        '10:00:00', TRUE),
        
-      ('Snacks', 'We are offering tasty Snacks here!!!', 50, 
+      ('Snacks 4PM', 'We are offering tasty Snacks here!!!', 50, 
        'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/snacks_qtdtlq.jpg', 
        '4:00:00', TRUE),
        
-      ('Veg Dinner', 'We are offering tasty Veg Dinner here!!!', 99, 
+      ('Veg Dinner 11PM', 'We are offering tasty Veg Dinner here!!!', 99, 
        'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/vegdinner_x9atpb.jpg', 
        '18:00:00', TRUE),
        
-      ('NonVeg Dinner', 'We are offering tasty Nonveg Dinner here!!!', 120, 
+      ('NonVeg Dinner 11PM', 'We are offering tasty Nonveg Dinner here!!!', 120, 
        'https://res.cloudinary.com/dmoasmpg4/image/upload/v1739536544/nonveg_brio9j.jpg', 
        '18:00:00', TRUE)
     ON CONFLICT (category_name) DO NOTHING;
