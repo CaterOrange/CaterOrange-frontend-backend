@@ -22,7 +22,7 @@ const CollapsibleCart = ({ sortedData, handleRemove, handleIncrement, handleDecr
   };
   const formatdates = (date) => {
     const d = new Date(date);
-    return `${d.getDay}, ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    return `${d.getDay()}, ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
   };
   const categoryTotals = useMemo(() => {
     return Object.entries(groupedItems).reduce((acc, [category, items]) => {
