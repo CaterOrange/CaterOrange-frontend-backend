@@ -859,7 +859,6 @@
 
 // export default AddressForm;
 
-
 import React, { useEffect, useState, useRef } from 'react';
 import { Pencil, X, Upload, Trash2 } from 'lucide-react';
 import axios from 'axios';
@@ -885,12 +884,13 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   const [editAddressId, setEditAddressId] = useState(null);
   const [formData, setFormData] = useState({
     addressLabel: '',
-    addressLine1: '',
-    addressLine2: '',
+    line1: '',
+    line2: '',
+    state: '',
     pincode: '',
     location: { lat: null, lng: null }
   });
-
+  
   const [selectedImage, setSelectedImage] = useState(null);
   const [existingImage, setExistingImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -916,6 +916,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
+
   const navigate = useNavigate();
   const modalRef = useRef(null);
   VerifyToken();
@@ -967,8 +968,9 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
 
     setFormData({
       addressLabel: initialData.tag || '',
-      addressLine1: initialData.line1 || '',
-      addressLine2: initialData.line2 || '',
+      line1: initialData.line1 || '',
+      line2: initialData.line2 || '',
+      state: initialData.line2?.split(',')[1]?.trim() || '',
       pincode: initialData.pincode || '',
       location: coords ? {
         lat: parseFloat(coords[1]),
@@ -998,19 +1000,27 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         if (!value) error = 'Address label is required';
         break;
 
-      case 'addressLine1':
+      case 'line1':
         if (!value) {
           error = 'Address Line 1 is required';
-        } else if (value.length < 5) {
-          error = 'Address Line 1 must be at least 5 characters';
+        } else if (value.length < 2) {
+          error = 'Address Line 1 must be at least 2 characters';
         }
         break;
 
-      case 'addressLine2':
+      case 'line2':
         if (!value) {
           error = 'Address Line 2 is required';
-        } else if (value.length < 5) {
-          error = 'Address Line 2 must be at least 5 characters';
+        } else if (value.length < 2) {
+          error = 'Address Line 2 must be at least 2 characters';
+        }
+        break;
+
+      case 'state':
+        if (!value) {
+          error = 'State is required';
+        } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+          error = 'State should only contain letters';
         }
         break;
 
@@ -1330,8 +1340,8 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       const formDataToSend = new FormData();
       formDataToSend.append('tag', formData.addressLabel);
       formDataToSend.append('pincode', formData.pincode);
-      formDataToSend.append('line1', formData.addressLine1);
-      formDataToSend.append('line2', formData.addressLine2);
+      formDataToSend.append('line1', formData.line1);
+      formDataToSend.append('line2', formData.line2);
       formDataToSend.append('location', `https://www.google.com/maps?q=${formData.location.lat},${formData.location.lng}`);
       formDataToSend.append('ship_to_name', defaultDetails.customer_name);
       formDataToSend.append('ship_to_phone_number', defaultDetails.customer_phonenumber);
@@ -1478,26 +1488,50 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="form-group">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address Label *
-              </label>
-              <select
-                name="addressLabel"
-                value={formData.addressLabel}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md ${
-                  formErrors.addressLabel ? 'border-red-500' : 'border-gray-300'
-                }`}
-              >
-                <option value="">Select Label</option>
-                <option value="home">Home</option>
-                <option value="office">Office</option>
-                <option value="other">Other</option>
-              </select>
-              {formErrors.addressLabel && (
-                <p className="text-red-500 text-xs mt-1">{formErrors.addressLabel}</p>
-              )}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address Label *
+                </label>
+                <select
+                  name="addressLabel"
+                  value={formData.addressLabel}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    formErrors.addressLabel ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                >
+                  <option value="">Select Label</option>
+                  <option value="home">Home</option>
+                  <option value="office">Office</option>
+                  <option value="other">Other</option>
+                </select>
+                {formErrors.addressLabel && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.addressLabel}</p>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pincode *
+                </label>
+                <input
+                  type="text"
+                  name="pincode"
+                  value={formData.pincode}
+                  onChange={handleChange}
+                  maxLength={6}
+                  pattern="\d*"
+                  inputMode="numeric"
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    formErrors.pincode ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Enter 6-digit pincode"
+                />
+                {formErrors.pincode && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.pincode}</p>
+                )}
+              </div>
             </div>
 
             <div className="form-group">
@@ -1506,16 +1540,16 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
               </label>
               <input
                 type="text"
-                name="addressLine1"
-                value={formData.addressLine1}
+                name="line1"
+                value={formData.line1}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 border rounded-md ${
-                  formErrors.addressLine1 ? 'border-red-500' : 'border-gray-300'
+                  formErrors.line1 ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="House/Flat No., Street Name"
+                placeholder="Flat number, Landmark"
               />
-              {formErrors.addressLine1 && (
-                <p className="text-red-500 text-xs mt-1">{formErrors.addressLine1}</p>
+              {formErrors.line1 && (
+                <p className="text-red-500 text-xs mt-1">{formErrors.line1}</p>
               )}
             </div>
 
@@ -1525,38 +1559,35 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
               </label>
               <input
                 type="text"
-                name="addressLine2"
-                value={formData.addressLine2}
+                name="line2"
+                value={formData.line2}
                 onChange={handleChange}
                 className={`w-full px-3 py-2 border rounded-md ${
-                  formErrors.addressLine2 ? 'border-red-500' : 'border-gray-300'
+                  formErrors.line2 ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="Area, City, State"
+                placeholder="City, Area"
               />
-              {formErrors.addressLine2 && (
-                <p className="text-red-500 text-xs mt-1">{formErrors.addressLine2}</p>
+              {formErrors.line2 && (
+                <p className="text-red-500 text-xs mt-1">{formErrors.line2}</p>
               )}
             </div>
 
             <div className="form-group">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Pincode *
+                State *
               </label>
               <input
                 type="text"
-                name="pincode"
-                value={formData.pincode}
+                name="state"
+                value={formData.state}
                 onChange={handleChange}
-                maxLength={6}
-                pattern="\d*"
-                inputMode="numeric"
                 className={`w-full px-3 py-2 border rounded-md ${
-                  formErrors.pincode ? 'border-red-500' : 'border-gray-300'
+                  formErrors.state ? 'border-red-500' : 'border-gray-300'
                 }`}
-                placeholder="Enter 6-digit pincode"
+                placeholder="Enter state"
               />
-              {formErrors.pincode && (
-                <p className="text-red-500 text-xs mt-1">{formErrors.pincode}</p>
+              {formErrors.state && (
+                <p className="text-red-500 text-xs mt-1">{formErrors.state}</p>
               )}
             </div>
 
@@ -1619,3 +1650,4 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
 };
 
 export default AddressForm;
+
