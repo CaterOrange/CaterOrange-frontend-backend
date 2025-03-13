@@ -108,33 +108,65 @@ pipeline {
             }
         }
 
-        stage('Deploy Containers') {
-            steps {
-                script {
-                    try {
-                        sh '''
-                            echo "Starting Backend container..."
-                            docker run \
-                                --name backend-container \
-                                --network postgres_network \
-                                -d -p 4000:4000 \
-                                backendcaterorange:${IMAGE_TAG}
+        // stage('Deploy Containers') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh '''
+        //                     echo "Starting Backend container..."
+        //                     docker run \
+        //                         --name backend-container \
+        //                         --network postgres_network \
+        //                         -d -p 4000:4000 \
+        //                         backendcaterorange:${IMAGE_TAG}
             
-                            echo "Starting Frontend container..."
-                            docker run \
-                                --name frontend-container \
-                                --network postgres_network \
-                                -d -p 3000:3000 \
-                                frontendcaterorange:${IMAGE_TAG}
-                        '''
-                    } catch (Exception e) {
-                        failedStage = 'Deploy Containers'
-                        failedStageMessage = "Error deploying containers: ${e.getMessage()}"
-                        error("Failed to deploy containers.")
-                    }
-                }
+        //                     echo "Starting Frontend container..."
+        //                     docker run \
+        //                         --name frontend-container \
+        //                         --network postgres_network \
+        //                         -d -p 3000:3000 \
+        //                         frontendcaterorange:${IMAGE_TAG}
+        //                 '''
+        //             } catch (Exception e) {
+        //                 failedStage = 'Deploy Containers'
+        //                 failedStageMessage = "Error deploying containers: ${e.getMessage()}"
+        //                 error("Failed to deploy containers.")
+        //             }
+        //         }
+        //     }
+        // }
+stage('Deploy Containers') {
+    steps {
+        script {
+            try {
+                sh '''
+                    echo "Starting Backend container..."
+                    docker run \
+                        --name backend-container \
+                        --network postgres_network \
+                        -e DB_HOST=postgres_container \
+                        -e DB_PORT=5432 \
+                        -e REDIS_HOST=redis_container \
+                        -e REDIS_PORT=6379 \
+                        -d -p 4000:4000 \
+                        backendcaterorange:${IMAGE_TAG}
+
+                    echo "Starting Frontend container..."
+                    docker run \
+                        --name frontend-container \
+                        --network postgres_network \
+                        -d -p 3000:3000 \
+                        frontendcaterorange:${IMAGE_TAG}
+                '''
+            } catch (Exception e) {
+                failedStage = 'Deploy Containers'
+                failedStageMessage = "Error deploying containers: ${e.getMessage()}"
+                error("Failed to deploy containers.")
             }
         }
+    }
+}
+
 
         stage('Health Check') {
             steps {
