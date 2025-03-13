@@ -43,7 +43,7 @@ pipeline {
                    
                     
                     echo "Building Frontend Docker Image..."
-                    docker build --network=host --no-cache -t frontendcaterorange:${IMAGE_TAG} .
+                    docker build --network=postgres_network --no-cache -t frontendcaterorange:${IMAGE_TAG} .
                 '''
             } catch (Exception e) {
                 failedStage = 'Build Frontend'
@@ -60,7 +60,7 @@ pipeline {
                                 sh '''
                                     cd CaterOrange-frontend-backend/Backend
                                     echo "Building Backend Docker Image..."
-                                    docker build --network=host --no-cache -t backendcaterorange:${IMAGE_TAG} .
+                                    docker build --network=postgres_network --no-cache -t backendcaterorange:${IMAGE_TAG} .
                                 '''
                             } catch (Exception e) {
                                 failedStage = 'Build Backend'
@@ -116,14 +116,14 @@ pipeline {
                             echo "Starting Backend container..."
                             docker run \
                                 --name backend-container \
-                                --network host \
+                                --network postgres_network \
                                 -d -p 4000:4000 \
                                 backendcaterorange:${IMAGE_TAG}
             
                             echo "Starting Frontend container..."
                             docker run \
                                 --name frontend-container \
-                                --network host \
+                                --network postgres_network \
                                 -d -p 3000:3000 \
                                 frontendcaterorange:${IMAGE_TAG}
                         '''
