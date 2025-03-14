@@ -11,7 +11,7 @@ cloudinary.config({
   api_secret: 'xXByzVUNWdJ__uExTTGlomF5iDM' 
 });
 
-const uploadCategoryMedia = async (mediaInput, tags = 'category') => {
+const uploadCategoryMedia = async (mediaInput, tags = 'corporate_products') => {
   let mediaItems = [];
   
   // Normalize input to always be an array
@@ -599,7 +599,7 @@ const resolvers = {
             for (const url of media) {
               try {
                 const uploadResult = await cloudinary.uploader.upload(url, {
-                  folder: 'corporate_category_media',
+                  folder: 'corporate_products',
                   transformation: {
                     quality: 'auto',
                     fetch_format: 'auto'
@@ -616,7 +616,7 @@ const resolvers = {
           else if (typeof media === 'string') {
             try {
               const uploadResult = await cloudinary.uploader.upload(media, {
-                folder: 'corporate_category_media',
+                folder: 'corporate_products',
                 transformation: {
                   quality: 'auto',
                   fetch_format: 'auto'
@@ -633,7 +633,7 @@ const resolvers = {
             for (const url of media.urls) {
               try {
                 const uploadResult = await cloudinary.uploader.upload(url, {
-                  folder: 'corporate_category_media',
+                  folder: 'corporate_products',
                   transformation: {
                     quality: 'auto',
                     fetch_format: 'auto'
