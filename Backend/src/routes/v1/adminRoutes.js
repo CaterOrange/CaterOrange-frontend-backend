@@ -318,41 +318,40 @@ const resolvers = {
     },
 
     getAllOrders: async () => {
-  try {
-    // Get all orders with customer info and details in a single query
-    const result = await client.query(
-      `SELECT 
-        co.corporateorder_id, 
-        co.corporateorder_generated_id,
-        co.customer_generated_id,
-        co.order_details,
-        co.total_amount,
-        co.paymentid,
-        co.customer_address,
-        co.ordered_at,
-        co.payment_status,
-        co.corporate_order_status,
-        c.customer_name, 
-        c.customer_phonenumber,
-        cod.order_detail_id,
-        cod.processing_date,
-        cod.delivery_status,
-        cod.category_id,
-        cod.quantity,
-        cod.active_quantity,
-        cod.media,
-        cod.delivery_details,
-        cod.addedat,
-        cc.category_name
-    FROM corporate_orders co 
-    JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
-    LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
-    LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
-    WHERE co.payment_status = 'Success' 
-    ORDER BY co.ordered_at DESC;
-'`
-    );
-    
+      try {
+        // Get all orders with customer info and details in a single query
+        const result = await client.query(
+          `SELECT 
+            co.corporateorder_id, 
+            co.corporateorder_generated_id,
+            co.customer_generated_id,
+            co.order_details,
+            co.total_amount,
+            co.paymentid,
+            co.customer_address,
+            co.ordered_at,
+            co.payment_status,
+            co.corporate_order_status,
+            c.customer_name, 
+            c.customer_phonenumber,
+            cod.order_detail_id,
+            cod.processing_date,
+            cod.delivery_status,
+            cod.category_id,
+            cod.quantity,
+            cod.active_quantity,
+            cod.media,
+            cod.delivery_details,
+            cod.addedat,
+            cc.category_name
+        FROM corporate_orders co 
+        JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
+        LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
+        LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
+        WHERE co.payment_status = 'Success' 
+        ORDER BY co.ordered_at DESC;`
+        );
+        
     // Group order details by order
     const orderMap = {};
     
