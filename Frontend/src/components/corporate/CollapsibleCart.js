@@ -20,7 +20,11 @@ const CollapsibleCart = ({ sortedData, handleRemove, handleIncrement, handleDecr
       [category]: !prev[category]
     }));
   };
-
+    const formatdates = (date) => {
+    const d = new Date(date);
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return `${days[d.getDay()]}, ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+  };
   const categoryTotals = useMemo(() => {
     return Object.entries(groupedItems).reduce((acc, [category, items]) => {
       acc[category] = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -63,7 +67,7 @@ const CollapsibleCart = ({ sortedData, handleRemove, handleIncrement, handleDecr
                     <div className="space-y-4 flex-grow">
                       <div>
                         <p className="text-sm text-gray-500">
-                          Date: {item.date}
+                          Date: {formatdates(item.date)}
                         </p>
                       </div>
 

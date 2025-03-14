@@ -135,6 +135,38 @@ pipeline {
                 }
             }
         }
+// stage('Deploy Containers1') {
+//     steps {
+//         script {
+//             try {
+//                 sh '''
+//                     echo "Starting Backend container..."
+//                     docker run \
+//                         --name backend-container_new \
+//                         --network postgres_network \
+//                         -e DB_HOST=postgres_container_new \
+//                         -e DB_PORT=5436 \
+//                         -e REDIS_HOST=redis_new_network \
+//                         -e REDIS_PORT=6380 \
+//                         -d -p 4008:4000 \
+//                         backendcaterorange:${IMAGE_TAG}
+
+//                     echo "Starting Frontend container..."
+//                     docker run \
+//                         --name frontend-container_new \
+//                         --network postgres_network \
+//                         -d -p 3008:3000 \
+//                         frontendcaterorange:${IMAGE_TAG}
+//                 '''
+//             } catch (Exception e) {
+//                 failedStage = 'Deploy Containers'
+//                 failedStageMessage = "Error deploying containers: ${e.getMessage()}"
+//                 error("Failed to deploy containers.")
+//             }
+//         }
+//     }
+//}
+
 
         stage('Health Check') {
             steps {

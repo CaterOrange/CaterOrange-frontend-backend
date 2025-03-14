@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Pencil, X, Upload, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { isTokenExpired, VerifyToken } from '../../MiddleWare/verifyToken';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -64,6 +63,12 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       populateInitialData();
     }
   }, [initialData]);
+  useEffect(() => {
+    fetchDefaultDetails();
+    if (initialData) {
+      populateInitialData();
+    }
+  }, [initialData]);
 
   const fetchDefaultDetails = async () => {
     try {
@@ -72,7 +77,18 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         navigate('/');
         return;
       }
+  const fetchDefaultDetails = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/');
+        return;
+      }
 
+      const response = await axios.get(
+        `${process.env.REACT_APP_URL}/api/v2/address/getDefaultAddress`,
+        { headers: { token } }
+      );
       const response = await axios.get(
         `${process.env.REACT_APP_URL}/api/v2/address/getDefaultAddress`,
         { headers: { token } }
@@ -93,10 +109,20 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   const populateInitialData = () => {
     setIsEdit(true);
     setEditAddressId(initialData.address_id);
+  const populateInitialData = () => {
+    setIsEdit(true);
+    setEditAddressId(initialData.address_id);
 
     const locationUrl = initialData.location || '';
     const coords = locationUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    const locationUrl = initialData.location || '';
+    const coords = locationUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
 
+    if (initialData.media_image_url) {
+      setExistingImage(initialData.media_image_url);
+      setImagePreview(initialData.media_image_url);
+      setShowImagePreview(true);
+    }
     if (initialData.media_image_url) {
       setExistingImage(initialData.media_image_url);
       setImagePreview(initialData.media_image_url);
@@ -123,9 +149,15 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   };
 
   const validateField = (name, value) => {
+  const validateField = (name, value) => {
     let error = '';
 
     switch (name) {
+      case 'location':
+        if (!value || !value.lat || !value.lng) {
+          error = 'Please select a location on the map';
+        }
+        break;
       case 'location':
         if (!value || !value.lat || !value.lng) {
           error = 'Please select a location on the map';
@@ -135,7 +167,17 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       case 'addressLabel':
         if (!value) error = 'Address label is required';
         break;
+      case 'addressLabel':
+        if (!value) error = 'Address label is required';
+        break;
 
+      case 'line1':
+        if (!value) {
+          error = 'Address Line 1 is required';
+        } else if (value.length < 2) {
+          error = 'Address Line 1 must be at least 2 characters';
+        }
+        break;
       case 'line1':
         if (!value) {
           error = 'Address Line 1 is required';
@@ -151,7 +193,24 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           error = 'Address Line 2 must be at least 2 characters';
         }
         break;
+      case 'line2':
+        if (!value) {
+          error = 'Address Line 2 is required';
+        } else if (value.length < 2) {
+          error = 'Address Line 2 must be at least 2 characters';
+        }
+        break;
 
+      case 'pincode':
+        if (!value) {
+          error = 'Pincode is required';
+        } else {
+          const cleanPincode = value.replace(/\D/g, '');
+          if (cleanPincode.length !== 6) {
+            error = 'Pincode must be 6 digits';
+          }
+        }
+        break;
       case 'pincode':
         if (!value) {
           error = 'Pincode is required';
@@ -173,12 +232,25 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           }
         }
         break;
+      case 'media_image_url':
+        if (value) {
+          const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+          if (!validTypes.includes(value.type)) {
+            error = 'Please upload a valid image file (JPEG, PNG)';
+          } else if (value.size > 5 * 1024 * 1024) {
+            error = 'Image size should be less than 5MB';
+          }
+        }
+        break;
 
+      default:
+        break;
       default:
         break;
     }
 
     return error;
+  };
   };
 
   const handleImageChange = (e) => {
@@ -200,6 +272,13 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         setShowImagePreview(true);
       };
       reader.readAsDataURL(file);
+      setSelectedImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setShowImagePreview(true);
+      };
+      reader.readAsDataURL(file);
 
       setExistingImage(null);
       setFormErrors(prev => ({
@@ -209,6 +288,15 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
     }
   };
 
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    setExistingImage(null);
+    setShowImagePreview(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
   const handleRemoveImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
@@ -281,15 +369,80 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       </div>
     </div>
   );
+  const renderImageSection = () => (
+    <div className="bg-gray-50 p-4 rounded-lg">
+      <h3 className="text-gray-800 text-sm font-medium mb-3">Address Image</h3>
+      <div className="space-y-3">
+        <div className="flex items-center justify-center w-full">
+          <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
+            {showImagePreview ? (
+              <div className="relative w-full h-full">
+                <img
+                  src={imagePreview || existingImage}
+                  alt="Address"
+                  className="w-full h-full object-contain rounded-lg"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      fileInputRef.current?.click();
+                    }}
+                    className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center space-x-2"
+                  >
+                    <Pencil size={16} />
+                    <span>Change Image</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleRemoveImage();
+                    }}
+                    className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg flex items-center space-x-2"
+                  >
+                    <Trash2 size={16} />
+                    <span>Remove Image</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <Upload className="w-8 h-8 mb-4 text-gray-500" />
+                <p className="mb-2 text-sm text-gray-500">
+                  <span className="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p className="text-xs text-gray-500">PNG, JPG (MAX. 5MB)</p>
+              </div>
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </label>
+        </div>
+        {formErrors.media_image_url && (
+          <p className="text-red-500 text-xs mt-1">{formErrors.media_image_url}</p>
+        )}
+      </div>
+    </div>
+  );
 
+  const validateForm = (respectTouched = false) => {
   const validateForm = (respectTouched = false) => {
     const errors = {};
     let isValid = true;
     
     Object.keys(formData).forEach(key => {
       if (!respectTouched || touchedFields[key]) {
-        const error = validateField(key, 
-          key === 'location' ? formData[key] : formData[key]);
+        const error = validateField(
+          key,
+          key === 'location' ? formData[key] : formData[key]
+        );
         if (error) {
           errors[key] = error;
           isValid = false;
@@ -303,40 +456,42 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   };
 
   const handleChange = (e) => {
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     
     setTouchedFields(prev => ({
       ...prev,
-      [name]: true
+      [name]: true,
     }));
 
     if (name === 'pincode') {
       const cleanValue = value.replace(/\D/g, '');
       if (cleanValue.length <= 6) {
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          [name]: cleanValue
+          [name]: cleanValue,
         }));
         
         if (touchedFields[name]) {
           const error = validateField(name, cleanValue);
-          setFormErrors(prev => ({
+          setFormErrors((prev) => ({
             ...prev,
-            [name]: error
+            [name]: error,
           }));
         }
       }
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
       
       if (touchedFields[name]) {
         const error = validateField(name, value);
-        setFormErrors(prev => ({
+        setFormErrors((prev) => ({
           ...prev,
-          [name]: error
+          [name]: error,
         }));
       }
     }
@@ -362,29 +517,30 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   };
 
   const handleDefaultDetailsChange = (e) => {
+  const handleDefaultDetailsChange = (e) => {
     const { name, value } = e.target;
     
     setTouchedFields(prev => ({
       ...prev,
-      [name]: true
+      [name]: true,
     }));
 
     const newDetails = {
       ...defaultDetails,
-      [name]: value
+      [name]: value,
     };
-    
+
     const validation = validateDefaultDetails(
       name === 'customer_name' ? value : newDetails.customer_name,
       name === 'customer_phonenumber' ? value : newDetails.customer_phonenumber
     );
-    
+
     setDefaultDetails({
       ...newDetails,
       isValid: validation.isValid,
-      errors: touchedFields[name] ? validation.errors : {}
+      errors: touchedFields[name] ? validation.errors : {},
     });
-    
+
     setTimeout(() => validateForm(true), 0);
   };
 
@@ -463,6 +619,12 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         navigate('/');
         return;
       }
+    try {
+      const token = localStorage.getItem('token');
+      if (!token || isTokenExpired(token)) {
+        navigate('/');
+        return;
+      }
 
       const formDataToSend = new FormData();
       formDataToSend.append('tag', formData.addressLabel);
@@ -501,6 +663,21 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         );
         setSuccessMessage('Address saved successfully');
       }
+      if (isEdit) {
+        await axios.put(
+          `${process.env.REACT_APP_URL}/api/v2/customer/address/update/${editAddressId}`,
+          formDataToSend,
+          config
+        );
+        setSuccessMessage('Address updated successfully');
+      } else {
+        await axios.post(
+          `${process.env.REACT_APP_URL}/api/v2/address/createAddres`,
+          formDataToSend,
+          config
+        );
+        setSuccessMessage('Address saved successfully');
+      }
 
       if (onAddressAdd) await onAddressAdd();
       if (onClose) onClose();
@@ -521,12 +698,33 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           navigate('/');
           return;
         }
+  const handleViewAddresses = async () => {
+    if (!isViewAddresses) {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token || isTokenExpired(token)) {
+          navigate('/');
+          return;
+        }
 
         const response = await axios.get(
           `${process.env.REACT_APP_URL}/api/v2/address/getalladdresses`,
           { headers: { token } }
         );
+        const response = await axios.get(
+          `${process.env.REACT_APP_URL}/api/v2/address/getalladdresses`,
+          { headers: { token } }
+        );
 
+        if (response.data.address) {
+          setAddress(response.data.address);
+        }
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+      }
+    }
+    setIsViewAddresses(!isViewAddresses);
+  };
         if (response.data.address) {
           setAddress(response.data.address);
         }
@@ -553,6 +751,11 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
     }
   };
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -594,6 +797,9 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
             {formErrors.location && (
               <p className="text-red-500 text-sm mb-2">{formErrors.location}</p>
             )}
+            {formErrors.location && (
+              <p className="text-red-500 text-sm mb-2">{formErrors.location}</p>
+            )}
 
             <button
               type="button"
@@ -609,11 +815,40 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           {successMessage && (
             <div className="text-teal-700 text-center mb-4">{successMessage}</div>
           )}
+          {successMessage && (
+            <div className="text-teal-700 text-center mb-4">{successMessage}</div>
+          )}
 
           {formErrors.general && (
             <div className="text-red-500 text-center mb-4">{formErrors.general}</div>
           )}
+          {formErrors.general && (
+            <div className="text-red-500 text-center mb-4">{formErrors.general}</div>
+          )}
 
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address Label *
+                </label>
+                <select
+                  name="addressLabel"
+                  value={formData.addressLabel}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    formErrors.addressLabel ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                >
+                  <option value="">Select Label</option>
+                  <option value="home">Home</option>
+                  <option value="office">Office</option>
+                  <option value="other">Other</option>
+                </select>
+                {formErrors.addressLabel && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.addressLabel}</p>
+                )}
+              </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-6">
               <div className="form-group">
@@ -660,7 +895,48 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
                 )}
               </div>
             </div>
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pincode *
+                </label>
+                <input
+                  type="text"
+                  name="pincode"
+                  value={formData.pincode}
+                  onChange={handleChange}
+                  maxLength={6}
+                  pattern="\d*"
+                  inputMode="numeric"
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    formErrors.pincode ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Enter 6-digit pincode"
+                />
+                {formErrors.pincode && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.pincode}</p>
+                )}
+              </div>
+            </div>
 
+            <div className="grid grid-cols-1 gap-6">
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address Line 1 *
+                </label>
+                <input
+                  type="text"
+                  name="line1"
+                  value={formData.line1}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    formErrors.line1 ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Flat number, Building name"
+                />
+                {formErrors.line1 && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.line1}</p>
+                )}
+              </div>
             <div className="grid grid-cols-1 gap-6">
               <div className="form-group">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -700,14 +976,38 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
                 )}
               </div>
             </div>
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Address Line 2 *
+                </label>
+                <input
+                  type="text"
+                  name="line2"
+                  value={formData.line2}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    formErrors.line2 ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Area, City, State"
+                />
+                {formErrors.line2 && (
+                  <p className="text-red-500 text-xs mt-1">{formErrors.line2}</p>
+                )}
+              </div>
+            </div>
 
+            <div className="space-y-4 mt-6">
+              {renderImageSection()}
             <div className="space-y-4 mt-6">
               {renderImageSection()}
 
               <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-gray-800 text-sm font-medium mb-3">Default Details</h3>
+                <h3 className="text-gray-800 text-sm font-medium mb-3">Contact Details</h3>
                 <div className="space-y-3">
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Name *
+                    </label>
                     <input
                       type="text"
                       name="customer_name"
@@ -724,6 +1024,9 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
                   </div>
 
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Phone Number *
+                    </label>
                     <input
                       type="text"
                       name="customer_phonenumber"
@@ -741,18 +1044,23 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
                 </div>
               </div>
 
-              <button 
+              <button
                 type="submit"
                 className={`w-full font-bold py-2 px-4 rounded transition-colors ${
-                  isFormValid 
-                    ? 'bg-teal-700 hover:bg-teal-600 text-white' 
+                  isFormValid
+                    ? 'bg-teal-700 hover:bg-teal-600 text-white'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
+                disabled={!isFormValid}
               >
                 {isEdit ? 'Update Address' : 'Save Address'}
               </button>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  );
         </div>
       </div>
     </div>
