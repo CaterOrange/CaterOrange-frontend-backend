@@ -36,8 +36,6 @@ const uploadCategoryMedia = async (mediaInput, tags = 'category') => {
       const uploadOptions = {
         folder: tags,
         transformation: {
-          width: 500,
-          height: 1000,
           quality: 'auto',
           fetch_format: 'auto'
         }
@@ -601,8 +599,6 @@ const resolvers = {
                 const uploadResult = await cloudinary.uploader.upload(url, {
                   folder: 'corporate_order_media',
                   transformation: {
-                    width: 500,
-                    height: 1000,
                     quality: 'auto',
                     fetch_format: 'auto'
                   }
@@ -620,8 +616,6 @@ const resolvers = {
               const uploadResult = await cloudinary.uploader.upload(media, {
                 folder: 'corporate_order_media',
                 transformation: {
-                  width: 500,
-                  height: 1000,
                   quality: 'auto',
                   fetch_format: 'auto'
                 }
@@ -639,8 +633,6 @@ const resolvers = {
                 const uploadResult = await cloudinary.uploader.upload(url, {
                   folder: 'corporate_order_media',
                   transformation: {
-                    width: 500,
-                    height: 1000,
                     quality: 'auto',
                     fetch_format: 'auto'
                   }
@@ -1513,8 +1505,6 @@ module.exports = { typeDefs, resolvers };
 //                 const uploadResult = await cloudinary.uploader.upload(url, {
 //                   folder: 'corporate_order_media',
 //                   transformation: {
-//                     width: 500,
-//                     height: 1000,
 //                     quality: 'auto',
 //                     fetch_format: 'auto'
 //                   }
@@ -1532,8 +1522,6 @@ module.exports = { typeDefs, resolvers };
 //               const uploadResult = await cloudinary.uploader.upload(media, {
 //                 folder: 'corporate_order_media',
 //                 transformation: {
-//                   width: 500,
-//                   height: 1000,
 //                   quality: 'auto',
 //                   fetch_format: 'auto'
 //                 }
@@ -1551,8 +1539,6 @@ module.exports = { typeDefs, resolvers };
 //                 const uploadResult = await cloudinary.uploader.upload(url, {
 //                   folder: 'corporate_order_media',
 //                   transformation: {
-//                     width: 500,
-//                     height: 1000,
 //                     quality: 'auto',
 //                     fetch_format: 'auto'
 //                   }

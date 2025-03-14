@@ -134,8 +134,6 @@ const createAddress = async (req, res) => {
                 const uploadResult = await cloudinary.uploader.upload(file.tempFilePath, {
                     folder: 'address_images',
                     transformation: {
-                        width: 500,
-                        height: 1000,
                         quality: 'auto',
                         fetch_format: 'auto'
                     }
@@ -411,8 +409,6 @@ const updateAddress = async (req, res) => {
                 const uploadResult = await cloudinary.uploader.upload(file.tempFilePath, {
                     folder: 'address_images',
                     transformation: {
-                        width: 500,
-                        height: 1000,
                         quality: 'auto',
                         fetch_format: 'auto'
                     }

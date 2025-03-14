@@ -96,15 +96,13 @@ const updateCorporateOrderMedia = async (req, res) => {
                 // Add transformations only for images
                 if (!isVideo) {
                     uploadOptions.transformation = {
-                        width: 500,
-                        height: 1000,
                         quality: 'auto',
                         fetch_format: 'auto'
                     };
                 } else {
                     // Video specific options
                     uploadOptions.eager = [
-                        { width: 480, height: 270, crop: "pad" }
+                        { crop: "pad" }
                     ];
                 }
                 
@@ -151,15 +149,13 @@ const updateCorporateOrderMedia = async (req, res) => {
                 // Add transformations only for images
                 if (!isVideo) {
                     uploadOptions.transformation = {
-                        width: 500,
-                        height: 1000,
                         quality: 'auto',
                         fetch_format: 'auto'
                     };
                 } else {
                     // Video specific options
                     uploadOptions.eager = [
-                        { width: 480, height: 270, crop: "pad" }
+                        {crop: "pad" }
                     ];
                 }
                 
@@ -361,15 +357,13 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
                 // Add transformations only for images
                 if (!isVideo) {
                     uploadOptions.transformation = {
-                        width: 500,
-                        height: 1000,
                         quality: 'auto',
                         fetch_format: 'auto'
                     };
                 } else {
                     // Video specific options
                     uploadOptions.eager = [
-                        { width: 480, height: 270, crop: "pad" }
+                        { crop: "pad" }
                     ];
                 }
                 
@@ -422,15 +416,13 @@ const bulkUpdateCorporateOrderMedia = async (req, res) => {
                 // Add transformations only for images
                 if (!isVideo) {
                     uploadOptions.transformation = {
-                        width: 500,
-                        height: 1000,
                         quality: 'auto',
                         fetch_format: 'auto'
                     };
                 } else {
                     // Video specific options
                     uploadOptions.eager = [
-                        { width: 480, height: 270, crop: "pad" }
+                        { crop: "pad" }
                     ];
                 }
                 

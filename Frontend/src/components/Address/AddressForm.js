@@ -3,19 +3,7 @@ import { Pencil, X, Upload, Trash2 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { isTokenExpired, VerifyToken } from '../../MiddleWare/verifyToken';
-import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import 'leaflet/dist/leaflet.css';
-
-const DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClose }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -25,7 +13,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
     line1: '',
     line2: '',
     pincode: '',
-    location: { lat: null, lng: null }
+    location: { lat: null, lng: null },
   });
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -38,9 +26,8 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   const [address, setAddress] = useState([]);
   const [isViewAddresses, setIsViewAddresses] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [position, setPosition] = useState([20.5937, 78.9629]);
-  const [mapCenter, setMapCenter] = useState([20.5937, 78.9629]);
-  const [mapKey, setMapKey] = useState(0);
+  const [position, setPosition] = useState({ lat: 20.5937, lng: 78.9629 }); // India centroid
+  const [mapCenter, setMapCenter] = useState({ lat: 20.5937, lng: 78.9629 });
   const [loading, setLoading] = useState(false);
   const [locationError, setLocationError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -49,20 +36,36 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
     customer_name: '',
     customer_phonenumber: '',
     isValid: false,
-    errors: {}
+    errors: {},
   });
+
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [formattedAddress, setFormattedAddress] = useState('');
 
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
   const modalRef = useRef(null);
+  const mapRef = useRef(null);
   VerifyToken();
 
-  useEffect(() => {
-    fetchDefaultDetails();
-    if (initialData) {
-      populateInitialData();
-    }
-  }, [initialData]);
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries: ['places'],
+  });
+
+  const mapContainerStyle = {
+    width: '100%',
+    height: '300px',
+  };
+
+  const options = {
+    disableDefaultUI: false,
+    zoomControl: true,
+    mapTypeControl: false,   // Disable satellite view option
+    mapTypeId: 'roadmap',    // Force roadmap view
+  };
+
   useEffect(() => {
     fetchDefaultDetails();
     if (initialData) {
@@ -77,29 +80,19 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         navigate('/');
         return;
       }
-  const fetchDefaultDetails = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/');
-        return;
-      }
 
-      const response = await axios.get(
-        `${process.env.REACT_APP_URL}/api/v2/address/getDefaultAddress`,
-        { headers: { token } }
-      );
       const response = await axios.get(
         `${process.env.REACT_APP_URL}/api/v2/address/getDefaultAddress`,
         { headers: { token } }
       );
 
       const { customer_name, customer_phonenumber } = response.data.customer;
-      setDefaultDetails(prev => ({
+      setDefaultDetails((prev) => ({
         ...prev,
         customer_name,
         customer_phonenumber,
-        isValid: validateDefaultDetails(customer_name, customer_phonenumber)
+        isValid: validateDefaultDetails(customer_name, customer_phonenumber).isValid,
+        errors: validateDefaultDetails(customer_name, customer_phonenumber).errors,
       }));
     } catch (error) {
       console.error('Error fetching default details:', error);
@@ -109,20 +102,10 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   const populateInitialData = () => {
     setIsEdit(true);
     setEditAddressId(initialData.address_id);
-  const populateInitialData = () => {
-    setIsEdit(true);
-    setEditAddressId(initialData.address_id);
 
     const locationUrl = initialData.location || '';
     const coords = locationUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
-    const locationUrl = initialData.location || '';
-    const coords = locationUrl.match(/q=(-?\d+\.\d+),(-?\d+\.\d+)/);
 
-    if (initialData.media_image_url) {
-      setExistingImage(initialData.media_image_url);
-      setImagePreview(initialData.media_image_url);
-      setShowImagePreview(true);
-    }
     if (initialData.media_image_url) {
       setExistingImage(initialData.media_image_url);
       setImagePreview(initialData.media_image_url);
@@ -134,21 +117,39 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       line1: initialData.line1 || '',
       line2: initialData.line2 || '',
       pincode: initialData.pincode || '',
-      location: coords ? {
-        lat: parseFloat(coords[1]),
-        lng: parseFloat(coords[2])
-      } : { lat: null, lng: null }
+      location: coords
+        ? { lat: parseFloat(coords[1]), lng: parseFloat(coords[2]) }
+        : { lat: null, lng: null },
     });
 
     if (coords) {
-      const newPos = [parseFloat(coords[1]), parseFloat(coords[2])];
+      const newPos = { lat: parseFloat(coords[1]), lng: parseFloat(coords[2]) };
       setPosition(newPos);
       setMapCenter(newPos);
-      setMapKey(prev => prev + 1);
+      fetchAddress(newPos);
     }
   };
 
-  const validateField = (name, value) => {
+  const fetchAddress = async (location) => {
+    if (!isLoaded) return;
+
+    try {
+      const geocoder = new window.google.maps.Geocoder();
+      const latLng = { lat: location.lat, lng: location.lng };
+
+      geocoder.geocode({ location: latLng }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          setFormattedAddress(results[0].formatted_address);
+        } else {
+          setFormattedAddress('Unable to fetch address');
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching address:', error);
+      setFormattedAddress('Error fetching address');
+    }
+  };
+
   const validateField = (name, value) => {
     let error = '';
 
@@ -158,26 +159,11 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           error = 'Please select a location on the map';
         }
         break;
-      case 'location':
-        if (!value || !value.lat || !value.lng) {
-          error = 'Please select a location on the map';
-        }
-        break;
 
       case 'addressLabel':
         if (!value) error = 'Address label is required';
         break;
-      case 'addressLabel':
-        if (!value) error = 'Address label is required';
-        break;
 
-      case 'line1':
-        if (!value) {
-          error = 'Address Line 1 is required';
-        } else if (value.length < 2) {
-          error = 'Address Line 1 must be at least 2 characters';
-        }
-        break;
       case 'line1':
         if (!value) {
           error = 'Address Line 1 is required';
@@ -193,24 +179,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           error = 'Address Line 2 must be at least 2 characters';
         }
         break;
-      case 'line2':
-        if (!value) {
-          error = 'Address Line 2 is required';
-        } else if (value.length < 2) {
-          error = 'Address Line 2 must be at least 2 characters';
-        }
-        break;
 
-      case 'pincode':
-        if (!value) {
-          error = 'Pincode is required';
-        } else {
-          const cleanPincode = value.replace(/\D/g, '');
-          if (cleanPincode.length !== 6) {
-            error = 'Pincode must be 6 digits';
-          }
-        }
-        break;
       case 'pincode':
         if (!value) {
           error = 'Pincode is required';
@@ -232,25 +201,12 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           }
         }
         break;
-      case 'media_image_url':
-        if (value) {
-          const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-          if (!validTypes.includes(value.type)) {
-            error = 'Please upload a valid image file (JPEG, PNG)';
-          } else if (value.size > 5 * 1024 * 1024) {
-            error = 'Image size should be less than 5MB';
-          }
-        }
-        break;
 
-      default:
-        break;
       default:
         break;
     }
 
     return error;
-  };
   };
 
   const handleImageChange = (e) => {
@@ -258,9 +214,9 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
     if (file) {
       const error = validateField('media_image_url', file);
       if (error) {
-        setFormErrors(prev => ({
+        setFormErrors((prev) => ({
           ...prev,
-          media_image_url: error
+          media_image_url: error,
         }));
         return;
       }
@@ -272,18 +228,11 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         setShowImagePreview(true);
       };
       reader.readAsDataURL(file);
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setShowImagePreview(true);
-      };
-      reader.readAsDataURL(file);
 
       setExistingImage(null);
-      setFormErrors(prev => ({
+      setFormErrors((prev) => ({
         ...prev,
-        media_image_url: ''
+        media_image_url: '',
       }));
     }
   };
@@ -297,15 +246,6 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       fileInputRef.current.value = '';
     }
   };
-  const handleRemoveImage = () => {
-    setSelectedImage(null);
-    setImagePreview(null);
-    setExistingImage(null);
-    setShowImagePreview(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
 
   const renderImageSection = () => (
     <div className="bg-gray-50 p-4 rounded-lg">
@@ -369,75 +309,12 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       </div>
     </div>
   );
-  const renderImageSection = () => (
-    <div className="bg-gray-50 p-4 rounded-lg">
-      <h3 className="text-gray-800 text-sm font-medium mb-3">Address Image</h3>
-      <div className="space-y-3">
-        <div className="flex items-center justify-center w-full">
-          <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 relative">
-            {showImagePreview ? (
-              <div className="relative w-full h-full">
-                <img
-                  src={imagePreview || existingImage}
-                  alt="Address"
-                  className="w-full h-full object-contain rounded-lg"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      fileInputRef.current?.click();
-                    }}
-                    className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg flex items-center space-x-2"
-                  >
-                    <Pencil size={16} />
-                    <span>Change Image</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleRemoveImage();
-                    }}
-                    className="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg flex items-center space-x-2"
-                  >
-                    <Trash2 size={16} />
-                    <span>Remove Image</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <Upload className="w-8 h-8 mb-4 text-gray-500" />
-                <p className="mb-2 text-sm text-gray-500">
-                  <span className="font-semibold">Click to upload</span> or drag and drop
-                </p>
-                <p className="text-xs text-gray-500">PNG, JPG (MAX. 5MB)</p>
-              </div>
-            )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </label>
-        </div>
-        {formErrors.media_image_url && (
-          <p className="text-red-500 text-xs mt-1">{formErrors.media_image_url}</p>
-        )}
-      </div>
-    </div>
-  );
 
-  const validateForm = (respectTouched = false) => {
   const validateForm = (respectTouched = false) => {
     const errors = {};
     let isValid = true;
-    
-    Object.keys(formData).forEach(key => {
+
+    Object.keys(formData).forEach((key) => {
       if (!respectTouched || touchedFields[key]) {
         const error = validateField(
           key,
@@ -456,11 +333,9 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
   };
 
   const handleChange = (e) => {
-
-  const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    setTouchedFields(prev => ({
+
+    setTouchedFields((prev) => ({
       ...prev,
       [name]: true,
     }));
@@ -472,7 +347,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           ...prev,
           [name]: cleanValue,
         }));
-        
+
         if (touchedFields[name]) {
           const error = validateField(name, cleanValue);
           setFormErrors((prev) => ({
@@ -486,7 +361,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         ...prev,
         [name]: value,
       }));
-      
+
       if (touchedFields[name]) {
         const error = validateField(name, value);
         setFormErrors((prev) => ({
@@ -495,32 +370,31 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         }));
       }
     }
-    
+
     setTimeout(() => validateForm(true), 0);
   };
 
   const validateDefaultDetails = (name, phone) => {
     const errors = {};
-    
+
     if (!name?.trim() || name.length < 3) {
       errors.customer_name = 'Name must be at least 3 characters';
     }
-    
+
     if (!phone?.trim() || !/^\d{10}$/.test(phone)) {
       errors.customer_phonenumber = 'Phone number must be 10 digits';
     }
-    
+
     return {
       isValid: Object.keys(errors).length === 0,
-      errors
+      errors,
     };
   };
 
   const handleDefaultDetailsChange = (e) => {
-  const handleDefaultDetailsChange = (e) => {
     const { name, value } = e.target;
-    
-    setTouchedFields(prev => ({
+
+    setTouchedFields((prev) => ({
       ...prev,
       [name]: true,
     }));
@@ -552,73 +426,77 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
 
   const getCurrentLocation = () => {
     setLoading(true);
+    setLocationError('');
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setPosition([latitude, longitude]);
-          setMapCenter([latitude, longitude]);
-          setFormData(prev => ({
+          const newPos = { lat: latitude, lng: longitude };
+          setPosition(newPos);
+          setMapCenter(newPos);
+          setFormData((prev) => ({
             ...prev,
-            location: { lat: latitude, lng: longitude }
+            location: newPos,
           }));
-          setMapKey(prev => prev + 1);
+          setCurrentLocation(newPos);
+          fetchAddress(newPos);
           setLoading(false);
+          validateForm(true);
         },
-        () => {
+        (error) => {
           setLoading(false);
-          setLocationError('Failed to get current location');
+          setLocationError(
+            error.message ||
+              'Failed to get current location. Please allow location access or select manually.'
+          );
         }
       );
     } else {
       setLoading(false);
-      setLocationError('Geolocation is not supported');
+      setLocationError('Geolocation is not supported by your browser.');
     }
   };
 
-  const handleLocationSelect = (newPosition) => {
-    setPosition(newPosition);
+  const handleMapClick = (e) => {
+    const newPos = {
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng(),
+    };
+    setPosition(newPos);
+    setMapCenter(newPos);
+    setFormData((prev) => ({
+      ...prev,
+      location: newPos,
+    }));
     setLocationError('');
-    setFormData(prev => ({
+    setCurrentLocation(null);
+    fetchAddress(newPos);
+    setFormErrors((prev) => ({
       ...prev,
-      location: { lat: newPosition[0], lng: newPosition[1] }
+      location: '',
     }));
-    setFormErrors(prev => ({
-      ...prev,
-      location: ''
-    }));
+    validateForm(true);
   };
 
-  const LocationMarker = ({ position, onLocationSelect }) => {
-    const map = useMapEvents({
-      click(e) {
-        const { lat, lng } = e.latlng;
-        onLocationSelect([lat, lng]);
-      },
-    });
-
-    return position ? <Marker position={position} /> : null;
+  const handleMapLoad = (map) => {
+    mapRef.current = map;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const allFields = {...formData, ...defaultDetails};
-    setTouchedFields(Object.keys(allFields).reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {}));
-    
+
+    const allFields = { ...formData, ...defaultDetails };
+    setTouchedFields(
+      Object.keys(allFields).reduce((acc, key) => {
+        acc[key] = true;
+        return acc;
+      }, {})
+    );
+
     if (!validateForm(false)) {
       return;
     }
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token || isTokenExpired(token)) {
-        navigate('/');
-        return;
-      }
     try {
       const token = localStorage.getItem('token');
       if (!token || isTokenExpired(token)) {
@@ -631,38 +509,26 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       formDataToSend.append('pincode', formData.pincode);
       formDataToSend.append('line1', formData.line1);
       formDataToSend.append('line2', formData.line2);
-      formDataToSend.append('location', `https://www.google.com/maps?q=${formData.location.lat},${formData.location.lng}`);
+      formDataToSend.append(
+        'location',
+        `https://www.google.com/maps?q=${formData.location.lat},${formData.location.lng}`
+      );
       formDataToSend.append('ship_to_name', defaultDetails.customer_name);
       formDataToSend.append('ship_to_phone_number', defaultDetails.customer_phonenumber);
-      
+
       if (selectedImage) {
         formDataToSend.append('media_image_url', selectedImage);
       } else if (imagePreview && !selectedImage && isEdit) {
-        formDataToSend.append('media_image_url', imagePreview);
+        // Handle existing image if no new image is uploaded in edit mode
       }
 
       const config = {
         headers: {
-          'token': token,
-          'Content-Type': 'multipart/form-data'
-        }
+          token,
+          'Content-Type': 'multipart/form-data',
+        },
       };
 
-      if (isEdit) {
-        await axios.put(
-          `${process.env.REACT_APP_URL}/api/v2/customer/address/update/${editAddressId}`,
-          formDataToSend,
-          config
-        );
-        setSuccessMessage('Address updated successfully');
-      } else {
-        await axios.post(
-          `${process.env.REACT_APP_URL}/api/v2/address/createAddres`,
-          formDataToSend,
-          config
-        );
-        setSuccessMessage('Address saved successfully');
-      }
       if (isEdit) {
         await axios.put(
           `${process.env.REACT_APP_URL}/api/v2/customer/address/update/${editAddressId}`,
@@ -681,11 +547,10 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
 
       if (onAddressAdd) await onAddressAdd();
       if (onClose) onClose();
-
     } catch (error) {
-      setFormErrors(prev => ({
+      setFormErrors((prev) => ({
         ...prev,
-        general: error.response?.data?.message || 'Failed to save address'
+        general: error.response?.data?.message || 'Failed to save address',
       }));
     }
   };
@@ -698,33 +563,12 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
           navigate('/');
           return;
         }
-  const handleViewAddresses = async () => {
-    if (!isViewAddresses) {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token || isTokenExpired(token)) {
-          navigate('/');
-          return;
-        }
 
         const response = await axios.get(
           `${process.env.REACT_APP_URL}/api/v2/address/getalladdresses`,
           { headers: { token } }
         );
-        const response = await axios.get(
-          `${process.env.REACT_APP_URL}/api/v2/address/getalladdresses`,
-          { headers: { token } }
-        );
 
-        if (response.data.address) {
-          setAddress(response.data.address);
-        }
-      } catch (error) {
-        console.error('Error fetching addresses:', error);
-      }
-    }
-    setIsViewAddresses(!isViewAddresses);
-  };
         if (response.data.address) {
           setAddress(response.data.address);
         }
@@ -741,7 +585,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         `${process.env.REACT_APP_URL}/api/v2/customer/getAddress`,
         {
           params: { address_id },
-          headers: { token: localStorage.getItem('token') }
+          headers: { token: localStorage.getItem('token') },
         }
       );
       setSelectedAddressId(address_id);
@@ -756,15 +600,16 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
       onClose();
     }
   };
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center p-4" onClick={handleOverlayClick}>
-      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto" ref={modalRef}>
+    <div
+      className="fixed inset-0 bg-black/30 flex items-center justify-center p-4"
+      onClick={handleOverlayClick}
+    >
+      <div
+        className="relative bg-white rounded-xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto"
+        ref={modalRef}
+      >
         <div className="sticky top-0 bg-white px-6 py-4 border-b flex justify-between items-center z-10">
           <h2 className="text-xl font-semibold text-teal-700 font-serif">
             ✏️ {isEdit ? 'Edit Address' : 'Add New Address'}
@@ -780,23 +625,24 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
         <div className="px-6 py-4">
           <div className="mb-6">
             <div className="relative z-0 border-2 border-teal-500 rounded-lg overflow-hidden h-64 mb-4">
-              <MapContainer
-                key={mapKey}
-                center={mapCenter}
-                zoom={13}
-                style={{ height: '100%', width: '100%' }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='© OpenStreetMap contributors'
-                />
-                <LocationMarker position={position} onLocationSelect={handleLocationSelect} />
-              </MapContainer>
+              {isLoaded ? (
+                <GoogleMap
+                  mapContainerStyle={mapContainerStyle}
+                  center={mapCenter}
+                  zoom={13}
+                  options={options}
+                  onClick={handleMapClick}
+                  onLoad={handleMapLoad}
+                >
+                  {position.lat && position.lng && <Marker position={position} />}
+                </GoogleMap>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center bg-gray-100">
+                  <p>Loading Map...</p>
+                </div>
+              )}
             </div>
 
-            {formErrors.location && (
-              <p className="text-red-500 text-sm mb-2">{formErrors.location}</p>
-            )}
             {formErrors.location && (
               <p className="text-red-500 text-sm mb-2">{formErrors.location}</p>
             )}
@@ -805,50 +651,33 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
               type="button"
               onClick={getCurrentLocation}
               disabled={loading}
-              className="w-full mb-4 bg-teal-700 text-white py-2 px-4 rounded hover:bg-teal-600 disabled:bg-teal-300"
+              className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:bg-green-300 flex items-center justify-center"
             >
-              {loading ? 'Getting Location...' : '📍 Use Current Location'}
+              {loading ? (
+                'Getting Location...'
+              ) : (
+                <>
+                  <span>Get Current Location</span>
+                </>
+              )}
             </button>
-            {locationError && <p className="text-red-500 text-sm mb-4">{locationError}</p>}
+            {locationError && <p className="text-red-500 text-sm mt-2">{locationError}</p>}
+
+            {formattedAddress && (
+              <div className="mt-2 text-sm text-gray-700 bg-gray-100 p-2 rounded">
+                <p>{formattedAddress}</p>
+              </div>
+            )}
           </div>
 
           {successMessage && (
             <div className="text-teal-700 text-center mb-4">{successMessage}</div>
           )}
-          {successMessage && (
-            <div className="text-teal-700 text-center mb-4">{successMessage}</div>
-          )}
 
           {formErrors.general && (
             <div className="text-red-500 text-center mb-4">{formErrors.general}</div>
           )}
-          {formErrors.general && (
-            <div className="text-red-500 text-center mb-4">{formErrors.general}</div>
-          )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-6">
-              <div className="form-group">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address Label *
-                </label>
-                <select
-                  name="addressLabel"
-                  value={formData.addressLabel}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    formErrors.addressLabel ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                >
-                  <option value="">Select Label</option>
-                  <option value="home">Home</option>
-                  <option value="office">Office</option>
-                  <option value="other">Other</option>
-                </select>
-                {formErrors.addressLabel && (
-                  <p className="text-red-500 text-xs mt-1">{formErrors.addressLabel}</p>
-                )}
-              </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-6">
               <div className="form-group">
@@ -895,48 +724,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
                 )}
               </div>
             </div>
-              <div className="form-group">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Pincode *
-                </label>
-                <input
-                  type="text"
-                  name="pincode"
-                  value={formData.pincode}
-                  onChange={handleChange}
-                  maxLength={6}
-                  pattern="\d*"
-                  inputMode="numeric"
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    formErrors.pincode ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter 6-digit pincode"
-                />
-                {formErrors.pincode && (
-                  <p className="text-red-500 text-xs mt-1">{formErrors.pincode}</p>
-                )}
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 gap-6">
-              <div className="form-group">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address Line 1 *
-                </label>
-                <input
-                  type="text"
-                  name="line1"
-                  value={formData.line1}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    formErrors.line1 ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Flat number, Building name"
-                />
-                {formErrors.line1 && (
-                  <p className="text-red-500 text-xs mt-1">{formErrors.line1}</p>
-                )}
-              </div>
             <div className="grid grid-cols-1 gap-6">
               <div className="form-group">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -976,28 +764,7 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
                 )}
               </div>
             </div>
-              <div className="form-group">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Address Line 2 *
-                </label>
-                <input
-                  type="text"
-                  name="line2"
-                  value={formData.line2}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    formErrors.line2 ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Area, City, State"
-                />
-                {formErrors.line2 && (
-                  <p className="text-red-500 text-xs mt-1">{formErrors.line2}</p>
-                )}
-              </div>
-            </div>
 
-            <div className="space-y-4 mt-6">
-              {renderImageSection()}
             <div className="space-y-4 mt-6">
               {renderImageSection()}
 
@@ -1057,10 +824,6 @@ const AddressForm = ({ initialData = null, onAddressAdd, onAddressSelect, onClos
               </button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
-  );
         </div>
       </div>
     </div>

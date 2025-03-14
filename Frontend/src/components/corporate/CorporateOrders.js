@@ -905,12 +905,12 @@ const CorporateOrders = () => {
  <div className="bg-white rounded-lg p-8 text-center">
  <AlertCircle className="mx-auto text-yellow-500 mb-4" size={48} />
  <h2 className="text-xl font-semibold text-gray-800 mb-4">{error}</h2>
- <button
+ {/* <button
  onClick={() => navigate('/home')}
  className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg transition-colors"
  >
  Start Ordering
- </button>
+ </button> */}
  </div>
  ) : orderData && orderData.length > 0 ? (
  <div className="space-y-6">
