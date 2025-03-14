@@ -412,7 +412,7 @@ const login = async (req, res) => {
             console.log('Error: customer.customer_password is undefined');
             return res.status(500).json({
                 success: false,
-                message: 'Internal server error'
+                message: 'Password not set for this account'
             });
         }
 
