@@ -350,7 +350,7 @@ const resolvers = {
        JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
        LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
        LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
-       ORDER BY co.ordered_at DESC`
+       ORDER BY co.ordered_at DESC WHERE co.payment_status = 'Success'`
     );
     
     // Group order details by order
