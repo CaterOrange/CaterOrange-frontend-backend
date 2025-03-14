@@ -334,7 +334,6 @@ const resolvers = {
         co.corporate_order_status,
         c.customer_name, 
         c.customer_phonenumber,
-
         cod.order_detail_id,
         cod.processing_date,
         cod.delivery_status,
@@ -344,13 +343,14 @@ const resolvers = {
         cod.media,
         cod.delivery_details,
         cod.addedat,
-
         cc.category_name
-       FROM corporate_orders co 
-       JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
-       LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
-       LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
-       ORDER BY co.ordered_at DESC WHERE co.payment_status = 'Success'`
+    FROM corporate_orders co 
+    JOIN customer c ON co.customer_generated_id = c.customer_generated_id 
+    LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
+    LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
+    WHERE co.payment_status = 'Success' 
+    ORDER BY co.ordered_at DESC;
+'`
     );
     
     // Group order details by order

@@ -158,23 +158,19 @@ app.use('/api/v2/',V2vendorRoutes)
 
 
 
-// aap.use('/api/',V1corporateorderdetailsRoutes)
-
-
 const deleteOldFilesFromFolder = async (folderName) => {
   const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - 1); // 15 days ago
+  cutoffDate.setDate(cutoffDate.getDate() - 1); // 1 day ago
   
   try {
     logger.info(`Starting cleanup for ${folderName} folder`);
     
-    // Get paginated results to handle large folders
     let nextCursor = null;
     let deletedCount = 0;
     let hasMore = true;
+    let deletedPublicIds = [];
     
     while (hasMore) {
-      // Get list of files from the specific folder
       const result = await cloudinary.api.resources({
         type: 'upload',
         prefix: folderName + '/',
@@ -188,16 +184,21 @@ const deleteOldFilesFromFolder = async (folderName) => {
         if (createdAt < cutoffDate) {
           logger.info(`Deleting ${resource.public_id} (created on ${createdAt.toISOString()})`);
           await cloudinary.uploader.destroy(resource.public_id);
+          deletedPublicIds.push(resource.public_id);
           deletedCount++;
         }
       }
       
-      // Check if there are more results to process
       if (result.next_cursor) {
         nextCursor = result.next_cursor;
       } else {
         hasMore = false;
       }
+    }
+    
+    // Update database records if we deleted any corporate_order_media files
+    if (folderName === 'corporate_order_media' && deletedPublicIds.length > 0) {
+      await updateCorporateOrderMedia(deletedPublicIds);
     }
     
     logger.info(`Cleanup for ${folderName} completed. Deleted ${deletedCount} files.`);
@@ -208,10 +209,71 @@ const deleteOldFilesFromFolder = async (folderName) => {
   }
 };
 
+const updateCorporateOrderMedia = async (deletedPublicIds) => {
+  try {
+    logger.info(`Updating database records for ${deletedPublicIds.length} deleted media files`);
+    
+    // For each order detail record with media
+    const query = `
+      SELECT order_detail_id, media 
+      FROM corporateorder_details 
+      WHERE media IS NOT NULL
+    `;
+    
+    const result = await client.query(query);
+    let updatedCount = 0;
+    
+    for (const row of result.rows) {
+      let mediaArray = row.media;
+      let needsUpdate = false;
+      
+      if (typeof mediaArray === 'string') {
+        try {
+          mediaArray = JSON.parse(mediaArray);
+        } catch (e) {
+          logger.error(`Failed to parse media JSON for order_detail_id ${row.order_detail_id}:`, e);
+          continue;
+        }
+      }
+      
+      if (!Array.isArray(mediaArray)) {
+        continue;
+      }
+      
+      for (let i = 0; i < mediaArray.length; i++) {
+        const media = mediaArray[i];
+        if (media && media.public_id && deletedPublicIds.includes(media.public_id)) {
+          mediaArray[i] = null;
+          needsUpdate = true;
+        }
+      }
+      
+      const filteredMedia = mediaArray.filter(item => item !== null);
+      
+      if (needsUpdate) {
+        const updateQuery = `
+          UPDATE corporateorder_details 
+          SET media = $1 
+          WHERE order_detail_id = $2
+        `;
+        
+        const newMediaValue = filteredMedia.length > 0 ? JSON.stringify(filteredMedia) : null;
+        
+        await client.query(updateQuery, [newMediaValue, row.order_detail_id]);
+        updatedCount++;
+      }
+    }
+    
+    logger.info(`Updated ${updatedCount} database records for deleted media files`);
+  } catch (error) {
+    logger.error('Error updating corporateorder_details for deleted media:', error);
+    throw error;
+  }
+};
+
 // Schedule a daily job to clean up specified folders
 const scheduleCloudinaryFolderCleanup = () => {
-  // Define the folders to clean up
-  const foldersToClean = ['address_images', 'corporate_order_media'];
+  const foldersToClean = ['corporate_order_media'];
   
   // Run at 2:00 AM every day
   const job = schedule.scheduleJob('0 2 * * *', async () => {
@@ -227,7 +289,6 @@ const scheduleCloudinaryFolderCleanup = () => {
           totalDeleted += deleted;
         } catch (error) {
           logger.error(`Failed to clean folder ${folder}:`, error);
-          // Continue with other folders even if one fails
         }
       }
       
