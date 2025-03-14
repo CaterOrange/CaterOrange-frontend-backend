@@ -83,6 +83,8 @@ const uploadCategoryMedia = async (mediaInput, tags = 'category') => {
     upload_timestamp: new Date().toISOString()
   });
 };
+
+
 const DateTimeScalar = new GraphQLScalarType({
   name: 'DateTime',
   description: 'A custom DateTime scalar with formatted date and time',
@@ -597,7 +599,7 @@ const resolvers = {
             for (const url of media) {
               try {
                 const uploadResult = await cloudinary.uploader.upload(url, {
-                  folder: 'corporate_order_media',
+                  folder: 'corporate_category_media',
                   transformation: {
                     quality: 'auto',
                     fetch_format: 'auto'
@@ -614,7 +616,7 @@ const resolvers = {
           else if (typeof media === 'string') {
             try {
               const uploadResult = await cloudinary.uploader.upload(media, {
-                folder: 'corporate_order_media',
+                folder: 'corporate_category_media',
                 transformation: {
                   quality: 'auto',
                   fetch_format: 'auto'
@@ -631,7 +633,7 @@ const resolvers = {
             for (const url of media.urls) {
               try {
                 const uploadResult = await cloudinary.uploader.upload(url, {
-                  folder: 'corporate_order_media',
+                  folder: 'corporate_category_media',
                   transformation: {
                     quality: 'auto',
                     fetch_format: 'auto'
