@@ -93,9 +93,9 @@ const getTodayCorporateOrders = async () => {
       LEFT JOIN corporateorder_details cod ON co.corporateorder_generated_id = cod.corporateorder_generated_id
       LEFT JOIN corporate_category cc ON cod.category_id = cc.category_id
       WHERE cod.processing_date = $1
+      AND co.payment_status = 'Success'
       ORDER BY co.ordered_at DESC
     `, [today]);
-
     const orderMap = {};
 
     result.rows.forEach(row => {
