@@ -17,6 +17,8 @@ ENV REACT_APP_URL=https://app.caterorange.com
 ENV GOOGLE_MAPS_API_KEY = AIzaSyDODkMU8eu1fLXLB7RLTLis7YEhL0tI2Cg
 
 ENV GENERATE_SOURCEMAP=false
+ENV NODE_ENV=production
+
 
 # Build the application (if using Create React App or similar)
 RUN npm run build
