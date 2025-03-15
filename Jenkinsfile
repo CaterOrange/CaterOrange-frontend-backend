@@ -37,7 +37,7 @@ pipeline {
         stage('Clone Repository') {
     steps {
         script {
-            withCredentials([usernamePassword(credentialsId: 'gitCredentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
+            withCredentials([usernamePassword(credentialsId: 'bf1ad129-6891-4ba4-9e09-2806428ff53c', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                 try {
                     timeout(time: 20, unit: 'MINUTES') {
                         sh '''
