@@ -10,29 +10,57 @@ pipeline {
     }
 
     stages {
+        // stage('Clone Repository') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 timeout(time: 20, unit: 'MINUTES') {
+        //                     sh '''
+        //                         #!/bin/bash
+        //                         if [ -d "CaterOrange-frontend-backend" ]; then
+        //                             echo "Removing existing CaterOrange directory..."
+        //                             rm -rf CaterOrange-frontend-backend
+        //                         fi
+        //                         echo "Cloning repository..."
+        //                         git clone -v --depth 1 https://Sirisha-eng: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@github.com/CaterOrange/CaterOrange-frontend-backend.git
+        //                     '''
+        //                 }
+        //             } catch (Exception e) {
+        //                 failedStage = 'Clone Repository'
+        //                 failedStageMessage = "Error during repository cloning: ${e.getMessage()}"
+        //                 error("Failed to clone repository. Aborting pipeline.")
+        //             }
+        //         }
+        //     }
+        // }
+         
         stage('Clone Repository') {
-            steps {
-                script {
-                    try {
-                        timeout(time: 20, unit: 'MINUTES') {
-                            sh '''
-                                #!/bin/bash
-                                if [ -d "CaterOrange-frontend-backend" ]; then
-                                    echo "Removing existing CaterOrange directory..."
-                                    rm -rf CaterOrange-frontend-backend
-                                fi
-                                echo "Cloning repository..."
-                                git clone -v --depth 1 https://Sirisha-eng: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@github.com/CaterOrange/CaterOrange-frontend-backend.git
-                            '''
-                        }
-                    } catch (Exception e) {
-                        failedStage = 'Clone Repository'
-                        failedStageMessage = "Error during repository cloning: ${e.getMessage()}"
-                        error("Failed to clone repository. Aborting pipeline.")
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: 'gitCredentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
+                try {
+                    timeout(time: 20, unit: 'MINUTES') {
+                        sh '''
+                            #!/bin/bash
+                            if [ -d "CaterOrange" ]; then
+                                echo "Removing existing CaterOrange directory..."
+                                rm -rf CaterOrange
+                            fi
+                            echo "Cloning repository..."
+                            git clone -v --depth 1 https://$GIT_USERNAME:$GIT_TOKEN@github.com/CaterOrange/CaterOrange-frontend-backend.git
+                        '''
                     }
+                } catch (Exception e) {
+                    sendDiscordNotification("failure", [stageName: "Clone Repository", reason: e.getMessage()])
+                    echo "Error during repository cloning: ${e.getMessage()}"
+                    error("Failed to clone repository. Aborting pipeline.")
                 }
             }
         }
+    }
+}
+
+
 
               stage('Build Frontend') {
     steps {
