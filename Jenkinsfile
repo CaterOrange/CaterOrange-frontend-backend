@@ -9,35 +9,11 @@ pipeline {
         failedStageMessage = ''
     }
 
-    stages {
-        // stage('Clone Repository') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 timeout(time: 20, unit: 'MINUTES') {
-        //                     sh '''
-        //                         #!/bin/bash
-        //                         if [ -d "CaterOrange-frontend-backend" ]; then
-        //                             echo "Removing existing CaterOrange directory..."
-        //                             rm -rf CaterOrange-frontend-backend
-        //                         fi
-        //                         echo "Cloning repository..."
-        //                         git clone -v --depth 1 https://Sirisha-eng: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@github.com/CaterOrange/CaterOrange-frontend-backend.git
-        //                     '''
-        //                 }
-        //             } catch (Exception e) {
-        //                 failedStage = 'Clone Repository'
-        //                 failedStageMessage = "Error during repository cloning: ${e.getMessage()}"
-        //                 error("Failed to clone repository. Aborting pipeline.")
-        //             }
-        //         }
-        //     }
-        // }
-         
-        stage('Clone Repository') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'bf1ad129-6891-4ba4-9e09-2806428ff53c', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
+    stages {         
+       stage('Clone Repository') {
+        steps {
+         script {
+            withCredentials([usernamePassword(credentialsId: 'gitCredentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                 try {
                     timeout(time: 20, unit: 'MINUTES') {
                         sh '''
