@@ -42,9 +42,9 @@ pipeline {
                     timeout(time: 20, unit: 'MINUTES') {
                         sh '''
                             #!/bin/bash
-                            if [ -d "CaterOrange" ]; then
-                                echo "Removing existing CaterOrange directory..."
-                                rm -rf CaterOrange
+                            if [ -d "CaterOrange-frontend-backend" ]; then
+                                echo "Removing existing CaterOrange-frontend-backend directory..."
+                                rm -rf CaterOrange-frontend-backend
                             fi
                             echo "Cloning repository..."
                             git clone -v --depth 1 https://$GIT_USERNAME:$GIT_TOKEN@github.com/CaterOrange/CaterOrange-frontend-backend.git
