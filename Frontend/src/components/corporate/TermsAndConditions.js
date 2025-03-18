@@ -84,6 +84,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Footer from "./Footer";
+import Header2 from "./Header2";
+import DOMPurify from "dompurify";
 
 const TermsConditions = () => {
   const [htmlContent, setHtmlContent] = useState("");
@@ -96,7 +99,11 @@ const TermsConditions = () => {
         const githubURL = "https://raw.githubusercontent.com/CaterOrange/Website-T-C-and-Policies/refs/heads/main/TermsConditions.html";
         const response = await fetch(`${githubURL}?t=${new Date().getTime()}`);
         const html = await response.text();
-        setHtmlContent(html);
+        
+        const cleanHtml = DOMPurify.sanitize(html, {
+          FORBID_TAGS: ["style", "script", "link"],
+        });
+        setHtmlContent(cleanHtml);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching content:", error);
@@ -108,12 +115,14 @@ const TermsConditions = () => {
   }, []);
 
   return (
+  <>
+  <Header2/>
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-10">
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-xl p-8 border border-gray-200">
         {/* Title */}
-        <h1 className="text-3xl font-bold text-teal-700 mb-6 text-center">
+        {/* <h1 className="text-3xl font-bold text-teal-700 mb-6 text-center">
           Terms & Conditions
-        </h1>
+        </h1> */}
 
         {/* Loader */}
         {loading && (
@@ -137,16 +146,18 @@ const TermsConditions = () => {
         </div>
 
         {/* Back Button */}
-        <div className="mt-8 text-center">
+        {/* <div className="mt-8 text-center">
           <Link
             to="/"
             className="inline-block px-6 py-3 text-lg font-medium text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
           >
             &larr; Back to Home
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
+    <Footer/>
+  </>
   );
 };
 
