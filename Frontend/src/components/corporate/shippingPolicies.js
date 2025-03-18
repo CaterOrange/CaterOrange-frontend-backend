@@ -74,6 +74,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Footer from "./Footer";
+import Header2 from "./Header2";
+import DOMPurify from "dompurify";
 
 const ShippingPolicy = () => {
   const [htmlContent, setHtmlContent] = useState("");
@@ -83,10 +86,13 @@ const ShippingPolicy = () => {
     const fetchContent = async () => {
       try {
         // Add cache-busting parameter to prevent caching
-        const githubURL = "https://raw.githubusercontent.com/CaterOrange/Website-T-C-and-Policies/main/ShippingPolicy.html";
+        const githubURL = "https://raw.githubusercontent.com/CaterOrange/Website-T-C-and-Policies/refs/heads/main/ShippingPolicy.html";
         const response = await fetch(`${githubURL}?t=${new Date().getTime()}`);
         const html = await response.text();
-        setHtmlContent(html);
+        const cleanHtml = DOMPurify.sanitize(html, {
+          FORBID_TAGS: ["style", "script", "link"],
+        });
+        setHtmlContent(cleanHtml);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching content:", error);
@@ -98,14 +104,15 @@ const ShippingPolicy = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-10">
-      <div className="max-w-4xl w-full bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+  <>
+    <div className="min-h-screen bg-gray-50 flex flex-col px-4 py-10">
+    <Header2/>
+
+      <div className="max-w-4xl w-full mx-auto">
         {/* Header */}
         <h1 className="text-3xl font-bold text-teal-800 text-center">
-          Shipping Policy
         </h1>
         <p className="text-gray-600 text-center mb-6">
-          Learn more about our shipping process, timelines, and policies.
         </p>
 
         {/* Loader */}
@@ -115,9 +122,9 @@ const ShippingPolicy = () => {
           </div>
         )}
 
-        {/* Document Container */}
+        {/* Document Container - Removed card styling */}
         <div
-          className={`relative overflow-hidden rounded-xl border border-gray-300 shadow-md transition-opacity duration-500 ${
+          className={`relative overflow-hidden transition-opacity duration-500 ${
             loading ? "opacity-0" : "opacity-100"
           }`}
         >
@@ -130,16 +137,18 @@ const ShippingPolicy = () => {
         </div>
 
         {/* Back Button */}
-        <div className="mt-8 text-center">
+        {/* <div className="mt-8 text-center">
           <Link
             to="/"
             className="inline-block px-6 py-3 text-lg font-medium text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
           >
             &larr; Back to Home
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 
