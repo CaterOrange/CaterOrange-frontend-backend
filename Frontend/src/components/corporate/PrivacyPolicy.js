@@ -102,8 +102,13 @@
 // export default PrivacyPolicy;
 
 
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Footer from "./Footer";
+import DOMPurify from "dompurify";
+import Header2 from "./Header2";
+
 
 const PrivacyPolicy = () => {
   const [htmlContent, setHtmlContent] = useState("");
@@ -112,61 +117,75 @@ const PrivacyPolicy = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        // Add cache-busting parameter to prevent caching
         const githubURL = "https://raw.githubusercontent.com/CaterOrange/Website-T-C-and-Policies/refs/heads/main/PrivacyPolicy.html";
         const response = await fetch(`${githubURL}?t=${new Date().getTime()}`);
-        const html = await response.text();
-        setHtmlContent(html);
+        let html = await response.text();
+        
+        // Add inline styles for lists
+        html = html.replace(/<ul>/g, '<ul style="list-style-type: disc; padding-left: 2rem; margin-bottom: 1rem;">');
+        html = html.replace(/<ol>/g, '<ol style="list-style-type: decimal; padding-left: 2rem; margin-bottom: 1rem;">');
+        
+        const cleanHtml = DOMPurify.sanitize(html, {
+          FORBID_TAGS: ["style", "script", "link"],
+          ADD_ATTR: ['style'], // Allow style attributes
+        });
+        
+        setHtmlContent(cleanHtml);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching content:", error);
         setLoading(false);
       }
     };
-
+  
     fetchContent();
   }, []);
 
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-10">
-      <div className="max-w-4xl w-full bg-white shadow-lg rounded-xl p-8 border border-gray-200">
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-teal-700 mb-6 text-center">
+    <>
+    <Header2/>
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-10">
+        <div className="max-w-4xl w-full bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+          {/* Title */}
+          {/* <h1 className="text-3xl font-bold text-teal-700 mb-6 text-center">
           Privacy Policy
-        </h1>
+        </h1> */}
 
-        {/* Loader */}
-        {loading && (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-teal-500 border-t-transparent"></div>
-          </div>
-        )}
-
-        {/* Document Container */}
-        <div
-          className={`relative overflow-hidden rounded-xl border border-gray-300 shadow-md transition-opacity duration-500 ${
-            loading ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          {!loading && (
-            <div 
-              className="w-full h-[80vh] md:h-[70vh] sm:h-[60vh] overflow-auto p-4"
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
+          {/* Loader */}
+          {loading && (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-teal-500 border-t-transparent"></div>
+            </div>
           )}
-        </div>
 
-        {/* Back Button */}
-        <div className="mt-8 text-center">
+          {/* Document Container */}
+          <div
+            className={`relative overflow-hidden rounded-xl border border-gray-300 shadow-md transition-opacity duration-500 ${loading ? "opacity-0" : "opacity-100"
+              }`}
+          >
+            {!loading && (
+              <div
+                className="w-full h-[80vh] md:h-[70vh] sm:h-[60vh] overflow-auto p-4"
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
+            )}
+          </div>
+
+          {/* Back Button */}
+          {/* <div className="mt-8 text-center">
           <Link
             to="/"
             className="inline-block px-6 py-3 text-lg font-medium text-white bg-teal-600 rounded-lg shadow-md hover:bg-teal-700 transition duration-300"
           >
             &larr; Back to Home
           </Link>
+        </div> */}
         </div>
+
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
