@@ -10,8 +10,7 @@ COPY package*.json ./
 # Install dependencies with specific flags for better reliability
 RUN npm cache clean --force && npm install --legacy-peer-deps
 
-# Update browserslist database
-RUN npx update-browserslist-db@latest
+
 
 # Install missing Babel dependency
 RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object
