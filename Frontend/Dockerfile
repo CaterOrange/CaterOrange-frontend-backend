@@ -11,10 +11,6 @@ COPY package*.json ./
 RUN npm cache clean --force && npm install --legacy-peer-deps
 
 
-
-# Install missing Babel dependency
-RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object
-
 COPY . .
 
 # Set environment variable
