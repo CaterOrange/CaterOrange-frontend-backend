@@ -226,11 +226,6 @@ const Body = ({ isSidenavOpen, activeTab, setActiveTab }) => {
             className="w-full aspect-[4/3] object-cover rounded-lg mb-3"
             alt={food.category_name}
           />
-          // <img
-          //   src={food.category_media}
-          //   className="w-full h-48 sm:h-52 object-cover rounded-lg mb-3"
-          //   alt={food.category_name}
-          // />
           <h2 className="text-lg font-bold text-gray-800 mb-2 font-serif">{food.category_name}</h2>
           <p className="text-gray-600 font-serif text-sm flex-1">{food.category_description}</p>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-2 border-t border-gray-100 gap-2">
