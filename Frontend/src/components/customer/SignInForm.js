@@ -144,8 +144,8 @@ const SignInForm = ({ onSignIn }) => {
  setError('');
  try {
  console.log('handle otp called');
- await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email,headers:{token:localStorage.getItem('token')} });
- const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email,headers:{token:localStorage.getItem('token')} });
+ await axios.post(`${process.env.REACT_APP_URL}/api/customer/checkCustomerOtp`, { email});
+ const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email});
  setError(response.data.message);
  setForgotPasswordStep(2);
  setIsOtpExpired(false); 
@@ -164,7 +164,7 @@ const SignInForm = ({ onSignIn }) => {
 
  setError('');
  try {
- const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email ,headers:{token:localStorage.getItem('token')}});
+ const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/send-otp`, { email});
  setError(response.data.message || 'OTP sent again');
  setIsOtpExpired(false); 
  setTimer(60);
@@ -183,7 +183,7 @@ const SignInForm = ({ onSignIn }) => {
 
  setError('');
  try {
- const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/verify-otp`, { email, otp,headers:{token:localStorage.getItem('token')} });
+ const response = await axios.post(`${process.env.REACT_APP_URL}/api/customer/verify-otp`, { email, otp});
  setError(response.data.message);
  setForgotPasswordStep(3);
  setIsLoading(false)
