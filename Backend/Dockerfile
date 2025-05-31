@@ -30,5 +30,8 @@ ENV MIXPANEL_TOKEN=cb19042cf789f9c44e059bd4be6f2c5d
 # Expose the port that the app runs on
 EXPOSE 4000
 
+#HealthCheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD curl -f app.categorange.com/api || exit 1
 # Command to run the app, waiting for the database to be ready first
 CMD ["npm", "start"]
