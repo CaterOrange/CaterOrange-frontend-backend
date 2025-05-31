@@ -156,6 +156,9 @@ app.use('/api/v2/',V2adminRoutes)
 app.use('/api/v2/',V2vendorRoutes)
 
 
+app.get('/api', (req, res) => {
+  res.sendStatus(200); // or res.json({ status: 'ok' });
+});
 
 
 const deleteOldFilesFromFolder = async (folderName) => {
