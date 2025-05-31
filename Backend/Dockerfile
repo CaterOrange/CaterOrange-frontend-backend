@@ -32,6 +32,7 @@ EXPOSE 4000
 
 #HealthCheck
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD curl -f app.categorange.com/api || exit 1
+  CMD curl -f http://localhost:3000/api || exit 1
+
 # Command to run the app, waiting for the database to be ready first
 CMD ["npm", "start"]
