@@ -122,6 +122,7 @@ pipeline {
                                 --name backend-container \
                                 --network host \
                                 -d -p 4000:4000 \
+                                --restart always \
                                 backendcaterorange:${IMAGE_TAG}
             
                             echo "Starting Frontend container..."
@@ -129,6 +130,7 @@ pipeline {
                                 --name frontend-container \
                                 --network host \
                                 -d -p 3000:3000 \
+                                --restart always \
                                 frontendcaterorange:${IMAGE_TAG}
                         '''
                     } catch (Exception e) {
